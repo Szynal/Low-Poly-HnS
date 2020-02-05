@@ -14,7 +14,7 @@ if ($id -eq 1) {
 } elseif ($id -eq 2) {
 
     Write-Output "Set for Pawel Szynal";
-    New-NetIPAddress -InterfaceIndex 4 -IPAddress 192.168.1.2 -PrefixLength 24 -DefaultGateway 192.168.1.1
+    New-NetIPAddress -InterfaceAlias 'Ethernet' -IPAddress 192.168.1.2 -PrefixLength 24 -DefaultGateway 192.168.1.1
     Start-Sleep -s 7
     Set-NetConnectionProfile -NetworkCategory Private
     Write-Output "Done!";
