@@ -7,7 +7,7 @@ $id = Read-Host -Prompt 'Get id'
 if ($id -eq 1) {
 
     Write-Output "Set for Krzysztof Sobocinski";
-    New-NetIPAddress -InterfaceIndex 4 -IPAddress 192.168.1.3 -PrefixLength 24 -DefaultGateway 192.168.1.1
+    New-NetIPAddress -InterfaceAlias 'Ethernet' -IPAddress 192.168.1.3 -PrefixLength 24 -DefaultGateway 192.168.1.1
     Start-Sleep -s 7
     Set-NetConnectionProfile -NetworkCategory Private
     Write-Output "Done!";
