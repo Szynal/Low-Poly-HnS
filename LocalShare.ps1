@@ -1,10 +1,24 @@
-# Pawel Szynal
+Set-ExecutionPolicy Unrestricted
+Write-Output "Krzysztof Sobocinski id: 1";
+Write-Output "Pawel Szynal id: 2";
 
-New-NetIPAddress -InterfaceIndex 4 -IPAddress 192.168.1.2 -PrefixLength 24 -DefaultGateway 192.168.1.1
-Set-NetConnectionProfile -Name "PC_Szynal" -NetworkCategory Private
+$id = Read-Host -Prompt 'Get id'
 
+if ($id -eq 1) {
 
-# Krzysztof Sobocinski
-# New-NetIPAddress -InterfaceIndex 4 -IPAddress 192.168.1.3 -PrefixLength 24 -DefaultGateway 192.168.1.1
-# Set-NetConnectionProfile -Name "PC_Sobocinski" -NetworkCategory Private
+    Write-Output "Set for Krzysztof Sobocinski";
+    New-NetIPAddress -InterfaceIndex 4 -IPAddress 192.168.1.3 -PrefixLength 24 -DefaultGateway 192.168.1.1
+    Start-Sleep -s 7
+    Set-NetConnectionProfile -NetworkCategory Private
+    Write-Output "Done!";
+} elseif ($id -eq 2) {
 
+    Write-Output "Set for Pawel Szynal";
+    New-NetIPAddress -InterfaceIndex 4 -IPAddress 192.168.1.2 -PrefixLength 24 -DefaultGateway 192.168.1.1
+    Start-Sleep -s 7
+    Set-NetConnectionProfile -NetworkCategory Private
+    Write-Output "Done!";
+}else{
+
+	Write-Warning -Message "Wrong input."
+}
