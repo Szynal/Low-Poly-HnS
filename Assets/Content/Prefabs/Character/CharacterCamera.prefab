@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 81133607875016184}
   - component: {fileID: 114626483620018602}
   m_Layer: 0
-  m_Name: Camera
+  m_Name: CharacterCamera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -105,6 +105,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fb3e80dcd7196347a61c839e73e384d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Player: {fileID: 0}
-  offset: {x: 3.06, y: 7.26, z: -6.86}
-  distance: 3
+  followTarget: {fileID: 0}
+  IsPlayersCamera: 1
+  Offset: {x: 0, y: 10, z: -10}
