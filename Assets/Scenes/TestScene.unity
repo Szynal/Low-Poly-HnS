@@ -149,7 +149,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1257027642313922}
-  - {fileID: 1659065252}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -158,7 +157,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 139016650}
+    m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1559146146702618, guid: bb80fa59493fada49acdbc878023d1f0, type: 3}
       propertyPath: m_Name
@@ -194,7 +193,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4363556638200000, guid: bb80fa59493fada49acdbc878023d1f0, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 4363556638200000, guid: bb80fa59493fada49acdbc878023d1f0, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -429,7 +428,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_BoundingSphereOverride: {x: 4.5905e-41, y: 4.51e-43, z: 1.16e-43, w: NaN}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -552,5 +551,10 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1659065256}
+    - target: {fileID: 7078214931956618583, guid: fece4e6c51722ed49b325c7a83bdbe3a,
+        type: 3}
+      propertyPath: cameraPosition
+      value: 
+      objectReference: {fileID: 1659065252}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fece4e6c51722ed49b325c7a83bdbe3a, type: 3}
