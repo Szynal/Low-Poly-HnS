@@ -1,32 +1,21 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
 
-namespace LowPolyHnS
+public class HealthBar : MonoBehaviour
 {
-    [RequireComponent(typeof(Slider))]
-    public class HealthBar : MonoBehaviour
+    [SerializeField] private int health;
+    [SerializeField] private Slider HealthSlider;
+
+    public void Start()
     {
-        [SerializeField] private Transform cameraPosition = null;
-        [SerializeField] Slider miniHealthSlider = null;
-        private Transform miniHealthSliderPos;
+        //HealthSlider = transform.GetComponent<Slider>();
+    }
 
-        private void Start()
-        {
-            if (miniHealthSlider != null)
-            {
-                miniHealthSliderPos = miniHealthSlider.transform;
-            }
-        }
-
-        private void Update()
-        {
-            RotateTowardsPlayer();
-        }
-
-        private void RotateTowardsPlayer()
-        {
-            if (cameraPosition == null || miniHealthSlider == null) return;
-            miniHealthSliderPos.LookAt(cameraPosition.position);
-        }
+    public void UpdateHealthBar(int hp)
+    {
+        health = hp;
+        HealthSlider.value = hp;
     }
 }
