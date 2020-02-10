@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using LowPolyHnS;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,6 +8,7 @@ public class HealthBar : MonoBehaviour
 {
     [SerializeField] private int health;
     [SerializeField] private Slider HealthSlider;
+    [SerializeField] private MiniHealthBar miniHealthBar;
 
     public void Start()
     {
@@ -17,5 +19,6 @@ public class HealthBar : MonoBehaviour
     {
         health = hp;
         HealthSlider.value = hp;
+        miniHealthBar.GetComponent<Slider>().value = hp;
     }
 }
