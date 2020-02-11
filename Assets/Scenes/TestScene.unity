@@ -1269,7 +1269,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 100
   m_WholeNumbers: 0
-  m_Value: 58.9
+  m_Value: 100
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1287,6 +1287,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 0
   HealthSlider: {fileID: 344149771}
+  miniHealthBar: {fileID: 1571008628}
 --- !u!1 &490385326
 GameObject:
   m_ObjectHideFlags: 0
@@ -1486,10 +1487,10 @@ RectTransform:
   m_Father: {fileID: 344149770}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.25}
-  m_AnchorMax: {x: 1, y: 0.75}
-  m_AnchoredPosition: {x: -5, y: 0}
-  m_SizeDelta: {x: -20, y: 0}
+  m_AnchorMin: {x: 0.01, y: 0.25}
+  m_AnchorMax: {x: 0.99, y: 0.75}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &664735153
 GameObject:
@@ -2283,6 +2284,7 @@ GameObject:
   - component: {fileID: 1085707008}
   - component: {fileID: 1085707007}
   - component: {fileID: 1085707006}
+  - component: {fileID: 1085707009}
   m_Layer: 0
   m_Name: Cylinder
   m_TagString: dmgZone
@@ -2365,6 +2367,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1085707004}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1085707009
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1085707004}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32027241174b54a418b2eeb526b3f7f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1092000217
 GameObject:
   m_ObjectHideFlags: 0
@@ -3178,6 +3192,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1428709530}
   m_CullTransparentMesh: 0
+--- !u!114 &1571008628 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7078214931956618583, guid: fece4e6c51722ed49b325c7a83bdbe3a,
+    type: 3}
+  m_PrefabInstance: {fileID: 679011617807963971}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60a6e3e12c5d40b43a50deefed495d99, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1576263348
 GameObject:
   m_ObjectHideFlags: 0
@@ -3193,7 +3219,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1576263349
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4125,6 +4151,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 139016650}
     m_Modifications:
+    - target: {fileID: 616208052955248464, guid: fece4e6c51722ed49b325c7a83bdbe3a,
+        type: 3}
+      propertyPath: m_Radius
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 645182083256624712, guid: fece4e6c51722ed49b325c7a83bdbe3a,
+        type: 3}
+      propertyPath: m_MinValue
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 645182083256624712, guid: fece4e6c51722ed49b325c7a83bdbe3a,
+        type: 3}
+      propertyPath: m_Value
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 647350326523645888, guid: fece4e6c51722ed49b325c7a83bdbe3a,
         type: 3}
       propertyPath: inputModule
