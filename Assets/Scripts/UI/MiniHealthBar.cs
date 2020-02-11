@@ -7,7 +7,7 @@ namespace LowPolyHnS
     public class MiniHealthBar : MonoBehaviour
     {
         [SerializeField] private Transform cameraPosition = null;
-        [SerializeField] Slider miniHealthSlider = null;
+        [SerializeField] private Slider miniHealthSlider = null;
         private Transform miniHealthSliderPos;
 
         private void Start()

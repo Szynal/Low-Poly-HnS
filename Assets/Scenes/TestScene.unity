@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -575,6 +575,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1257027642313922}
+  - {fileID: 1659065252}
+  - {fileID: 1092000221}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -957,7 +959,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 139016650}
     m_Modifications:
     - target: {fileID: 1559146146702618, guid: bb80fa59493fada49acdbc878023d1f0, type: 3}
       propertyPath: m_Name
@@ -993,7 +995,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4363556638200000, guid: bb80fa59493fada49acdbc878023d1f0, type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4363556638200000, guid: bb80fa59493fada49acdbc878023d1f0, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -1285,8 +1287,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63de9fa3bc2335a4b89a920bb2f82742, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 0
-  HealthSlider: {fileID: 344149771}
   miniHealthBar: {fileID: 1571008628}
 --- !u!1 &490385326
 GameObject:
@@ -1925,8 +1925,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d71955e21f4b1754c8ca7b5480f05706, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 100
   sliderScript: {fileID: 344149772}
+  health: 100
 --- !u!1 &944431432
 GameObject:
   m_ObjectHideFlags: 0
@@ -2379,6 +2379,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32027241174b54a418b2eeb526b3f7f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  DamageDeal: 5
+  TimeStep: 0.5
 --- !u!1 &1092000217
 GameObject:
   m_ObjectHideFlags: 0
@@ -2472,8 +2474,8 @@ RectTransform:
   - {fileID: 131925922}
   - {fileID: 2046239326}
   - {fileID: 1097991924}
-  m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_Father: {fileID: 139016650}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -2490,7 +2492,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1097991924}
   - component: {fileID: 1097991927}
-  - component: {fileID: 1097991926}
   - component: {fileID: 1097991925}
   m_Layer: 5
   m_Name: HPCanvas
@@ -2536,28 +2537,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &1097991926
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1097991923}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
-  m_ReferencePixelsPerUnit: 100
-  m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
-  m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
-  m_PhysicalUnit: 3
-  m_FallbackScreenDPI: 96
-  m_DefaultSpriteDPI: 96
-  m_DynamicPixelsPerUnit: 1
 --- !u!223 &1097991927
 Canvas:
   m_ObjectHideFlags: 0
@@ -3851,7 +3830,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2046239326}
   - component: {fileID: 2046239329}
-  - component: {fileID: 2046239328}
   - component: {fileID: 2046239327}
   m_Layer: 5
   m_Name: MPCanvas
@@ -3897,28 +3875,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &2046239328
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2046239325}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
-  m_ReferencePixelsPerUnit: 100
-  m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
-  m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
-  m_PhysicalUnit: 3
-  m_FallbackScreenDPI: 96
-  m_DefaultSpriteDPI: 96
-  m_DynamicPixelsPerUnit: 1
 --- !u!223 &2046239329
 Canvas:
   m_ObjectHideFlags: 0

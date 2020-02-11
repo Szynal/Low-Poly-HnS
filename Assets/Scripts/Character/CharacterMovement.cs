@@ -20,7 +20,7 @@ namespace LowPolyHnS
 
         private Plane plane;
         private Ray ray;
-        
+
         private CharacterAnimatorManger animatorManger;
         private bool isMoving = true;
 

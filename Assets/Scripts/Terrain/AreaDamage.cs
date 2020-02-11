@@ -15,13 +15,12 @@ namespace LowPolyHnS
         {
             characterHealth = other.GetComponent<CharacterHealth>();
             if (characterHealth == null || deadZoneActive) return;
-            TimeDmg(other);
+            TimeDmg();
         }
 
-        private async void TimeDmg(Collider other)
+        private async void TimeDmg()
         {
-            Debug.Log("dmg");
-            characterHealth.CharacterTakeDMG(DamageDeal);
+            characterHealth.CharacterTakeDamage(DamageDeal);
             deadZoneActive = true;
             await Task.Delay(TimeSpan.FromSeconds(TimeStep));
             deadZoneActive = false;

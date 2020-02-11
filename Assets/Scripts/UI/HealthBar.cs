@@ -1,24 +1,24 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using LowPolyHnS;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class HealthBar : MonoBehaviour
+namespace LowPolyHnS
 {
-    [SerializeField] private int health;
-    [SerializeField] private Slider HealthSlider;
-    [SerializeField] private MiniHealthBar miniHealthBar;
-
-    public void Start()
+    public class HealthBar : MonoBehaviour
     {
-        //HealthSlider = transform.GetComponent<Slider>();
-    }
+        private Slider healthSlider;
+        [SerializeField] private MiniHealthBar miniHealthBar = null;
+        public int Health { get; private set; }
 
-    public void UpdateHealthBar(int hp)
-    {
-        health = hp;
-        HealthSlider.value = hp;
-        miniHealthBar.GetComponent<Slider>().value = hp;
+        public void Start()
+        {
+            healthSlider = transform.GetComponent<Slider>();
+        }
+
+        public void UpdateHealthBar(int hp)
+        {
+            Health = hp;
+            if (healthSlider != null) healthSlider.value = hp;
+            if (miniHealthBar != null) miniHealthBar.GetComponent<Slider>().value = hp;
+        }
     }
 }

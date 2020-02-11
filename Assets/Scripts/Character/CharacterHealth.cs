@@ -1,33 +1,32 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using LowPolyHnS;
 using UnityEngine;
 
 public class CharacterHealth : MonoBehaviour
 {
-    [SerializeField]private int health;
-    [SerializeField] private HealthBar sliderScript;
-
+    [SerializeField] private HealthBar sliderScript = null;
+    [SerializeField] private int health;
+    
     public void Awake()
     {
         sliderScript.UpdateHealthBar(health);
     }
 
-    public void CharacterTakeDMG(int dmg)
+    public void CharacterTakeDamage(int damage)
     {
-        health -= dmg;
+        health -= damage;
         if (health <= 0)
         {
             sliderScript.UpdateHealthBar(0);
             Death();
             return;
         }
+
         sliderScript.UpdateHealthBar(health);
-            
     }
 
     public void Death()
     {
+        //TODO
         Debug.Log("Death");
     }
-
 }
