@@ -10,14 +10,20 @@ namespace LowPolyHnS
     public class CharacterMovement : MonoBehaviour
     {
         [SerializeField] private StandaloneInputModule inputModule = null;
-        
-        private CharacterAnimatorManger animatorManger = null;
         private NavMeshAgent agent;
         private CharacterController controller;
+
+        private Vector3 cursorPosition;
         private Vector3 motion = Vector3.zero;
-        private bool isMoving = true;
+
         private Transform playerCamera;
+
+        private Plane plane;
+        private Ray ray;
         
+        private CharacterAnimatorManger animatorManger;
+        private bool isMoving = true;
+
         private void Start()
         {
             controller = GetComponent<CharacterController>();
@@ -45,22 +51,43 @@ namespace LowPolyHnS
                 return;
             }
 
-            motion = new Vector3(Input.GetAxis(inputModule.horizontalAxis), Input.GetAxis(inputModule.verticalAxis));
+            motion = Input.GetMouseButton(0) ? GetCursorDirection() : Vector3.zero;
+
             Rotate();
             controller.Move(Vector3.down);
             UpdateNavAgentPosition();
-            
+
             if (animatorManger != null)
             {
                 animatorManger.AnimateCharacterMovement(isMoving, motion);
             }
         }
 
+        private Vector3 GetCursorDirection()
+        {
+            plane = new Plane(Vector3.up, transform.position);
+            ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            if (plane.Raycast(ray, out var point))
+            {
+                cursorPosition = ray.GetPoint(point);
+            }
+
+            Vector3 heading = cursorPosition - transform.position;
+            float distance = heading.magnitude;
+            Vector3 direction = heading / distance;
+
+            return new Vector3(direction.x, direction.z);
+        }
+
         private void Rotate()
         {
+            if (playerCamera == null) return;
+
             Vector3 movementVector = playerCamera.TransformDirection(motion);
 
             if (movementVector == Vector3.zero) return;
+
             movementVector.y = 0f;
             movementVector.Normalize();
             transform.forward = Vector3.Lerp(transform.forward, movementVector, 8 * Time.deltaTime);
@@ -72,5 +99,4 @@ namespace LowPolyHnS
             agent.nextPosition = transform.position;
         }
     }
-
 }
