@@ -1907,26 +1907,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 820444385}
   m_CullTransparentMesh: 0
---- !u!1 &925947445 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 677829378768984962, guid: fece4e6c51722ed49b325c7a83bdbe3a,
-    type: 3}
-  m_PrefabInstance: {fileID: 679011617807963971}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &925947446
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 925947445}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d71955e21f4b1754c8ca7b5480f05706, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sliderScript: {fileID: 344149772}
-  health: 100
 --- !u!1 &944431432
 GameObject:
   m_ObjectHideFlags: 0
@@ -4107,21 +4087,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 139016650}
     m_Modifications:
-    - target: {fileID: 616208052955248464, guid: fece4e6c51722ed49b325c7a83bdbe3a,
-        type: 3}
-      propertyPath: m_Radius
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 645182083256624712, guid: fece4e6c51722ed49b325c7a83bdbe3a,
-        type: 3}
-      propertyPath: m_MinValue
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 645182083256624712, guid: fece4e6c51722ed49b325c7a83bdbe3a,
-        type: 3}
-      propertyPath: m_Value
-      value: 100
-      objectReference: {fileID: 0}
+    - target: {fileID: 925947446, guid: fece4e6c51722ed49b325c7a83bdbe3a, type: 3}
+      propertyPath: sliderScript
+      value: 
+      objectReference: {fileID: 344149772}
     - target: {fileID: 647350326523645888, guid: fece4e6c51722ed49b325c7a83bdbe3a,
         type: 3}
       propertyPath: inputModule
