@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Threading.Tasks;
+using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.EventSystems;
 
@@ -22,6 +24,8 @@ namespace LowPolyHnS
         private Ray ray;
 
         private CharacterAnimatorManger animatorManger;
+
+        private bool canMove = true;
         private bool isMoving = true;
 
         private void Start()
@@ -41,7 +45,10 @@ namespace LowPolyHnS
 
         private void Update()
         {
-            Move();
+            if (canMove)
+            {
+                Move();
+            }
         }
 
         private void Move()
@@ -54,7 +61,7 @@ namespace LowPolyHnS
             motion = Input.GetMouseButton(0) ? GetCursorDirection() : Vector3.zero;
 
             Rotate();
-            controller.Move(Vector3.down);
+            controller?.Move(Vector3.down);
             UpdateNavAgentPosition();
 
             if (animatorManger != null)
@@ -97,6 +104,16 @@ namespace LowPolyHnS
         {
             transform.position = new Vector3(transform.position.x, agent.nextPosition.y, transform.position.z);
             agent.nextPosition = transform.position;
+        }
+        
+        public async void EnableRagdoll(float delay)
+        {
+            await Task.Delay(TimeSpan.FromSeconds(delay));
+
+            if (controller != null) controller.enabled = false;
+            if (animatorManger != null) animatorManger.enabled = false;
+            GetComponent<Rigidbody>().isKinematic = false;
+            canMove = false;
         }
     }
 }
