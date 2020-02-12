@@ -11,6 +11,9 @@ namespace LowPolyHnS
         private static int _deathTriggerParameter = Animator.StringToHash("DeadTrigger");
         private static int _deathParameter = Animator.StringToHash("Dead");
 
+        public bool DeadZone = false;
+        public bool Fighting = false;
+
         private void Start()
         {
             animator = GetComponent<Animator>();
