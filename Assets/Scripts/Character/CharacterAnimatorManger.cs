@@ -10,9 +10,7 @@ namespace LowPolyHnS
         private static int _moveParameter = Animator.StringToHash("Move");
         private static int _deathTriggerParameter = Animator.StringToHash("DeadTrigger");
         private static int _deathParameter = Animator.StringToHash("Dead");
-
-        public bool DeadZone = false;
-        public bool Fighting = false;
+        private static int _hitParameter = Animator.StringToHash("Hit");
 
         private void Start()
         {
@@ -32,6 +30,12 @@ namespace LowPolyHnS
             if (animator == null) return;
             animator.SetTrigger(_deathTriggerParameter);
             animator.SetInteger(_deathParameter, Random.Range(1, 5));
+        }
+
+        public void AnimateCharacterHit()
+        {
+            if (animator == null) return;
+            animator.SetTrigger(_hitParameter);
         }
     }
 }

@@ -20,12 +20,16 @@ public class CharacterHealth : MonoBehaviour
 
     public void CharacterTakeDamage(int damage)
     {
-        health -= damage;
         if (health <= 0)
         {
             sliderScript.UpdateHealthBar(0);
             Death();
             return;
+        }
+        else
+        {
+            health -= damage;
+            if (animatorManger != null) animatorManger.AnimateCharacterHit();
         }
 
         sliderScript.UpdateHealthBar(health);
