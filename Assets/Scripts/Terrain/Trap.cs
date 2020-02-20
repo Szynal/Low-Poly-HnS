@@ -5,28 +5,29 @@ using UnityEngine;
 namespace LowPolyHnS
 {
     [RequireComponent(typeof(Collider))]
+    [RequireComponent(typeof(Animator))]
     public class Trap : MonoBehaviour
     {
         public int DamageDeal = 5;
         public float TimeStep = 0.5f;
 
-        private new Animation animation = null;
-
         private CharacterHealth characterHealth;
         private bool deadZoneActive;
 
-        private string[] animationState;
+        private Animator animator;
+        private AnimatorStateInfo trapState;
+        private static int _stateNameHash = Animator.StringToHash("TrapOpenClose");
+        private static int _chestParameter = Animator.StringToHash("Open");
+        private bool trapOn;
 
         private void Start()
         {
-            animation = GetComponent<Animation>();
-            Debug.Log(animation);
-            if (animation != null) animationState = new string[animation.GetClipCount()];
+            animator = GetComponent<Animator>();
         }
 
         private void OnTriggerEnter(Collider other)
         {
-            if (animationState != null) animation.Play("an_TrapOn");
+            ActivateTrap();
         }
 
         private void OnTriggerStay(Collider other)
@@ -38,7 +39,22 @@ namespace LowPolyHnS
 
         private void OnTriggerExit(Collider other)
         {
-            if (animationState != null) animation.Play("an_TrapOff");
+            DeactivateTrap();
+        }
+
+        private void ActivateTrap()
+        {
+            trapState = animator.GetCurrentAnimatorStateInfo(0);
+            trapOn = AnimationTools.PlayAnimation(animator, _stateNameHash, _chestParameter, trapOn,
+                trapState.normalizedTime);
+        }
+
+        private async void DeactivateTrap()
+        {
+            await Task.Delay(TimeSpan.FromSeconds(4));
+            trapState = animator.GetCurrentAnimatorStateInfo(0);
+            trapOn = AnimationTools.PlayAnimation(animator, _stateNameHash, _chestParameter, trapOn,
+                trapState.normalizedTime);
         }
 
         private async void TimeDmg()
