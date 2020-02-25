@@ -22,7 +22,7 @@ namespace LowPolyHnS
             if (animator == null) return;
             animator.SetFloat(_moveParameter, isMoving
                 ? Mathf.Lerp(animator.GetFloat(_moveParameter), motion.sqrMagnitude, 10 * Time.deltaTime)
-                : Mathf.Lerp(animator.GetFloat(_moveParameter), 0, 10 * Time.deltaTime));
+                : Mathf.Lerp(animator.GetFloat(_moveParameter), 0, 2 * Time.deltaTime));
         }
 
         public void AnimateCharacterDeath()

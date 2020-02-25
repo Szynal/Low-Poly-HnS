@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Numerics;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.EventSystems;
+using Plane = UnityEngine.Plane;
+using Vector3 = UnityEngine.Vector3;
 
 namespace LowPolyHnS
 {
@@ -27,6 +30,10 @@ namespace LowPolyHnS
 
         private bool canMove = true;
         private bool isMoving = true;
+        
+
+        public float MouseTimer = 0f;
+        [SerializeField] private float mouseClickTime = 0.1f;
 
         private void Start()
         {
@@ -41,10 +48,22 @@ namespace LowPolyHnS
             agent = GetComponent<NavMeshAgent>();
             agent.updatePosition = false;
             agent.updateRotation = false;
+            
+
         }
 
         private void Update()
         {
+            if (Input.GetMouseButtonDown(0))
+            {
+                MouseTimer = 0f;
+            }
+
+            if (Input.GetMouseButton(0))
+            {
+                MouseTimer += Time.deltaTime;
+            }
+
             if (canMove)
             {
                 Move();
@@ -58,11 +77,19 @@ namespace LowPolyHnS
                 return;
             }
 
-            motion = Input.GetMouseButton(0) ? GetCursorDirection() : Vector3.zero;
+            if (MouseTimer < mouseClickTime)
+            {
+                motion = agent.hasPath ? GetNextPointDirection() : Input.GetMouseButton(0) ? GetCursorDirection() : Vector3.zero;
+            }else if (MouseTimer > mouseClickTime)
+            {
+                agent.ResetPath();
+                motion = Input.GetMouseButton(0) ? GetCursorDirection() : Vector3.zero;
+            }
+            
 
+            UpdateNavAgentPosition2();
             Rotate();
             controller?.Move(Vector3.down);
-            UpdateNavAgentPosition();
 
             if (animatorManger != null)
             {
@@ -87,6 +114,21 @@ namespace LowPolyHnS
             return new Vector3(direction.x, direction.z);
         }
 
+        private Vector3 GetNextPointDirection()
+        {
+            
+            Vector3 heading = agent.steeringTarget - transform.position;
+            float distance = heading.magnitude;
+
+            Vector3 direction = heading / distance;
+            Debug.Log("distance " + distance);
+            if ( Vector3.Magnitude(agent.pathEndPosition - transform.position) < 0.3f)
+            {
+                agent.ResetPath();
+            }
+            return new  Vector3(direction.x, direction.z);
+        }
+
         private void Rotate()
         {
             if (playerCamera == null) return;
@@ -105,7 +147,11 @@ namespace LowPolyHnS
             transform.position = new Vector3(transform.position.x, agent.nextPosition.y, transform.position.z);
             agent.nextPosition = transform.position;
         }
-        
+        private void UpdateNavAgentPosition2()
+        {
+            agent.nextPosition = transform.position;
+        }
+
         public async void EnableRagdoll(float delay)
         {
             await Task.Delay(TimeSpan.FromSeconds(delay));
