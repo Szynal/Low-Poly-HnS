@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de1fcb5a8237ab640882c904be80a14c, type: 3}
+  m_Name: MachinePistol
+  m_EditorClassIdentifier: 
+  itemID: 1004
+  ItemName: Machine Pistol
+  ItemSprite: {fileID: 10915, guid: 0000000000000000f000000000000000, type: 0}
+  ItemUses: 1
+  AmmoType: 1
+  IsDualWielded: 0
+  DualWieldedVariant: {fileID: 11400000, guid: cc8a290e69b752b429227c87b2b555f6, type: 2}
+  MagAmmoLeft: 0
+  MagAmmoMax: 15
+  Damage: 10
+  ReloadTime: 1.2
+  AttackCooldown: 0.12
+  AttackRange: 4
+  BackstabRange: 1.5

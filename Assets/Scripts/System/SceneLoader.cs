@@ -209,16 +209,6 @@ namespace LowPolyHnS
                         }
                     }
 
-                    //We need to get new references in case we got a new player object
-                    if (FE_GravitatingCamera.Instance != null &&
-                        FE_GravitatingCamera.Instance.PlayerController == null && playerObject != null)
-                    {
-                        FE_GravitatingCamera.Instance.PlayerController =
-                            playerObject.GetComponent<FE_PlayerMovementController>();
-                        FE_GravitatingCamera.Instance.LookAtTransform =
-                            playerObject.GetComponent<FE_PlayerMovementController>().CameraFocus;
-                    }
-
                     if (FE_UIController.Instance != null && playerObject != null)
                     {
                         playerObject.GetComponent<FE_PlayerInventoryInteraction>().RefreshInteractions();
@@ -383,7 +373,6 @@ namespace LowPolyHnS
             //First, we need to load MSO manager, so it can give values to MSOs. BUT only if we're loading the game from a file!
             if (loadedFromFile)
             {
-                MP_Logger.Log("LOADED FROM FILE " + loadedFrom.SceneID);
                 MultipleStateObjectManager.Instance.LoadFromState(loadedFrom.GetMSOManagerState());
                 loadedFromFile = false;
             }
@@ -394,7 +383,6 @@ namespace LowPolyHnS
 
                 if (monoBehaviour.gameObject.scene.buildIndex != loadedFrom.SceneID)
                 {
-                    MP_Logger.Log($"Skipping monobehaviour: {monoBehaviour.gameObject}");
                     continue;
                 }
 
@@ -409,13 +397,6 @@ namespace LowPolyHnS
 
                         break;
                     }
-                    case FE_EnemyController enemyController
-                        when loadedFrom.GetEnemyStateByID(enemyController.SaveableID) != null:
-                        saveable.OnLoad(loadedFrom.GetEnemyStateByID(enemyController.SaveableID));
-                        break;
-                    case FE_EnemyController enemyController:
-                        Destroy(enemyController.gameObject);
-                        break;
                     case FE_Pickup pickup when loadedFrom.GetPickupStateByID(pickup.SaveableID) != null:
                         saveable.OnLoad(loadedFrom.GetPickupStateByID(pickup.SaveableID));
                         break;
