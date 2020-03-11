@@ -44,7 +44,7 @@ public class FE_PlayerInputController : MonoBehaviour, ISaveable
 
     private bool usedAboutFace;
     private FE_PlayerInventoryInteraction inventoryInteractionManager;
-    private FE_PlayerHealth healthScript;
+    private CharacterHealth healthScript;
     
     //In awake we check for references to handlers for given actions
     private void Awake()
@@ -52,115 +52,14 @@ public class FE_PlayerInputController : MonoBehaviour, ISaveable
         if (Instance == null)
         {
             Instance = this;
-
             inventoryInteractionManager = GetComponent<FE_PlayerInventoryInteraction>();
-            healthScript = GetComponent<FE_PlayerHealth>();
-            
-            if (inventoryInteractionManager == null)
-            {
-                Debug.LogError("No InventoryManager on PlayerInputController (Object: " + name + ")!");
-            }
-
-            if (healthScript == null)
-            {
-                Debug.LogError("No PlayerHealth on PlayerInputController (Object: " + name + ")!");
-            }
-
-            if (SaveableID < 0)
-            {
-                Debug.LogWarning("Saveable object " + gameObject.name +
-                                 " has an invalid saveableID set up. It will cause erroneous behaviour when saving or loading the game!");
-            }
+            healthScript = GetComponent<CharacterHealth>();
         }
     }
 
     private void Start()
     {
         useCharacterBasedMovement = GameManager.Instance.Settings.UseCharacterBasedMovement;
-    }
-
-    private void Update()
-    {
-        if (AllowInput)
-        {
-            if (UsingLadder)
-            {
-                if (FE_CrossInput.MoveY() != 0f)
-                {
-                }
-                else
-                {
-                }
-            }
-            else
-            {
-                if (useCharacterBasedMovement == false)
-                {
-                }
-                else if (useCharacterBasedMovement)
-                {
-                }
-                else
-                {
-                }
-            }
-
-            //Then, we check if we're trying to use about face
-            if (useCharacterBasedMovement)
-            {
-                if (FE_CrossInput.AboutFace() && usedAboutFace == false)
-                {
-                    usedAboutFace = true;
-                }
-                else if (FE_CrossInput.EndAboutFace() && usedAboutFace)
-                {
-                    usedAboutFace = false;
-                }
-            }
-
-            //After this, we listen for crouching and uncrouching and running
-            if (FE_CrossInput.Crouch())
-            {
-            }
-            else if (FE_CrossInput.Run())
-            {
-            }
-
-            if (FE_CrossInput.UseItem())
-            {
-                inventoryInteractionManager.Interact();
-            }
-        }
-
-        if (AllowInventoryInput)
-        {
-            if (FE_CrossInput.OpenInventory())
-            {
-                OnInventoryOpened?.Invoke();
-            }
-
-            if (FE_CrossInput.InventoryUpDown() != 0f)
-            {
-                InventoryUpDownInput?.Invoke(FE_CrossInput.InventoryUpDown());
-            }
-
-            if (FE_CrossInput.InventoryLeftRight() != 0f)
-            {
-                InventoryLeftRightInput?.Invoke(FE_CrossInput.InventoryLeftRight());
-            }
-        }
-    }
-
-    private void LateUpdate()
-    {
-        //Check for rollmode
-        if (FE_CrossInput.StartRoll() || FE_CrossInput.EndRoll())
-        {
-        }
-
-        if (FE_CrossInput.EndRotation())
-        {
-        }
     }
 
     public void OnDestroy()

@@ -1,15 +1,14 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System.Collections.Generic;
+using LowPolyHnS;
 
-public class FE_ObjectHealth : FE_Health
+public class ObjectHealth : Health
 {
     public List<FE_ActionContainer> AfterDeathChanges = new List<FE_ActionContainer>();
 
-    protected override void die(bool _silentDeath)
+    protected override void Die()
     {
-        base.die(_silentDeath);
-        if(GetComponentInParent<FE_MultipleStateObject>() != null)
+        base.Die();
+        if (GetComponentInParent<FE_MultipleStateObject>() != null)
         {
             GetComponentInParent<FE_MultipleStateObject>().ChangeState(EStateMessage.ObjectDestroyed, true);
         }

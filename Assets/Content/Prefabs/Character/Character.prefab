@@ -187,8 +187,11 @@ GameObject:
   - component: {fileID: 852385379004681224}
   - component: {fileID: 647350326523645888}
   - component: {fileID: 1257027642313922}
-  - component: {fileID: 925947446}
-  m_Layer: 9
+  - component: {fileID: 8006226374797725269}
+  - component: {fileID: 194539233090048396}
+  - component: {fileID: 7593341490199559833}
+  - component: {fileID: 9133239568973208029}
+  m_Layer: 8
   m_Name: Character
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -315,6 +318,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputModule: {fileID: 0}
+  MouseTimer: 0
+  mouseClickTime: 0.3
 --- !u!114 &1257027642313922
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -327,7 +332,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01eb003062df5954d883f89496d81f12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &925947446
+--- !u!208 &8006226374797725269
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 677829378768984962}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 0
+  m_Extents: {x: 0.1, y: 0.9, z: 0.1}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 0
+  m_Center: {x: 0, y: 0.9, z: 0}
+  m_TimeToStationary: 0.5
+--- !u!114 &194539233090048396
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -336,11 +357,50 @@ MonoBehaviour:
   m_GameObject: {fileID: 677829378768984962}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d71955e21f4b1754c8ca7b5480f05706, type: 3}
+  m_Script: {fileID: 11500000, guid: 0d64243e1afd8ca4f9eee72015adc45a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Inventory:
+  - {fileID: 11400000, guid: 2ad95d84b47d02f42b0e00a05724846a, type: 2}
+  - {fileID: 11400000, guid: 00d6c1c17c1734740b1bcba85f5db6ef, type: 2}
+  Ammunition: 200000003c0000005a00000028000000
+  InputController: {fileID: 0}
+--- !u!114 &7593341490199559833
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 677829378768984962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3840e403a7419b440817923258a30ae4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HealthMax: 100
+  HealthCurrent: 100
+  IsInvulnerable: 0
+  IgnoreDamageZones: 0
+  deathCutscene: {fileID: 0}
   sliderScript: {fileID: 0}
-  health: 100
+--- !u!114 &9133239568973208029
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 677829378768984962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1bf82094a278ff46b04d3b5ecac8d82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AllowInventoryInput: 1
+  AllowInput: 1
+  UsingLadder: 0
+  useCharacterBasedMovement: 1
+  CurrentCharacter: 0
+  SaveableID: 3670
 --- !u!1 &677833717701352800
 GameObject:
   m_ObjectHideFlags: 0

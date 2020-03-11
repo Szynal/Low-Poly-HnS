@@ -211,7 +211,7 @@ namespace LowPolyHnS
 
                     if (FE_UIController.Instance != null && playerObject != null)
                     {
-                        playerObject.GetComponent<FE_PlayerInventoryInteraction>().RefreshInteractions();
+                        playerObject.GetComponentInChildren<FE_PlayerInventoryInteraction>().RefreshInteractions();
                     }
 
                     //We want to always move player to the new scene, so we can properly save his state

@@ -72,7 +72,7 @@ namespace LowPolyHnS
 
         private void Move()
         {
-            if (inputModule == null || playerCamera == null)
+            if ( playerCamera == null)
             {
                 return;
             }

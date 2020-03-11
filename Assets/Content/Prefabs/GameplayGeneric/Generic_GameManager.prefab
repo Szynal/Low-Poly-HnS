@@ -705,7 +705,7 @@ GameObject:
   - component: {fileID: 6517250156093362580}
   - component: {fileID: 4514522296803194282}
   m_Layer: 0
-  m_Name: MenuEventSystem
+  m_Name: InputModule
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -752,10 +752,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_HorizontalAxis: MoveX
-  m_VerticalAxis: MoveY
-  m_SubmitButton: UIAccept
-  m_CancelButton: UICancel
+  m_HorizontalAxis: Horizontal
+  m_VerticalAxis: Vertical
+  m_SubmitButton: Submit
+  m_CancelButton: Cancel
   m_InputActionsPerSecond: 10
   m_RepeatDelay: 0.5
   m_ForceModuleActive: 0

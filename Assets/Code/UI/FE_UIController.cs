@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using LowPolyHnS;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class FE_UIController : MonoBehaviour
@@ -29,6 +30,9 @@ public class FE_UIController : MonoBehaviour
     [SerializeField] GameObject controllerInputMap = null;
     [SerializeField] GameObject keyboardInputMap = null;
 
+    [SerializeField] public EventSystem MenuEventSystem = null;
+
+
     private FE_PlayerInventoryInteraction interactionController;
     private FE_PlayerInputController inputController;
     private bool dangerNearby = false;
@@ -50,6 +54,7 @@ public class FE_UIController : MonoBehaviour
         {
         }
 
+        
         playerHealthImage.enabled = false;
     }
 

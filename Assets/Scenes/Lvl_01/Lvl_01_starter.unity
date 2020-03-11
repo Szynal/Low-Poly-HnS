@@ -180,7 +180,6 @@ MonoBehaviour:
     MSOName: 
     NewMSOState: 0
     ItemIDToGive: 0
-    FightToStart: {fileID: 0}
     SceneTeleporterToUse: {fileID: 204562982}
     MessageReciever: {fileID: 0}
     MessageToSend: 0
@@ -266,6 +265,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Generic_GameManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 4514522296803194282, guid: c6c4906f2c09a2a40bb6a7ebb17b7da0,
+        type: 3}
+      propertyPath: m_HorizontalAxis
+      value: Horizontal
+      objectReference: {fileID: 0}
+    - target: {fileID: 4514522296803194282, guid: c6c4906f2c09a2a40bb6a7ebb17b7da0,
+        type: 3}
+      propertyPath: m_VerticalAxis
+      value: Vertical
+      objectReference: {fileID: 0}
+    - target: {fileID: 4514522296803194282, guid: c6c4906f2c09a2a40bb6a7ebb17b7da0,
+        type: 3}
+      propertyPath: m_SubmitButton
+      value: Submit
+      objectReference: {fileID: 0}
+    - target: {fileID: 4514522296803194282, guid: c6c4906f2c09a2a40bb6a7ebb17b7da0,
+        type: 3}
+      propertyPath: m_CancelButton
+      value: Cancel
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c6c4906f2c09a2a40bb6a7ebb17b7da0, type: 3}

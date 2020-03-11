@@ -6,8 +6,7 @@ using UnityEngine.AI;
 
 public class FE_StateChanger : FE_InteractableObject
 {
-    [Header("State changer properties")]
-    public EStateMessage AfterUseState = EStateMessage.FirstButtonUsed;
+    [Header("State changer properties")] public EStateMessage AfterUseState = EStateMessage.FirstButtonUsed;
     public List<FE_ActionContainer> AfterUseObjectChanges = new List<FE_ActionContainer>();
 
     private FE_MultipleStateObject parentScript;
@@ -51,10 +50,10 @@ public class FE_StateChanger : FE_InteractableObject
             case EActionType.KillObject:
                 if (_objectChange.TargetObject != null)
                 {
-                    FE_Health _objHealth = _objectChange.TargetObject.GetComponent<FE_Health>();
+                    Health _objHealth = _objectChange.TargetObject.GetComponent<Health>();
                     if (_objHealth != null)
                     {
-                        _objHealth.TakeDamage(_objHealth.HealthCurrent, _objHealth.transform, true, true);
+                        _objHealth.TakeDamage(_objHealth.HealthCurrent);
                     }
                     else
                     {
@@ -78,7 +77,7 @@ public class FE_StateChanger : FE_InteractableObject
                     }
                     else
                     {
-                        if(_objectChange.TargetObject.CompareTag("Player"))
+                        if (_objectChange.TargetObject.CompareTag("Player"))
                         {
                         }
                         else
@@ -90,20 +89,13 @@ public class FE_StateChanger : FE_InteractableObject
 
                 break;
 
-            case EActionType.HealPlayer:
-                FE_PlayerHealth _player = GameObject.FindWithTag("Player").GetComponent<FE_PlayerHealth>();
-                if (_player != null)
-                {
-                    _player.HealToFull();
-                }
-                break;
-
             case EActionType.ChangeMSOStateByName:
                 MultipleStateObjectManager.Instance.ChangeStateByName(_objectChange.MSOName, _objectChange.NewMSOState);
                 break;
 
             case EActionType.GivePlayerItem:
-                FE_PlayerInventoryInteraction.Instance.AddItem(Instantiate(GameManager.Instance.ItemDatabase.GetItemByID(_objectChange.ItemIDToGive)));
+                FE_PlayerInventoryInteraction.Instance.AddItem(
+                    Instantiate(GameManager.Instance.ItemDatabase.GetItemByID(_objectChange.ItemIDToGive)));
                 break;
 
             case EActionType.UseSceneTeleporter:
@@ -111,6 +103,7 @@ public class FE_StateChanger : FE_InteractableObject
                 {
                     _objectChange.SceneTeleporterToUse.HandleTeleport();
                 }
+
                 break;
 
             case EActionType.SendMessage:
@@ -119,6 +112,7 @@ public class FE_StateChanger : FE_InteractableObject
                 {
                     _msgReciever.OnMessageRecieved(_objectChange.MessageToSend);
                 }
+
                 break;
 
             case EActionType.StartInsceneCutscene:
@@ -126,6 +120,7 @@ public class FE_StateChanger : FE_InteractableObject
                 {
                     _objectChange.CutsceneToStart.PlayCutscene(FE_PlayerInventoryInteraction.Instance);
                 }
+
                 break;
 
             case EActionType.RotateObjectToAngle:
@@ -137,25 +132,29 @@ public class FE_StateChanger : FE_InteractableObject
                     {
                     }
                 }
+
                 break;
 
             case EActionType.RemoveItemFromPlayer:
-                FE_PlayerInventoryInteraction.Instance.RemoveItem(FE_PlayerInventoryInteraction.Instance.GetInventoryItemByID(_objectChange.ItemIDToGive));
+                FE_PlayerInventoryInteraction.Instance.RemoveItem(
+                    FE_PlayerInventoryInteraction.Instance.GetInventoryItemByID(_objectChange.ItemIDToGive));
                 break;
 
             case EActionType.StartFinaleChooser:
-                if(FE_FinaleChooser.Instance != null)
+                if (FE_FinaleChooser.Instance != null)
                 {
                     FE_FinaleChooser.Instance.StartChoosingFinale();
                 }
                 else
                 {
-                    Debug.LogError("StartFinaleChooser was called, but there is no finale chooser in this scene!");                  
+                    Debug.LogError("StartFinaleChooser was called, but there is no finale chooser in this scene!");
                 }
+
                 break;
 
             default:
-                Debug.LogError("FE_StateChanger has encountered an unknown state in one of its' FE_NewObjectStateContainers!");
+                Debug.LogError(
+                    "FE_StateChanger has encountered an unknown state in one of its' FE_NewObjectStateContainers!");
                 break;
         }
     }
@@ -190,7 +189,7 @@ public enum EActionType
     StartInsceneCutscene,
     RotateObjectToAngle,
     RemoveItemFromPlayer,
-    StartFinaleChooser,
+    StartFinaleChooser
 }
 
 public enum EMessage

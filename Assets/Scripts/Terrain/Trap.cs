@@ -59,7 +59,7 @@ namespace LowPolyHnS
 
         private async void TimeDmg()
         {
-            characterHealth.CharacterTakeDamage(DamageDeal);
+            characterHealth.TakeDamage(DamageDeal);
             deadZoneActive = true;
             await Task.Delay(TimeSpan.FromSeconds(TimeStep));
             deadZoneActive = false;
