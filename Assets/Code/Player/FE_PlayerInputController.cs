@@ -3,13 +3,6 @@ using System.Collections.Generic;
 using LowPolyHnS;
 using UnityEngine;
 
-public enum EPlayerCharacter
-{
-    Hana,
-    Glas,
-    Deke
-}
-
 public enum EInputMode
 {
     Full,
@@ -27,9 +20,6 @@ public class FE_PlayerInputController : MonoBehaviour, ISaveable
     public bool AllowInput = true;
     public bool UsingLadder = false;
 
-    [Header("Settings")] [SerializeField] private bool useCharacterBasedMovement;
-    public EPlayerCharacter CurrentCharacter = 0;
-
     [Header("ID used for saving. Change only by using IDManager!")] [SerializeField]
     public int SaveableID = -1;
 
@@ -45,7 +35,7 @@ public class FE_PlayerInputController : MonoBehaviour, ISaveable
     private bool usedAboutFace;
     private FE_PlayerInventoryInteraction inventoryInteractionManager;
     private CharacterHealth healthScript;
-    
+
     //In awake we check for references to handlers for given actions
     private void Awake()
     {
@@ -57,10 +47,6 @@ public class FE_PlayerInputController : MonoBehaviour, ISaveable
         }
     }
 
-    private void Start()
-    {
-        useCharacterBasedMovement = GameManager.Instance.Settings.UseCharacterBasedMovement;
-    }
 
     public void OnDestroy()
     {
@@ -72,9 +58,9 @@ public class FE_PlayerInputController : MonoBehaviour, ISaveable
         SceneLoader.Instance.ActiveSaveables.Remove(this);
     }
 
-    public void ChangeInputMode(EInputMode _newMode)
+    public void ChangeInputMode(EInputMode newMode)
     {
-        switch (_newMode)
+        switch (newMode)
         {
             case EInputMode.None:
                 AllowInput = false;
@@ -100,138 +86,96 @@ public class FE_PlayerInputController : MonoBehaviour, ISaveable
 
     #region Saving/loading
 
-    public void OnSave(SceneSave _saveTo)
+    public void OnSave(SceneSave saveTo)
     {
-        FE_PlayerSaveState _saveState = new FE_PlayerSaveState();
-        _saveState.SaveableID = SaveableID;
-
-        _saveState.Health = healthScript.HealthCurrent;
-
-        if (CurrentCharacter == EPlayerCharacter.Hana)
+        FE_PlayerSaveState saveState = new FE_PlayerSaveState
         {
-            GameManager.Instance.SavedCharactersInventory.PlayerDisguised = _saveState.PlayerDisguised;
+            SaveableID = SaveableID, Health = healthScript.HealthCurrent
+        };
 
-            foreach (FE_Item _item in inventoryInteractionManager.Inventory)
-            {
-                _saveState.InventoryIDList_Player.Add(_item.itemID);
-            }
 
-            GameManager.Instance.SavedCharactersInventory.PlayerInvList = _saveState.InventoryIDList_Player;
+        GameManager.Instance.SavedCharactersInventory.PlayerDisguised = saveState.PlayerDisguised;
 
-            _saveState.AmmoTable_Player = inventoryInteractionManager.Ammunition;
-            GameManager.Instance.SavedCharactersInventory.PlayerSpellList = inventoryInteractionManager.Ammunition;
-        }
-        else
+        foreach (FE_Item item in inventoryInteractionManager.Inventory)
         {
-            _saveState.PlayerDisguised = GameManager.Instance.SavedCharactersInventory.PlayerDisguised;
-
-            foreach (FE_Item _item in inventoryInteractionManager.Inventory)
-            {
-                _saveState.InventoryIDList_Deke.Add(_item.itemID);
-            }
-
-            _saveState.AmmoTable_Deke = inventoryInteractionManager.Ammunition;
-            _saveState.InventoryIDList_Player = GameManager.Instance.SavedCharactersInventory.PlayerInvList;
-            _saveState.AmmoTable_Player = GameManager.Instance.SavedCharactersInventory.PlayerSpellList;
+            saveState.InventoryIDList_Player.Add(item.itemID);
         }
-        
-        _saveState.Position_X = transform.position.x;
-        _saveState.Position_Y = transform.position.y;
-        _saveState.Position_Z = transform.position.z;
 
-        _saveState.Rotation_Y = transform.rotation.eulerAngles.y;
+        GameManager.Instance.SavedCharactersInventory.PlayerInvList = saveState.InventoryIDList_Player;
 
-        _saveTo.RecordSaveableState(_saveState);
+        saveState.AmmoTable_Player = inventoryInteractionManager.Ammunition;
+        GameManager.Instance.SavedCharactersInventory.PlayerSpellList = inventoryInteractionManager.Ammunition;
+
+
+        saveState.Position_X = transform.position.x;
+        saveState.Position_Y = transform.position.y;
+        saveState.Position_Z = transform.position.z;
+
+        saveState.Rotation_Y = transform.rotation.eulerAngles.y;
+
+        saveTo.RecordSaveableState(saveState);
     }
 
-    public void OnLoad(FE_EnemySaveState _loadState)
+    public void OnLoad(FE_EnemySaveState loadState)
     {
         throw new NotImplementedException();
     }
 
-    public void OnLoad(FE_PickupState _loadState)
+    public void OnLoad(FE_PickupState loadState)
     {
         throw new NotImplementedException();
     }
 
-    public void OnLoad(FE_PlayerSaveState _loadState)
+    public void OnLoad(FE_PlayerSaveState loadState)
     {
-        if (_loadState.Health > 0)
+        if (loadState.Health > 0)
         {
-            healthScript.HealthCurrent = _loadState.Health;
+            healthScript.HealthCurrent = loadState.Health;
         }
 
-        int[] _desiredAmmoTable = new int[0];
-        int _desiredWeaponID = -1;
-        int _desiredWeaponAmmo = 0;
+        int[] desiredAmmoTable = new int[0];
 
-
-        if (_loadState.PlayerDisguised)
+        if (loadState.AmmoTable_Player != null && loadState.AmmoTable_Player.Length > 0)
         {
-        }
-
-        _desiredWeaponID = _loadState.CurrentWeaponID_Player;
-        _desiredWeaponAmmo = _loadState.CurrentWeaponAmmo_Player;
-        if (_loadState.AmmoTable_Player != null && _loadState.AmmoTable_Player.Length > 0)
-        {
-            _desiredAmmoTable = _loadState.AmmoTable_Player;
+            desiredAmmoTable = loadState.AmmoTable_Player;
         }
         else if (GameManager.Instance.SavedCharactersInventory.PlayerSpellList.Length > 0)
         {
-            _desiredAmmoTable = GameManager.Instance.SavedCharactersInventory.PlayerSpellList;
+            desiredAmmoTable = GameManager.Instance.SavedCharactersInventory.PlayerSpellList;
         }
 
 
-        if (_desiredAmmoTable != null && _desiredAmmoTable.Length > 0)
+        if (desiredAmmoTable != null && desiredAmmoTable.Length > 0)
         {
-            inventoryInteractionManager.Ammunition = _desiredAmmoTable;
+            inventoryInteractionManager.Ammunition = desiredAmmoTable;
         }
 
-        List<int> _desiredInvList = new List<int>();
-
-        if (_loadState.InventoryIDList_Player.Count > 0)
-        {
-            _desiredInvList = _loadState.InventoryIDList_Player;
-        }
-        else
-        {
-            _desiredInvList = GameManager.Instance.SavedCharactersInventory.PlayerInvList;
-        }
+        List<int> desiredInvList = loadState.InventoryIDList_Player.Count > 0
+            ? loadState.InventoryIDList_Player
+            : GameManager.Instance.SavedCharactersInventory.PlayerInvList;
 
 
-        if (_desiredInvList != null && _desiredInvList.Count > 0)
+        if (desiredInvList != null && desiredInvList.Count > 0)
         {
             inventoryInteractionManager.Inventory.Clear();
-            foreach (int _id in _desiredInvList)
+            foreach (int id in desiredInvList)
             {
-                inventoryInteractionManager.Inventory.Add(GameManager.Instance.ItemDatabase.GetItemByID(_id));
+                inventoryInteractionManager.Inventory.Add(GameManager.Instance.ItemDatabase.GetItemByID(id));
             }
         }
 
         inventoryInteractionManager.InitializeInventory();
 
-        if (_desiredWeaponID != -1)
+        if (loadState.InventoryIDList_Player.Count > 0)
         {
-            foreach (FE_Item _item in inventoryInteractionManager.Inventory)
-            {
-                if (_item.itemID == _desiredWeaponID)
-                {
-                }
-            }
+            GameManager.Instance.SavedCharactersInventory.PlayerInvList = loadState.InventoryIDList_Player;
+            GameManager.Instance.SavedCharactersInventory.PlayerSpellList = loadState.AmmoTable_Player;
         }
 
+        GameManager.Instance.SavedCharactersInventory.PlayerDisguised = loadState.PlayerDisguised;
 
-        if (_loadState.InventoryIDList_Player.Count > 0)
-        {
-            GameManager.Instance.SavedCharactersInventory.PlayerInvList = _loadState.InventoryIDList_Player;
-            GameManager.Instance.SavedCharactersInventory.PlayerSpellList = _loadState.AmmoTable_Player;
-        }
-
-        GameManager.Instance.SavedCharactersInventory.PlayerDisguised = _loadState.PlayerDisguised;
-
-        Vector3 _loadPosition = new Vector3(_loadState.Position_X, _loadState.Position_Y, _loadState.Position_Z);
-        Quaternion _loadRotation = Quaternion.Euler(0f, _loadState.Rotation_Y, 0f);
-        //    FE_PlayerCombatManager.Instance.HolsterWeapon(); //Why this?
+        Vector3 loadPosition = new Vector3(loadState.Position_X, loadState.Position_Y, loadState.Position_Z);
+        Quaternion loadRotation = Quaternion.Euler(0f, loadState.Rotation_Y, 0f);
     }
 
     public void OnLoad(MultipleStateObjectManagerState _loadState)

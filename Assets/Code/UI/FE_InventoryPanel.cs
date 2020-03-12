@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class FE_InventoryPanel : MonoBehaviour
 {
-    [SerializeField] float inputDelay = 0.8f;
     [SerializeField] float upDownInputDeadzone = 0.5f;
     [Space(5f)]
     [SerializeField] FE_ItemWheel weaponInventoryWheel = null;
