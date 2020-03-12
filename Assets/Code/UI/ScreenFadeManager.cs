@@ -9,8 +9,6 @@ public class ScreenFadeManager : MonoBehaviour
 
     private Coroutine fadeCoroutine;
 
-
-    //METALLICA !!!
     public void FadeToBlack(bool isBlackening, float fadeTime, Action callbackFunction = null)
     {
         if (fadeCoroutine != null)
@@ -80,6 +78,7 @@ public class ScreenFadeManager : MonoBehaviour
 
         yield return StartCoroutine(fadeToBlack(false, fadeTime, callbackFunction));
 
-        FE_PlayerInventoryInteraction.Instance.InputController.ChangeInputMode(EInputMode.Full);
+        if (FE_PlayerInventoryInteraction.Instance.InputController != null)
+            FE_PlayerInventoryInteraction.Instance.InputController.ChangeInputMode(EInputMode.Full);
     }
 }

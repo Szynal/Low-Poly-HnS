@@ -3642,6 +3642,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4972818546410309188}
     m_Modifications:
+    - target: {fileID: 194539233090048396, guid: fece4e6c51722ed49b325c7a83bdbe3a,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 676306226646476444, guid: fece4e6c51722ed49b325c7a83bdbe3a,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3727,7 +3732,23 @@ PrefabInstance:
       propertyPath: sliderScript
       value: 
       objectReference: {fileID: 8487591550754179314}
-    m_RemovedComponents: []
+    - target: {fileID: 7593341490199559833, guid: fece4e6c51722ed49b325c7a83bdbe3a,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8006226374797725269, guid: fece4e6c51722ed49b325c7a83bdbe3a,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9133239568973208029, guid: fece4e6c51722ed49b325c7a83bdbe3a,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 8006226374797725269, guid: fece4e6c51722ed49b325c7a83bdbe3a, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: fece4e6c51722ed49b325c7a83bdbe3a, type: 3}
 --- !u!114 &796480884211162074 stripped
 MonoBehaviour:

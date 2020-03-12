@@ -24,8 +24,8 @@ public class SubMenuController : MonoBehaviour
     }
 
     private void Update()
-    {
-        if(GameManager.Instance.IsInCutscene == false && FE_CrossInput.MenuCancel())
+    {Input.GetKeyDown(KeyCode.Escape);
+        if(GameManager.Instance.IsInCutscene == false && Input.GetKeyDown(KeyCode.Escape))
         {
             Exit();
         }

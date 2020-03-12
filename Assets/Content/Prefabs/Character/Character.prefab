@@ -187,7 +187,6 @@ GameObject:
   - component: {fileID: 852385379004681224}
   - component: {fileID: 647350326523645888}
   - component: {fileID: 1257027642313922}
-  - component: {fileID: 8006226374797725269}
   - component: {fileID: 194539233090048396}
   - component: {fileID: 7593341490199559833}
   - component: {fileID: 9133239568973208029}
@@ -317,7 +316,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4949fbedaff62694e96434609ab2d3c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputModule: {fileID: 0}
   MouseTimer: 0
   mouseClickTime: 0.3
 --- !u!114 &1257027642313922
@@ -332,22 +330,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01eb003062df5954d883f89496d81f12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!208 &8006226374797725269
-NavMeshObstacle:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 677829378768984962}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Shape: 0
-  m_Extents: {x: 0.1, y: 0.9, z: 0.1}
-  m_MoveThreshold: 0.1
-  m_Carve: 1
-  m_CarveOnlyStationary: 0
-  m_Center: {x: 0, y: 0.9, z: 0}
-  m_TimeToStationary: 0.5
 --- !u!114 &194539233090048396
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -395,8 +377,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1bf82094a278ff46b04d3b5ecac8d82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AllowInventoryInput: 1
-  AllowInput: 1
+  AllowInventoryInput: 0
+  AllowInput: 0
   UsingLadder: 0
   useCharacterBasedMovement: 1
   CurrentCharacter: 0

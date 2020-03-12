@@ -41,29 +41,22 @@ public class FE_InventoryPanel : MonoBehaviour
         }
 
         inputScript.InventoryUpDownInput += handleUpDownInput;
-        inputScript.InventoryLeftRightInput += handleLeftRightInput;
         //TODO: create an indication to show that given inventory is empty
     }
 
     private void OnDisable()
     {
         inputScript.InventoryUpDownInput -= handleUpDownInput;
-        inputScript.InventoryLeftRightInput -= handleLeftRightInput;
+  
     }
 
     private void Update()
     {
-        if(inputDelayRemaining > 0f)
-        {
-            inputDelayRemaining -= Time.unscaledDeltaTime;
-            return;
-        }
-
-        if(FE_CrossInput.UseItem())
+        if(Input.GetKeyDown(KeyCode.F))
         {
             UseCurrentlySelected();
         } 
-        else if(FE_CrossInput.MenuCancel())
+        else if(Input.GetKeyDown(KeyCode.Escape))
         {
             masterScript.CloseInventory();
         }
@@ -108,20 +101,7 @@ public class FE_InventoryPanel : MonoBehaviour
         }
     }
 
-    private void handleLeftRightInput(float _value)
-    {
-        if(inputDelayRemaining > 0f)
-        {
-            return;
-        }
-
-        if (currentItemWheel != null)
-        {
-            currentItemWheel.Rotate(_value > 0f ? 1 : -1, inputDelay - (inputDelay / 10f)); //We want to make the animation just a bit shorter than the input delay, so that it can end properly before starting new one
-            inputDelayRemaining = inputDelay;
-        }
-    }
-
+    
     public void UseCurrentlySelected()
     {
         if(currentItemWheel == null)

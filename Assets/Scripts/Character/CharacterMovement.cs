@@ -14,7 +14,6 @@ namespace LowPolyHnS
     [RequireComponent(typeof(Rigidbody))]
     public class CharacterMovement : MonoBehaviour
     {
-        [SerializeField] private StandaloneInputModule inputModule = null;
         private NavMeshAgent agent;
         private CharacterController controller;
 

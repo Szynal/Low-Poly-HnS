@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using LowPolyHnS;
+﻿using LowPolyHnS;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -9,39 +7,44 @@ public class FE_UIController : MonoBehaviour
 {
     public static FE_UIController Instance;
 
-    [Header("Panels")]
-    [SerializeField] FE_InteractionPanel interactionPanel = null;
-    [SerializeField] FE_InventoryPanel inventoryPanel = null;
-    [SerializeField] FE_CombatStatusScreen combatInfo = null;
-    [SerializeField] FE_PickupPanel pickupPanel = null;
-    [Header("Player UI references")]
-    [SerializeField] Image playerHealthImage = null;
-    [SerializeField] Text interactionText = null;
-    [SerializeField] Image gameOverBackgroundImage = null;
-    [Header("Boss healthbar")]
-    [SerializeField] GameObject bossHealthBarObject = null;
-    [SerializeField] Image bossHealthFillImage = null;
-    [Header("References to menus")]
-    [SerializeField] SubMenuController pauseMenu = null;
-    [SerializeField] SubMenuController saveMenu = null;
-    [SerializeField] SubMenuController loadMenu = null;
-    [SerializeField] SubMenuController gameOverMenu = null;
-    [Header("Other")]
-    [SerializeField] GameObject controllerInputMap = null;
-    [SerializeField] GameObject keyboardInputMap = null;
+    [Header("Panels")] [SerializeField] private FE_InteractionPanel interactionPanel = null;
+    [SerializeField] private FE_InventoryPanel inventoryPanel = null;
+    [SerializeField] private FE_CombatStatusScreen combatInfo = null;
+    [SerializeField] private FE_PickupPanel pickupPanel = null;
+
+    [Header("Player UI references")] [SerializeField]
+    private Image playerHealthImage = null;
+
+    [SerializeField] private Text interactionText = null;
+    [SerializeField] private Image gameOverBackgroundImage = null;
+
+    [Header("Boss healthbar")] [SerializeField]
+    private GameObject bossHealthBarObject = null;
+
+    [SerializeField] private Image bossHealthFillImage = null;
+
+    [Header("References to menus")] [SerializeField]
+    private SubMenuController pauseMenu = null;
+
+    [SerializeField] private SubMenuController saveMenu = null;
+    [SerializeField] private SubMenuController loadMenu = null;
+    [SerializeField] private SubMenuController gameOverMenu = null;
+    [Header("Other")] [SerializeField] private GameObject controllerInputMap = null;
+    [SerializeField] private GameObject keyboardInputMap = null;
 
     [SerializeField] public EventSystem MenuEventSystem = null;
 
 
     private FE_PlayerInventoryInteraction interactionController;
     private FE_PlayerInputController inputController;
-    private bool dangerNearby = false;
-    private bool gameOverShown = false;
+    private bool dangerNearby;
+    private bool gameOverShown;
 
     #region Basic Unity Methods
+
     private void Awake()
     {
-        if(Instance != null)
+        if (Instance != null)
         {
             Destroy(gameObject);
         }
@@ -50,19 +53,19 @@ public class FE_UIController : MonoBehaviour
             Instance = this;
         }
 
-        if(inventoryPanel == null || combatInfo == null || interactionText == null || interactionPanel == null || pickupPanel == null || gameOverBackgroundImage == null || playerHealthImage == null)
+        if (inventoryPanel == null || combatInfo == null || interactionText == null || interactionPanel == null ||
+            pickupPanel == null || gameOverBackgroundImage == null || playerHealthImage == null)
         {
         }
 
-        
+
         playerHealthImage.enabled = false;
     }
 
     private void Start()
     {
-
         interactionController = FE_PlayerInventoryInteraction.Instance;
-        if(interactionController == null)
+        if (interactionController == null)
         {
         }
 
@@ -78,32 +81,34 @@ public class FE_UIController : MonoBehaviour
 
     private void Update()
     {
-        if (FE_CrossInput.ShowControllerInputMap() == true)
+        if (Input.GetKeyDown(KeyCode.Home))
         {
             Time.timeScale = controllerInputMap.activeInHierarchy ? 1f : 0f;
             controllerInputMap.SetActive(!controllerInputMap.activeInHierarchy);
         }
-        else if(FE_CrossInput.ShowKeyboardInputMap() == true)
+        else if (Input.GetKeyDown(KeyCode.M))
         {
             Time.timeScale = keyboardInputMap.activeInHierarchy ? 1f : 0f;
             keyboardInputMap.SetActive(!keyboardInputMap.activeInHierarchy);
         }
-        else if(FE_CrossInput.ShowMenu() == true)
+        else if (Input.GetKeyDown(KeyCode.Escape))
         {
             TogglePauseMenu();
         }
     }
+
     #endregion
 
     public void ChangePanelVisibility(bool _visibilityState, MonoBehaviour _callerScript)
     {
         if (_callerScript == this || _callerScript == interactionController)
         {
-            if (_visibilityState == true && interactionPanel.GetVisibility() == false)
+            if (_visibilityState && interactionPanel.GetVisibility() == false)
             {
                 interactionPanel.Appear();
             }
-            else if (_visibilityState == false && interactionPanel.GetVisibility() == true && interactionController.HasInteraction() == false)
+            else if (_visibilityState == false && interactionPanel.GetVisibility() &&
+                     interactionController.HasInteraction() == false)
             {
                 interactionPanel.Disappear();
             }
@@ -114,9 +119,9 @@ public class FE_UIController : MonoBehaviour
 
     private void handlePanelDisplay()
     {
-        if(interactionController.HasInteraction() == true)
+        if (interactionController.HasInteraction())
         {
-            if(dangerNearby == false)
+            if (dangerNearby == false)
             {
                 ShowHealth(false, dangerNearby);
             }
@@ -146,12 +151,12 @@ public class FE_UIController : MonoBehaviour
     }
 
     public void ChangeInteractionText()
-    {     
+    {
         FE_InteractableObject _foundInteraction = interactionController.GetInteraction();
 
         if (_foundInteraction != null)
-        {          
-            if(_foundInteraction is FE_Pickup || _foundInteraction is FE_AmmoPickup)
+        {
+            if (_foundInteraction is FE_Pickup || _foundInteraction is FE_AmmoPickup)
             {
                 pickupPanel.UpdateDisplay(_foundInteraction);
             }
@@ -168,7 +173,7 @@ public class FE_UIController : MonoBehaviour
 
     public void ShowHealth(bool _show, bool _isDanger = false)
     {
-        if(_show != false || inventoryPanel.gameObject.activeSelf != true)
+        if (_show || inventoryPanel.gameObject.activeSelf != true)
         {
             playerHealthImage.enabled = _show;
         }
@@ -207,9 +212,10 @@ public class FE_UIController : MonoBehaviour
     }
 
     #region Inventory
+
     public void OpenInventory()
     {
-        if(inventoryPanel.gameObject.activeSelf == true)
+        if (inventoryPanel.gameObject.activeSelf)
         {
             CloseInventory();
             return;
@@ -233,9 +239,11 @@ public class FE_UIController : MonoBehaviour
 
         FE_PlayerInventoryInteraction.Instance.InputController.ChangeInputMode(EInputMode.Full);
     }
+
     #endregion
 
     #region BossHealth
+
     public void ChangeBossHealthVisibility(bool _newVal)
     {
         bossHealthBarObject.SetActive(_newVal);
@@ -245,12 +253,14 @@ public class FE_UIController : MonoBehaviour
     {
         bossHealthFillImage.fillAmount = _healthCurrent / _healthMax;
     }
+
     #endregion
 
     #region Menus
+
     public void ShowSaveScreen()
     {
-        if(saveMenu == null || GameManager.Instance.IsInCutscene)
+        if (saveMenu == null || GameManager.Instance.IsInCutscene)
         {
             return;
         }
@@ -261,7 +271,7 @@ public class FE_UIController : MonoBehaviour
 
     public void ShowLoadScreen()
     {
-        if(loadMenu == null || GameManager.Instance.IsInCutscene)
+        if (loadMenu == null || GameManager.Instance.IsInCutscene)
         {
             return;
         }
@@ -272,20 +282,20 @@ public class FE_UIController : MonoBehaviour
 
     public void TogglePauseMenu()
     {
-        if(GameManager.Instance.IsInCutscene || gameOverShown == true)
+        if (GameManager.Instance.IsInCutscene || gameOverShown)
         {
             return;
         }
 
-        if(pauseMenu.IsVisible())
+        if (pauseMenu.IsVisible())
         {
             pauseMenu.ExitCompletely();
         }
-        else if(saveMenu.IsVisible())
+        else if (saveMenu.IsVisible())
         {
             saveMenu.ExitCompletely();
         }
-        else if(loadMenu.IsVisible())
+        else if (loadMenu.IsVisible())
         {
             loadMenu.ExitCompletely();
         }
@@ -298,7 +308,7 @@ public class FE_UIController : MonoBehaviour
 
     private void handleEnteringMenu()
     {
-        if(inventoryPanel.gameObject.activeSelf == true)
+        if (inventoryPanel.gameObject.activeSelf)
         {
             CloseInventory();
         }
@@ -321,5 +331,6 @@ public class FE_UIController : MonoBehaviour
         gameOverShown = true;
         gameOverMenu.Show();
     }
+
     #endregion
 }

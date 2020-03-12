@@ -104,7 +104,7 @@ public class FE_CutsceneController : MonoBehaviour
     {
         if (skipCanvas.activeSelf == true)
         {
-            if(FE_CrossInput.UseItem() == true && canSkip == true)
+            if(Input.GetKeyDown(KeyCode.F) && canSkip)
             {
                 StopAllCoroutines();
                 fadeManager.StopFading();
