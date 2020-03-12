@@ -287,6 +287,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 549416938629183301, guid: c6c4906f2c09a2a40bb6a7ebb17b7da0,
+        type: 3}
+      propertyPath: Settings.UseCharacterBasedMovement
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 549416938629183306, guid: c6c4906f2c09a2a40bb6a7ebb17b7da0,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1956,7 +1961,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0

@@ -25,7 +25,6 @@ namespace LowPolyHnS
         [Serializable]
         public struct CheatFlags
         {
-            public bool UseGravitatingCamera;
             public bool GodMode;
         }
 
