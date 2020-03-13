@@ -46,7 +46,7 @@ namespace LowPolyHnS
         [Header("References to other scripts")]
         public ScreenFadeManager ScreenFadeScript = null;
 
-        private Queue<FE_CutsceneController> scheduledCutscenes = new Queue<FE_CutsceneController>();
+        private Queue<CutsceneController> scheduledCutscenes = new Queue<CutsceneController>();
 
         private void Awake()
         {
@@ -110,7 +110,7 @@ namespace LowPolyHnS
             }
         }
 
-        public void ScheduleCutscene(FE_CutsceneController cutsceneToQueue)
+        public void ScheduleCutscene(CutsceneController cutsceneToQueue)
         {
             if (IsInCutscene)
             {

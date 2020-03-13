@@ -1,14 +1,13 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class FE_BlackscreenCutsceneTimer : MonoBehaviour
+public class BlackscreenCutsceneTimer : MonoBehaviour
 {
-    [SerializeField] FE_CutsceneController cutsceneController = null;
-    [SerializeField] Text timerText = null;
+    [SerializeField] private CutsceneController cutsceneController = null;
+    [SerializeField] private Text timerText = null;
 
-    private float timeLeft = 0f;
+    private float timeLeft;
 
     private void Awake()
     {
@@ -25,7 +24,7 @@ public class FE_BlackscreenCutsceneTimer : MonoBehaviour
 
     private IEnumerator countDown()
     {
-        while(timeLeft >= 0f)
+        while (timeLeft >= 0f)
         {
             timeLeft -= Time.unscaledDeltaTime;
             timerText.text = timeLeft.ToString("f");

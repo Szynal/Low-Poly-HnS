@@ -12,9 +12,9 @@ public class FE_TributeBurner : FE_InteractableObject
     [SerializeField] FE_MultipleStateObject burnedBranchMSO = null;
     [SerializeField] FE_MultipleStateObject keyMSO = null;
     [Space(10f)]
-    [SerializeField] FE_CutsceneController gateCutscene = null;
-    [SerializeField] FE_CutsceneController branchCutscene = null;
-    [SerializeField] FE_CutsceneController keyCutscene = null;
+    [SerializeField] CutsceneController gateCutscene = null;
+    [SerializeField] CutsceneController branchCutscene = null;
+    [SerializeField] CutsceneController keyCutscene = null;
 
     public override void Activate(FE_PlayerInventoryInteraction _instigator, FE_Item _itemUsed = null, bool _bypassItemUsage = false)
     {

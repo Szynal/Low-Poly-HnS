@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using LowPolyHnS;
 using UnityEngine;
 using UnityEngine.Playables;
-using UnityEngine.UI;
 
 public enum ECameraTransitionType
 {
@@ -13,52 +12,56 @@ public enum ECameraTransitionType
     FadeToBlack,
     SmoothMove,
     None
-};
+}
 
-//This script is meant to be used on an object with timeline director component
-public class FE_CutsceneController : MonoBehaviour
+/// <summary>
+///     This script is meant to be used on an object with timeline director component
+/// </summary>
+public class CutsceneController : MonoBehaviour
 {
-    public delegate void OnSelfCountStarted(float _countdownTime);
+    public delegate void OnSelfCountStarted(float countdownTime);
+
     public OnSelfCountStarted CountdownDelegate;
 
-    [Header("General properties")]
-    public string SceneName = "";
+    [Header("General properties")] public string SceneName = "";
     public Camera CutsceneCam = null;
     public Camera LerpCam = null;
     [SerializeField] protected bool oneShotOnly = true;
-    [Header("Skipping")]
-    [SerializeField] protected GameObject skipCanvas = null;
-    [Header("Transitions")]
-    public ECameraTransitionType StartTransitionType = default;
+    [Header("Skipping")] [SerializeField] protected GameObject skipCanvas = null;
+    [Header("Transitions")] public ECameraTransitionType StartTransitionType;
     public float StartTransitionTime = 1f;
-    public ECameraTransitionType EndTransitionType = default;
+    public ECameraTransitionType EndTransitionType;
     public float EndTransitionTime = 1f;
-    [Header("Things related to having, or not, the director and a scene")]
-    [SerializeField] protected bool hasItsOwnScene = false;
+
+    [Header("Things related to having, or not, the director and a scene")] [SerializeField]
+    protected bool hasItsOwnScene = false;
+
     [SerializeField] protected bool hasDirector = true;
     public float TimeToPlayWithoutDirector = 0f;
     [SerializeField] protected GameObject[] objectsToActivateWithoutDirector = null;
-    [Header("Properties related to teleporting to another scene")]
-    public bool TeleportsToDifferentScene = false;
-    [Header("After cutscene changes")]
-    [SerializeField] List<FE_ActionContainer> afterCutsceneChanges = null;
 
-    protected PlayableDirector director = null;
-    protected Coroutine transitionCoroutine = null;
-    protected FE_PlayerInventoryInteraction playerRef = null;
-    protected FE_SceneTeleporter sceneTeleporter;
+    [Header("Properties related to teleporting to another scene")]
+    public bool TeleportsToDifferentScene;
+
+    [Header("After cutscene changes")] [SerializeField]
+    private List<FE_ActionContainer> afterCutsceneChanges = null;
+
+    protected PlayableDirector director;
+    protected Coroutine transitionCoroutine;
+    protected FE_PlayerInventoryInteraction playerRef;
+    protected SceneTeleporter sceneTeleporter;
     protected Camera targetCamera;
-    protected bool canSkip = false;
-    protected ScreenFadeManager fadeManager = null;
+    protected bool canSkip;
+    protected ScreenFadeManager fadeManager;
 
     private void Awake()
     {
-        if(EndTransitionType == ECameraTransitionType.SharpCut)
+        if (EndTransitionType == ECameraTransitionType.SharpCut)
         {
             EndTransitionTime = 0f;
         }
 
-        if (hasDirector == true)
+        if (hasDirector)
         {
             director = GetComponent<PlayableDirector>();
             if (director != null)
@@ -71,24 +74,27 @@ public class FE_CutsceneController : MonoBehaviour
             }
         }
 
-        if(CutsceneCam == null)
+        if (CutsceneCam == null)
         {
             Debug.LogError("CutsceneController " + name + " doesn't have camera attached!");
         }
 
-        if(LerpCam == null && (StartTransitionType == ECameraTransitionType.SmoothMove || EndTransitionType == ECameraTransitionType.SmoothMove))
+        if (LerpCam == null && (StartTransitionType == ECameraTransitionType.SmoothMove ||
+                                EndTransitionType == ECameraTransitionType.SmoothMove))
         {
-            Debug.LogWarning("CutsceneController " + name + " wants a smooth transition, but has no lerp cam attached. Changing to sharp cut transition...");
+            Debug.LogWarning("CutsceneController " + name +
+                             " wants a smooth transition, but has no lerp cam attached. Changing to sharp cut transition...");
             StartTransitionType = ECameraTransitionType.SharpCut;
             EndTransitionType = ECameraTransitionType.SharpCut;
         }
 
-        if (TeleportsToDifferentScene == true)
+        if (TeleportsToDifferentScene)
         {
-            sceneTeleporter = GetComponent<FE_SceneTeleporter>();
+            sceneTeleporter = GetComponent<SceneTeleporter>();
             if (sceneTeleporter == null)
             {
-                Debug.LogError("Cutscene controller " + name + " has 'teleportsToDifferentScene' set as true, but has no SceneTeleporter component!");
+                Debug.LogError("Cutscene controller " + name +
+                               " has 'teleportsToDifferentScene' set as true, but has no SceneTeleporter component!");
                 TeleportsToDifferentScene = false;
             }
         }
@@ -102,13 +108,13 @@ public class FE_CutsceneController : MonoBehaviour
 
     private void Update()
     {
-        if (skipCanvas.activeSelf == true)
+        if (skipCanvas.activeSelf)
         {
-            if(Input.GetKeyDown(KeyCode.F) && canSkip)
+            if (Input.GetKeyDown(KeyCode.F) && canSkip)
             {
                 StopAllCoroutines();
                 fadeManager.StopFading();
-                if (hasDirector == true)
+                if (hasDirector)
                 {
                     director.Stop();
                 }
@@ -123,9 +129,9 @@ public class FE_CutsceneController : MonoBehaviour
         }
     }
 
-    public void PlayCutscene(FE_PlayerInventoryInteraction _interactionController = null)
+    public void PlayCutscene(FE_PlayerInventoryInteraction interactionController = null)
     {
-        if(GameManager.Instance.IsInCutscene == true)
+        if (GameManager.Instance.IsInCutscene)
         {
             GameManager.Instance.ScheduleCutscene(this);
             return;
@@ -133,9 +139,9 @@ public class FE_CutsceneController : MonoBehaviour
 
         GameManager.Instance.OnCutsceneStart();
 
-        if(_interactionController != null)
+        if (interactionController != null)
         {
-            playerRef = _interactionController;
+            playerRef = interactionController;
             playerRef.InputController.ChangeInputMode(EInputMode.None);
         }
 
@@ -143,15 +149,16 @@ public class FE_CutsceneController : MonoBehaviour
         switch (StartTransitionType)
         {
             case ECameraTransitionType.SharpCut:
-                handleSharpCut(targetCamera, CutsceneCam, true);
+                HandleSharpCut(targetCamera, CutsceneCam, true);
                 break;
             case ECameraTransitionType.FadeToBlack:
-                if(transitionCoroutine != null)
+                if (transitionCoroutine != null)
                 {
                     StopCoroutine(transitionCoroutine);
                 }
 
-                fadeManager.FadeToBlack(true, StartTransitionTime / 2f, () => handleFadeToBlack(targetCamera, CutsceneCam, StartTransitionTime, true));
+                fadeManager.FadeToBlack(true, StartTransitionTime / 2f,
+                    () => handleFadeToBlack(targetCamera, CutsceneCam, StartTransitionTime, true));
                 break;
             case ECameraTransitionType.SmoothMove:
                 if (transitionCoroutine != null)
@@ -159,7 +166,8 @@ public class FE_CutsceneController : MonoBehaviour
                     StopCoroutine(transitionCoroutine);
                 }
 
-                transitionCoroutine = StartCoroutine(handleSmoothMove(targetCamera, CutsceneCam, StartTransitionTime, true));
+                transitionCoroutine =
+                    StartCoroutine(handleSmoothMove(targetCamera, CutsceneCam, StartTransitionTime, true));
                 break;
             default:
                 Debug.LogError("CutsceneController " + name + " encountered an unknown StartTransitionType!");
@@ -167,11 +175,11 @@ public class FE_CutsceneController : MonoBehaviour
         }
     }
 
-    private void onStartPlayback()
+    private void OnStartPlayback()
     {
         FE_UIController.Instance.HandleCutscene(true);
 
-        if (hasDirector == true)
+        if (hasDirector)
         {
             director.Play();
         }
@@ -186,113 +194,117 @@ public class FE_CutsceneController : MonoBehaviour
         }
 
         skipCanvas.SetActive(true);
-        StartCoroutine(waitForSkippability(0.5f));
+        StartCoroutine(WaitForSkippability(0.5f));
     }
 
-    private IEnumerator waitForSkippability(float _time)
+    private IEnumerator WaitForSkippability(float time)
     {
-        yield return new WaitForSecondsRealtime(_time);
+        yield return new WaitForSecondsRealtime(time);
 
         canSkip = true;
     }
 
-    private void handleSharpCut(Camera _current, Camera _target, bool _startPlaying)
+    private void HandleSharpCut(Camera current, Camera target, bool startPlaying)
     {
-        _current.enabled = false;
-        _target.enabled = true;
+        current.enabled = false;
+        target.enabled = true;
 
-        if (_startPlaying == true)
+        if (startPlaying)
         {
-            onStartPlayback();
+            OnStartPlayback();
         }
         else if (playerRef != null)
         {
             playerRef.InputController.ChangeInputMode(EInputMode.Full);
             playerRef = null;
         }
-        if (_startPlaying == false)
+
+        if (startPlaying == false)
         {
             endCutscene();
         }
     }
 
-    private async void handleFadeToBlack(Camera _current, Camera _target, float _transitionTime, bool _startPlaying)
+    private async void handleFadeToBlack(Camera current, Camera target, float transitionTime, bool startPlaying)
     {
         activateObjects();
-        _current.enabled = false;
-        _target.enabled = true;
+        current.enabled = false;
+        target.enabled = true;
         await Task.Delay(TimeSpan.FromSeconds(0.1f));
-        
-        if (_startPlaying == true)
+
+        if (startPlaying)
         {
-            onStartPlayback();
+            OnStartPlayback();
         }
         else if (playerRef != null)
         {
             playerRef.InputController.ChangeInputMode(EInputMode.Full);
             playerRef = null;
         }
-        if (_startPlaying == false)
+
+        if (startPlaying == false)
         {
             endCutscene();
         }
 
-        if (TeleportsToDifferentScene == false || _startPlaying == true)
+        if (TeleportsToDifferentScene == false || startPlaying)
         {
-            fadeManager.UnfadeFromBlack(0f, _transitionTime / 2f);
+            fadeManager.UnfadeFromBlack(0f, transitionTime / 2f);
         }
     }
 
-    private IEnumerator handleSmoothMove(Camera _current, Camera _target, float _transitionTime, bool _startPlaying)
+    private IEnumerator handleSmoothMove(Camera current, Camera target, float transitionTime, bool startPlaying)
     {
         //First we put lerp cam at our current cam pos and copy its' FOV
-        LerpCam.transform.position = _current.transform.position;
-        LerpCam.transform.rotation = _current.transform.rotation;
-        LerpCam.fieldOfView = _current.fieldOfView;
+        LerpCam.transform.position = current.transform.position;
+        LerpCam.transform.rotation = current.transform.rotation;
+        LerpCam.fieldOfView = current.fieldOfView;
 
         //Some variables to help with lerping
-        Vector3 _basePos = _current.transform.position;
-        Quaternion _baseRot = _current.transform.rotation;
-        float _baseFOV = _current.fieldOfView;
+        Vector3 _basePos = current.transform.position;
+        Quaternion _baseRot = current.transform.rotation;
+        float _baseFOV = current.fieldOfView;
 
         //Then we disable old camera and enable lerpcam
-        _current.enabled = false;
+        current.enabled = false;
         LerpCam.enabled = true;
 
         //We lerp lerp cam to target position and rotation and fov
-        float _lerpRate = 1f / _transitionTime;
+        float _lerpRate = 1f / transitionTime;
         float _lerpTime = 0f;
 
-        while(_lerpTime <= 1f)
+        while (_lerpTime <= 1f)
         {
             _lerpTime += Time.unscaledDeltaTime * _lerpRate;
 
-            LerpCam.transform.position = Vector3.Lerp(_basePos, _target.transform.position, _lerpTime);
-            LerpCam.transform.rotation = Quaternion.Lerp(_baseRot, _target.transform.rotation, _lerpTime);
-            LerpCam.fieldOfView = Mathf.Lerp(_baseFOV, _target.fieldOfView, _lerpTime);
+            LerpCam.transform.position = Vector3.Lerp(_basePos, target.transform.position, _lerpTime);
+            LerpCam.transform.rotation = Quaternion.Lerp(_baseRot, target.transform.rotation, _lerpTime);
+            LerpCam.fieldOfView = Mathf.Lerp(_baseFOV, target.fieldOfView, _lerpTime);
 
             yield return null;
         }
 
         //Disable lerp cam and enable target camera
         LerpCam.enabled = false;
-        _target.enabled = true;
+        target.enabled = true;
 
 
         //Start playback
-        if (_startPlaying == true)
+        if (startPlaying)
         {
-            onStartPlayback();
+            OnStartPlayback();
         }
-        else if(playerRef != null)
+        else if (playerRef != null)
         {
             playerRef.InputController.ChangeInputMode(EInputMode.Full);
             playerRef = null;
         }
-        if (_startPlaying == false)
+
+        if (startPlaying == false)
         {
             endCutscene();
         }
+
         transitionCoroutine = null;
     }
 
@@ -310,16 +322,17 @@ public class FE_CutsceneController : MonoBehaviour
         switch (EndTransitionType)
         {
             case ECameraTransitionType.SharpCut:
-                handleSharpCut(CutsceneCam, targetCamera, false);
+                HandleSharpCut(CutsceneCam, targetCamera, false);
                 break;
 
-            case ECameraTransitionType.FadeToBlack:     
+            case ECameraTransitionType.FadeToBlack:
                 if (transitionCoroutine != null)
                 {
                     StopCoroutine(transitionCoroutine);
                 }
 
-                fadeManager.FadeToBlack(true, EndTransitionTime / 2f, () => handleFadeToBlack(CutsceneCam, targetCamera, EndTransitionTime, false));
+                fadeManager.FadeToBlack(true, EndTransitionTime / 2f,
+                    () => handleFadeToBlack(CutsceneCam, targetCamera, EndTransitionTime, false));
                 break;
 
             case ECameraTransitionType.SmoothMove:
@@ -328,7 +341,8 @@ public class FE_CutsceneController : MonoBehaviour
                     StopCoroutine(transitionCoroutine);
                 }
 
-                transitionCoroutine = StartCoroutine(handleSmoothMove(CutsceneCam, targetCamera, EndTransitionTime, false));
+                transitionCoroutine =
+                    StartCoroutine(handleSmoothMove(CutsceneCam, targetCamera, EndTransitionTime, false));
                 break;
 
             case ECameraTransitionType.None:
@@ -337,6 +351,7 @@ public class FE_CutsceneController : MonoBehaviour
                     playerRef.InputController.ChangeInputMode(EInputMode.Full);
                     playerRef = null;
                 }
+
                 endCutscene();
                 break;
 
@@ -348,7 +363,7 @@ public class FE_CutsceneController : MonoBehaviour
 
     protected virtual void endCutscene()
     {
-        if (TeleportsToDifferentScene == true)
+        if (TeleportsToDifferentScene)
         {
             sceneTeleporter.HandleTeleport();
         }
@@ -357,15 +372,16 @@ public class FE_CutsceneController : MonoBehaviour
         {
             FE_StateChanger.HandleObjectChange(_action);
         }
+
         GameManager.Instance.OnCutsceneEnd(EndTransitionTime / 2f);
 
-        if (hasItsOwnScene == true)
+        if (hasItsOwnScene)
         {
             SceneLoader.Instance.CloseCutscene(SceneName);
         }
         else
         {
-            if (oneShotOnly == true)
+            if (oneShotOnly)
             {
                 Destroy(gameObject);
             }
@@ -378,12 +394,11 @@ public class FE_CutsceneController : MonoBehaviour
                 }
             }
         }
-
-   }
+    }
 
     private void activateObjects()
     {
-        foreach(GameObject _go in objectsToActivateWithoutDirector)
+        foreach (GameObject _go in objectsToActivateWithoutDirector)
         {
             _go.SetActive(true);
         }

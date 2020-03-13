@@ -251,7 +251,7 @@ namespace LowPolyHnS
                 }
                 case ESceneType.Cutscene:
                 {
-                    FE_CutsceneController cutsceneController = FindObjectOfType<FE_CutsceneController>();
+                    CutsceneController cutsceneController = FindObjectOfType<CutsceneController>();
                     if (cutsceneController != null)
                     {
                         cutsceneController.SceneName = loadedScene.name;

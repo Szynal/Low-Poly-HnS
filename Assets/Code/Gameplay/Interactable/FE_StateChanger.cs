@@ -169,10 +169,10 @@ public class FE_ActionContainer
     public string MSOName;
     public int NewMSOState;
     public int ItemIDToGive;
-    public FE_SceneTeleporter SceneTeleporterToUse;
+    public SceneTeleporter SceneTeleporterToUse;
     public MonoBehaviour MessageReciever;
     public EMessage MessageToSend;
-    public FE_CutsceneController CutsceneToStart;
+    public CutsceneController CutsceneToStart;
     public Quaternion Rotation;
 }
 

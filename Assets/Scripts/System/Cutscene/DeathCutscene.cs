@@ -1,7 +1,7 @@
 ﻿using LowPolyHnS;
 using UnityEngine;
 
-public class FE_DeathCutscene : FE_CutsceneController
+public class DeathCutscene : CutsceneController
 {
     protected override void endCutscene()
     {

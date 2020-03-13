@@ -458,7 +458,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b470e5198ac1ee4da13dd6e1b2281aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cutsceneController: {fileID: 8151592157717017488}
+  cutsceneController: {fileID: 0}
   timerText: {fileID: 6003989874509571846}
 --- !u!1 &6003989873496399588
 GameObject:
@@ -808,11 +808,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6003989874553432637}
-  - component: {fileID: 8151592157717017488}
   - component: {fileID: 6003989874553432634}
   - component: {fileID: 6003989874553432635}
   m_Layer: 0
-  m_Name: DeathCutscene_Level1
+  m_Name: DeathCutscene
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -837,35 +836,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8151592157717017488
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6003989874553432639}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9205a0d99c0b2aa4cb61a139097f1302, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SceneName: 
-  CutsceneCam: {fileID: 6003989874580108624}
-  LerpCam: {fileID: 6003989874388254768}
-  oneShotOnly: 1
-  skipCanvas: {fileID: 4034873863560625364}
-  StartTransitionType: 1
-  StartTransitionTime: 1
-  EndTransitionType: 1
-  EndTransitionTime: 1
-  hasItsOwnScene: 0
-  hasDirector: 0
-  TimeToPlayWithoutDirector: 10
-  objectsToActivateWithoutDirector:
-  - {fileID: 6003989872960233210}
-  - {fileID: 6003989874381633287}
-  TeleportsToDifferentScene: 0
-  afterCutsceneChanges: []
 --- !u!320 &6003989874553432634
 PlayableDirector:
   m_ObjectHideFlags: 0
