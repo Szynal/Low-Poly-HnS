@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Numerics;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.EventSystems;
-using Plane = UnityEngine.Plane;
-using Vector3 = UnityEngine.Vector3;
 
 namespace LowPolyHnS
 {
@@ -29,9 +25,9 @@ namespace LowPolyHnS
 
         private bool canMove = true;
         private bool isMoving = true;
-        
 
-        public float MouseTimer = 0f;
+
+        public float MouseTimer;
         [SerializeField] private float mouseClickTime = 0.1f;
 
         private void Start()
@@ -47,8 +43,6 @@ namespace LowPolyHnS
             agent = GetComponent<NavMeshAgent>();
             agent.updatePosition = false;
             agent.updateRotation = false;
-            
-
         }
 
         private void Update()
@@ -71,20 +65,22 @@ namespace LowPolyHnS
 
         private void Move()
         {
-            if ( playerCamera == null)
+            if (playerCamera == null)
             {
                 return;
             }
 
             if (MouseTimer < mouseClickTime)
             {
-                motion = agent.hasPath ? GetNextPointDirection() : Input.GetMouseButton(0) ? GetCursorDirection() : Vector3.zero;
-            }else if (MouseTimer > mouseClickTime)
+                motion = agent.hasPath ? GetNextPointDirection() :
+                    Input.GetMouseButton(0) ? GetCursorDirection() : Vector3.zero;
+            }
+            else if (MouseTimer > mouseClickTime)
             {
                 agent.ResetPath();
                 motion = Input.GetMouseButton(0) ? GetCursorDirection() : Vector3.zero;
             }
-            
+
 
             UpdateNavAgentPosition2();
             Rotate();
@@ -115,16 +111,16 @@ namespace LowPolyHnS
 
         private Vector3 GetNextPointDirection()
         {
-            
             Vector3 heading = agent.steeringTarget - transform.position;
             float distance = heading.magnitude;
 
             Vector3 direction = heading / distance;
-            if ( Vector3.Magnitude(agent.pathEndPosition - transform.position) < 0.3f)
+            if (Vector3.Magnitude(agent.pathEndPosition - transform.position) < 0.3f)
             {
                 agent.ResetPath();
             }
-            return new  Vector3(direction.x, direction.z);
+
+            return new Vector3(direction.x, direction.z);
         }
 
         private void Rotate()
@@ -145,6 +141,7 @@ namespace LowPolyHnS
             transform.position = new Vector3(transform.position.x, agent.nextPosition.y, transform.position.z);
             agent.nextPosition = transform.position;
         }
+
         private void UpdateNavAgentPosition2()
         {
             agent.nextPosition = transform.position;
