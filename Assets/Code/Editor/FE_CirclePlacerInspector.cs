@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-[CustomEditor(typeof(FE_CirclePlacer))]
+[CustomEditor(typeof(CirclePlacer))]
 public class FE_CirclePlacerInspector : Editor
 {
     public override void OnInspectorGUI()
@@ -12,7 +12,7 @@ public class FE_CirclePlacerInspector : Editor
 
         if(GUILayout.Button("Place objects") == true)
         {
-            ((FE_CirclePlacer)target).PlaceObjects();
+            ((CirclePlacer)target).PlaceObjects();
         }
     }
 }
