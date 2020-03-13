@@ -111,17 +111,17 @@ public class FE_MultipleStateObject : MonoBehaviour, ISaveable
         SceneLoader.Instance.ActiveSaveables.Remove(this);
     }
 
-    public void OnLoad(FE_PlayerSaveState _loadState)
+    public void OnLoad(PlayerSaveState _loadState)
     {
         throw new System.NotImplementedException();
     }
 
-    public void OnLoad(FE_EnemySaveState _loadState)
+    public void OnLoad(EnemySaveState _loadState)
     {
         throw new System.NotImplementedException();
     }
 
-    public void OnLoad(FE_PickupState _loadState)
+    public void OnLoad(PickupState _loadState)
     {
         throw new System.NotImplementedException();
     }
@@ -136,7 +136,7 @@ public class FE_MultipleStateObject : MonoBehaviour, ISaveable
         handleState(_loadedState);
     }
 
-    public void OnLoad(FE_ActionTriggerState _loadState)
+    public void OnLoad(ActionTriggerState _loadState)
     {
         throw new System.NotImplementedException();
     }

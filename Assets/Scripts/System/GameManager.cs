@@ -39,7 +39,7 @@ namespace LowPolyHnS
         public FE_ItemDatabase ItemDatabase;
         public CharactersInventory SavedCharactersInventory;
         public bool IsInCutscene;
-        public FE_SaveFile CurrentSave;
+        public SaveFile CurrentSave;
         public CheatFlags CheatOptions;
         public PlayerSettings Settings = new PlayerSettings();
 
@@ -67,7 +67,7 @@ namespace LowPolyHnS
 
         private void PrepareSaveFile()
         {
-            CurrentSave = FE_SaveLoadSystem.GetSavedFile("save.sav");
+            CurrentSave = SaveLoadSystem.GetSavedFile("save.sav");
 
             if (CurrentSave == null)
             {
@@ -122,12 +122,12 @@ namespace LowPolyHnS
         {
             if (createNew || CurrentSave == null)
             {
-                CurrentSave = new FE_SaveFile();
+                CurrentSave = new SaveFile();
             }
 
             CurrentSave.Settings = Settings;
 
-            FE_SaveLoadSystem.SaveGame(CurrentSave, "save.sav");
+            SaveLoadSystem.SaveGame(CurrentSave, "save.sav");
         }
 
         public void ToggleGodMode()

@@ -21,7 +21,7 @@ public class SceneTeleporter : MonoBehaviour
             OverridedTransform = transform;
         }
 
-        FE_PlayerLoadParams _params = new FE_PlayerLoadParams(OverridesPlayerPosition, OverridedTransform.position,
+        PlayerLoadParams _params = new PlayerLoadParams(OverridesPlayerPosition, OverridedTransform.position,
             OverridedTransform.rotation.eulerAngles, OverrideInventory, OverrideHealth);
 
         if (loadDistinctGameplayScene == false)

@@ -120,7 +120,6 @@ namespace LowPolyHnS
             float distance = heading.magnitude;
 
             Vector3 direction = heading / distance;
-            Debug.Log("distance " + distance);
             if ( Vector3.Magnitude(agent.pathEndPosition - transform.position) < 0.3f)
             {
                 agent.ResetPath();

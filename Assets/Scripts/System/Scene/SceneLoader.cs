@@ -22,7 +22,7 @@ namespace LowPolyHnS
 
         private List<SceneSave> statesOfScenes = new List<SceneSave>();
         private SceneSave lastSceneState;
-        private FE_PlayerLoadParams playerLoadParams;
+        private PlayerLoadParams playerLoadParams;
         private GameObject playerObject;
         private bool loadedFromFile;
         private string distinctGameplaySceneName = "";
@@ -39,7 +39,7 @@ namespace LowPolyHnS
         }
 
         public void LoadLevel(int sceneID, string name, LoadSceneMode loadMode, bool clearOldScenes = false,
-            FE_PlayerLoadParams playerParams = null, string distinctGameplayName = "")
+            PlayerLoadParams playerParams = null, string distinctGameplayName = "")
         {
             if (isInLoading == false)
             {
@@ -110,7 +110,7 @@ namespace LowPolyHnS
         }
 
         private void StartLoading(int sceneID, string name, LoadSceneMode loadMode, bool clearOldScenes = false,
-            FE_PlayerLoadParams playerParams = null, string distinctGameplayName = "")
+            PlayerLoadParams playerParams = null, string distinctGameplayName = "")
         {
             Time.timeScale = 0f;
             isInLoading = true;
@@ -320,7 +320,7 @@ namespace LowPolyHnS
 
         #region Loading From Save
 
-        public void LoadFromSave(FE_Save savedGame)
+        public void LoadFromSave(Save savedGame)
         {
             //Clear up stuff, if there is any
             GameManager.Instance.SavedCharactersInventory.Clear();
@@ -333,7 +333,7 @@ namespace LowPolyHnS
             StartCoroutine(LoadFromSaveAsync(savedGame));
         }
 
-        private IEnumerator LoadFromSaveAsync(FE_Save savedGame)
+        private IEnumerator LoadFromSaveAsync(Save savedGame)
         {
             loadOperation = SceneManager.LoadSceneAsync("LoadingScene", LoadSceneMode.Single);
             loadOperation.allowSceneActivation = true;
@@ -448,7 +448,7 @@ namespace LowPolyHnS
 
             if (lastSceneState == null) return;
 
-            FE_PlayerSaveState playerState = new FE_PlayerSaveState();
+            PlayerSaveState playerState = new PlayerSaveState();
             if (playerLoadParams.OverwriteTransform)
             {
                 playerState.Position_X = playerLoadParams.CustomLoadPos.x;

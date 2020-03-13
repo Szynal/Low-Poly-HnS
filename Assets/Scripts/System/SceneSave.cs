@@ -5,11 +5,11 @@ using UnityEngine;
 public interface ISaveable
 {
     void OnSave(SceneSave _saveTo);
-    void OnLoad(FE_PlayerSaveState _loadState);
-    void OnLoad(FE_EnemySaveState _loadState);
-    void OnLoad(FE_PickupState _loadState);
+    void OnLoad(PlayerSaveState _loadState);
+    void OnLoad(EnemySaveState _loadState);
+    void OnLoad(PickupState _loadState);
     void OnLoad(MultipleStateObjectManagerState _loadState);
-    void OnLoad(FE_ActionTriggerState _loadState);
+    void OnLoad(ActionTriggerState _loadState);
     void OnDestroy();
 }
 
@@ -18,11 +18,11 @@ public class SceneSave
 {
     public int SceneID;
 
-    private FE_PlayerSaveState playerState = null;
+    private PlayerSaveState playerState = null;
     private MultipleStateObjectManagerState msoManagerState = null;
-    private List<FE_EnemySaveState> enemyStates = new List<FE_EnemySaveState>();
-    private List<FE_PickupState> pickupStates = new List<FE_PickupState>();
-    private List<FE_ActionTriggerState> triggerStates = new List<FE_ActionTriggerState>();
+    private List<EnemySaveState> enemyStates = new List<EnemySaveState>();
+    private List<PickupState> pickupStates = new List<PickupState>();
+    private List<ActionTriggerState> triggerStates = new List<ActionTriggerState>();
 
     public void SaveScene(Scene _scene)
     {
@@ -49,38 +49,38 @@ public class SceneSave
         MultipleStateObjectManager.Instance.SaveState(this);
     }
 
-    public void RecordSaveableState(FE_SaveableState _newState)
+    public void RecordSaveableState(SaveableState _newState)
     {
         //Zapisujemy do konkretnego arraya/miejsca, zaleznie od tego jaki jest typ
-        if(_newState is FE_PlayerSaveState)
+        if(_newState is PlayerSaveState)
         {
-            playerState = (FE_PlayerSaveState)_newState;
+            playerState = (PlayerSaveState)_newState;
         }
-        else if(_newState is FE_EnemySaveState)
+        else if(_newState is EnemySaveState)
         {
-            if (enemyStates.Contains((FE_EnemySaveState)_newState) == false)
+            if (enemyStates.Contains((EnemySaveState)_newState) == false)
             {
-                enemyStates.Add((FE_EnemySaveState)_newState);
+                enemyStates.Add((EnemySaveState)_newState);
             }
         }
-        else if(_newState is FE_PickupState)
+        else if(_newState is PickupState)
         {
-            if (pickupStates.Contains((FE_PickupState)_newState) == false)
+            if (pickupStates.Contains((PickupState)_newState) == false)
             {
-                pickupStates.Add((FE_PickupState)_newState);
+                pickupStates.Add((PickupState)_newState);
             }
         }
         else if(_newState is MultipleStateObjectManagerState)
         {
             msoManagerState = (MultipleStateObjectManagerState)_newState;
         }
-        else if(_newState is FE_ActionTriggerState)
+        else if(_newState is ActionTriggerState)
         {
-            triggerStates.Add((FE_ActionTriggerState)_newState);
+            triggerStates.Add((ActionTriggerState)_newState);
         }
     }
     
-    public FE_PlayerSaveState GetPlayerState()
+    public PlayerSaveState GetPlayerState()
     {
         return playerState;
     }
@@ -90,11 +90,11 @@ public class SceneSave
         return msoManagerState;
     }
 
-    public FE_EnemySaveState GetEnemyStateByID(int _id)
+    public EnemySaveState GetEnemyStateByID(int _id)
     {
-        FE_EnemySaveState _ret = null;
+        EnemySaveState _ret = null;
 
-        foreach (FE_EnemySaveState _state in enemyStates)
+        foreach (EnemySaveState _state in enemyStates)
         {
             if (_state.SaveableID == _id)
             {
@@ -105,11 +105,11 @@ public class SceneSave
         return _ret;
     }
 
-    public FE_PickupState GetPickupStateByID(int _id)
+    public PickupState GetPickupStateByID(int _id)
     {
-        FE_PickupState _ret = null;
+        PickupState _ret = null;
 
-        foreach (FE_PickupState _state in pickupStates)
+        foreach (PickupState _state in pickupStates)
         {
             if (_state.SaveableID == _id)
             {
@@ -120,11 +120,11 @@ public class SceneSave
         return _ret;
     } 
 
-    public FE_ActionTriggerState GetTriggerStateByID(int _id)
+    public ActionTriggerState GetTriggerStateByID(int _id)
     {
-        FE_ActionTriggerState _ret = null;
+        ActionTriggerState _ret = null;
 
-        foreach (FE_ActionTriggerState _state in triggerStates)
+        foreach (ActionTriggerState _state in triggerStates)
         {
             if (_state.SaveableID == _id)
             {

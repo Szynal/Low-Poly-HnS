@@ -47,18 +47,18 @@ public class FE_SaveScreen : MonoBehaviour
         }
 
         //Now to either overwrite the save, or create a new one
-        FE_Save _usedSave = new FE_Save();
+        Save _usedSave = new Save();
         _usedSave.SaveScenes();
         GameManager.Instance.CurrentSave.Saves[_selectedIndex] = _usedSave;
         
-        FE_SaveLoadSystem.SaveGame(GameManager.Instance.CurrentSave, "save.sav");
+        SaveLoadSystem.SaveGame(GameManager.Instance.CurrentSave, "save.sav");
 
         OnCancel();
     }
 
     private void prepareSlots()
     {
-        List<FE_Save> _savedGames = GameManager.Instance.CurrentSave.Saves;
+        List<Save> _savedGames = GameManager.Instance.CurrentSave.Saves;
 
         for(int i = 0; i < 10; i++)
         {

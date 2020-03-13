@@ -54,7 +54,7 @@ public class FE_AmmoPickup : FE_InteractableObject, ISaveable
 
     public void OnSave(SceneSave _saveTo)
     {
-        FE_PickupState _saveState = new FE_PickupState();
+        PickupState _saveState = new PickupState();
 
         _saveState.SaveableID = SaveableID;
 
@@ -68,12 +68,12 @@ public class FE_AmmoPickup : FE_InteractableObject, ISaveable
         _saveTo.RecordSaveableState(_saveState);
     }
 
-    public void OnLoad(FE_PlayerSaveState _loadState)
+    public void OnLoad(PlayerSaveState _loadState)
     {
         throw new System.NotImplementedException();
     }
 
-    public void OnLoad(FE_EnemySaveState _loadState)
+    public void OnLoad(EnemySaveState _loadState)
     {
         throw new System.NotImplementedException();
     }
@@ -83,7 +83,7 @@ public class FE_AmmoPickup : FE_InteractableObject, ISaveable
         throw new System.NotImplementedException();
     }
 
-    public void OnLoad(FE_PickupState _loadState)
+    public void OnLoad(PickupState _loadState)
     {
         pickupAmmoType = (EAmmoType)_loadState.AmmoID;
         pickupAmount = _loadState.AmmoAmount;
@@ -97,7 +97,7 @@ public class FE_AmmoPickup : FE_InteractableObject, ISaveable
         base.OnDestroy();
     }
 
-    public void OnLoad(FE_ActionTriggerState _loadState)
+    public void OnLoad(ActionTriggerState _loadState)
     {
         throw new System.NotImplementedException();
     }

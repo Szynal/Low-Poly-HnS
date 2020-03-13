@@ -50,7 +50,7 @@ public class LoadMenuController : SubMenuController
 
     private void prepareSlots()
     {
-        List<FE_Save> _savedGames = GameManager.Instance.CurrentSave.Saves;
+        List<Save> _savedGames = GameManager.Instance.CurrentSave.Saves;
 
         for(int i = 0; i < 10; i++)
         {

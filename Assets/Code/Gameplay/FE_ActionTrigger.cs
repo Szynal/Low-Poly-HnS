@@ -73,7 +73,7 @@ public class FE_ActionTrigger : MonoBehaviour, ISaveable
 
     public void OnSave(SceneSave _saveTo)
     {
-        FE_ActionTriggerState _saveState = new FE_ActionTriggerState();
+        ActionTriggerState _saveState = new ActionTriggerState();
 
         _saveState.SaveableID = SaveableID;
         _saveState.WasUsedAlready = BeenUsedAlready;
@@ -81,17 +81,17 @@ public class FE_ActionTrigger : MonoBehaviour, ISaveable
         _saveTo.RecordSaveableState(_saveState);
     }
 
-    public void OnLoad(FE_PlayerSaveState _loadState)
+    public void OnLoad(PlayerSaveState _loadState)
     {
         throw new System.NotImplementedException();
     }
 
-    public void OnLoad(FE_EnemySaveState _loadState)
+    public void OnLoad(EnemySaveState _loadState)
     {
         throw new System.NotImplementedException();
     }
 
-    public void OnLoad(FE_PickupState _loadState)
+    public void OnLoad(PickupState _loadState)
     {
         throw new System.NotImplementedException();
     }
@@ -101,7 +101,7 @@ public class FE_ActionTrigger : MonoBehaviour, ISaveable
         throw new System.NotImplementedException();
     }
 
-    public void OnLoad(FE_ActionTriggerState _loadState)
+    public void OnLoad(ActionTriggerState _loadState)
     {
         BeenUsedAlready = _loadState.WasUsedAlready;
     }

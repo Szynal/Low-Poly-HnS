@@ -88,7 +88,7 @@ public class FE_PlayerInputController : MonoBehaviour, ISaveable
 
     public void OnSave(SceneSave saveTo)
     {
-        FE_PlayerSaveState saveState = new FE_PlayerSaveState
+        PlayerSaveState saveState = new PlayerSaveState
         {
             SaveableID = SaveableID, Health = healthScript.HealthCurrent
         };
@@ -116,17 +116,17 @@ public class FE_PlayerInputController : MonoBehaviour, ISaveable
         saveTo.RecordSaveableState(saveState);
     }
 
-    public void OnLoad(FE_EnemySaveState loadState)
+    public void OnLoad(EnemySaveState loadState)
     {
         throw new NotImplementedException();
     }
 
-    public void OnLoad(FE_PickupState loadState)
+    public void OnLoad(PickupState loadState)
     {
         throw new NotImplementedException();
     }
 
-    public void OnLoad(FE_PlayerSaveState loadState)
+    public void OnLoad(PlayerSaveState loadState)
     {
         if (loadState.Health > 0)
         {
@@ -183,7 +183,7 @@ public class FE_PlayerInputController : MonoBehaviour, ISaveable
         throw new NotImplementedException();
     }
 
-    public void OnLoad(FE_ActionTriggerState _loadState)
+    public void OnLoad(ActionTriggerState _loadState)
     {
         throw new NotImplementedException();
     }
