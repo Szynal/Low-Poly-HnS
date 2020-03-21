@@ -1,17 +1,15 @@
-﻿// Author: dpienkowska
-
-using LowPolyHnS;
+﻿using LowPolyHnS;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class SubMenuController : MonoBehaviour
 {
-    [Header("SubMenu Properties")]
-    [Tooltip("Defaults to first child Selectable.")]
-    [SerializeField] private Selectable firstToSelect = null;
+    [Header("SubMenu Properties")] [Tooltip("Defaults to first child Selectable.")] [SerializeField]
+    private Selectable firstToSelect;
+
     [SerializeField] private bool rememberSelection = true;
-    [SerializeField] bool canGoBack = true;
+    [SerializeField] private bool canGoBack = true;
 
     protected SubMenuController parent;
 
@@ -24,8 +22,9 @@ public class SubMenuController : MonoBehaviour
     }
 
     private void Update()
-    {Input.GetKeyDown(KeyCode.Escape);
-        if(GameManager.Instance.IsInCutscene == false && Input.GetKeyDown(KeyCode.Escape))
+    {
+        Input.GetKeyDown(KeyCode.Escape);
+        if (GameManager.Instance.IsInCutscene == false && Input.GetKeyDown(KeyCode.Escape))
         {
             Exit();
         }
@@ -43,17 +42,17 @@ public class SubMenuController : MonoBehaviour
 
     public virtual void Show()
     {
-        if(IsVisible())
+        if (IsVisible())
         {
             return;
         }
 
-        if(initialized == false)
+        if (initialized == false)
         {
             init();
         }
 
-        if(resetParent)
+        if (resetParent)
         {
             parent = null;
         }
@@ -68,19 +67,19 @@ public class SubMenuController : MonoBehaviour
 
     public virtual void Hide() // Called when going into child menu
     {
-        if(IsVisible() == false)
+        if (IsVisible() == false)
         {
             return;
         }
 
-        if(rememberSelection)
+        if (rememberSelection)
         {
             setCurrentlySelectedAsFirstToSelect();
         }
 
         gameObject.SetActive(false);
 
-        if(parent != null)
+        if (parent != null)
         {
             parent.Show();
         }
@@ -88,12 +87,12 @@ public class SubMenuController : MonoBehaviour
 
     public virtual void Exit() // Called when going back to parent menu
     {
-        if(canGoBack == false)
+        if (canGoBack == false)
         {
             return;
         }
 
-        if(parent == null)
+        if (parent == null)
         {
             ExitCompletely();
         }
@@ -107,8 +106,8 @@ public class SubMenuController : MonoBehaviour
     {
         parent = null;
         Hide();
-        
-        if(FE_UIController.Instance != null)
+
+        if (FE_UIController.Instance != null)
         {
             FE_UIController.Instance.OnExitedMenu();
         }
@@ -121,7 +120,7 @@ public class SubMenuController : MonoBehaviour
 
     protected virtual void init()
     {
-        if(firstToSelect == null)
+        if (firstToSelect == null)
         {
             firstToSelect = GetComponentInChildren<Selectable>();
         }
@@ -131,12 +130,12 @@ public class SubMenuController : MonoBehaviour
 
     protected void setCurrentlySelectedAsFirstToSelect()
     {
-        if(EventSystem.current == null)
+        if (EventSystem.current == null)
         {
         }
 
         GameObject _currentSelected = EventSystem.current.currentSelectedGameObject;
-        if(_currentSelected == null)
+        if (_currentSelected == null)
         {
             return;
         }

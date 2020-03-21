@@ -24,7 +24,7 @@ namespace LowPolyHnS
             }
 
             loadScreenPanel.HandleShowing(true);
-      }
+        }
 
         public void OnMenuExited()
         {
