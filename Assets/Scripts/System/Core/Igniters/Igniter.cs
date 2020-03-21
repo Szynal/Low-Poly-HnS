@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using LowPolyHnS.Core.Hooks;
+using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
 
@@ -71,15 +72,10 @@ namespace LowPolyHnS.Core
 
         #region PROTECTED UTILITY METHODS
 
-        protected bool IsColliderPlayer(Collider c)
+        protected bool IsColliderPlayer(Collider col)
         {
-            int cInstanceID = c.gameObject.GetInstanceID();
-            if (HookPlayer.Instance != null && HookPlayer.Instance.gameObject.GetInstanceID() == cInstanceID)
-            {
-                return true;
-            }
-
-            return false;
+            int cInstanceID = col.gameObject.GetInstanceID();
+            return HookPlayer.Instance != null && HookPlayer.Instance.gameObject.GetInstanceID() == cInstanceID;
         }
 
         #endregion
