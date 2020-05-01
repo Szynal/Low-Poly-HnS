@@ -20,10 +20,10 @@ namespace LowPolyHnS.Core
                                                    BindingFlags.Static |
                                                    BindingFlags.FlattenHierarchy;
 
-        public const string ICONS_ACTIONS_PATH = "Assets/Plugins/LowPolyHnS/Extra/Icons/Actions/";
-        public const string ICONS_CONDITIONS_PATH = "Assets/Plugins/LowPolyHnS/Extra/Icons/Conditions/";
-        public const string ICONS_IGNITERS_PATH = "Assets/Plugins/LowPolyHnS/Extra/Icons/Igniters/";
-        public const string ICONS_VARIABLES_PATH = "Assets/Plugins/LowPolyHnS/Extra/Icons/Variables/";
+        public const string ICONS_ACTIONS_PATH = "Assets/EditorIcons/Actions/";
+        public const string ICONS_CONDITIONS_PATH = "Assets/EditorIcons/Conditions/";
+        public const string ICONS_IGNITERS_PATH = "Assets/EditorIcons/Icons/Igniters/";
+        public const string ICONS_VARIABLES_PATH = "Assets/EditorIcons/Variables/";
         public const string CUSTOM_ICON_PATH_VARIABLE = "CUSTOM_ICON_PATH";
 
         private const float ARROW_SIZE = 13f;

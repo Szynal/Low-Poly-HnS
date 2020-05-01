@@ -7,7 +7,7 @@ namespace LowPolyHnS.Variables
 {
     public static class VariableEditorUtils
     {
-        private const string VARIABLE_ICONS_PATH = "Assets/Plugins/LowPolyHnS/Extra/Icons/Variables/";
+        private const string VARIABLE_ICONS_PATH = "Assets/EditorIcons/Variables/";
         private const string VARIABLE_ICON_DEFAULT_NAME = "Default.png";
         private static Dictionary<string, Texture2D> VARIABLE_ICONS;
 

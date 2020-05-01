@@ -109,16 +109,16 @@ namespace LowPolyHnS.Core
             switch (numClauses)
             {
                 case 0:
-                    Gizmos.DrawIcon(transform.position, "LowPolyHnS/Conditions/conditions0", true);
+                    Gizmos.DrawIcon(transform.position, "Conditions/conditions0", true);
                     break;
                 case 1:
-                    Gizmos.DrawIcon(transform.position, "LowPolyHnS/Conditions/conditions1", true);
+                    Gizmos.DrawIcon(transform.position, "Conditions/conditions1", true);
                     break;
                 case 2:
-                    Gizmos.DrawIcon(transform.position, "LowPolyHnS/Conditions/conditions2", true);
+                    Gizmos.DrawIcon(transform.position, "Conditions/conditions2", true);
                     break;
                 default:
-                    Gizmos.DrawIcon(transform.position, "LowPolyHnS/Conditions/conditions3", true);
+                    Gizmos.DrawIcon(transform.position, "Conditions/conditions3", true);
                     break;
             }
         }

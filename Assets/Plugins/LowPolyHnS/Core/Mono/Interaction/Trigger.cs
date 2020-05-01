@@ -246,16 +246,16 @@ namespace LowPolyHnS.Core
             switch (state)
             {
                 case 0:
-                    Gizmos.DrawIcon(transform.position, "LowPolyHnS/Trigger/trigger0", true);
+                    Gizmos.DrawIcon(transform.position, "Trigger/trigger0", true);
                     break;
                 case 1:
-                    Gizmos.DrawIcon(transform.position, "LowPolyHnS/Trigger/trigger1", true);
+                    Gizmos.DrawIcon(transform.position, "Trigger/trigger1", true);
                     break;
                 case 2:
-                    Gizmos.DrawIcon(transform.position, "LowPolyHnS/Trigger/trigger2", true);
+                    Gizmos.DrawIcon(transform.position, "Trigger/trigger2", true);
                     break;
                 case 3:
-                    Gizmos.DrawIcon(transform.position, "LowPolyHnS/Trigger/trigger3", true);
+                    Gizmos.DrawIcon(transform.position, "Trigger/trigger3", true);
                     break;
             }
 

@@ -58,12 +58,7 @@ namespace LowPolyHnS.Variables
         }
 
         // OVERRIDE METHODS: ----------------------------------------------------------------------
-
-        public override string GetDocumentationURL()
-        {
-            return "https://docs.LowPolyHnS.io/manual/variables";
-        }
-
+        
         public override string GetName()
         {
             return "Variables";

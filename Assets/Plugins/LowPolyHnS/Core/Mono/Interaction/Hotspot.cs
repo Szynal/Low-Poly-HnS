@@ -46,7 +46,7 @@ namespace LowPolyHnS.Core
 
         private void OnDrawGizmos()
         {
-            Gizmos.DrawIcon(transform.position, "LowPolyHnS/Hotspot/hotspot", true);
+            Gizmos.DrawIcon(transform.position, "Hotspot/hotspot", true);
         }
     }
 }

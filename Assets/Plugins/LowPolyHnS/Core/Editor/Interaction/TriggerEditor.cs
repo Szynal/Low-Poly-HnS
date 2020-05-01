@@ -20,7 +20,7 @@ namespace LowPolyHnS.Core
         private const float DOTTED_LINES_SIZE = 2.0f;
         private const string KEY_IGNITER_INDEX_PREF = "LowPolyHnS-igniters-index";
 
-        private const string ICONS_PATH = "Assets/Plugins/LowPolyHnS/Extra/Icons/Trigger/{0}";
+        private const string ICONS_PATH = "Assets/EditorIcons/Trigger/{0}";
         private const float ITEMS_TOOLBAR_WIDTH = 25f;
 
         private const string PROP_OPTION = "option";

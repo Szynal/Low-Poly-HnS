@@ -5,10 +5,10 @@ namespace LowPolyHnS.Core
 {
     public abstract class CoreGUIStyles
     {
-        private const string TAG_BG_PATH = "Assets/Plugins/LowPolyHnS/Extra/Icons/Variables/Tag.png";
-        private const string DROPZONE_NORMAL_PATH = "Assets/Plugins/LowPolyHnS/Characters/Icons/DropZoneNormal.png";
-        private const string DROPZONE_ACTIVE_PATH = "Assets/Plugins/LowPolyHnS/Characters/Icons/DropZoneActive.png";
-        private const string DROP_MARK_PATH = "Assets/Plugins/LowPolyHnS/Extra/Icons/EditorUI/DropMark.png";
+        private const string TAG_BG_PATH = "Assets/EditorIcons/Variables/Tag.png";
+        private const string DROPZONE_NORMAL_PATH = "Assets/EditorIcons/DropZoneNormal.png";
+        private const string DROPZONE_ACTIVE_PATH = "Assets/EditorIcons/DropZoneActive.png";
+        private const string DROP_MARK_PATH = "Assets/EditorIcons/EditorUI/DropMark.png";
 
         private static GUIStyle btnLeft;
         private static GUIStyle btnRight;

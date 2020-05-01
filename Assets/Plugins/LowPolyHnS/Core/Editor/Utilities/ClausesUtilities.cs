@@ -21,7 +21,7 @@ namespace LowPolyHnS.Core
             EyeClosed
         }
 
-        private const string ICONS_PATH = "Assets/Plugins/LowPolyHnS/Extra/Icons/Utilities/{0}";
+        private const string ICONS_PATH = "Assets/EditorIcons/Utilities/{0}";
 
         private static readonly string[] ICONS =
         {

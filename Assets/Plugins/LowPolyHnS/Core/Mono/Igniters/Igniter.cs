@@ -91,7 +91,7 @@ namespace LowPolyHnS.Core
         public static string NAME = "Never";
         public static string COMMENT = "";
         public static bool REQUIRES_COLLIDER = false;
-        public static string ICON_PATH = "Assets/Plugins/LowPolyHnS/Extra/Icons/Igniters/";
+        public static string ICON_PATH = "Assets/EditorIcons/Igniters/";
 
         public static bool PaintEditor(SerializedObject serialObject)
         {

@@ -61,11 +61,6 @@ namespace LowPolyHnS.Localization
 
         // OVERRIDE METHODS: ----------------------------------------------------------------------
 
-        public override string GetDocumentationURL()
-        {
-            return "https://docs.LowPolyHnS.io/";
-        }
-
         public override string GetName()
         {
             return "General";

@@ -15,11 +15,6 @@ namespace LowPolyHnS.Core
             OnInspectorGUI();
         }
 
-        public virtual string GetDocumentationURL()
-        {
-            return "http://docs.LowPolyHnS.io";
-        }
-
         public virtual int GetPanelWeight()
         {
             return 50;

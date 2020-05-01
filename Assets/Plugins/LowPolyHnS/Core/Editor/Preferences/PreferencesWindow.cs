@@ -155,21 +155,6 @@ namespace LowPolyHnS.Core
         {
             EditorGUILayout.BeginHorizontal(EditorStyles.toolbar);
             GUILayout.FlexibleSpace();
-
-            currentSidebarIndex = Mathf.Clamp(currentSidebarIndex, 0, DATABASES.Count - 1);
-            if (DATABASES[currentSidebarIndex].dataEditor.CanBeDecoupled())
-            {
-                if (GUILayout.Button("Detach", EditorStyles.toolbarButton))
-                {
-                    PreferencesDetachWindow.Create(DATABASES[currentSidebarIndex].dataEditor);
-                }
-            }
-
-            if (GUILayout.Button("Documentation", EditorStyles.toolbarButton))
-            {
-                Application.OpenURL(DATABASES[currentSidebarIndex].dataEditor.GetDocumentationURL());
-            }
-
             EditorGUILayout.EndHorizontal();
         }
 
@@ -220,12 +205,6 @@ namespace LowPolyHnS.Core
             window.LoadDatabases();
             window.Show();
             return window;
-        }
-
-        [MenuItem("LowPolyHnS/Tools/Documentation...")]
-        public static void OpenDocumentation()
-        {
-            Application.OpenURL("https://docs.LowPolyHnS.io");
         }
 
         public static void CloseWindow()
