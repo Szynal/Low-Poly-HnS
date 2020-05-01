@@ -8678,7 +8678,7 @@ MonoBehaviour:
   gid: 8d3475d7-82a5-421d-ba3d-49abc0bf841f
   initItems:
   - item:
-      item: {fileID: 0}
+      item: {fileID: 114273004538180096, guid: 17839004acbb6924ebf5be3ce8a59dcc, type: 2}
     amount: 1
   saveContainer: 1
   containerUI: {fileID: 0}
@@ -12006,6 +12006,10 @@ PrefabInstance:
     - target: {fileID: 104968, guid: 53208521fffd8a242acf30e93a01b99a, type: 3}
       propertyPath: m_Name
       value: Chest_01
+      objectReference: {fileID: 0}
+    - target: {fileID: 104968, guid: 53208521fffd8a242acf30e93a01b99a, type: 3}
+      propertyPath: m_TagString
+      value: ItemContainer
       objectReference: {fileID: 0}
     - target: {fileID: 455628, guid: 53208521fffd8a242acf30e93a01b99a, type: 3}
       propertyPath: m_LocalPosition.x

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace LowPolyHnS
+namespace LowPolyHnS.Inventory
 {
     [RequireComponent(typeof(Animator))]
     public class Chest : MonoBehaviour

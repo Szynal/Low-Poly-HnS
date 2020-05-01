@@ -97,7 +97,6 @@ namespace LowPolyHnS.Inventory
         public void Close()
         {
             if (!isOpen) return;
-
             if (DATABASE_INVENTORY.inventorySettings.pauseTimeOnUI)
             {
                 TimeManager.Instance.SetTimeScale(1f, TIME_LAYER);
@@ -110,6 +109,11 @@ namespace LowPolyHnS.Inventory
 
             currentContainer.RemoveOnAddListener(UpdateContainerItems);
             currentContainer.RemoveOnRemoveListener(UpdateContainerItems);
+            GameObject[] _itemContainers = GameObject.FindGameObjectsWithTag("ItemContainer");
+
+            foreach (GameObject container in _itemContainers)
+            {   
+            }
         }
 
         public void ChangePlayerTypes(int itemTypes)
