@@ -43,15 +43,6 @@ namespace LowPolyHnS.Inventory
             initItemsList.elementHeightCallback = InitContainer_Height;
         }
 
-        [InitializeOnLoadMethod]
-        private static void RegisterContainerToolbar()
-        {
-            LowPolyHnSToolbar.REGISTER_ITEMS.Push(new LowPolyHnSToolbar.Item(
-                string.Format(GCTOOLBAR_ICON_PATH),
-                "Create a Container",
-                CreateContainer
-            ));
-        }
 
         // PAINT METHODS: -------------------------------------------------------------------------
 
