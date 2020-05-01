@@ -1,4 +1,5 @@
 ﻿using LowPolyHnS;
+using LowPolyHnS.Core;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -23,7 +24,7 @@ public class UIController : MonoBehaviour
 
     [SerializeField] public EventSystem MenuEventSystem = null;
 
-    private FE_PlayerInputController inputController;
+    private LoadSaveController inputController;
     private bool dangerNearby;
     private bool gameOverShown;
 
@@ -43,7 +44,7 @@ public class UIController : MonoBehaviour
 
     private void Start()
     {
-        inputController = FE_PlayerInputController.Instance;
+        inputController = LoadSaveController.Instance;
     }
 
     private void Update()
@@ -106,7 +107,6 @@ public class UIController : MonoBehaviour
             return;
         }
 
-        handleEnteringMenu();
         saveMenu.Show();
     }
 
@@ -117,7 +117,6 @@ public class UIController : MonoBehaviour
             return;
         }
 
-        handleEnteringMenu();
         loadMenu.Show();
     }
 
@@ -142,23 +141,8 @@ public class UIController : MonoBehaviour
         }
         else
         {
-            handleEnteringMenu();
             pauseMenu.Show();
         }
-    }
-
-    private void handleEnteringMenu()
-    {
-        FE_PlayerInputController.Instance.AllowInput = false;
-        FE_PlayerInputController.Instance.AllowInventoryInput = false;
-        Time.timeScale = 0f;
-    }
-
-    public void OnExitedMenu()
-    {
-        FE_PlayerInputController.Instance.AllowInput = true;
-        FE_PlayerInputController.Instance.AllowInventoryInput = true;
-        Time.timeScale = 1f;
     }
 
     public void ShowGameOverScreen()

@@ -106,11 +106,6 @@ public class SubMenuController : MonoBehaviour
     {
         parent = null;
         Hide();
-
-        if (UIController.Instance != null)
-        {
-            UIController.Instance.OnExitedMenu();
-        }
     }
 
     public virtual bool IsVisible()

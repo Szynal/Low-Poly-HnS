@@ -29,7 +29,6 @@ public class SaveScreen : MonoBehaviour
     public void OnCancel()
     {
         HandleShowing(false);
-        UIController.Instance.OnExitedMenu();
     }
 
     public void OnSlotSelected(Button _clickedButton)

@@ -38,14 +38,9 @@ public class LoadScreen : MonoBehaviour
     {
         HandleShowing(false);
 
-        if (mainMenuController != null
-        ) //if we've found main menu controller, then we're in the main menu and we don't need to call UI controller
+        if (mainMenuController != null)
         {
             mainMenuController.OnMenuExited();
-        }
-        else
-        {
-            UIController.Instance?.OnExitedMenu();
         }
     }
 

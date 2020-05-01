@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using LowPolyHnS.Core;
 using LowPolyHnS.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -383,7 +384,7 @@ namespace LowPolyHnS
 
                 switch (monoBehaviour)
                 {
-                    case FE_PlayerInputController _:
+                    case LoadSaveController _:
                     {
                         if (playerLoadParams == null && loadedFrom.GetPlayerState() != null)
                         {
@@ -427,7 +428,7 @@ namespace LowPolyHnS
 
         private void LoadCustomPlayerParams()
         {
-            ISaveable player = FE_PlayerInputController.Instance;
+            ISaveable player = LoadSaveController.Instance;
 
             if (lastSceneState == null) return;
 
@@ -441,7 +442,7 @@ namespace LowPolyHnS
             }
             else
             {
-                Transform playerTrans = ((FE_PlayerInputController) player).transform;
+                Transform playerTrans = ((LoadSaveController) player).transform;
                 playerState.Position_X = playerTrans.position.x;
                 playerState.Position_Y = playerTrans.position.y;
                 playerState.Position_Z = playerTrans.position.z;

@@ -187,13 +187,12 @@ GameObject:
   - component: {fileID: 852385379004681224}
   - component: {fileID: 647350326523645888}
   - component: {fileID: 1257027642313922}
-  - component: {fileID: 194539233090048396}
   - component: {fileID: 7593341490199559833}
   - component: {fileID: 9133239568973208029}
   - component: {fileID: 1071196391}
+  - component: {fileID: 619734470}
   - component: {fileID: 619734468}
   - component: {fileID: 619734469}
-  - component: {fileID: 619734470}
   m_Layer: 8
   m_Name: Character
   m_TagString: Player
@@ -334,23 +333,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01eb003062df5954d883f89496d81f12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &194539233090048396
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 677829378768984962}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0d64243e1afd8ca4f9eee72015adc45a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Inventory:
-  - {fileID: 11400000, guid: 2ad95d84b47d02f42b0e00a05724846a, type: 2}
-  - {fileID: 11400000, guid: 00d6c1c17c1734740b1bcba85f5db6ef, type: 2}
-  Ammunition: 200000003c0000005a00000028000000
-  InputController: {fileID: 0}
 --- !u!114 &7593341490199559833
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -383,7 +365,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AllowInventoryInput: 0
   AllowInput: 0
-  UsingLadder: 0
   SaveableID: 3670
 --- !u!114 &1071196391
 MonoBehaviour:
@@ -398,6 +379,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   goalPoint: {fileID: 0}
+--- !u!114 &619734470
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 677829378768984962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd0195a266c1d47549a59d0871e075de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gid: 1f55cbd3-ca8a-4233-8a32-c504999fbc87
+  Save: 0
 --- !u!114 &619734468
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -490,20 +485,6 @@ MonoBehaviour:
     - isEquipped: 0
       itemID: 0
   saveEquipment: 1
---- !u!114 &619734470
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 677829378768984962}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bd0195a266c1d47549a59d0871e075de, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gid: 1f55cbd3-ca8a-4233-8a32-c504999fbc87
-  Save: 0
 --- !u!1 &677833717701352800
 GameObject:
   m_ObjectHideFlags: 0
