@@ -128,18 +128,6 @@ public class FE_StateChanger : FE_InteractableObject
 
                 break;
 
-            case EActionType.StartFinaleChooser:
-                if (FE_FinaleChooser.Instance != null)
-                {
-                    FE_FinaleChooser.Instance.StartChoosingFinale();
-                }
-                else
-                {
-                    Debug.LogError("StartFinaleChooser was called, but there is no finale chooser in this scene!");
-                }
-
-                break;
-
             default:
                 Debug.LogError(
                     "FE_StateChanger has encountered an unknown state in one of its' FE_NewObjectStateContainers!");
