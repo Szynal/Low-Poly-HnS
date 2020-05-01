@@ -130,7 +130,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 204562984}
-  - component: {fileID: 204562983}
   - component: {fileID: 204562982}
   m_Layer: 0
   m_Name: SceneTeleporter
@@ -154,37 +153,14 @@ MonoBehaviour:
   TargetSceneName: Lvl_01
   LoadMode: 0
   OverridesPlayerPosition: 0
-  OverridedTransform: {fileID: 0}
+  OverriddenTransform: {fileID: 0}
   OneWayTeleport: 1
   OverrideInventory: 0
   OverrideHealth: 0
   loadDistinctGameplayScene: 1
   distinctGameplayToLoad: Lvl_01_Gameplay_01
---- !u!114 &204562983
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 204562981}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e28219464b34404f9414cc2b4297a0e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  delayBeforeActivating: 0
-  OnEnableStateChanges:
-  - StateType: 6
-    TargetObject: {fileID: 0}
-    Pos: {x: 0, y: 0, z: 0}
-    MSOName: 
-    NewMSOState: 0
-    ItemIDToGive: 0
-    SceneTeleporterToUse: {fileID: 204562982}
-    MessageReciever: {fileID: 0}
-    MessageToSend: 0
-    CutsceneToStart: {fileID: 0}
-    Rotation: {x: 0, y: 0, z: 0, w: 0}
+  TeleportOnEnable: 1
+  DelayBeforeActivating: 0
 --- !u!4 &204562984
 Transform:
   m_ObjectHideFlags: 0
@@ -280,6 +256,41 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: -336.5768
+      objectReference: {fileID: 0}
+    - target: {fileID: 3329719488003123909, guid: c6c4906f2c09a2a40bb6a7ebb17b7da0,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4082423116126165349, guid: c6c4906f2c09a2a40bb6a7ebb17b7da0,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4082423116126165349, guid: c6c4906f2c09a2a40bb6a7ebb17b7da0,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4082423116126165349, guid: c6c4906f2c09a2a40bb6a7ebb17b7da0,
+        type: 3}
+      propertyPath: m_Type
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4082423116126165349, guid: c6c4906f2c09a2a40bb6a7ebb17b7da0,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4082423116126165349, guid: c6c4906f2c09a2a40bb6a7ebb17b7da0,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4082423116126165349, guid: c6c4906f2c09a2a40bb6a7ebb17b7da0,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4514522296803194282, guid: c6c4906f2c09a2a40bb6a7ebb17b7da0,
         type: 3}

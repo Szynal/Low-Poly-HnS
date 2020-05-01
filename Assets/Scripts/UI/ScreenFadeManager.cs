@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace LowPolyHnS
+namespace LowPolyHnS.UI
 {
     public class ScreenFadeManager : MonoBehaviour
     {
@@ -31,14 +31,12 @@ namespace LowPolyHnS
 
         private IEnumerator fadeToBlack(bool isBlackening, float fadeTime, Action callbackFunction = null)
         {
-            //Preparing the lerp
             fadeImage.enabled = true;
             float lerpTime = 0f;
             float startOpacity = fadeImage.color.a;
             float targetOpacity = isBlackening ? 1f : 0f;
             float lerpRate = 1f / fadeTime;
 
-            //Lerp
             while (fadeImage.color.a != targetOpacity)
             {
                 fadeImage.color = new Color(fadeImage.color.r, fadeImage.color.g, fadeImage.color.b,
@@ -78,7 +76,6 @@ namespace LowPolyHnS
             yield return new WaitForSecondsRealtime(blackscreenTime);
 
             yield return StartCoroutine(fadeToBlack(false, fadeTime, callbackFunction));
-
         }
     }
 }
