@@ -1,13 +1,10 @@
-﻿namespace LowPolyHnS.Core
-{
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEditor;
-    using LowPolyHnS.Variables;
+﻿using LowPolyHnS.Variables;
+using UnityEditor;
 
+namespace LowPolyHnS.Core
+{
     [CustomPropertyDrawer(typeof(TargetPosition))]
-	public class TargetPositionPD : TargetGenericPD
+    public class TargetPositionPD : TargetGenericPD
     {
         private const string PROP_OFFSET = "offset";
         private const string PROP_TRANSFORM = "targetTransform";
@@ -18,7 +15,7 @@
 
         protected override SerializedProperty GetProperty(int option, SerializedProperty property)
         {
-            TargetPosition.Target optionTyped = (TargetPosition.Target)option;
+            TargetPosition.Target optionTyped = (TargetPosition.Target) option;
             switch (optionTyped)
             {
                 case TargetPosition.Target.Transform:
@@ -42,7 +39,7 @@
 
         protected override SerializedProperty GetExtraProperty(int option, SerializedProperty property)
         {
-            TargetPosition.Target optionTyped = (TargetPosition.Target)option;
+            TargetPosition.Target optionTyped = (TargetPosition.Target) option;
             switch (optionTyped)
             {
                 case TargetPosition.Target.Player:
@@ -57,11 +54,9 @@
 
         protected override void Initialize(SerializedProperty property)
         {
-            int allowTypesMask = (
-                (1 << (int)Variable.DataType.Vector2) |
-                (1 << (int)Variable.DataType.Vector3) |
-                (1 << (int)Variable.DataType.GameObject)
-            );
+            int allowTypesMask = (1 << (int) Variable.DataType.Vector2) |
+                                 (1 << (int) Variable.DataType.Vector3) |
+                                 (1 << (int) Variable.DataType.GameObject);
 
             property
                 .FindPropertyRelative(PROP_GLOBAL)

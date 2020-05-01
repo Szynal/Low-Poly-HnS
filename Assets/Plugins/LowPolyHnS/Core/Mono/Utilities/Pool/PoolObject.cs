@@ -1,10 +1,8 @@
-﻿namespace LowPolyHnS.Pool
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using LowPolyHnS.Core;
+﻿using System.Collections;
+using UnityEngine;
 
+namespace LowPolyHnS.Pool
+{
     [AddComponentMenu("LowPolyHnS/Pool/Pool Object")]
     public class PoolObject : MonoBehaviour
     {
@@ -22,22 +20,22 @@
 
         private void OnEnable()
         {
-            this.coroutine = this.SetDisable();
-            this.StartCoroutine(this.coroutine);
+            coroutine = SetDisable();
+            StartCoroutine(coroutine);
         }
 
         private void OnDisable()
         {
-            this.CancelInvoke();
-            this.StopCoroutine(this.coroutine);
+            CancelInvoke();
+            StopCoroutine(coroutine);
         }
 
         private IEnumerator SetDisable()
         {
-            WaitForSeconds wait = new WaitForSeconds(this.duration);
+            WaitForSeconds wait = new WaitForSeconds(duration);
             yield return wait;
 
-            this.gameObject.SetActive(false);
+            gameObject.SetActive(false);
         }
     }
 }

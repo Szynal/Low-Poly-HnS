@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
-using UnityEngine.SceneManagement;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public interface ISaveable
 {
@@ -13,13 +14,13 @@ public interface ISaveable
     void OnDestroy();
 }
 
-[System.Serializable]
+[Serializable]
 public class SceneSave
 {
     public int SceneID;
 
-    private PlayerSaveState playerState = null;
-    private MultipleStateObjectManagerState msoManagerState = null;
+    private PlayerSaveState playerState;
+    private MultipleStateObjectManagerState msoManagerState;
     private List<EnemySaveState> enemyStates = new List<EnemySaveState>();
     private List<PickupState> pickupStates = new List<PickupState>();
     private List<ActionTriggerState> triggerStates = new List<ActionTriggerState>();
@@ -30,17 +31,17 @@ public class SceneSave
 
         foreach (MonoBehaviour _mb in Resources.FindObjectsOfTypeAll<MonoBehaviour>())
         {
-            if (_mb.gameObject.scene.isLoaded == true && _mb.gameObject.scene == _scene)
+            if (_mb.gameObject.scene.isLoaded && _mb.gameObject.scene == _scene)
             {
                 if (_mb is ISaveable)
                 {
-                   // Debug.Log("Scene " + _scene.name + " is saving object: " + _mb.name);
-                    ISaveable _saveable = (ISaveable)_mb;
+                    // Debug.Log("Scene " + _scene.name + " is saving object: " + _mb.name);
+                    ISaveable _saveable = (ISaveable) _mb;
                     _saveable.OnSave(this);
                 }
                 else if (_mb is MultipleStateObjectManager)
                 {
-                    MultipleStateObjectManager _msoManager = (MultipleStateObjectManager)_mb;
+                    MultipleStateObjectManager _msoManager = (MultipleStateObjectManager) _mb;
                     _msoManager.SaveState(this);
                 }
             }
@@ -52,34 +53,34 @@ public class SceneSave
     public void RecordSaveableState(SaveableState _newState)
     {
         //Zapisujemy do konkretnego arraya/miejsca, zaleznie od tego jaki jest typ
-        if(_newState is PlayerSaveState)
+        if (_newState is PlayerSaveState)
         {
-            playerState = (PlayerSaveState)_newState;
+            playerState = (PlayerSaveState) _newState;
         }
-        else if(_newState is EnemySaveState)
+        else if (_newState is EnemySaveState)
         {
-            if (enemyStates.Contains((EnemySaveState)_newState) == false)
+            if (enemyStates.Contains((EnemySaveState) _newState) == false)
             {
-                enemyStates.Add((EnemySaveState)_newState);
+                enemyStates.Add((EnemySaveState) _newState);
             }
         }
-        else if(_newState is PickupState)
+        else if (_newState is PickupState)
         {
-            if (pickupStates.Contains((PickupState)_newState) == false)
+            if (pickupStates.Contains((PickupState) _newState) == false)
             {
-                pickupStates.Add((PickupState)_newState);
+                pickupStates.Add((PickupState) _newState);
             }
         }
-        else if(_newState is MultipleStateObjectManagerState)
+        else if (_newState is MultipleStateObjectManagerState)
         {
-            msoManagerState = (MultipleStateObjectManagerState)_newState;
+            msoManagerState = (MultipleStateObjectManagerState) _newState;
         }
-        else if(_newState is ActionTriggerState)
+        else if (_newState is ActionTriggerState)
         {
-            triggerStates.Add((ActionTriggerState)_newState);
+            triggerStates.Add((ActionTriggerState) _newState);
         }
     }
-    
+
     public PlayerSaveState GetPlayerState()
     {
         return playerState;
@@ -118,7 +119,7 @@ public class SceneSave
         }
 
         return _ret;
-    } 
+    }
 
     public ActionTriggerState GetTriggerStateByID(int _id)
     {

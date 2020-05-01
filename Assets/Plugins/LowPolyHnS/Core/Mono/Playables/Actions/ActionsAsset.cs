@@ -1,12 +1,10 @@
-﻿namespace LowPolyHnS.Playables
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEngine.Playables;
-    using LowPolyHnS.Core;
+﻿using System;
+using UnityEngine;
+using UnityEngine.Playables;
 
-    [System.Serializable]
+namespace LowPolyHnS.Playables
+{
+    [Serializable]
     public class ActionsAsset : PlayableAsset
     {
         public override Playable CreatePlayable(PlayableGraph graph, GameObject owner)

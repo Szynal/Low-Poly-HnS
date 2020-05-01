@@ -1,16 +1,16 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class FE_OpenableDoor : FE_InteractableObject
 {
-    [Header("Openable door properties")]
-    [SerializeField] bool staysOpen = true;
-    [SerializeField] float selfCloseTime = 30f;
-    [SerializeField] bool isOpenedAtStart = false;
+    [Header("Openable door properties")] [SerializeField]
+    private bool staysOpen = true;
+
+    [SerializeField] private float selfCloseTime = 30f;
+    [SerializeField] private bool isOpenedAtStart = false;
 
     private Animation openAnim;
-    private bool isOpen = false;
+    private bool isOpen;
     private Collider triggerCol;
 
     private FE_MultipleStateObject parentScript;
@@ -27,21 +27,25 @@ public class FE_OpenableDoor : FE_InteractableObject
         {
             Debug.LogError("Openable door " + name + " has no animation component!");
         }
-        if(staysOpen == false && selfCloseTime <= 0f)
+
+        if (staysOpen == false && selfCloseTime <= 0f)
         {
-            Debug.LogWarning("Openable door " + name + " is set to close itself, but the closing time is <= 0. Setting to default closing time...");
+            Debug.LogWarning("Openable door " + name +
+                             " is set to close itself, but the closing time is <= 0. Setting to default closing time...");
             selfCloseTime = 30f;
         }
-        if(triggerCol == null)
+
+        if (triggerCol == null)
         {
             Debug.LogError("Openable Door " + name + " have no trigger collider!");
         }
-        if(parentScript == null)
+
+        if (parentScript == null)
         {
             Debug.LogError("Openable Door " + name + " couldn't find FE_MultipleStateObject script in parent!");
         }
 
-        if(isOpenedAtStart == true)
+        if (isOpenedAtStart)
         {
             instantOpen();
         }
@@ -78,18 +82,18 @@ public class FE_OpenableDoor : FE_InteractableObject
         isOpen = false;
         SetCanInteract(true);
 
-        if (isOpenedAtStart == true)
+        if (isOpenedAtStart)
         {
             openAnim["ANIM_openDoor"].time = 0f;
         }
     }
-    
+
     private void instantOpen()
     {
-        if(isOpen == false)
+        if (isOpen == false)
         {
             openAnim["ANIM_openDoor"].time = openAnim["ANIM_openDoor"].clip.length;
-            openAnim.Play("ANIM_openDoor");   
+            openAnim.Play("ANIM_openDoor");
             isOpen = true;
 
             SetCanInteract(false);

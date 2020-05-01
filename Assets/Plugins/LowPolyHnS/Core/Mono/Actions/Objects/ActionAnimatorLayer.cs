@@ -1,73 +1,70 @@
-﻿namespace LowPolyHnS.Core
+﻿using UnityEngine;
+
+namespace LowPolyHnS.Core
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-	using LowPolyHnS.Core;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[AddComponentMenu("")]
-	public class ActionAnimatorLayer : IAction 
-	{
-		public Animator animator;
-		public int layerIndex = 1;
-		[Range(0.0f, 1.0f)] public float weight = 0.0f;
+    [AddComponentMenu("")]
+    public class ActionAnimatorLayer : IAction
+    {
+        public Animator animator;
+        public int layerIndex = 1;
+        [Range(0.0f, 1.0f)] public float weight = 0.0f;
 
-		// EXECUTABLE: ----------------------------------------------------------------------------
-		
+        // EXECUTABLE: ----------------------------------------------------------------------------
+
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
-            this.animator.SetLayerWeight(this.layerIndex, weight);
+            animator.SetLayerWeight(layerIndex, weight);
             return true;
         }
 
-		// +--------------------------------------------------------------------------------------+
-		// | EDITOR                                                                               |
-		// +--------------------------------------------------------------------------------------+
+        // +--------------------------------------------------------------------------------------+
+        // | EDITOR                                                                               |
+        // +--------------------------------------------------------------------------------------+
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 
-		public static new string NAME = "Animation/Animator Layer";
-		private const string NODE_TITLE = "Change {0}'s layer {1} to weight {2}";
+        public static new string NAME = "Animation/Animator Layer";
+        private const string NODE_TITLE = "Change {0}'s layer {1} to weight {2}";
 
-		// PROPERTIES: ----------------------------------------------------------------------------
+        // PROPERTIES: ----------------------------------------------------------------------------
 
-		private SerializedProperty spAnimator;
-		private SerializedProperty spLayerIndex;
-		private SerializedProperty spWeight;
+        private SerializedProperty spAnimator;
+        private SerializedProperty spLayerIndex;
+        private SerializedProperty spWeight;
 
-		// INSPECTOR METHODS: ---------------------------------------------------------------------
+        // INSPECTOR METHODS: ---------------------------------------------------------------------
 
-		public override string GetNodeTitle()
-		{
-			return string.Format(NODE_TITLE, 
-				(this.animator == null ? "nothing" : this.animator.gameObject.name),
-				this.layerIndex, this.weight
-			);
-		}
+        public override string GetNodeTitle()
+        {
+            return string.Format(NODE_TITLE,
+                animator == null ? "nothing" : animator.gameObject.name,
+                layerIndex, weight
+            );
+        }
 
-		protected override void OnEnableEditorChild()
-		{
-			this.spAnimator = this.serializedObject.FindProperty("animator");
-			this.spLayerIndex = this.serializedObject.FindProperty("layerIndex");
-			this.spWeight = this.serializedObject.FindProperty("weight");
-		}
+        protected override void OnEnableEditorChild()
+        {
+            spAnimator = serializedObject.FindProperty("animator");
+            spLayerIndex = serializedObject.FindProperty("layerIndex");
+            spWeight = serializedObject.FindProperty("weight");
+        }
 
-		public override void OnInspectorGUI()
-		{
-			this.serializedObject.Update();
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
 
-			EditorGUILayout.PropertyField(this.spAnimator);
-			EditorGUILayout.PropertyField(this.spLayerIndex);
-			EditorGUILayout.PropertyField(this.spWeight);
+            EditorGUILayout.PropertyField(spAnimator);
+            EditorGUILayout.PropertyField(spLayerIndex);
+            EditorGUILayout.PropertyField(spWeight);
 
-			this.serializedObject.ApplyModifiedProperties();
-		}
+            serializedObject.ApplyModifiedProperties();
+        }
 
-		#endif
-	}
+#endif
+    }
 }

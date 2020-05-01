@@ -1,17 +1,12 @@
-﻿namespace LowPolyHnS.Core
-{
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEngine.UI;
-    using UnityEngine.Events;
-    using UnityEngine.EventSystems;
-    using LowPolyHnS.Variables;
+﻿using LowPolyHnS.Variables;
+using UnityEngine;
+using UnityEngine.UI;
 
-    #if UNITY_EDITOR
-    using UnityEditor.Events;
-    #endif
+namespace LowPolyHnS.Core
+{
+#if UNITY_EDITOR
+
+#endif
 
     [AddComponentMenu("LowPolyHnS/UI/Toggle", 10)]
     public class ToggleVariable : Toggle
@@ -34,35 +29,35 @@
             base.Start();
             if (!Application.isPlaying) return;
 
-            object current = this.variable.Get(gameObject);
+            object current = variable.Get(gameObject);
 
             if (current != null)
             {
-                this.isOn = (bool)current;
-                this.onValueChanged.AddListener(this.SyncVariableWithValue);
+                isOn = (bool) current;
+                onValueChanged.AddListener(SyncVariableWithValue);
             }
 
-            switch (this.variable.variableType)
+            switch (variable.variableType)
             {
                 case VariableProperty.GetVarType.GlobalVariable:
                     VariablesManager.events.SetOnChangeGlobal(
                         SyncValueWithVariable,
-                        this.variable.GetVariableID()
+                        variable.GetVariableID()
                     );
                     break;
 
                 case VariableProperty.GetVarType.LocalVariable:
                     VariablesManager.events.SetOnChangeLocal(
                         SyncValueWithVariable,
-                        this.variable.GetLocalVariableGameObject(gameObject),
-                        this.variable.GetVariableID()
+                        variable.GetLocalVariableGameObject(gameObject),
+                        variable.GetVariableID()
                     );
                     break;
 
                 case VariableProperty.GetVarType.ListVariable:
                     VariablesManager.events.StartListenListAny(
                         SyncValueWithList,
-                        this.variable.GetListVariableGameObject(gameObject)
+                        variable.GetListVariableGameObject(gameObject)
                     );
                     break;
             }
@@ -73,27 +68,27 @@
             base.OnDestroy();
             if (!Application.isPlaying) return;
 
-            switch (this.variable.variableType)
+            switch (variable.variableType)
             {
                 case VariableProperty.GetVarType.GlobalVariable:
                     VariablesManager.events.RemoveChangeGlobal(
                         SyncValueWithVariable,
-                        this.variable.GetVariableID()
+                        variable.GetVariableID()
                     );
                     break;
 
                 case VariableProperty.GetVarType.LocalVariable:
                     VariablesManager.events.RemoveChangeLocal(
                         SyncValueWithVariable,
-                        this.variable.GetLocalVariableGameObject(gameObject),
-                        this.variable.GetVariableID()
+                        variable.GetLocalVariableGameObject(gameObject),
+                        variable.GetVariableID()
                     );
                     break;
 
                 case VariableProperty.GetVarType.ListVariable:
                     VariablesManager.events.StopListenListAny(
                         SyncValueWithList,
-                        this.variable.GetListVariableGameObject(gameObject)
+                        variable.GetListVariableGameObject(gameObject)
                     );
                     break;
             }
@@ -103,22 +98,22 @@
 
         private void SyncValueWithVariable(string variableName)
         {
-            object current = this.variable.Get(gameObject);
+            object current = variable.Get(gameObject);
             if (current != null)
             {
-                bool variableValue = (bool)current;
-                this.isOn = variableValue;
+                bool variableValue = (bool) current;
+                isOn = variableValue;
             }
         }
 
         private void SyncValueWithList(int index, object prevElem, object newElem)
         {
-            this.SyncValueWithVariable(string.Empty);
+            SyncValueWithVariable(string.Empty);
         }
 
         private void SyncVariableWithValue(bool state)
         {
-            this.variable.Set(state, gameObject);
+            variable.Set(state, gameObject);
         }
     }
 }

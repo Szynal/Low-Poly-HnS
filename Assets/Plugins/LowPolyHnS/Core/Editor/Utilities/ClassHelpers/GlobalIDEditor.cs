@@ -1,12 +1,9 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using UnityEditor;
+using UnityEngine;
+
 namespace LowPolyHnS.Core
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEditor;
-
     public static class GlobalEditorID
     {
         private const string REGEN_1 = "Are you sure you want to regenerate this ID?";
@@ -17,16 +14,20 @@ namespace LowPolyHnS.Core
         private const float HEIGHT = 18f;
         private const float PADDING = 2f;
 
-        private static bool IS_EDITING = false;
+        private static bool IS_EDITING;
 
         // PAINT METHOD: --------------------------------------------------------------------------
 
         public static void Paint(GlobalID globalID)
-		{
+        {
             switch (IS_EDITING)
             {
-                case true: PaintEditing(globalID);  break;
-                case false: PaintNormal(globalID); break;
+                case true:
+                    PaintEditing(globalID);
+                    break;
+                case false:
+                    PaintNormal(globalID);
+                    break;
             }
         }
 
@@ -58,7 +59,7 @@ namespace LowPolyHnS.Core
                 EDIT_WIDTH,
                 HEIGHT
             );
-                
+
             if (GUI.Button(rectInfo, "Regen", CoreGUIStyles.GetButtonLeft()))
             {
                 if (EditorUtility.DisplayDialog(REGEN_1, REGEN_2, "Yes", "Cancel"))
@@ -70,8 +71,8 @@ namespace LowPolyHnS.Core
 
             string prvGid = globalID.GetID();
             string newGid = EditorGUI.TextField(
-                rectContent, 
-                prvGid, 
+                rectContent,
+                prvGid,
                 CoreGUIStyles.GlobalIDText()
             );
 
@@ -89,7 +90,7 @@ namespace LowPolyHnS.Core
         private static void PaintNormal(GlobalID globalID)
         {
             Rect rect = GUILayoutUtility.GetRect(
-                0f, 9999f, 
+                0f, 9999f,
                 HEIGHT + PADDING,
                 HEIGHT + PADDING
             );

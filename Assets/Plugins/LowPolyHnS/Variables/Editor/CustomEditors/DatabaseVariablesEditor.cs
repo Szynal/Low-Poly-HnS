@@ -1,19 +1,12 @@
-﻿namespace LowPolyHnS.Variables
-{
-    using System.IO;
-	using System;
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEditor;
-	using UnityEditor.AnimatedValues;
-	using System.Linq;
-	using System.Reflection;
-    using LowPolyHnS.Core;
+﻿using System.IO;
+using LowPolyHnS.Core;
+using UnityEditor;
 
-	[CustomEditor(typeof(DatabaseVariables))]
-	public class DatabaseVariablesEditor : IDatabaseEditor
-	{
+namespace LowPolyHnS.Variables
+{
+    [CustomEditor(typeof(DatabaseVariables))]
+    public class DatabaseVariablesEditor : IDatabaseEditor
+    {
         private const string PROP_GLOBALTAGS = "tags";
         private const string PROP_GLOBALVARIABLES = "variables";
 
@@ -23,78 +16,78 @@
         private SerializedProperty spVariables;
         private GlobalVariablesEditor variablesEditor;
 
-		// INITIALIZE: ----------------------------------------------------------------------------
+        // INITIALIZE: ----------------------------------------------------------------------------
 
-		private void OnEnable()
-		{
+        private void OnEnable()
+        {
             if (target == null || serializedObject == null) return;
 
-            this.spTags = serializedObject.FindProperty(PROP_GLOBALTAGS);
-            if (this.spTags.objectReferenceValue == null)
+            spTags = serializedObject.FindProperty(PROP_GLOBALTAGS);
+            if (spTags.objectReferenceValue == null)
             {
                 LowPolyHnSUtilities.CreateFolderStructure(GlobalTagsEditor.PATH_ASSET);
-                GlobalTags instance = ScriptableObject.CreateInstance<GlobalTags>();
+                GlobalTags instance = CreateInstance<GlobalTags>();
                 AssetDatabase.CreateAsset(instance, Path.Combine(
                     GlobalTagsEditor.PATH_ASSET,
                     GlobalTagsEditor.NAME_ASSET
                 ));
 
-                this.spTags.objectReferenceValue = instance;
+                spTags.objectReferenceValue = instance;
                 serializedObject.ApplyModifiedPropertiesWithoutUndo();
                 serializedObject.Update();
             }
 
-            this.spVariables = serializedObject.FindProperty(PROP_GLOBALVARIABLES);
-            if (this.spVariables.objectReferenceValue == null)
+            spVariables = serializedObject.FindProperty(PROP_GLOBALVARIABLES);
+            if (spVariables.objectReferenceValue == null)
             {
                 LowPolyHnSUtilities.CreateFolderStructure(GlobalVariablesEditor.PATH_ASSET);
-                GlobalVariables instance = ScriptableObject.CreateInstance<GlobalVariables>();
+                GlobalVariables instance = CreateInstance<GlobalVariables>();
                 AssetDatabase.CreateAsset(instance, Path.Combine(
-                    GlobalVariablesEditor.PATH_ASSET, 
+                    GlobalVariablesEditor.PATH_ASSET,
                     GlobalVariablesEditor.NAME_ASSET
                 ));
 
-                this.spVariables.objectReferenceValue = instance;
+                spVariables.objectReferenceValue = instance;
                 serializedObject.ApplyModifiedPropertiesWithoutUndo();
                 serializedObject.Update();
             }
 
-            this.variablesEditor = (GlobalVariablesEditor)CreateEditor(
-                this.spVariables.objectReferenceValue
-            ); 
-		}
+            variablesEditor = (GlobalVariablesEditor) CreateEditor(
+                spVariables.objectReferenceValue
+            );
+        }
 
-		// OVERRIDE METHODS: ----------------------------------------------------------------------
+        // OVERRIDE METHODS: ----------------------------------------------------------------------
 
-		public override string GetDocumentationURL ()
-		{
-			return "https://docs.LowPolyHnS.io/manual/variables";
-		}
+        public override string GetDocumentationURL()
+        {
+            return "https://docs.LowPolyHnS.io/manual/variables";
+        }
 
-		public override string GetName ()
-		{
-			return "Variables";
-		}
+        public override string GetName()
+        {
+            return "Variables";
+        }
 
         public override bool CanBeDecoupled()
         {
             return true;
         }
 
-		// GUI METHODS: ---------------------------------------------------------------------------
+        // GUI METHODS: ---------------------------------------------------------------------------
 
-		public override void OnInspectorGUI()
-		{
-			this.serializedObject.Update();
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
 
-            if (this.variablesEditor != null)
+            if (variablesEditor != null)
             {
                 EditorGUILayout.BeginVertical(EditorStyles.inspectorDefaultMargins);
-                this.variablesEditor.OnInspectorGUI();
+                variablesEditor.OnInspectorGUI();
                 EditorGUILayout.EndVertical();
             }
 
-			this.serializedObject.ApplyModifiedPropertiesWithoutUndo();
-		}
-	}
+            serializedObject.ApplyModifiedPropertiesWithoutUndo();
+        }
+    }
 }

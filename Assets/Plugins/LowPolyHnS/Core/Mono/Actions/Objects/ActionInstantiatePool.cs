@@ -1,32 +1,28 @@
-﻿namespace LowPolyHnS.Core
-{
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-	using LowPolyHnS.Core.Hooks;
-    using LowPolyHnS.Variables;
-    using LowPolyHnS.Pool;
+﻿using LowPolyHnS.Pool;
+using UnityEngine;
 
-    #if UNITY_EDITOR
+namespace LowPolyHnS.Core
+{
+#if UNITY_EDITOR
     using UnityEditor;
-    #endif
+
+#endif
 
     [AddComponentMenu("")]
-	public class ActionInstantiatePool : IAction 
-	{
+    public class ActionInstantiatePool : IAction
+    {
         public TargetGameObject prefab = new TargetGameObject();
         public TargetPosition initLocation = new TargetPosition();
 
-		// EXECUTABLE: ----------------------------------------------------------------------------
-		
+        // EXECUTABLE: ----------------------------------------------------------------------------
+
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
-            GameObject prefabValue = this.prefab.GetGameObject(target);
+            GameObject prefabValue = prefab.GetGameObject(target);
             if (prefabValue != null)
             {
-                Vector3 position = this.initLocation.GetPosition(target, Space.Self);
-                Quaternion rotation = this.initLocation.GetRotation(target);
+                Vector3 position = initLocation.GetPosition(target, Space.Self);
+                Quaternion rotation = initLocation.GetRotation(target);
 
                 GameObject instance = PoolManager.Instance.Pick(prefabValue);
                 instance.transform.SetPositionAndRotation(position, rotation);
@@ -35,49 +31,49 @@
             return true;
         }
 
-		// +--------------------------------------------------------------------------------------+
-		// | EDITOR                                                                               |
-		// +--------------------------------------------------------------------------------------+
+        // +--------------------------------------------------------------------------------------+
+        // | EDITOR                                                                               |
+        // +--------------------------------------------------------------------------------------+
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 
-		public static new string NAME = "Object/Instantiate from Pool";
-		private const string NODE_TITLE = "Instantiate {0} from Pool";
+        public static new string NAME = "Object/Instantiate from Pool";
+        private const string NODE_TITLE = "Instantiate {0} from Pool";
 
         // PROPERTIES: ----------------------------------------------------------------------------
 
         private SerializedProperty spPrefab;
-		private SerializedProperty spInitLocation;
+        private SerializedProperty spInitLocation;
 
         // INSPECTOR METHODS: ---------------------------------------------------------------------
 
         public override string GetNodeTitle()
-		{
-			return string.Format(NODE_TITLE, this.prefab);
-		}
-
-		protected override void OnEnableEditorChild ()
-		{
-			this.spPrefab = this.serializedObject.FindProperty("prefab");
-			this.spInitLocation = this.serializedObject.FindProperty("initLocation");
+        {
+            return string.Format(NODE_TITLE, prefab);
         }
 
-		protected override void OnDisableEditorChild ()
-		{
-			this.spPrefab = null;
-			this.spInitLocation = null;
+        protected override void OnEnableEditorChild()
+        {
+            spPrefab = serializedObject.FindProperty("prefab");
+            spInitLocation = serializedObject.FindProperty("initLocation");
         }
 
-		public override void OnInspectorGUI()
-		{
-			this.serializedObject.Update();
+        protected override void OnDisableEditorChild()
+        {
+            spPrefab = null;
+            spInitLocation = null;
+        }
 
-			EditorGUILayout.PropertyField(this.spPrefab);
-			EditorGUILayout.PropertyField(this.spInitLocation);
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
 
-			this.serializedObject.ApplyModifiedProperties();
-		}
+            EditorGUILayout.PropertyField(spPrefab);
+            EditorGUILayout.PropertyField(spInitLocation);
 
-		#endif
-	}
+            serializedObject.ApplyModifiedProperties();
+        }
+
+#endif
+    }
 }

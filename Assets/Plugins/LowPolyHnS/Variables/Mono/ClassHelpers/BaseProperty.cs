@@ -1,11 +1,8 @@
-﻿namespace LowPolyHnS.Variables
-{
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using LowPolyHnS.Core;
+﻿using System;
+using UnityEngine;
 
+namespace LowPolyHnS.Variables
+{
     [Serializable]
     public abstract class BaseProperty<T>
     {
@@ -30,21 +27,21 @@
 
         protected BaseProperty()
         {
-            this.value = default(T);
-            this.SetupVariables();
+            value = default;
+            SetupVariables();
         }
 
         protected BaseProperty(T value)
         {
             this.value = value;
-            this.SetupVariables();
+            SetupVariables();
         }
 
         private void SetupVariables()
         {
-            this.global = this.global ?? new HelperGlobalVariable();
-            this.local = this.local ?? new HelperLocalVariable();
-            this.list = this.list ?? new HelperGetListVariable();
+            global = global ?? new HelperGlobalVariable();
+            local = local ?? new HelperLocalVariable();
+            list = list ?? new HelperGetListVariable();
         }
 
         // PUBLIC METHODS: ------------------------------------------------------------------------
@@ -56,42 +53,42 @@
                 "Please contact us at: marti@catsoft-studios.com. Thanks!"
             );
 
-            return this.GetValue(null);
+            return GetValue(null);
         }
 
         public T GetValue(GameObject invoker)
         {
-            switch (this.optionIndex)
+            switch (optionIndex)
             {
-                case OPTION.Value: return this.value;
-                case OPTION.UseGlobalVariable : return (T)this.global.Get();
-                case OPTION.UseLocalVariable: return (T)this.local.Get(invoker);
-                case OPTION.UseListVariable: return (T)this.list.Get(invoker);
+                case OPTION.Value: return value;
+                case OPTION.UseGlobalVariable: return (T) global.Get();
+                case OPTION.UseLocalVariable: return (T) local.Get(invoker);
+                case OPTION.UseListVariable: return (T) list.Get(invoker);
             }
 
-            return default(T);
+            return default;
         }
 
-		// OVERRIDERS: ----------------------------------------------------------------------------
+        // OVERRIDERS: ----------------------------------------------------------------------------
 
-		public override string ToString()
-		{
-            switch (this.optionIndex)
+        public override string ToString()
+        {
+            switch (optionIndex)
             {
-                case OPTION.Value : return this.GetValueName();
+                case OPTION.Value: return GetValueName();
                 case OPTION.UseGlobalVariable: return "(Global Variable)";
                 case OPTION.UseLocalVariable: return "(Local Variable)";
                 case OPTION.UseListVariable: return "(List Variable)";
             }
 
             return "unknown";
-		}
+        }
 
         protected virtual string GetValueName()
         {
-            return this.value == null
+            return value == null
                 ? "(none)"
-                : this.value.ToString();
+                : value.ToString();
         }
-	}
+    }
 }

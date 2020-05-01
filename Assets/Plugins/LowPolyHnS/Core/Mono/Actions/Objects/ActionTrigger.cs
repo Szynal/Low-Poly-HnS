@@ -1,67 +1,65 @@
-﻿namespace LowPolyHnS.Core
+﻿using UnityEngine;
+
+namespace LowPolyHnS.Core
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[AddComponentMenu("")]
-    public class ActionTrigger : IAction 
-	{
+    [AddComponentMenu("")]
+    public class ActionTrigger : IAction
+    {
         public Trigger trigger;
 
         // EXECUTABLE: -------------------------------------------------------------------------------------------------
 
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
-            if (this.trigger != null) this.trigger.Execute(target);
+            if (trigger != null) trigger.Execute(target);
             return true;
         }
 
-		// +-----------------------------------------------------------------------------------------------------------+
-		// | EDITOR                                                                                                    |
-		// +-----------------------------------------------------------------------------------------------------------+
+        // +-----------------------------------------------------------------------------------------------------------+
+        // | EDITOR                                                                                                    |
+        // +-----------------------------------------------------------------------------------------------------------+
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 
-		public static new string NAME = "Object/Trigger";
-		private const string NODE_TITLE = "Trigger {0}";
+        public static new string NAME = "Object/Trigger";
+        private const string NODE_TITLE = "Trigger {0}";
 
-		// PROPERTIES: -------------------------------------------------------------------------------------------------
+        // PROPERTIES: -------------------------------------------------------------------------------------------------
 
-		private SerializedProperty spTrigger;
+        private SerializedProperty spTrigger;
 
-		// INSPECTOR METHODS: ------------------------------------------------------------------------------------------
+        // INSPECTOR METHODS: ------------------------------------------------------------------------------------------
 
-		public override string GetNodeTitle()
-		{
+        public override string GetNodeTitle()
+        {
             return string.Format(
-                NODE_TITLE, 
-                (this.trigger == null ? "none" : this.trigger.gameObject.name)
+                NODE_TITLE,
+                trigger == null ? "none" : trigger.gameObject.name
             );
-		}
+        }
 
-		protected override void OnEnableEditorChild ()
-		{
-            this.spTrigger = this.serializedObject.FindProperty("trigger");
-		}
+        protected override void OnEnableEditorChild()
+        {
+            spTrigger = serializedObject.FindProperty("trigger");
+        }
 
-		protected override void OnDisableEditorChild ()
-		{
-			this.spTrigger = null;
-		}
+        protected override void OnDisableEditorChild()
+        {
+            spTrigger = null;
+        }
 
-		public override void OnInspectorGUI()
-		{
-			this.serializedObject.Update();
-            EditorGUILayout.PropertyField(this.spTrigger);
-			this.serializedObject.ApplyModifiedProperties();
-		}
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
+            EditorGUILayout.PropertyField(spTrigger);
+            serializedObject.ApplyModifiedProperties();
+        }
 
-		#endif
-	}
+#endif
+    }
 }

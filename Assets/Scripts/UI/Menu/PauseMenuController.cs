@@ -5,7 +5,7 @@ public class PauseMenuController : SubMenuController
 {
     public void ReturnToMainMenu()
     {
-        if(SceneLoader.Instance == null)
+        if (SceneLoader.Instance == null)
         {
             return;
         }

@@ -1,16 +1,12 @@
-﻿namespace LowPolyHnS.Playables
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEngine.Playables;
-    using LowPolyHnS.Core;
+﻿using LowPolyHnS.Core;
 
+namespace LowPolyHnS.Playables
+{
     public class ConditionsBehavior : IGenericBehavior<Conditions>
     {
         protected override void Execute()
         {
-            this.interactable.Interact(this.invoker);
+            interactable.Interact(invoker);
         }
     }
 }

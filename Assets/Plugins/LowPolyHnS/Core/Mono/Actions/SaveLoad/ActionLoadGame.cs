@@ -1,35 +1,33 @@
-﻿namespace LowPolyHnS.Core
+﻿using System.Collections;
+using UnityEngine;
+
+namespace LowPolyHnS.Core
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[AddComponentMenu("")]
-	public class ActionLoadGame : IAction 
-	{
-		public bool useCurrentProfile = true;
-		public int selectProfile = 1;
+    [AddComponentMenu("")]
+    public class ActionLoadGame : IAction
+    {
+        public bool useCurrentProfile = true;
+        public int selectProfile = 1;
 
-        private bool complete = false;
+        private bool complete;
 
-		// EXECUTABLE: ----------------------------------------------------------------------------
+        // EXECUTABLE: ----------------------------------------------------------------------------
 
         public override IEnumerator Execute(GameObject target, IAction[] actions, int index)
         {
-            int profile = (this.useCurrentProfile 
-                ? SaveLoadManager.Instance.GetCurrentProfile() 
-                : this.selectProfile
-            );
+            int profile = useCurrentProfile
+                ? SaveLoadManager.Instance.GetCurrentProfile()
+                : selectProfile;
 
-            this.complete = false;
-            SaveLoadManager.Instance.Load(profile, this.OnLoad);
+            complete = false;
+            SaveLoadManager.Instance.Load(profile, OnLoad);
 
-            WaitUntil waitUntil = new WaitUntil(() => this.complete);
+            WaitUntil waitUntil = new WaitUntil(() => complete);
             yield return waitUntil;
 
             yield return 0;
@@ -37,60 +35,61 @@
 
         private void OnLoad()
         {
-            this.complete = true;
+            complete = true;
         }
 
         // +--------------------------------------------------------------------------------------+
         // | EDITOR                                                                               |
         // +--------------------------------------------------------------------------------------+
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
 
         public static new string NAME = "Save & Load/Load Game";
-		private const string NODE_TITLE = "Load Game (profile {0})";
+        private const string NODE_TITLE = "Load Game (profile {0})";
 
-		private static readonly GUIContent GUICONTENT_USECURR_PROFILE = new GUIContent("Use Current Profile?");
-		private static readonly GUIContent GUICONTENT_SELECT_PROFILE = new GUIContent("Select Profile");
+        private static readonly GUIContent GUICONTENT_USECURR_PROFILE = new GUIContent("Use Current Profile?");
+        private static readonly GUIContent GUICONTENT_SELECT_PROFILE = new GUIContent("Select Profile");
 
-		// PROPERTIES: ----------------------------------------------------------------------------
+        // PROPERTIES: ----------------------------------------------------------------------------
 
-		private SerializedProperty spUseCurrentProfile;
-		private SerializedProperty spSelectProfile;
+        private SerializedProperty spUseCurrentProfile;
+        private SerializedProperty spSelectProfile;
 
-		// INSPECTOR METHODS: ---------------------------------------------------------------------
+        // INSPECTOR METHODS: ---------------------------------------------------------------------
 
-		public override string GetNodeTitle()
-		{
-			return string.Format(
-				NODE_TITLE,
-				(this.useCurrentProfile ? "current" : this.selectProfile.ToString())
-			);
-		}
+        public override string GetNodeTitle()
+        {
+            return string.Format(
+                NODE_TITLE,
+                useCurrentProfile ? "current" : selectProfile.ToString()
+            );
+        }
 
-		protected override void OnEnableEditorChild ()
-		{
-			this.spUseCurrentProfile = serializedObject.FindProperty("useCurrentProfile");
-			this.spSelectProfile = serializedObject.FindProperty("selectProfile");
-		}
-		protected override void OnDisableEditorChild ()
-		{
-			this.spUseCurrentProfile = null;
-			this.spSelectProfile = null;
-		}
+        protected override void OnEnableEditorChild()
+        {
+            spUseCurrentProfile = serializedObject.FindProperty("useCurrentProfile");
+            spSelectProfile = serializedObject.FindProperty("selectProfile");
+        }
 
-		public override void OnInspectorGUI()
-		{
-			this.serializedObject.Update();
+        protected override void OnDisableEditorChild()
+        {
+            spUseCurrentProfile = null;
+            spSelectProfile = null;
+        }
 
-			EditorGUILayout.PropertyField(this.spUseCurrentProfile, GUICONTENT_USECURR_PROFILE);
-			if (!this.spUseCurrentProfile.boolValue)
-			{
-				EditorGUILayout.PropertyField(this.spSelectProfile, GUICONTENT_SELECT_PROFILE);
-			}
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
 
-			this.serializedObject.ApplyModifiedProperties();
-		}
+            EditorGUILayout.PropertyField(spUseCurrentProfile, GUICONTENT_USECURR_PROFILE);
+            if (!spUseCurrentProfile.boolValue)
+            {
+                EditorGUILayout.PropertyField(spSelectProfile, GUICONTENT_SELECT_PROFILE);
+            }
 
-		#endif
-	}
+            serializedObject.ApplyModifiedProperties();
+        }
+
+#endif
+    }
 }

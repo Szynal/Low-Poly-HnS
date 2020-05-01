@@ -1,31 +1,27 @@
-﻿namespace LowPolyHnS.Core
-{
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.UI;
-	using UnityEditor;
+﻿using UnityEditor;
 
+namespace LowPolyHnS.Core
+{
     [CustomEditor(typeof(IDataProvider), true)]
     public class IDataProviderEditor : Editor
-	{
-		private SerializedProperty spTitle;
+    {
+        private SerializedProperty spTitle;
         private SerializedProperty spDescription;
 
-		private void OnEnable()
-		{
-            this.spTitle = serializedObject.FindProperty("title");
-            this.spDescription = serializedObject.FindProperty("description");
-		}
+        private void OnEnable()
+        {
+            spTitle = serializedObject.FindProperty("title");
+            spDescription = serializedObject.FindProperty("description");
+        }
 
-		public override void OnInspectorGUI()
-		{
-			serializedObject.Update();
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
 
-            EditorGUILayout.LabelField(this.spTitle.stringValue, EditorStyles.boldLabel);
-            EditorGUILayout.HelpBox(this.spDescription.stringValue, MessageType.Info);
+            EditorGUILayout.LabelField(spTitle.stringValue, EditorStyles.boldLabel);
+            EditorGUILayout.HelpBox(spDescription.stringValue, MessageType.Info);
 
-			serializedObject.ApplyModifiedProperties();
-		}
-	}
+            serializedObject.ApplyModifiedProperties();
+        }
+    }
 }

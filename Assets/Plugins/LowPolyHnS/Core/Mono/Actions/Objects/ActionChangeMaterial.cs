@@ -1,42 +1,39 @@
-﻿namespace LowPolyHnS.Core
-{
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-	using LowPolyHnS.Core;
-    using LowPolyHnS.Variables;
-    using UnityEngine.Serialization;
+﻿using LowPolyHnS.Variables;
+using UnityEngine;
+using UnityEngine.Serialization;
 
-    #if UNITY_EDITOR
-    using UnityEditor;
-    #endif
+namespace LowPolyHnS.Core
+{
+#if UNITY_EDITOR
+
+#endif
 
     [AddComponentMenu("")]
-	public class ActionChangeMaterial : IAction
-	{
+    public class ActionChangeMaterial : IAction
+    {
         public Material material;
 
-        [FormerlySerializedAs("target")]
-        [Space] public TargetGameObject targetRenderer = new TargetGameObject();
+        [FormerlySerializedAs("target")] [Space]
+        public TargetGameObject targetRenderer = new TargetGameObject();
+
         [Space] public NumberProperty materialIndex = new NumberProperty(0);
 
         // EXECUTABLE: ----------------------------------------------------------------------------
 
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
-            GameObject go = this.targetRenderer.GetGameObject(target);
+            GameObject go = targetRenderer.GetGameObject(target);
             if (go != null)
             {
                 Renderer render = go.GetComponent<Renderer>();
-                int matIndex = this.materialIndex.GetInt(target);
+                int matIndex = materialIndex.GetInt(target);
 
                 if (render != null)
                 {
                     if (matIndex >= 0 && matIndex < render.materials.Length)
                     {
                         Material[] materials = render.materials;
-                        materials[matIndex] = this.material;
+                        materials[matIndex] = material;
 
                         render.materials = materials;
                     }
@@ -46,26 +43,24 @@
             return true;
         }
 
-		// +--------------------------------------------------------------------------------------+
-		// | EDITOR                                                                               |
-		// +--------------------------------------------------------------------------------------+
+        // +--------------------------------------------------------------------------------------+
+        // | EDITOR                                                                               |
+        // +--------------------------------------------------------------------------------------+
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 
-		public static new string NAME = "Object/Change Material";
+        public static new string NAME = "Object/Change Material";
         private const string NODE_TITLE = "Change material {0}";
 
-		// INSPECTOR METHODS: ---------------------------------------------------------------------
+        // INSPECTOR METHODS: ---------------------------------------------------------------------
 
-		public override string GetNodeTitle()
-		{
-            return string.Format(NODE_TITLE, (
-                this.material == null
+        public override string GetNodeTitle()
+        {
+            return string.Format(NODE_TITLE, material == null
                 ? "(none)"
-                : this.material.name
-            ));
-		}
+                : material.name);
+        }
 
-		#endif
-	}
+#endif
+    }
 }

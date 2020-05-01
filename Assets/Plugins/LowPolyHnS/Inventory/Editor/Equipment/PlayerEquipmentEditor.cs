@@ -1,11 +1,7 @@
-﻿namespace LowPolyHnS.Inventory
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEditor;
-    using LowPolyHnS.Core;
+﻿using UnityEditor;
 
+namespace LowPolyHnS.Inventory
+{
     [CustomEditor(typeof(PlayerEquipment))]
     public class PlayerEquipmentEditor : CharacterEquipmentEditor
     {

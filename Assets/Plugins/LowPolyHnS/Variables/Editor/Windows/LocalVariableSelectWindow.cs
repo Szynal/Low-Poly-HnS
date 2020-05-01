@@ -1,13 +1,9 @@
-﻿namespace LowPolyHnS.Variables
-{
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEditor;
-    using UnityEditor.IMGUI.Controls;
-    using LowPolyHnS.Core;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
 
+namespace LowPolyHnS.Variables
+{
     public class LocalVariableSelectWindow : GenericVariableSelectWindow
     {
         private GameObject target;
@@ -15,20 +11,21 @@
 
         // INITIALIZERS: --------------------------------------------------------------------------
 
-        public LocalVariableSelectWindow(Rect ctaRect, GameObject target, bool inChildren, Action<string> callback, int allowTypesMask) 
+        public LocalVariableSelectWindow(Rect ctaRect, GameObject target, bool inChildren, Action<string> callback,
+            int allowTypesMask)
             : base(ctaRect, callback, allowTypesMask)
         {
             this.target = target;
             this.inChildren = inChildren;
         }
 
-		// OVERRIDERS: ----------------------------------------------------------------------------
+        // OVERRIDERS: ----------------------------------------------------------------------------
 
-		protected override GUIContent[] GetVariables(int allowTypesMask)
-		{
-            if (this.target == null) return new GUIContent[0];
+        protected override GUIContent[] GetVariables(int allowTypesMask)
+        {
+            if (target == null) return new GUIContent[0];
             LocalVariables[] localVariables = LocalVariablesUtilities.GatherLocals(
-                this.target, this.inChildren
+                target, inChildren
             );
 
             List<GUIContent> variables = new List<GUIContent>();
@@ -37,8 +34,8 @@
                 LocalVariables local = localVariables[i];
                 for (int j = 0; j < local.references.Length; ++j)
                 {
-                    Variable.DataType type = (Variable.DataType)local.references[j].variable.type;
-                    if ((allowTypesMask & 1 << (int)type) == 0) continue;
+                    Variable.DataType type = (Variable.DataType) local.references[j].variable.type;
+                    if ((allowTypesMask & (1 << (int) type)) == 0) continue;
 
                     variables.Add(new GUIContent(
                         local.references[j].variable.name,
@@ -48,11 +45,10 @@
             }
 
             return variables.ToArray();
-		}
+        }
 
-		protected override void PaintFooter()
-		{
-            return;
-		}
-	}
+        protected override void PaintFooter()
+        {
+        }
+    }
 }

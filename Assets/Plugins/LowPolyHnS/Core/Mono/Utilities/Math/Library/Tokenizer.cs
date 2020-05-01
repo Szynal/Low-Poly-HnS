@@ -1,10 +1,10 @@
-﻿namespace LowPolyHnS.Core.Math
-{
-    using System;
-    using System.IO;
-    using System.Text;
-    using System.Globalization;
+﻿using System;
+using System.Globalization;
+using System.IO;
+using System.Text;
 
+namespace LowPolyHnS.Core.Math
+{
     public class Tokenizer
     {
         public enum Token
@@ -16,7 +16,7 @@
             Divide,
             OpenParens,
             CloseParens,
-            Number,
+            Number
         }
 
         private static readonly CultureInfo CULTURE = new CultureInfo("en-US");
@@ -42,77 +42,77 @@
 
         public Tokenizer(string expression)
         {
-            this.reader = new StringReader(expression);
+            reader = new StringReader(expression);
 
-            this.NextChar();
-            this.NextToken();
+            NextChar();
+            NextToken();
         }
 
         // PRIVATE METHODS: -----------------------------------------------------------------------
 
-        void NextChar()
+        private void NextChar()
         {
             int character = reader.Read();
-            this.currentCharacter = character < 0 ? CHAR_EOF : (char)character;
+            currentCharacter = character < 0 ? CHAR_EOF : (char) character;
         }
 
         public void NextToken()
         {
-            while (char.IsWhiteSpace(this.currentCharacter)) this.NextChar();
-            switch (this.currentCharacter)
+            while (char.IsWhiteSpace(currentCharacter)) NextChar();
+            switch (currentCharacter)
             {
                 case CHAR_EOF:
-                    this.currentToken = Token.EOF;
+                    currentToken = Token.EOF;
                     return;
 
                 case CHAR_PLUS:
-                    this.NextChar();
-                    this.currentToken = Token.Add;
+                    NextChar();
+                    currentToken = Token.Add;
                     return;
 
                 case CHAR_MINUS:
-                    this.NextChar();
-                    this.currentToken = Token.Subtract;
+                    NextChar();
+                    currentToken = Token.Subtract;
                     return;
 
                 case CHAR_MULT:
-                    this.NextChar();
-                    this.currentToken = Token.Multiply;
+                    NextChar();
+                    currentToken = Token.Multiply;
                     return;
 
                 case CHAR_DIV:
-                    this.NextChar();
-                    this.currentToken = Token.Divide;
+                    NextChar();
+                    currentToken = Token.Divide;
                     return;
 
                 case CHAR_S_PARENTHESIS:
-                    this.NextChar();
-                    this.currentToken = Token.OpenParens;
+                    NextChar();
+                    currentToken = Token.OpenParens;
                     return;
 
                 case CHAR_E_PARENTHESIS:
-                    this.NextChar();
-                    this.currentToken = Token.CloseParens;
+                    NextChar();
+                    currentToken = Token.CloseParens;
                     return;
             }
 
-            if (char.IsDigit(this.currentCharacter) || this.currentCharacter == CHAR_DOT)
+            if (char.IsDigit(currentCharacter) || currentCharacter == CHAR_DOT)
             {
                 var sb = new StringBuilder();
                 bool hasFloatingPoint = false;
-                while (char.IsDigit(this.currentCharacter) || (!hasFloatingPoint && this.currentCharacter == CHAR_DOT))
+                while (char.IsDigit(currentCharacter) || !hasFloatingPoint && currentCharacter == CHAR_DOT)
                 {
-                    sb.Append(this.currentCharacter);
-                    hasFloatingPoint = this.currentCharacter == CHAR_DOT;
-                    this.NextChar();
+                    sb.Append(currentCharacter);
+                    hasFloatingPoint = currentCharacter == CHAR_DOT;
+                    NextChar();
                 }
 
-                this.number = float.Parse(sb.ToString(), CULTURE);
-                this.currentToken = Token.Number;
+                number = float.Parse(sb.ToString(), CULTURE);
+                currentToken = Token.Number;
                 return;
             }
 
-            throw new Exception(string.Format("Unexpected character: {0}", this.currentCharacter));
+            throw new Exception(string.Format("Unexpected character: {0}", currentCharacter));
         }
     }
 }

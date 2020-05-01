@@ -1,12 +1,9 @@
-﻿namespace LowPolyHnS.ModuleManager
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEditor;
-    using UnityEditor.AnimatedValues;
-    using LowPolyHnS.Core;
+﻿using LowPolyHnS.Core;
+using UnityEditor;
+using UnityEngine;
 
+namespace LowPolyHnS.ModuleManager
+{
     [CustomEditor(typeof(AssetModule))]
     public class AssetModuleEditor : Editor
     {
@@ -46,61 +43,61 @@
         private SerializedProperty spDataPaths;
 
         // INITIALIZERS: --------------------------------------------------------------------------
-        
-		private void OnEnable()
-		{
-            this.assetModule = (AssetModule)target;
 
-            this.spAdminLogin = serializedObject.FindProperty("adminLogin");
-            this.spAdminOpen = serializedObject.FindProperty("adminOpen");
+        private void OnEnable()
+        {
+            assetModule = (AssetModule) target;
+
+            spAdminLogin = serializedObject.FindProperty("adminLogin");
+            spAdminOpen = serializedObject.FindProperty("adminOpen");
 
             SerializedProperty spModule = serializedObject.FindProperty("module");
-            this.spModuleID = spModule.FindPropertyRelative("moduleID");
+            spModuleID = spModule.FindPropertyRelative("moduleID");
 
             SerializedProperty spVersion = spModule.FindPropertyRelative("version");
-            this.spVersionMajor = spVersion.FindPropertyRelative("major");
-            this.spVersionMinor = spVersion.FindPropertyRelative("minor");
-            this.spVersionPatch = spVersion.FindPropertyRelative("patch");
+            spVersionMajor = spVersion.FindPropertyRelative("major");
+            spVersionMinor = spVersion.FindPropertyRelative("minor");
+            spVersionPatch = spVersion.FindPropertyRelative("patch");
 
-            this.spDisplayName = spModule.FindPropertyRelative("displayName");
-            this.spDescription = spModule.FindPropertyRelative("description");
-            this.spCategory = spModule.FindPropertyRelative("category");
+            spDisplayName = spModule.FindPropertyRelative("displayName");
+            spDescription = spModule.FindPropertyRelative("description");
+            spCategory = spModule.FindPropertyRelative("category");
 
-            this.spDependencies = spModule.FindPropertyRelative("dependencies");
-            this.spTags = spModule.FindPropertyRelative("tags");
+            spDependencies = spModule.FindPropertyRelative("dependencies");
+            spTags = spModule.FindPropertyRelative("tags");
 
-            this.spAuthorName = spModule.FindPropertyRelative("authorName");
-            this.spAuthorMail = spModule.FindPropertyRelative("authorMail");
-            this.spAuthorSite = spModule.FindPropertyRelative("authorSite");
+            spAuthorName = spModule.FindPropertyRelative("authorName");
+            spAuthorMail = spModule.FindPropertyRelative("authorMail");
+            spAuthorSite = spModule.FindPropertyRelative("authorSite");
 
-            this.spIncludesData = spModule.FindPropertyRelative("includesData");
-            this.spCodePaths = spModule.FindPropertyRelative("codePaths");
-            this.spDataPaths = spModule.FindPropertyRelative("dataPaths");
-		}
+            spIncludesData = spModule.FindPropertyRelative("includesData");
+            spCodePaths = spModule.FindPropertyRelative("codePaths");
+            spDataPaths = spModule.FindPropertyRelative("dataPaths");
+        }
 
         // PAINT METHODS: -------------------------------------------------------------------------
 
-		public override void OnInspectorGUI()
-		{
+        public override void OnInspectorGUI()
+        {
             serializedObject.Update();
 
-            this.PaintInfo();
-            this.PaintDeveloper();
+            PaintInfo();
+            PaintDeveloper();
 
             serializedObject.ApplyModifiedProperties();
-		}
+        }
 
         private void PaintInfo()
         {
             string title = string.Format(
                 TITLE,
-                this.spModuleID.stringValue,
-                this.spVersionMajor.intValue,
-                this.spVersionMinor.intValue,
-                this.spVersionPatch.intValue
+                spModuleID.stringValue,
+                spVersionMajor.intValue,
+                spVersionMinor.intValue,
+                spVersionPatch.intValue
             );
 
-            EditorGUILayout.LabelField(this.spDisplayName.stringValue, EditorStyles.boldLabel);
+            EditorGUILayout.LabelField(spDisplayName.stringValue, EditorStyles.boldLabel);
             EditorGUILayout.LabelField(title, EditorStyles.label);
         }
 
@@ -108,10 +105,9 @@
         {
             EditorGUILayout.BeginVertical(EditorStyles.helpBox);
 
-            GUIStyle style = (this.spAdminOpen.boolValue
+            GUIStyle style = spAdminOpen.boolValue
                 ? CoreGUIStyles.GetToggleButtonNormalOn()
-                : CoreGUIStyles.GetToggleButtonNormalOff()
-            );
+                : CoreGUIStyles.GetToggleButtonNormalOff();
 
             if (GUICONTENT_ADMIN == null)
             {
@@ -121,24 +117,25 @@
 
             if (GUILayout.Button(GUICONTENT_ADMIN, style))
             {
-                this.spAdminOpen.boolValue = !this.spAdminOpen.boolValue;
+                spAdminOpen.boolValue = !spAdminOpen.boolValue;
             }
 
-            if (this.spAdminOpen.boolValue)
+            if (spAdminOpen.boolValue)
             {
-                if (this.spAdminLogin.boolValue)
+                if (spAdminLogin.boolValue)
                 {
-                    this.PaintDeveloperAdmin();
+                    PaintDeveloperAdmin();
                 }
                 else
                 {
                     EditorGUILayout.HelpBox(MSG_DEV, MessageType.Warning);
                     EditorGUILayout.BeginHorizontal();
-                    this.password = EditorGUILayout.PasswordField(this.password);
+                    password = EditorGUILayout.PasswordField(password);
                     if (GUILayout.Button("Sign in", EditorStyles.miniButton))
                     {
-                        if (this.password == PASSWORD) this.spAdminLogin.boolValue = true;
+                        if (password == PASSWORD) spAdminLogin.boolValue = true;
                     }
+
                     EditorGUILayout.EndHorizontal();
                 }
             }
@@ -151,12 +148,13 @@
             EditorGUILayout.BeginHorizontal();
             if (GUILayout.Button("Build Module", CoreGUIStyles.GetButtonLeft()))
             {
-                EditorApplication.update += this.BuildModuleDeferred;
+                EditorApplication.update += BuildModuleDeferred;
             }
+
             if (GUILayout.Button("Logout", CoreGUIStyles.GetButtonRight()))
             {
-                this.spAdminLogin.boolValue = false;
-                this.password = "";
+                spAdminLogin.boolValue = false;
+                password = "";
             }
 
             EditorGUILayout.EndHorizontal();
@@ -164,51 +162,51 @@
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("Information", EditorStyles.boldLabel);
             EditorGUI.indentLevel++;
-            EditorGUILayout.PropertyField(this.spModuleID);
-            EditorGUILayout.PropertyField(this.spDisplayName);
-            EditorGUILayout.PropertyField(this.spDescription);
-            EditorGUILayout.PropertyField(this.spCategory);
+            EditorGUILayout.PropertyField(spModuleID);
+            EditorGUILayout.PropertyField(spDisplayName);
+            EditorGUILayout.PropertyField(spDescription);
+            EditorGUILayout.PropertyField(spCategory);
             EditorGUI.indentLevel--;
 
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("Version", EditorStyles.boldLabel);
             EditorGUI.indentLevel++;
-            EditorGUILayout.PropertyField(this.spVersionMajor);
-            EditorGUILayout.PropertyField(this.spVersionMinor);
-            EditorGUILayout.PropertyField(this.spVersionPatch);
+            EditorGUILayout.PropertyField(spVersionMajor);
+            EditorGUILayout.PropertyField(spVersionMinor);
+            EditorGUILayout.PropertyField(spVersionPatch);
             EditorGUI.indentLevel--;
 
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("Author", EditorStyles.boldLabel);
             EditorGUI.indentLevel++;
-            EditorGUILayout.PropertyField(this.spAuthorName);
-            EditorGUILayout.PropertyField(this.spAuthorMail);
-            EditorGUILayout.PropertyField(this.spAuthorSite);
+            EditorGUILayout.PropertyField(spAuthorName);
+            EditorGUILayout.PropertyField(spAuthorMail);
+            EditorGUILayout.PropertyField(spAuthorSite);
             EditorGUI.indentLevel--;
 
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("Dependencies", EditorStyles.boldLabel);
             EditorGUI.indentLevel++;
-            EditorGUILayout.PropertyField(this.spDependencies, true);
+            EditorGUILayout.PropertyField(spDependencies, true);
             EditorGUI.indentLevel--;
 
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("Tags", EditorStyles.boldLabel);
             EditorGUI.indentLevel++;
-            EditorGUILayout.PropertyField(this.spTags, true);
+            EditorGUILayout.PropertyField(spTags, true);
             EditorGUI.indentLevel--;
 
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("Code Paths", EditorStyles.boldLabel);
             EditorGUI.indentLevel++;
-            EditorGUILayout.PropertyField(this.spCodePaths, true);
+            EditorGUILayout.PropertyField(spCodePaths, true);
             EditorGUI.indentLevel--;
 
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("Data Paths", EditorStyles.boldLabel);
             EditorGUI.indentLevel++;
-            EditorGUILayout.PropertyField(this.spIncludesData);
-            EditorGUILayout.PropertyField(this.spDataPaths, true);
+            EditorGUILayout.PropertyField(spIncludesData);
+            EditorGUILayout.PropertyField(spDataPaths, true);
             EditorGUI.indentLevel--;
 
             EditorGUI.EndDisabledGroup();
@@ -216,8 +214,8 @@
 
         private void BuildModuleDeferred()
         {
-            EditorApplication.update -= this.BuildModuleDeferred;
-            this.assetModule.BuildModule();
+            EditorApplication.update -= BuildModuleDeferred;
+            assetModule.BuildModule();
         }
-	}
+    }
 }

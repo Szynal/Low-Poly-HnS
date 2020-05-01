@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "ItemDatabase", menuName = "FearEffect/Generic/ItemDatabase", order = 1)]
@@ -10,17 +9,17 @@ public class FE_ItemDatabase : ScriptableObject
 
     public FE_Item GetItemByID(int _id)
     {
-        foreach(FE_Weapon _wep in Weapons)
+        foreach (FE_Weapon _wep in Weapons)
         {
-            if(_wep.itemID == _id)
+            if (_wep.itemID == _id)
             {
                 return _wep;
             }
         }
-        
-        foreach(FE_UseableItem _item in Useables)
+
+        foreach (FE_UseableItem _item in Useables)
         {
-            if(_item.itemID == _id)
+            if (_item.itemID == _id)
             {
                 return _item;
             }

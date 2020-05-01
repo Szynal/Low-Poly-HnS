@@ -1,14 +1,9 @@
-﻿namespace LowPolyHnS.Core
-{
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEngine.UI;
-    using UnityEngine.Events;
-    using UnityEngine.EventSystems;
-    using LowPolyHnS.Variables;
+﻿using LowPolyHnS.Variables;
+using UnityEngine;
+using UnityEngine.UI;
 
+namespace LowPolyHnS.Core
+{
     [AddComponentMenu("LowPolyHnS/UI/Slider", 10)]
     public class SliderVariable : Slider
     {
@@ -30,35 +25,35 @@
             base.Start();
             if (!Application.isPlaying) return;
 
-            object current = this.variable.Get(gameObject);
+            object current = variable.Get(gameObject);
 
             if (current != null)
             {
-                this.value = (float)current;
-                this.onValueChanged.AddListener(this.SyncVariableWithValue);
+                value = (float) current;
+                onValueChanged.AddListener(SyncVariableWithValue);
             }
 
-            switch (this.variable.variableType)
+            switch (variable.variableType)
             {
                 case VariableProperty.GetVarType.GlobalVariable:
                     VariablesManager.events.SetOnChangeGlobal(
-                        SyncValueWithVariable, 
-                        this.variable.GetVariableID()
+                        SyncValueWithVariable,
+                        variable.GetVariableID()
                     );
                     break;
 
                 case VariableProperty.GetVarType.LocalVariable:
                     VariablesManager.events.SetOnChangeLocal(
                         SyncValueWithVariable,
-                        this.variable.GetLocalVariableGameObject(gameObject),
-                        this.variable.GetVariableID()
+                        variable.GetLocalVariableGameObject(gameObject),
+                        variable.GetVariableID()
                     );
                     break;
 
                 case VariableProperty.GetVarType.ListVariable:
                     VariablesManager.events.StartListenListAny(
                         SyncValueWithList,
-                        this.variable.GetListVariableGameObject(gameObject)
+                        variable.GetListVariableGameObject(gameObject)
                     );
                     break;
             }
@@ -69,27 +64,27 @@
             base.OnDestroy();
             if (!Application.isPlaying) return;
 
-            switch (this.variable.variableType)
+            switch (variable.variableType)
             {
                 case VariableProperty.GetVarType.GlobalVariable:
                     VariablesManager.events.RemoveChangeGlobal(
                         SyncValueWithVariable,
-                        this.variable.GetVariableID()
+                        variable.GetVariableID()
                     );
                     break;
 
                 case VariableProperty.GetVarType.LocalVariable:
                     VariablesManager.events.RemoveChangeLocal(
                         SyncValueWithVariable,
-                        this.variable.GetLocalVariableGameObject(gameObject),
-                        this.variable.GetVariableID()
+                        variable.GetLocalVariableGameObject(gameObject),
+                        variable.GetVariableID()
                     );
                     break;
 
                 case VariableProperty.GetVarType.ListVariable:
                     VariablesManager.events.StopListenListAny(
                         SyncValueWithList,
-                        this.variable.GetListVariableGameObject(gameObject)
+                        variable.GetListVariableGameObject(gameObject)
                     );
                     break;
             }
@@ -99,27 +94,27 @@
 
         private void SyncValueWithList(int index, object prevElem, object newElem)
         {
-            this.SyncValueWithVariable(string.Empty);
+            SyncValueWithVariable(string.Empty);
         }
 
         // PROTECTED METHODS: ---------------------------------------------------------------------
 
         protected virtual void SyncValueWithVariable(string variableName)
         {
-            object current = this.variable.Get(gameObject);
+            object current = variable.Get(gameObject);
             if (current != null)
             {
-                float newValue = (float)current;
-                if (!Mathf.Approximately(newValue, this.value))
+                float newValue = (float) current;
+                if (!Mathf.Approximately(newValue, value))
                 {
-                    this.value = newValue;
+                    value = newValue;
                 }
             }
         }
 
         protected virtual void SyncVariableWithValue(float newValue)
         {
-            this.variable.Set(newValue, gameObject);
+            variable.Set(newValue, gameObject);
         }
     }
 }

@@ -30,28 +30,32 @@ namespace LowPolyHnS.Core
         {
             base.Awake();
 
-            if (!Application.isPlaying || this.exitingApplication) return;
-            this.defaultState = this.gameObject.activeSelf;
+            if (!Application.isPlaying || exitingApplication) return;
+            defaultState = gameObject.activeSelf;
         }
 
         private void OnEnable()
         {
-            if (!Application.isPlaying || this.exitingApplication) return;
-            this.UpdateState();
+            if (!Application.isPlaying || exitingApplication) return;
+            UpdateState();
         }
 
         private void OnDisable()
         {
-            if (!Application.isPlaying || this.exitingApplication) return;
-            this.UpdateState();
+            if (!Application.isPlaying || exitingApplication) return;
+            UpdateState();
         }
 
         private void UpdateState()
         {
-            switch (this.gameObject.activeSelf)
+            switch (gameObject.activeSelf)
             {
-                case true: this.state = State.Active; break;
-                case false: this.state = State.Inactive; break;
+                case true:
+                    state = State.Active;
+                    break;
+                case false:
+                    state = State.Inactive;
+                    break;
             }
         }
 
@@ -59,17 +63,17 @@ namespace LowPolyHnS.Core
         {
             base.OnDestroy();
 
-            if (!Application.isPlaying || this.exitingApplication) return;
-            this.state = State.Destroyed;
+            if (!Application.isPlaying || exitingApplication) return;
+            state = State.Destroyed;
         }
 
         // IGAMESAVE: -----------------------------------------------------------------------------
 
         public override object GetSaveData()
         {
-            return new Memory()
+            return new Memory
             {
-                state = this.state
+                state = state
             };
         }
 
@@ -80,25 +84,31 @@ namespace LowPolyHnS.Core
 
         public override string GetUniqueName()
         {
-            return this.GetID();
+            return GetID();
         }
 
         public override void OnLoad(object generic)
         {
             Memory memory = generic as Memory;
-            if (memory == null || this.isDestroyed) return;
+            if (memory == null || isDestroyed) return;
 
             switch (memory.state)
             {
-                case State.Active: this.gameObject.SetActive(true); break;
-                case State.Inactive: this.gameObject.SetActive(false); break;
-                case State.Destroyed: Destroy(this.gameObject); break;
+                case State.Active:
+                    gameObject.SetActive(true);
+                    break;
+                case State.Inactive:
+                    gameObject.SetActive(false);
+                    break;
+                case State.Destroyed:
+                    Destroy(gameObject);
+                    break;
             }
         }
 
         public override void ResetData()
         {
-            this.gameObject.SetActive(this.defaultState);
+            gameObject.SetActive(defaultState);
         }
     }
 }

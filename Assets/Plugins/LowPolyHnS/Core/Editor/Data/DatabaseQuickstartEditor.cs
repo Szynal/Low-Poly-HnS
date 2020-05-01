@@ -1,292 +1,290 @@
-﻿namespace LowPolyHnS.Core
+﻿using System;
+using System.IO;
+using LowPolyHnS.ModuleManager;
+using UnityEditor;
+using UnityEditor.AnimatedValues;
+using UnityEngine;
+
+namespace LowPolyHnS.Core
 {
-	using System;
-	using System.IO;
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEditor;
-	using UnityEditor.AnimatedValues;
-	using System.Linq;
-	using System.Reflection;
-    using LowPolyHnS.ModuleManager;
+    [CustomEditor(typeof(DatabaseQuickstart))]
+    public class DatabaseQuickstartEditor : IDatabaseEditor
+    {
+        private class PageData
+        {
+            private const string TEXTURE_HEADER_PATH = "Assets/Plugins/LowPolyHnS/Extra/Icons/Quickstart/";
 
-	[CustomEditor(typeof(DatabaseQuickstart))]
-	public class DatabaseQuickstartEditor : IDatabaseEditor
-	{
-		private class PageData
-		{
-			private const string TEXTURE_HEADER_PATH = "Assets/Plugins/LowPolyHnS/Extra/Icons/Quickstart/";
+            public Action<Rect, Texture2D> paint;
+            public Texture2D header;
 
-			public Action<Rect, Texture2D> paint;
-			public Texture2D header;
+            public PageData(Action<Rect, Texture2D> paint, string headerName)
+            {
+                string headerPath = Path.Combine(TEXTURE_HEADER_PATH, headerName);
+                header = AssetDatabase.LoadAssetAtPath<Texture2D>(headerPath);
+                this.paint = paint;
+            }
+        }
 
-			public PageData(Action<Rect, Texture2D> paint, string headerName)
-			{
-				string headerPath = Path.Combine(TEXTURE_HEADER_PATH, headerName);
-				this.header = AssetDatabase.LoadAssetAtPath<Texture2D>(headerPath);
-				this.paint = paint;
-			}
-		}
+        // PROPERTIES: -------------------------------------------------------------------------------------------------
 
-		// PROPERTIES: -------------------------------------------------------------------------------------------------
+        private const float CONTROL_MARGIN_BOTTOM = 20.0f;
+        private const float CONTROL_DOT_WIDTH = 20f;
+        private const float CONTROL_BTN_WIDTH = 80.0f;
+        private const float HEADER_IMAGES_AR = 900f / 500f;
 
-		private const float CONTROL_MARGIN_BOTTOM = 20.0f;
-		private const float CONTROL_DOT_WIDTH = 20f;
-		private const float CONTROL_BTN_WIDTH = 80.0f;
-		private const float HEADER_IMAGES_AR = 900f/500f;
+        private AnimFloat animPagesIndex;
+        private PageData[] pages;
 
-		private AnimFloat animPagesIndex;
-		private PageData[] pages;
+        private GUIStyle titleStyle;
+        private GUIStyle contentStyle;
 
-		private GUIStyle titleStyle;
-		private GUIStyle contentStyle;
+        private float availableWidth;
+        private float availableHeight;
 
-		private float availableWidth = 0.0f;
-		private float availableHeight = 0.0f;
+        // INITIALIZE: -------------------------------------------------------------------------------------------------
 
-		// INITIALIZE: -------------------------------------------------------------------------------------------------
-
-		private void OnEnable()
-		{
+        private void OnEnable()
+        {
             if (target == null || serializedObject == null) return;
-			this.animPagesIndex = new AnimFloat(0.0f, () => { this.Repaint(); });
-			this.pages = new PageData[]
-			{
-				new PageData(this.OnPaintWelcome, "welcome.png"),
-				new PageData(this.OnPaintTutorials, "tutorials.png"),
-				new PageData(this.OnPaintDocumentation, "documentation.png"),
-				new PageData(this.OnPaintExamples, "examples.png"),
-				new PageData(this.OnPaintModules, "modules.png"),
-				new PageData(this.OnPaintStore, "hub.png"),
-                new PageData(this.OnPaintDiscord, "discord.png"),
-			};
-		}
+            animPagesIndex = new AnimFloat(0.0f, () => { Repaint(); });
+            pages = new[]
+            {
+                new PageData(OnPaintWelcome, "welcome.png"),
+                new PageData(OnPaintTutorials, "tutorials.png"),
+                new PageData(OnPaintDocumentation, "documentation.png"),
+                new PageData(OnPaintExamples, "examples.png"),
+                new PageData(OnPaintModules, "modules.png"),
+                new PageData(OnPaintStore, "hub.png")
+            };
+        }
 
-		private void InitializeStyles()
-		{
-			if (this.titleStyle == null)
-			{
-				this.titleStyle = new GUIStyle(EditorStyles.boldLabel);
-				this.titleStyle.fontSize = 13;
-				this.titleStyle.fontStyle = FontStyle.Bold;
-				this.titleStyle.alignment = TextAnchor.MiddleCenter;
-			}
+        private void InitializeStyles()
+        {
+            if (titleStyle == null)
+            {
+                titleStyle = new GUIStyle(EditorStyles.boldLabel);
+                titleStyle.fontSize = 13;
+                titleStyle.fontStyle = FontStyle.Bold;
+                titleStyle.alignment = TextAnchor.MiddleCenter;
+            }
 
-			if (this.contentStyle == null)
-			{
-				this.contentStyle = new GUIStyle(EditorStyles.helpBox);
-				this.contentStyle.padding = new RectOffset(10,10,10,10);
-				this.contentStyle.alignment = TextAnchor.MiddleCenter;
-				this.contentStyle.richText = true;
-				this.contentStyle.wordWrap = true;
-			}
-		}
+            if (contentStyle == null)
+            {
+                contentStyle = new GUIStyle(EditorStyles.helpBox);
+                contentStyle.padding = new RectOffset(10, 10, 10, 10);
+                contentStyle.alignment = TextAnchor.MiddleCenter;
+                contentStyle.richText = true;
+                contentStyle.wordWrap = true;
+            }
+        }
 
-		// OVERRIDE METHODS: -------------------------------------------------------------------------------------------
+        // OVERRIDE METHODS: -------------------------------------------------------------------------------------------
 
-		public override string GetName ()
-		{
-			return "Quickstart";
-		}
+        public override string GetName()
+        {
+            return "Quickstart";
+        }
 
-		public override int GetPanelWeight ()
-		{
-			return 99;
-		}
+        public override int GetPanelWeight()
+        {
+            return 99;
+        }
 
-		// GUI METHODS: ------------------------------------------------------------------------------------------------
+        // GUI METHODS: ------------------------------------------------------------------------------------------------
 
-		public override void OnInspectorGUI()
-		{
-			EditorGUILayout.HelpBox("This component is only accessable through the Preferences Panel", MessageType.Info);
-			if (GUILayout.Button("Open Preferences Window"))
-			{
-				PreferencesWindow.OpenWindow();
-			}
-		}
+        public override void OnInspectorGUI()
+        {
+            EditorGUILayout.HelpBox("This component is only accessable through the Preferences Panel",
+                MessageType.Info);
+            if (GUILayout.Button("Open Preferences Window"))
+            {
+                PreferencesWindow.OpenWindow();
+            }
+        }
 
-		public override void OnPreferencesWindowGUI()
-		{
-			this.serializedObject.Update();
+        public override void OnPreferencesWindowGUI()
+        {
+            serializedObject.Update();
 
-			this.InitializeStyles();
-			this.PaintPagesView();
+            InitializeStyles();
+            PaintPagesView();
 
-			this.serializedObject.ApplyModifiedProperties();
-		}
+            serializedObject.ApplyModifiedProperties();
+        }
 
-		private void PaintPagesView()
-		{
-			Rect availableSpace = GUILayoutUtility.GetRect(
-				GUIContent.none, 
-				GUIStyle.none, 
-				GUILayout.ExpandWidth(true), 
-				GUILayout.ExpandHeight(true)
-			);
+        private void PaintPagesView()
+        {
+            Rect availableSpace = GUILayoutUtility.GetRect(
+                GUIContent.none,
+                GUIStyle.none,
+                GUILayout.ExpandWidth(true),
+                GUILayout.ExpandHeight(true)
+            );
 
-			float areaWidth = this.availableWidth;
-			float areaHeight = this.availableHeight;
+            float areaWidth = availableWidth;
+            float areaHeight = availableHeight;
 
-			if (UnityEngine.Event.current.type == EventType.Repaint)
-			{
-                this.availableWidth = availableSpace.width;
-				this.availableHeight = availableSpace.height;
+            if (Event.current.type == EventType.Repaint)
+            {
+                availableWidth = availableSpace.width;
+                availableHeight = availableSpace.height;
             }
 
 
-			if (areaWidth <= Mathf.Epsilon || areaHeight <= Mathf.Epsilon) return;
+            if (areaWidth <= Mathf.Epsilon || areaHeight <= Mathf.Epsilon) return;
 
-			GUILayout.BeginArea(new Rect(
-				this.animPagesIndex.value * -areaWidth, 
-				0, 
-				areaWidth * this.pages.Length, 
-				areaHeight
-			));
+            GUILayout.BeginArea(new Rect(
+                animPagesIndex.value * -areaWidth,
+                0,
+                areaWidth * pages.Length,
+                areaHeight
+            ));
 
-			for (int i = 0; i < this.pages.Length; ++i)
-			{
-				Rect bounds = new Rect(
-					(float)i * areaWidth,
-					0.0f, 
-					areaWidth,
-					areaHeight
-				);
+            for (int i = 0; i < pages.Length; ++i)
+            {
+                Rect bounds = new Rect(
+                    i * areaWidth,
+                    0.0f,
+                    areaWidth,
+                    areaHeight
+                );
 
-				this.pages[i].paint(bounds, this.pages[i].header);
-			}
+                pages[i].paint(bounds, pages[i].header);
+            }
 
-			GUILayout.EndArea();
-			this.PaintControls();
-		}
+            GUILayout.EndArea();
+            PaintControls();
+        }
 
-		private void PaintControls()
-		{
+        private void PaintControls()
+        {
             EditorGUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
 
-            EditorGUI.BeginDisabledGroup(Mathf.Approximately(this.animPagesIndex.target, 0.0f));
+            EditorGUI.BeginDisabledGroup(Mathf.Approximately(animPagesIndex.target, 0.0f));
             if (GUILayout.Button("Previous", CoreGUIStyles.GetButtonLeft()))
             {
-                float targ = this.animPagesIndex.target - 1.0f;
+                float targ = animPagesIndex.target - 1.0f;
                 if (targ < 0.0f) targ = 0.0f;
-                this.animPagesIndex.target = targ;
-
+                animPagesIndex.target = targ;
             }
+
             EditorGUI.EndDisabledGroup();
 
-            for (int i = 0; i < this.pages.Length; ++i)
+            for (int i = 0; i < pages.Length; ++i)
             {
-                GUIStyle dotStyle = (Mathf.Approximately(this.animPagesIndex.target, (float)i)
+                GUIStyle dotStyle = Mathf.Approximately(animPagesIndex.target, i)
                     ? CoreGUIStyles.GetToggleButtonMidOn()
-                    : CoreGUIStyles.GetToggleButtonMidOff()
-                );
+                    : CoreGUIStyles.GetToggleButtonMidOff();
 
                 if (GUILayout.Button((i + 1).ToString(), dotStyle))
                 {
-                    this.animPagesIndex.target = (float)i;
+                    animPagesIndex.target = i;
                 }
             }
 
-            EditorGUI.BeginDisabledGroup(Mathf.Approximately(this.animPagesIndex.target, this.pages.Length - 1.0f));
+            EditorGUI.BeginDisabledGroup(Mathf.Approximately(animPagesIndex.target, pages.Length - 1.0f));
             if (GUILayout.Button("Next", CoreGUIStyles.GetButtonRight()))
             {
-                float targ = this.animPagesIndex.target + 1.0f;
-                if (targ > this.pages.Length - 1.0f) targ = this.pages.Length - 1.0f;
-                this.animPagesIndex.target = targ;
+                float targ = animPagesIndex.target + 1.0f;
+                if (targ > pages.Length - 1.0f) targ = pages.Length - 1.0f;
+                animPagesIndex.target = targ;
             }
+
             EditorGUI.EndDisabledGroup();
 
             GUILayout.FlexibleSpace();
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.Space();
-		}
+        }
 
-		// PAGES METHODS: ----------------------------------------------------------------------------------------------
+        // PAGES METHODS: ----------------------------------------------------------------------------------------------
 
-		private Rect OnPaintPage(Rect bounds, string title, Texture2D header, float heightReserve = 80f)
-		{
-			Rect titleRect = GUILayoutUtility.GetRect(bounds.width, 50f);
-			EditorGUI.LabelField(titleRect, title, this.titleStyle);
+        private Rect OnPaintPage(Rect bounds, string title, Texture2D header, float heightReserve = 80f)
+        {
+            Rect titleRect = GUILayoutUtility.GetRect(bounds.width, 50f);
+            EditorGUI.LabelField(titleRect, title, titleStyle);
 
 
-			Rect headerRect = GUILayoutUtility.GetRect(bounds.width, bounds.width/HEADER_IMAGES_AR);
-			EditorGUI.DrawPreviewTexture(headerRect, header);
+            Rect headerRect = GUILayoutUtility.GetRect(bounds.width, bounds.width / HEADER_IMAGES_AR);
+            EditorGUI.DrawPreviewTexture(headerRect, header);
 
-			Rect contentRect = GUILayoutUtility.GetRect(bounds.width, heightReserve);
-			return new Rect(
-				contentRect.x + 20f,
-				contentRect.y + 20f,
-				contentRect.width - 40f,
-				contentRect.height - 20f
-			);
-		}
+            Rect contentRect = GUILayoutUtility.GetRect(bounds.width, heightReserve);
+            return new Rect(
+                contentRect.x + 20f,
+                contentRect.y + 20f,
+                contentRect.width - 40f,
+                contentRect.height - 20f
+            );
+        }
 
-		private void OnPaintWelcome(Rect bounds, Texture2D header)
-		{
-			GUILayout.BeginArea(bounds);
+        private void OnPaintWelcome(Rect bounds, Texture2D header)
+        {
+            GUILayout.BeginArea(bounds);
 
-			Rect contentRect = this.OnPaintPage(bounds, "WELCOME TO LowPolyHnS", header, 80f);
+            Rect contentRect = OnPaintPage(bounds, "WELCOME TO LowPolyHnS", header);
 
-			string content = "Follow these simple steps and become a pro with <b>LowPolyHnS</b> in less than 15 minutes";
-			EditorGUI.LabelField(contentRect, content, this.contentStyle);
-			GUILayout.EndArea();
-		}
+            string content =
+                "Follow these simple steps and become a pro with <b>LowPolyHnS</b> in less than 15 minutes";
+            EditorGUI.LabelField(contentRect, content, contentStyle);
+            GUILayout.EndArea();
+        }
 
-		private void OnPaintTutorials(Rect bounds, Texture2D header)
-		{
-			GUILayout.BeginArea(bounds);
+        private void OnPaintTutorials(Rect bounds, Texture2D header)
+        {
+            GUILayout.BeginArea(bounds);
 
-			string videoTutorialsURL = "https://www.youtube.com/watch?v=IG8GXAAih2Q&list=PL7FyK0gfdpCbxMrWIV9B2xQiExkiZbpa5";
-			string content = "Watch the <b>Getting Started Video Tutorials</b>";
+            string videoTutorialsURL =
+                "https://www.youtube.com/watch?v=IG8GXAAih2Q&list=PL7FyK0gfdpCbxMrWIV9B2xQiExkiZbpa5";
+            string content = "Watch the <b>Getting Started Video Tutorials</b>";
 
-			Rect contentRect = this.OnPaintPage(bounds, "GET STARTED IN 15 MINUTES", header, 80f);
-			EditorGUI.LabelField(contentRect, content, contentStyle);
+            Rect contentRect = OnPaintPage(bounds, "GET STARTED IN 15 MINUTES", header);
+            EditorGUI.LabelField(contentRect, content, contentStyle);
 
-			Rect btnRect = GUILayoutUtility.GetRect(GUIContent.none, GUI.skin.button);
-			btnRect = new Rect(btnRect.x + 15f, btnRect.y, btnRect.width - 30f, btnRect.height);
-			if (GUI.Button(btnRect, "Watch playlist"))
-			{
-				Application.OpenURL(videoTutorialsURL);
-			}
+            Rect btnRect = GUILayoutUtility.GetRect(GUIContent.none, GUI.skin.button);
+            btnRect = new Rect(btnRect.x + 15f, btnRect.y, btnRect.width - 30f, btnRect.height);
+            if (GUI.Button(btnRect, "Watch playlist"))
+            {
+                Application.OpenURL(videoTutorialsURL);
+            }
 
-			GUILayout.EndArea();
-		}
+            GUILayout.EndArea();
+        }
 
-		private void OnPaintDocumentation(Rect bounds, Texture2D header)
-		{
-			GUILayout.BeginArea(bounds);
+        private void OnPaintDocumentation(Rect bounds, Texture2D header)
+        {
+            GUILayout.BeginArea(bounds);
 
-			string documentationURL = "https://docs.LowPolyHnS.io";
-			string content = "Take a look at our beautifully hand-crafted <b>Documentation</b>";
+            string documentationURL = "https://docs.LowPolyHnS.io";
+            string content = "Take a look at our beautifully hand-crafted <b>Documentation</b>";
 
-			Rect contentRect = this.OnPaintPage(bounds, "DOCUMENTATION", header, 80f);
-			EditorGUI.LabelField(contentRect, content, contentStyle);
+            Rect contentRect = OnPaintPage(bounds, "DOCUMENTATION", header);
+            EditorGUI.LabelField(contentRect, content, contentStyle);
 
-			Rect btnRect = GUILayoutUtility.GetRect(GUIContent.none, GUI.skin.button);
-			btnRect = new Rect(btnRect.x + 15f, btnRect.y, btnRect.width - 30f, btnRect.height);
-			if (GUI.Button(btnRect, "docs.LowPolyHnS.io"))
-			{
-				Application.OpenURL(documentationURL);
-			}
+            Rect btnRect = GUILayoutUtility.GetRect(GUIContent.none, GUI.skin.button);
+            btnRect = new Rect(btnRect.x + 15f, btnRect.y, btnRect.width - 30f, btnRect.height);
+            if (GUI.Button(btnRect, "docs.LowPolyHnS.io"))
+            {
+                Application.OpenURL(documentationURL);
+            }
 
-			GUILayout.EndArea();
-		}
+            GUILayout.EndArea();
+        }
 
-		private void OnPaintExamples(Rect bounds, Texture2D header)
-		{
-			GUILayout.BeginArea(bounds);
+        private void OnPaintExamples(Rect bounds, Texture2D header)
+        {
+            GUILayout.BeginArea(bounds);
 
-			string content = "Learn from the <b>Example Scenes</b>";
+            string content = "Learn from the <b>Example Scenes</b>";
 
-			Rect contentRect = this.OnPaintPage(bounds, "EXAMPLE SCENES", header, 80f);
-			EditorGUI.LabelField(contentRect, content, contentStyle);
+            Rect contentRect = OnPaintPage(bounds, "EXAMPLE SCENES", header);
+            EditorGUI.LabelField(contentRect, content, contentStyle);
 
-			Rect btnRect = GUILayoutUtility.GetRect(GUIContent.none, GUI.skin.button);
-			btnRect = new Rect(btnRect.x + 15f, btnRect.y, btnRect.width - 30f, btnRect.height);
-			if (GUI.Button(btnRect, "See Example Scenes"))
-			{
-				string scenePath = "Assets/Plugins/LowPolyHnS/Examples/Scenes/Example-Hub.unity";
+            Rect btnRect = GUILayoutUtility.GetRect(GUIContent.none, GUI.skin.button);
+            btnRect = new Rect(btnRect.x + 15f, btnRect.y, btnRect.width - 30f, btnRect.height);
+            if (GUI.Button(btnRect, "See Example Scenes"))
+            {
+                string scenePath = "Assets/Plugins/LowPolyHnS/Examples/Scenes/Example-Hub.unity";
                 SceneAsset sceneAsset = AssetDatabase.LoadAssetAtPath<SceneAsset>(scenePath);
                 if (sceneAsset != null)
                 {
@@ -297,91 +295,71 @@
                 {
                     ModuleManagerWindow.OpenModuleManager();
                 }
-			}
-
-			GUILayout.EndArea();
-		}
-
-		private void OnPaintModules(Rect bounds, Texture2D header)
-		{
-			GUILayout.BeginArea(bounds);
-
-			string content = "Check out the <b>Module Manager</b>";
-			Rect contentRect = this.OnPaintPage(bounds, "MODULE MANAGER", header, 80f);
-			EditorGUI.LabelField(contentRect, content, contentStyle);
-
-			Rect btnRect = GUILayoutUtility.GetRect(GUIContent.none, GUI.skin.button);
-			btnRect = new Rect(btnRect.x + 15f, btnRect.y, btnRect.width - 30f, btnRect.height);
-			if (GUI.Button(btnRect, "Module Manager"))
-			{
-                ModuleManagerWindow.OpenModuleManager();
-			}
-
-			GUILayout.EndArea();
-		}
-
-		private void OnPaintStore(Rect bounds, Texture2D header)
-		{
-			GUILayout.BeginArea(bounds);
-
-			string storeURL = "https://hub.LowPolyHnS.io";
-			string content = "Visit <b>LowPolyHnS Hub</b>";
-
-			Rect contentRect = this.OnPaintPage(bounds, "LowPolyHnS HUB", header, 80f);
-			EditorGUI.LabelField(contentRect, content, contentStyle);
-
-			Rect btnRect = GUILayoutUtility.GetRect(GUIContent.none, GUI.skin.button);
-			btnRect = new Rect(btnRect.x + 15f, btnRect.y, btnRect.width - 30f, btnRect.height);
-			if (GUI.Button(btnRect, "hub.LowPolyHnS.io"))
-			{
-				Application.OpenURL(storeURL);
-			}
-
-			GUILayout.EndArea();
-		}
-
-        private void OnPaintDiscord(Rect bounds, Texture2D header)
-        {
-            GUILayout.BeginArea(bounds);
-
-            string discordURL = "https://LowPolyHnS.page.link/discord";
-            string content = "Be part of a friendly community of game developers";
-
-            Rect contentRect = this.OnPaintPage(bounds, "JOIN OUR DISCORD SERVER", header, 80f);
-            EditorGUI.LabelField(contentRect, content, contentStyle);
-
-            Rect btnRect = GUILayoutUtility.GetRect(GUIContent.none, GUI.skin.button);
-            btnRect = new Rect(btnRect.x + 15f, btnRect.y, btnRect.width - 30f, btnRect.height);
-            if (GUI.Button(btnRect, "Join LowPolyHnS Discord"))
-            {
-                Application.OpenURL(discordURL);
             }
 
             GUILayout.EndArea();
         }
-	}
 
-	// ON INITIALIZE SHOW PREFERENCES: ---------------------------------------------------------------------------------
+        private void OnPaintModules(Rect bounds, Texture2D header)
+        {
+            GUILayout.BeginArea(bounds);
 
-	[InitializeOnLoad]
-	public class DatabaseQuickstartEditorOnLoad 
-	{
-		private const string KEY_PREFERENCES_STARTUP = "show-quickstart-preferences-on-startup";
+            string content = "Check out the <b>Module Manager</b>";
+            Rect contentRect = OnPaintPage(bounds, "MODULE MANAGER", header);
+            EditorGUI.LabelField(contentRect, content, contentStyle);
 
-		static DatabaseQuickstartEditorOnLoad()
-		{
-			EditorApplication.update += DatabaseQuickstartEditorOnLoad.Start;
-		}
+            Rect btnRect = GUILayoutUtility.GetRect(GUIContent.none, GUI.skin.button);
+            btnRect = new Rect(btnRect.x + 15f, btnRect.y, btnRect.width - 30f, btnRect.height);
+            if (GUI.Button(btnRect, "Module Manager"))
+            {
+                ModuleManagerWindow.OpenModuleManager();
+            }
 
-		static void Start()
-		{
-			EditorApplication.update -= DatabaseQuickstartEditorOnLoad.Start;
+            GUILayout.EndArea();
+        }
+
+        private void OnPaintStore(Rect bounds, Texture2D header)
+        {
+            GUILayout.BeginArea(bounds);
+
+            string storeURL = "https://hub.LowPolyHnS.io";
+            string content = "Visit <b>LowPolyHnS Hub</b>";
+
+            Rect contentRect = OnPaintPage(bounds, "LowPolyHnS HUB", header);
+            EditorGUI.LabelField(contentRect, content, contentStyle);
+
+            Rect btnRect = GUILayoutUtility.GetRect(GUIContent.none, GUI.skin.button);
+            btnRect = new Rect(btnRect.x + 15f, btnRect.y, btnRect.width - 30f, btnRect.height);
+            if (GUI.Button(btnRect, "hub.LowPolyHnS.io"))
+            {
+                Application.OpenURL(storeURL);
+            }
+
+            GUILayout.EndArea();
+        }
+    }
+
+    // ON INITIALIZE SHOW PREFERENCES: ---------------------------------------------------------------------------------
+
+    [InitializeOnLoad]
+    public class DatabaseQuickstartEditorOnLoad
+    {
+        private const string KEY_PREFERENCES_STARTUP = "show-quickstart-preferences-on-startup";
+
+        static DatabaseQuickstartEditorOnLoad()
+        {
+            EditorApplication.update += Start;
+        }
+
+        private static void Start()
+        {
+            EditorApplication.update -= Start;
             if (EditorPrefs.GetBool(KEY_PREFERENCES_STARTUP, true))
             {
                 EditorPrefs.SetBool(KEY_PREFERENCES_STARTUP, false);
 
-				PreferencesWindow.SetSidebarIndex(0);
-				PreferencesWindow.OpenWindow();
+                PreferencesWindow.SetSidebarIndex(0);
+                PreferencesWindow.OpenWindow();
             }
         }
     }

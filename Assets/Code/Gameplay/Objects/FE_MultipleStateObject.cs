@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using LowPolyHnS;
 using UnityEngine;
@@ -21,9 +21,9 @@ public enum EStateMessage
     FifthTriggerEntered,
     BossDefeated,
     BossStunned
-};
+}
 
-[System.Serializable]
+[Serializable]
 public class FE_CauseEffectAssociation
 {
     public EStateMessage Key;
@@ -35,12 +35,13 @@ public class FE_MultipleStateObject : MonoBehaviour, ISaveable
     public int CurrentStateID;
     public List<GameObject> States = new List<GameObject>();
     public List<FE_CauseEffectAssociation> CauseEffectAssociations = new List<FE_CauseEffectAssociation>();
-    [Header("ID used for saving. Change only by using IDManager!")]
-    [SerializeField] public int SaveableID = -1;
+
+    [Header("ID used for saving. Change only by using IDManager!")] [SerializeField]
+    public int SaveableID = -1;
 
     private void Start()
     {
-        if(MultipleStateObjectManager.Instance.GetStateByID(SaveableID) == -1)
+        if (MultipleStateObjectManager.Instance.GetStateByID(SaveableID) == -1)
         {
             MultipleStateObjectManager.Instance.RecordState(SaveableID, CurrentStateID, gameObject.name);
         }
@@ -67,7 +68,8 @@ public class FE_MultipleStateObject : MonoBehaviour, ISaveable
                 }
                 else
                 {
-                    Debug.LogWarning("Multi state object " + name + " has a null state with index " + i + " . It may cause problems!");
+                    Debug.LogWarning("Multi state object " + name + " has a null state with index " + i +
+                                     " . It may cause problems!");
                 }
             }
         }
@@ -79,7 +81,7 @@ public class FE_MultipleStateObject : MonoBehaviour, ISaveable
         {
             if (_union.Key == _newState)
             {
-                if (_changeObjects == true)
+                if (_changeObjects)
                 {
                     handleState(_union.Value);
                 }
@@ -96,9 +98,9 @@ public class FE_MultipleStateObject : MonoBehaviour, ISaveable
 
     public void ChangeStateByID(int _newStateID, bool _changeObjects)
     {
-        foreach(FE_CauseEffectAssociation _union in CauseEffectAssociations)
+        foreach (FE_CauseEffectAssociation _union in CauseEffectAssociations)
         {
-            if(_union.Value == _newStateID)
+            if (_union.Value == _newStateID)
             {
                 ChangeState(_union.Key, _changeObjects);
                 return;
@@ -113,22 +115,22 @@ public class FE_MultipleStateObject : MonoBehaviour, ISaveable
 
     public void OnLoad(PlayerSaveState _loadState)
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 
     public void OnLoad(EnemySaveState _loadState)
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 
     public void OnLoad(PickupState _loadState)
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 
     public void OnLoad(MultipleStateObjectManagerState _loadState)
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 
     public void OnLoad(int _loadedState)
@@ -138,15 +140,15 @@ public class FE_MultipleStateObject : MonoBehaviour, ISaveable
 
     public void OnLoad(ActionTriggerState _loadState)
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 
     public void OnSave(SceneSave _saveTo)
     {
-     /*   MultipleStateObjectManagerState _saveState = new MultipleStateObjectManagerState();
-        _saveState.SaveableID = SaveableID;
-        _saveState.StateID = CurrentStateID;
-
-        _saveTo.RecordSaveableState(_saveState);*/
+        /*   MultipleStateObjectManagerState _saveState = new MultipleStateObjectManagerState();
+           _saveState.SaveableID = SaveableID;
+           _saveState.StateID = CurrentStateID;
+   
+           _saveTo.RecordSaveableState(_saveState);*/
     }
 }

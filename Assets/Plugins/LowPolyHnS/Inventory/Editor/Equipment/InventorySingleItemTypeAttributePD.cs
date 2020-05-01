@@ -1,10 +1,8 @@
-﻿namespace LowPolyHnS.Inventory
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEditor;
+﻿using UnityEditor;
+using UnityEngine;
 
+namespace LowPolyHnS.Inventory
+{
     [CustomPropertyDrawer(typeof(InventorySingleItemTypeAttribute))]
     public class InventorySingleItemTypeAttributePD : PropertyDrawer
     {

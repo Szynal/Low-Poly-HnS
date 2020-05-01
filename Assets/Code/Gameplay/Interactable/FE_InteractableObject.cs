@@ -165,7 +165,7 @@ public abstract class FE_InteractableObject : MonoBehaviour
         SetCanInteract(false);
 
         await Task.Delay(TimeSpan.FromSeconds(0.5f));
-        
+
         SetCanInteract(true);
     }
 

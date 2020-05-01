@@ -1,18 +1,16 @@
-﻿namespace LowPolyHnS.Variables
+﻿using LowPolyHnS.Core;
+using UnityEngine;
+
+namespace LowPolyHnS.Variables
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-	using LowPolyHnS.Core;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[AddComponentMenu("")]
-	public class ActionVariableRandom : IAction
-	{
+    [AddComponentMenu("")]
+    public class ActionVariableRandom : IAction
+    {
         public enum Step
         {
             Integer,
@@ -25,7 +23,7 @@
         public float maxValue = 10.0f;
         public Step step = Step.Decimal;
 
-        [VariableFilter(Variables.Variable.DataType.Number)]
+        [VariableFilter(Variable.DataType.Number)]
         public VariableProperty variable = new VariableProperty();
 
         // EXECUTABLE: ----------------------------------------------------------------------------
@@ -33,26 +31,30 @@
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
             float random = 0.0f;
-            switch (this.step)
+            switch (step)
             {
-                case Step.Decimal : random = Random.Range(this.minValue, this.maxValue); break;
-                case Step.Integer : random = (float)Random.Range((int)this.minValue, (int)this.maxValue); break;
+                case Step.Decimal:
+                    random = Random.Range(minValue, maxValue);
+                    break;
+                case Step.Integer:
+                    random = Random.Range((int) minValue, (int) maxValue);
+                    break;
             }
 
-            this.variable.Set(random, target);
+            variable.Set(random, target);
             return true;
         }
 
-		// +--------------------------------------------------------------------------------------+
-		// | EDITOR                                                                               |
-		// +--------------------------------------------------------------------------------------+
+        // +--------------------------------------------------------------------------------------+
+        // | EDITOR                                                                               |
+        // +--------------------------------------------------------------------------------------+
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 
-		public static new string NAME = "Variables/Variable Random";
+        public static new string NAME = "Variables/Variable Random";
         private const string NODE_TITLE = "Random value to {0}";
 
-		// PROPERTIES: ----------------------------------------------------------------------------
+        // PROPERTIES: ----------------------------------------------------------------------------
 
         private SerializedProperty spMinValue;
         private SerializedProperty spMaxValue;
@@ -61,41 +63,41 @@
 
         // INSPECTOR METHODS: ---------------------------------------------------------------------
 
-		public override string GetNodeTitle()
-		{
-            return string.Format(NODE_TITLE, this.variable);
-		}
+        public override string GetNodeTitle()
+        {
+            return string.Format(NODE_TITLE, variable);
+        }
 
-		protected override void OnEnableEditorChild ()
-		{
-            this.spMinValue = this.serializedObject.FindProperty("minValue");
-            this.spMaxValue = this.serializedObject.FindProperty("maxValue");
-            this.spStep = this.serializedObject.FindProperty("step");
-            this.spVariable = this.serializedObject.FindProperty("variable");
-		}
+        protected override void OnEnableEditorChild()
+        {
+            spMinValue = serializedObject.FindProperty("minValue");
+            spMaxValue = serializedObject.FindProperty("maxValue");
+            spStep = serializedObject.FindProperty("step");
+            spVariable = serializedObject.FindProperty("variable");
+        }
 
-		protected override void OnDisableEditorChild ()
-		{
-            this.spMinValue = null;
-            this.spMaxValue = null;
-            this.spStep = null;
-            this.spVariable = null;
-		}
+        protected override void OnDisableEditorChild()
+        {
+            spMinValue = null;
+            spMaxValue = null;
+            spStep = null;
+            spVariable = null;
+        }
 
-		public override void OnInspectorGUI()
-		{
-			this.serializedObject.Update();
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
 
-            EditorGUILayout.PropertyField(this.spMinValue);
-            EditorGUILayout.PropertyField(this.spMaxValue);
-            EditorGUILayout.PropertyField(this.spStep);
+            EditorGUILayout.PropertyField(spMinValue);
+            EditorGUILayout.PropertyField(spMaxValue);
+            EditorGUILayout.PropertyField(spStep);
 
             EditorGUILayout.Space();
-            EditorGUILayout.PropertyField(this.spVariable);
+            EditorGUILayout.PropertyField(spVariable);
 
-			this.serializedObject.ApplyModifiedProperties();
-		}
+            serializedObject.ApplyModifiedProperties();
+        }
 
-		#endif
-	}
+#endif
+    }
 }

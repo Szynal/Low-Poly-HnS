@@ -1,86 +1,88 @@
-﻿namespace LowPolyHnS.Inventory
+﻿using LowPolyHnS.Core;
+using UnityEngine;
+
+namespace LowPolyHnS.Inventory
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-	using LowPolyHnS.Core;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[AddComponentMenu("")]
-	public class ActionInventoryCurrency : IAction 
-	{
-		public enum CURRENCY_OPERATION
-		{
-			Add,
-			Substract
-		}
+    [AddComponentMenu("")]
+    public class ActionInventoryCurrency : IAction
+    {
+        public enum CURRENCY_OPERATION
+        {
+            Add,
+            Substract
+        }
 
-		public CURRENCY_OPERATION operation;
-		public int amount = 0;
+        public CURRENCY_OPERATION operation;
+        public int amount = 0;
 
         // EXECUTABLE: -------------------------------------------------------------------------------------------------
 
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
-            switch (this.operation)
+            switch (operation)
             {
-                case CURRENCY_OPERATION.Add: InventoryManager.Instance.AddCurrency(this.amount); break;
-                case CURRENCY_OPERATION.Substract: InventoryManager.Instance.SubstractCurrency(this.amount); break;
+                case CURRENCY_OPERATION.Add:
+                    InventoryManager.Instance.AddCurrency(amount);
+                    break;
+                case CURRENCY_OPERATION.Substract:
+                    InventoryManager.Instance.SubstractCurrency(amount);
+                    break;
             }
 
             return true;
         }
 
-		// +-----------------------------------------------------------------------------------------------------------+
-		// | EDITOR                                                                                                    |
-		// +-----------------------------------------------------------------------------------------------------------+
+        // +-----------------------------------------------------------------------------------------------------------+
+        // | EDITOR                                                                                                    |
+        // +-----------------------------------------------------------------------------------------------------------+
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 
-		public const string CUSTOM_ICON_PATH = "Assets/Plugins/LowPolyHnS/Inventory/Icons/Actions/";
+        public const string CUSTOM_ICON_PATH = "Assets/Plugins/LowPolyHnS/Inventory/Icons/Actions/";
 
-		public static new string NAME = "Inventory/Currency";
-		private const string NODE_TITLE = "{0} {1} of currency";
+        public static new string NAME = "Inventory/Currency";
+        private const string NODE_TITLE = "{0} {1} of currency";
 
-		// PROPERTIES: -------------------------------------------------------------------------------------------------
+        // PROPERTIES: -------------------------------------------------------------------------------------------------
 
-		private SerializedProperty spOperation;
-		private SerializedProperty spAmount;
+        private SerializedProperty spOperation;
+        private SerializedProperty spAmount;
 
-		// INSPECTOR METHODS: ------------------------------------------------------------------------------------------
+        // INSPECTOR METHODS: ------------------------------------------------------------------------------------------
 
-		public override string GetNodeTitle()
-		{
-			return string.Format(NODE_TITLE, this.operation.ToString(), this.amount.ToString());
-		}
+        public override string GetNodeTitle()
+        {
+            return string.Format(NODE_TITLE, operation.ToString(), amount.ToString());
+        }
 
-		protected override void OnEnableEditorChild ()
-		{
-			this.spOperation = this.serializedObject.FindProperty("operation");
-			this.spAmount = this.serializedObject.FindProperty("amount");
-		}
+        protected override void OnEnableEditorChild()
+        {
+            spOperation = serializedObject.FindProperty("operation");
+            spAmount = serializedObject.FindProperty("amount");
+        }
 
-		protected override void OnDisableEditorChild ()
-		{
-			this.spOperation = null;
-			this.spAmount = null;
-		}
+        protected override void OnDisableEditorChild()
+        {
+            spOperation = null;
+            spAmount = null;
+        }
 
-		public override void OnInspectorGUI()
-		{
-			this.serializedObject.Update();
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
 
-			EditorGUILayout.PropertyField(this.spOperation);
-			EditorGUILayout.PropertyField(this.spAmount);
-			this.spAmount.intValue = Mathf.Max(0, this.spAmount.intValue);
+            EditorGUILayout.PropertyField(spOperation);
+            EditorGUILayout.PropertyField(spAmount);
+            spAmount.intValue = Mathf.Max(0, spAmount.intValue);
 
-			this.serializedObject.ApplyModifiedProperties();
-		}
+            serializedObject.ApplyModifiedProperties();
+        }
 
-		#endif
-	}
+#endif
+    }
 }

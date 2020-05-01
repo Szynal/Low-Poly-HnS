@@ -1,45 +1,46 @@
-﻿namespace LowPolyHnS.Core
-{
-	using System;
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
+using Random = UnityEngine.Random;
 
-    #if UNITY_EDITOR
+namespace LowPolyHnS.Core
+{
+#if UNITY_EDITOR
     using System.IO;
     using UnityEditor;
-    #endif
+
+#endif
 
     public static class LowPolyHnSUtilities
-	{
-        #if UNITY_EDITOR
+    {
+#if UNITY_EDITOR
 
-		private const string CHARACTERS = "abcdefghijklmnopqrstuvwxyz0123456789";
-		private static int RANDOM_SEED = 0;
+        private const string CHARACTERS = "abcdefghijklmnopqrstuvwxyz0123456789";
+        private static int RANDOM_SEED;
 
-		// PUBLIC METHODS: ------------------------------------------------------------------------
+        // PUBLIC METHODS: ------------------------------------------------------------------------
 
-		public static string RandomHash(int count)
-		{
-			string hash = "";
-			for (int i = 0; i < count; ++i)
-			{
-				int charPosition = LowPolyHnSUtilities.RandomValue(0, CHARACTERS.Length);
-				hash += CHARACTERS[charPosition];
-			}
+        public static string RandomHash(int count)
+        {
+            string hash = "";
+            for (int i = 0; i < count; ++i)
+            {
+                int charPosition = RandomValue(0, CHARACTERS.Length);
+                hash += CHARACTERS[charPosition];
+            }
 
-			return hash;
-		}
+            return hash;
+        }
 
-		public static int RandomValue(int min, int max)
-		{
-			if (RANDOM_SEED == 0) RANDOM_SEED = Guid.NewGuid().GetHashCode();
-			return UnityEngine.Random.Range(min, max);
-		}
+        public static int RandomValue(int min, int max)
+        {
+            if (RANDOM_SEED == 0) RANDOM_SEED = Guid.NewGuid().GetHashCode();
+            return Random.Range(min, max);
+        }
 
         public static void CreateFolderStructure(string path)
         {
-            string[] pathSplit = path.Split(new char[] { '/', '\\' }, System.StringSplitOptions.RemoveEmptyEntries);
+            string[] pathSplit = path.Split(new[] {'/', '\\'}, StringSplitOptions.RemoveEmptyEntries);
             string stackPath = pathSplit[0];
 
             for (int i = 1; i < pathSplit.Length; ++i)
@@ -76,6 +77,6 @@
             return assets;
         }
 
-        #endif
-	}
+#endif
+    }
 }

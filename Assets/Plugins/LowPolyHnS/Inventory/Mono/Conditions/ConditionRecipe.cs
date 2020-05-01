@@ -1,77 +1,75 @@
-﻿namespace LowPolyHnS.Inventory
+﻿using LowPolyHnS.Core;
+using UnityEngine;
+
+namespace LowPolyHnS.Inventory
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-	using LowPolyHnS.Core;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[AddComponentMenu("")]
-	public class ConditionRecipe : ICondition
-	{
-		public ItemHolder item1;
-		public ItemHolder item2;
+    [AddComponentMenu("")]
+    public class ConditionRecipe : ICondition
+    {
+        public ItemHolder item1;
+        public ItemHolder item2;
 
-		// EXECUTABLE: -------------------------------------------------------------------------------------------------
-		
-		public override bool Check()
-		{
-			return InventoryManager.Instance.ExistsRecipe(this.item1.item.uuid, this.item2.item.uuid);
-		}
+        // EXECUTABLE: -------------------------------------------------------------------------------------------------
 
-		// +-----------------------------------------------------------------------------------------------------------+
-		// | EDITOR                                                                                                    |
-		// +-----------------------------------------------------------------------------------------------------------+
+        public override bool Check()
+        {
+            return InventoryManager.Instance.ExistsRecipe(item1.item.uuid, item2.item.uuid);
+        }
 
-		#if UNITY_EDITOR
+        // +-----------------------------------------------------------------------------------------------------------+
+        // | EDITOR                                                                                                    |
+        // +-----------------------------------------------------------------------------------------------------------+
 
-		public const string CUSTOM_ICON_PATH = "Assets/Plugins/LowPolyHnS/Inventory/Icons/Conditions/";
+#if UNITY_EDITOR
 
-		public static new string NAME = "Inventory/Exists Recipe";
-		private const string NODE_TITLE = "Exists recipe {0} + {1}";
+        public const string CUSTOM_ICON_PATH = "Assets/Plugins/LowPolyHnS/Inventory/Icons/Conditions/";
 
-		// PROPERTIES: -------------------------------------------------------------------------------------------------
+        public static new string NAME = "Inventory/Exists Recipe";
+        private const string NODE_TITLE = "Exists recipe {0} + {1}";
 
-		private SerializedProperty spItem1;
-		private SerializedProperty spItem2;
+        // PROPERTIES: -------------------------------------------------------------------------------------------------
 
-		// INSPECTOR METHODS: ------------------------------------------------------------------------------------------
+        private SerializedProperty spItem1;
+        private SerializedProperty spItem2;
 
-		public override string GetNodeTitle()
-		{
-			return string.Format(
-				NODE_TITLE, 
-				(this.item1.item == null ? "(none)" : this.item1.item.itemName.content),
-				(this.item2.item == null ? "(none)" : this.item2.item.itemName.content)
-			);
-		}
+        // INSPECTOR METHODS: ------------------------------------------------------------------------------------------
 
-		protected override void OnEnableEditorChild ()
-		{
-			this.spItem1 = this.serializedObject.FindProperty("item1");
-			this.spItem2 = this.serializedObject.FindProperty("item2");
-		}
+        public override string GetNodeTitle()
+        {
+            return string.Format(
+                NODE_TITLE,
+                item1.item == null ? "(none)" : item1.item.itemName.content,
+                item2.item == null ? "(none)" : item2.item.itemName.content
+            );
+        }
 
-		protected override void OnDisableEditorChild ()
-		{
-			this.spItem1 = null;
-			this.spItem2 = null;
-		}
+        protected override void OnEnableEditorChild()
+        {
+            spItem1 = serializedObject.FindProperty("item1");
+            spItem2 = serializedObject.FindProperty("item2");
+        }
 
-		public override void OnInspectorGUI()
-		{
-			this.serializedObject.Update();
+        protected override void OnDisableEditorChild()
+        {
+            spItem1 = null;
+            spItem2 = null;
+        }
 
-			EditorGUILayout.PropertyField(this.spItem1);
-			EditorGUILayout.PropertyField(this.spItem2);
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
 
-			this.serializedObject.ApplyModifiedProperties();
-		}
+            EditorGUILayout.PropertyField(spItem1);
+            EditorGUILayout.PropertyField(spItem2);
 
-		#endif
-	}
+            serializedObject.ApplyModifiedProperties();
+        }
+
+#endif
+    }
 }

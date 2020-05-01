@@ -1,12 +1,10 @@
-﻿namespace LowPolyHnS.Core
-{
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEditor;
+﻿using UnityEditor;
+using UnityEngine;
 
+namespace LowPolyHnS.Core
+{
     public abstract class RememberEditor : Editor
-	{
+    {
         private const string MSG_ACTIVE1 = "Disabled components can not be initialized on start.";
         private const string MSG_ACTIVE2 = "This component won't work until its first enabled.";
 
@@ -14,14 +12,14 @@
 
         protected virtual void OnEnable()
         {
-            this.remember = this.target as RememberBase;
+            remember = target as RememberBase;
         }
 
         public override void OnInspectorGUI()
         {
-            this.serializedObject.Update();
+            serializedObject.Update();
 
-            if (!Application.isPlaying && !this.remember.isActiveAndEnabled)
+            if (!Application.isPlaying && !remember.isActiveAndEnabled)
             {
                 EditorGUILayout.HelpBox(
                     string.Format("{0} {1}", MSG_ACTIVE1, MSG_ACTIVE2),
@@ -29,18 +27,18 @@
                 );
             }
 
-            string comment = this.Comment();
+            string comment = Comment();
             if (!string.IsNullOrEmpty(comment))
             {
                 EditorGUILayout.HelpBox(comment, MessageType.None);
             }
-            
-            this.OnPaint();
 
-            this.serializedObject.ApplyModifiedProperties();
+            OnPaint();
+
+            serializedObject.ApplyModifiedProperties();
 
             EditorGUILayout.Space();
-            GlobalEditorID.Paint(this.remember);
+            GlobalEditorID.Paint(remember);
         }
 
         protected abstract void OnPaint();

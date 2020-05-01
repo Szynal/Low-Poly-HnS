@@ -1,76 +1,75 @@
-﻿namespace LowPolyHnS.Core
+﻿using UnityEngine;
+using UnityEngine.Events;
+
+namespace LowPolyHnS.Core
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[AddComponentMenu("")]
-	public class ActionMethods : IAction 
-	{
-		public UnityEvent events = new UnityEvent();
+    [AddComponentMenu("")]
+    public class ActionMethods : IAction
+    {
+        public UnityEvent events = new UnityEvent();
 
-		// EXECUTABLE: -------------------------------------------------------------------------------------------------
+        // EXECUTABLE: -------------------------------------------------------------------------------------------------
 
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
-            if (this.events != null) this.events.Invoke();
+            if (events != null) events.Invoke();
             return true;
         }
 
-		// +-----------------------------------------------------------------------------------------------------------+
-		// | EDITOR                                                                                                    |
-		// +-----------------------------------------------------------------------------------------------------------+
+        // +-----------------------------------------------------------------------------------------------------------+
+        // | EDITOR                                                                                                    |
+        // +-----------------------------------------------------------------------------------------------------------+
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 
-		// PROPERTIES: -------------------------------------------------------------------------------------------------
+        // PROPERTIES: -------------------------------------------------------------------------------------------------
 
-		public static new string NAME = "General/Call Methods";
-		private const string NODE_TITLE = "Call {0} method{1}";
+        public static new string NAME = "General/Call Methods";
+        private const string NODE_TITLE = "Call {0} method{1}";
 
-		private static readonly GUIContent GUICONTENT_EVENTS = new GUIContent("Call methods");
-		private SerializedProperty spEvents;
+        private static readonly GUIContent GUICONTENT_EVENTS = new GUIContent("Call methods");
+        private SerializedProperty spEvents;
 
-		// INSPECTOR METHODS: ------------------------------------------------------------------------------------------
+        // INSPECTOR METHODS: ------------------------------------------------------------------------------------------
 
-		public override string GetNodeTitle()
-		{
-			int methodsCount = 0;
-			string methodsSuffix = "";
+        public override string GetNodeTitle()
+        {
+            int methodsCount = 0;
+            string methodsSuffix = "";
 
-			if (this.events != null)
-			{
-				methodsCount = this.events.GetPersistentEventCount();
-				methodsSuffix = (methodsCount == 1 ? "" : "s");
-			}
+            if (events != null)
+            {
+                methodsCount = events.GetPersistentEventCount();
+                methodsSuffix = methodsCount == 1 ? "" : "s";
+            }
 
-			return string.Format(ActionMethods.NODE_TITLE, methodsCount, methodsSuffix);
-		}
+            return string.Format(NODE_TITLE, methodsCount, methodsSuffix);
+        }
 
-		protected override void OnEnableEditorChild ()
-		{
-			this.spEvents = this.serializedObject.FindProperty("events");
-		}
+        protected override void OnEnableEditorChild()
+        {
+            spEvents = serializedObject.FindProperty("events");
+        }
 
-		protected override void OnDisableEditorChild ()
-		{
-			this.spEvents = null;
-		}
+        protected override void OnDisableEditorChild()
+        {
+            spEvents = null;
+        }
 
-		public override void OnInspectorGUI()
-		{
-			this.serializedObject.Update();
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
 
-			EditorGUILayout.PropertyField(this.spEvents, GUICONTENT_EVENTS);
+            EditorGUILayout.PropertyField(spEvents, GUICONTENT_EVENTS);
 
-			this.serializedObject.ApplyModifiedProperties();
-		}
+            serializedObject.ApplyModifiedProperties();
+        }
 
-		#endif
-	}
+#endif
+    }
 }

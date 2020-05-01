@@ -1,14 +1,12 @@
-﻿namespace LowPolyHnS.Variables
-{
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
+﻿using System;
+using UnityEngine;
 
+namespace LowPolyHnS.Variables
+{
     [Serializable]
     public class Tag
     {
-        public static readonly string[] COLOR_NAMES = new string[]
+        public static readonly string[] COLOR_NAMES =
         {
             "Red",
             "Pink",
@@ -21,10 +19,10 @@
             "Green",
             "Lime",
             "Yellow",
-            "Orange",
+            "Orange"
         };
 
-        public static readonly HexColor[] COLOR_HEXS = new HexColor[]
+        public static readonly HexColor[] COLOR_HEXS =
         {
             new HexColor("#f03e3e"), // Red
             new HexColor("#d6336c"), // Pink
@@ -37,7 +35,7 @@
             new HexColor("#37b24d"), // Green
             new HexColor("#74b816"), // Lime
             new HexColor("#f59f00"), // Yellow
-            new HexColor("#f76707"), // Orange
+            new HexColor("#f76707") // Orange
         };
 
         // PROPERTIES: ----------------------------------------------------------------------------
@@ -49,8 +47,8 @@
 
         public Tag()
         {
-            this.name = "";
-            this.color = 0;
+            name = "";
+            color = 0;
         }
 
         public Tag(string name, int color)
@@ -63,7 +61,7 @@
 
         public Color GetColor()
         {
-            return COLOR_HEXS[this.color].GetColor();
+            return COLOR_HEXS[color].GetColor();
         }
     }
 }

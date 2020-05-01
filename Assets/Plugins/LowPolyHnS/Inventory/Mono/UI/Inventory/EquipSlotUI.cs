@@ -1,23 +1,19 @@
-﻿namespace LowPolyHnS.Inventory
-{
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.UI;
-	using UnityEngine.Events;
-	using UnityEngine.EventSystems;
-	using LowPolyHnS.Core;
-    using LowPolyHnS.Core.Hooks;
+﻿using LowPolyHnS.Core.Hooks;
+using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
+namespace LowPolyHnS.Inventory
+{
     [AddComponentMenu("LowPolyHnS/UI/Equip Slot")]
-    public class EquipSlotUI : MonoBehaviour 
-	{
-		private static DatabaseInventory DATABASE_INVENTORY;
+    public class EquipSlotUI : MonoBehaviour
+    {
+        private static DatabaseInventory DATABASE_INVENTORY;
 
         // PROPERTIES: ----------------------------------------------------------------------------
 
-        [InventorySingleItemType]
-        public int itemType = 1;
+        [InventorySingleItemType] public int itemType = 1;
 
         public Image equipmentImage;
         public Text equipmentText;
@@ -27,72 +23,72 @@
         public Sprite onEquipped;
         public Sprite onHighlight;
 
-        private bool isExittingApplication = false;
+        private bool isExittingApplication;
 
-		// INITIALIZERS: --------------------------------------------------------------------------
+        // INITIALIZERS: --------------------------------------------------------------------------
 
         private void Start()
-		{
-			if (DATABASE_INVENTORY == null) DATABASE_INVENTORY = DatabaseInventory.Load();
-            this.SetupEvents(EventTriggerType.PointerClick, this.OnClick);
-		}
+        {
+            if (DATABASE_INVENTORY == null) DATABASE_INVENTORY = DatabaseInventory.Load();
+            SetupEvents(EventTriggerType.PointerClick, OnClick);
+        }
 
         private void OnEnable()
         {
-            InventoryManager.Instance.eventOnEquip.AddListener(this.OnEquip);
-            InventoryManager.Instance.eventOnUnequip.AddListener(this.OnEquip);
-            this.UpdateUI();
+            InventoryManager.Instance.eventOnEquip.AddListener(OnEquip);
+            InventoryManager.Instance.eventOnUnequip.AddListener(OnEquip);
+            UpdateUI();
         }
 
         private void OnDisable()
         {
-            if (this.isExittingApplication) return;
-            InventoryManager.Instance.eventOnEquip.RemoveListener(this.OnEquip);
-            InventoryManager.Instance.eventOnUnequip.RemoveListener(this.OnEquip);
+            if (isExittingApplication) return;
+            InventoryManager.Instance.eventOnEquip.RemoveListener(OnEquip);
+            InventoryManager.Instance.eventOnUnequip.RemoveListener(OnEquip);
         }
 
         private void OnApplicationQuit()
         {
-            this.isExittingApplication = true;
+            isExittingApplication = true;
         }
 
         // PRIVATE METHODS: -----------------------------------------------------------------------
 
         private void OnEquip(GameObject target, int itemID)
         {
-            this.UpdateUI();
+            UpdateUI();
         }
 
         private void UpdateUI()
-		{
+        {
             Item item = null;
             if (HookPlayer.Instance != null)
             {
                 item = InventoryManager.Instance.GetEquip(
                     HookPlayer.Instance.gameObject,
-                    this.itemType
+                    itemType
                 );
             }
 
             if (item != null)
             {
-                if (this.frameImage != null) this.frameImage.sprite = this.onEquipped;
-                if (this.equipmentImage != null) this.equipmentImage.overrideSprite = item.sprite;
-                if (this.equipmentText != null) this.equipmentText.text = item.itemName.GetText();
+                if (frameImage != null) frameImage.sprite = onEquipped;
+                if (equipmentImage != null) equipmentImage.overrideSprite = item.sprite;
+                if (equipmentText != null) equipmentText.text = item.itemName.GetText();
             }
             else
             {
-                if (this.frameImage != null) this.frameImage.sprite = this.onUnequipped;
-                if (this.equipmentImage != null) this.equipmentImage.overrideSprite = null;
-                if (this.equipmentText != null) this.equipmentText.text = string.Empty;
+                if (frameImage != null) frameImage.sprite = onUnequipped;
+                if (equipmentImage != null) equipmentImage.overrideSprite = null;
+                if (equipmentText != null) equipmentText.text = string.Empty;
             }
-		}
+        }
 
         public void OnClick(BaseEventData eventData)
         {
             Item item = InventoryManager.Instance.GetEquip(
-                HookPlayer.Instance.gameObject, 
-                this.itemType
+                HookPlayer.Instance.gameObject,
+                itemType
             );
 
             if (item != null)
@@ -110,22 +106,22 @@
             InventoryManager.Instance.Equip(
                 HookPlayer.Instance.gameObject,
                 item.uuid,
-                this.itemType
+                itemType
             );
         }
 
         // OTHER METHODS: -------------------------------------------------------------------------
 
-		private void SetupEvents(EventTriggerType eventType, UnityAction<BaseEventData> callback)
-		{
-			EventTrigger.Entry eventTriggerEntry = new EventTrigger.Entry();
-			eventTriggerEntry.eventID = eventType;
-			eventTriggerEntry.callback.AddListener(callback);
+        private void SetupEvents(EventTriggerType eventType, UnityAction<BaseEventData> callback)
+        {
+            EventTrigger.Entry eventTriggerEntry = new EventTrigger.Entry();
+            eventTriggerEntry.eventID = eventType;
+            eventTriggerEntry.callback.AddListener(callback);
 
-			EventTrigger eventTrigger = gameObject.GetComponent<EventTrigger>();
-			if (eventTrigger == null) eventTrigger = gameObject.AddComponent<EventTrigger>();
+            EventTrigger eventTrigger = gameObject.GetComponent<EventTrigger>();
+            if (eventTrigger == null) eventTrigger = gameObject.AddComponent<EventTrigger>();
 
-			eventTrigger.triggers.Add(eventTriggerEntry);
-		}
-	}
+            eventTrigger.triggers.Add(eventTriggerEntry);
+        }
+    }
 }

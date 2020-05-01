@@ -1,17 +1,15 @@
-﻿namespace LowPolyHnS.Core
+﻿using UnityEngine;
+
+namespace LowPolyHnS.Core
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[AddComponentMenu("")]
-	public class ActionStopMusic : IAction 
-	{
+    [AddComponentMenu("")]
+    public class ActionStopMusic : IAction
+    {
         public enum MusicType
         {
             AllMusic,
@@ -21,45 +19,44 @@
         public MusicType type = MusicType.AllMusic;
         [Indent] public AudioClip audioClip;
 
-        [Range(0f, 10f)]
-        public float fadeOut;
+        [Range(0f, 10f)] public float fadeOut;
 
-		// EXECUTABLE: ----------------------------------------------------------------------------
+        // EXECUTABLE: ----------------------------------------------------------------------------
 
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
-            switch (this.type)
+            switch (type)
             {
                 case MusicType.AllMusic:
-                    AudioManager.Instance.StopAllMusic(this.fadeOut);
+                    AudioManager.Instance.StopAllMusic(fadeOut);
                     break;
 
                 case MusicType.AudioClip:
-                    AudioManager.Instance.StopMusic(this.audioClip, this.fadeOut);
+                    AudioManager.Instance.StopMusic(audioClip, fadeOut);
                     break;
             }
 
             return true;
         }
 
-		// +--------------------------------------------------------------------------------------+
-		// | EDITOR                                                                               |
-		// +--------------------------------------------------------------------------------------+
+        // +--------------------------------------------------------------------------------------+
+        // | EDITOR                                                                               |
+        // +--------------------------------------------------------------------------------------+
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 
-		public static new string NAME = "Audio/Stop Music";
-		private const string NODE_TITLE = "Stop Music {0}";
+        public static new string NAME = "Audio/Stop Music";
+        private const string NODE_TITLE = "Stop Music {0}";
 
-		// INSPECTOR METHODS: ---------------------------------------------------------------------
+        // INSPECTOR METHODS: ---------------------------------------------------------------------
 
-		public override string GetNodeTitle()
-		{
-			return string.Format(
-				NODE_TITLE,
-				this.fadeOut > 0f ? "(" + this.fadeOut.ToString() + "s)" : ""
-			);
-		}
+        public override string GetNodeTitle()
+        {
+            return string.Format(
+                NODE_TITLE,
+                fadeOut > 0f ? "(" + fadeOut + "s)" : ""
+            );
+        }
 
         private SerializedProperty spType;
         private SerializedProperty spAudioClip;
@@ -67,26 +64,26 @@
 
         protected override void OnEnableEditorChild()
         {
-            this.spType = this.serializedObject.FindProperty("type");
-            this.spAudioClip = this.serializedObject.FindProperty("audioClip");
-            this.spFadeOut = this.serializedObject.FindProperty("fadeOut");
+            spType = serializedObject.FindProperty("type");
+            spAudioClip = serializedObject.FindProperty("audioClip");
+            spFadeOut = serializedObject.FindProperty("fadeOut");
         }
 
         public override void OnInspectorGUI()
         {
-            this.serializedObject.Update();
+            serializedObject.Update();
 
-            EditorGUILayout.PropertyField(this.spType);
-            if (this.spType.enumValueIndex == (int)MusicType.AudioClip)
+            EditorGUILayout.PropertyField(spType);
+            if (spType.enumValueIndex == (int) MusicType.AudioClip)
             {
-                EditorGUILayout.PropertyField(this.spAudioClip);
+                EditorGUILayout.PropertyField(spAudioClip);
             }
 
-            EditorGUILayout.PropertyField(this.spFadeOut);
+            EditorGUILayout.PropertyField(spFadeOut);
 
-            this.serializedObject.ApplyModifiedProperties();
+            serializedObject.ApplyModifiedProperties();
         }
 
-        #endif
+#endif
     }
 }

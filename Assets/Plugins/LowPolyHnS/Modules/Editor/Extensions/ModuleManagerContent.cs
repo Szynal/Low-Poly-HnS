@@ -1,13 +1,9 @@
-﻿namespace LowPolyHnS.ModuleManager
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEngine.Events;
-    using UnityEditor;
-    using UnityEditor.AnimatedValues;
-    using LowPolyHnS.Core;
+﻿using UnityEditor;
+using UnityEditor.AnimatedValues;
+using UnityEngine;
 
+namespace LowPolyHnS.ModuleManager
+{
     public abstract class ModuleManagerContent
     {
         private const string PANEL_PATH = "Assets/Plugins/LowPolyHnS/Modules/Icons/UI/PanelBackground.png";
@@ -38,7 +34,7 @@
         {
             if (CURRENT_MODULE_ID != manifest.module.moduleID)
             {
-                ModuleManagerContent.InitializeModule(manifest);
+                InitializeModule(manifest);
                 CURRENT_MODULE_ID = manifest.module.moduleID;
             }
 
@@ -47,48 +43,50 @@
             bool assetModuleExists = ModuleManager.AssetModuleExists(manifest.module);
             AssetModule assetModule = ModuleManager.GetAssetModule(manifest.module.moduleID);
 
-            ModuleManagerContent.PaintTitle(manifest.module);
+            PaintTitle(manifest.module);
 
-            EditorGUILayout.BeginHorizontal(ModuleManagerContent.GetPanelStyle());
+            EditorGUILayout.BeginHorizontal(GetPanelStyle());
             GUILayout.FlexibleSpace();
 
-            if (GUILayout.Button("Backup", ModuleManagerContent.GetLargeButtonStyle()))
+            if (GUILayout.Button("Backup", GetLargeButtonStyle()))
             {
                 ModuleManager.Backup(manifest);
             }
 
             EditorGUILayout.Space();
             EditorGUI.BeginDisabledGroup(!isEnabled || !updateAvail);
-            if (GUILayout.Button("Update", ModuleManagerContent.GetLargeButtonLeft()))
+            if (GUILayout.Button("Update", GetLargeButtonLeft()))
             {
                 ModuleManager.Update(manifest);
             }
+
             EditorGUI.EndDisabledGroup();
 
-            if (!isEnabled && GUILayout.Button("Enable", ModuleManagerContent.GetLargeButtonMid()))
+            if (!isEnabled && GUILayout.Button("Enable", GetLargeButtonMid()))
             {
                 ModuleManager.Enable(manifest);
             }
 
-            if (isEnabled && GUILayout.Button("Disable", ModuleManagerContent.GetLargeButtonMid()))
+            if (isEnabled && GUILayout.Button("Disable", GetLargeButtonMid()))
             {
                 ModuleManager.Disable(manifest);
             }
 
             EditorGUI.BeginDisabledGroup(!assetModuleExists || isEnabled);
-            if (GUILayout.Button("Remove", ModuleManagerContent.GetLargeButtonRight()))
+            if (GUILayout.Button("Remove", GetLargeButtonRight()))
             {
                 ModuleManager.Remove(manifest);
             }
+
             EditorGUI.EndDisabledGroup();
 
             GUILayout.FlexibleSpace();
             EditorGUILayout.EndHorizontal();
 
-            ModuleManagerContent.PaintModule(manifest.module);
+            PaintModule(manifest.module);
 
             EditorGUILayout.Space();
-            ModuleManagerContent.PaintDependencies(
+            PaintDependencies(
                 "Dependencies ({0})",
                 manifest.module.dependencies
             );
@@ -96,8 +94,8 @@
             if (updateAvail && assetModule != null)
             {
                 EditorGUILayout.Space();
-                ModuleManagerContent.PaintDependencies(
-                    "Update Dependencies ({0})", 
+                PaintDependencies(
+                    "Update Dependencies ({0})",
                     assetModule.module.dependencies
                 );
             }
@@ -112,7 +110,7 @@
                 ModuleManager.GetModuleIcon(module.moduleID)
             );
 
-            EditorGUILayout.LabelField(content, ModuleManagerContent.GetTitleLabelStyle());
+            EditorGUILayout.LabelField(content, GetTitleLabelStyle());
 
             EditorGUILayout.EndHorizontal();
         }
@@ -132,8 +130,7 @@
 
         private static void InitializeModule(ModuleManifest manifest)
         {
-            
-            ANIMBOOL_UPDATE = new AnimBool(false, ModuleManagerContent.RepaintModuleManager);
+            ANIMBOOL_UPDATE = new AnimBool(false, RepaintModuleManager);
             ANIMBOOL_UPDATE.speed = 3.0f;
         }
 
@@ -163,7 +160,7 @@
 
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("Description", EditorStyles.boldLabel);
-            EditorGUILayout.LabelField(module.description, ModuleManagerContent.GetTextStyle());
+            EditorGUILayout.LabelField(module.description, GetTextStyle());
 
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("Tags", EditorStyles.boldLabel);
@@ -193,15 +190,15 @@
                         dependencies[i].moduleID
                     );
 
-                    Texture2D dot = ModuleManagerContent.GetDotG();
+                    Texture2D dot = GetDotG();
                     if (depManifest == null)
                     {
-                        dot = ModuleManagerContent.GetDotR();
+                        dot = GetDotR();
                     }
-                    else if (depManifest.module.version.Higher(dependencies[i].version) || 
+                    else if (depManifest.module.version.Higher(dependencies[i].version) ||
                              !ModuleManager.IsEnabled(depManifest.module))
                     {
-                        dot = ModuleManagerContent.GetDotO();
+                        dot = GetDotO();
                     }
 
                     string depName = string.Format(
@@ -215,12 +212,13 @@
 
                     Rect depRect = GUILayoutUtility.GetLastRect();
                     EditorGUIUtility.AddCursorRect(depRect, MouseCursor.Link);
-                    if (UnityEngine.Event.current.type == EventType.MouseUp &&
-                        depRect.Contains(UnityEngine.Event.current.mousePosition))
+                    if (Event.current.type == EventType.MouseUp &&
+                        depRect.Contains(Event.current.mousePosition))
                     {
                         Application.OpenURL("https://hub.LowPolyHnS.io/content/modules");
                     }
                 }
+
                 EditorGUILayout.EndVertical();
             }
         }

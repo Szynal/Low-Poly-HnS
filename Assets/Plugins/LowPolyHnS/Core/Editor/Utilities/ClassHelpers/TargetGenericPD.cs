@@ -1,10 +1,8 @@
-﻿namespace LowPolyHnS.Core
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEditor;
+﻿using UnityEditor;
+using UnityEngine;
 
+namespace LowPolyHnS.Core
+{
     public abstract class TargetGenericPD : PropertyDrawer
     {
         public const string PROP_TARGET = "target";
@@ -15,19 +13,18 @@
 
         protected abstract SerializedProperty GetProperty(int option, SerializedProperty property);
 
-        protected virtual SerializedProperty GetExtraProperty(int option, SerializedProperty property) 
+        protected virtual SerializedProperty GetExtraProperty(int option, SerializedProperty property)
         {
             return null;
         }
 
         protected virtual void Initialize(SerializedProperty property)
         {
-            return;
         }
 
         // PROPERTIES: ----------------------------------------------------------------------------
 
-        private bool init = false;
+        private bool init;
 
         // PAINT METHODS: -------------------------------------------------------------------------
 
@@ -35,10 +32,10 @@
         {
             EditorGUI.BeginProperty(position, label, property);
 
-            if (!this.init)
+            if (!init)
             {
-                this.init = true;
-                this.Initialize(property);
+                init = true;
+                Initialize(property);
             }
 
             SerializedProperty spTarget = property.FindPropertyRelative(PROP_TARGET);
@@ -51,7 +48,7 @@
             );
 
             EditorGUI.PropertyField(rect, spTarget, label);
-            SerializedProperty spValue = this.GetProperty(spTarget.intValue, property);
+            SerializedProperty spValue = GetProperty(spTarget.intValue, property);
             if (spValue != null)
             {
                 rect = new Rect(
@@ -64,7 +61,7 @@
                 EditorGUI.PropertyField(rect, spValue, GUICONTENT_EMPTY);
             }
 
-            SerializedProperty spExtra = this.GetExtraProperty(spTarget.intValue, property);
+            SerializedProperty spExtra = GetExtraProperty(spTarget.intValue, property);
             if (spExtra != null)
             {
                 rect = new Rect(
@@ -87,22 +84,18 @@
             SerializedProperty spTarget = property.FindPropertyRelative(PROP_TARGET);
             float height = EditorGUI.GetPropertyHeight(spTarget);
 
-            SerializedProperty spValue = this.GetProperty(spTarget.intValue, property);
+            SerializedProperty spValue = GetProperty(spTarget.intValue, property);
             if (spValue != null)
             {
-                height += (
-                    EditorGUI.GetPropertyHeight(spValue) +
-                    EditorGUIUtility.standardVerticalSpacing
-                );
+                height += EditorGUI.GetPropertyHeight(spValue) +
+                          EditorGUIUtility.standardVerticalSpacing;
             }
 
-            SerializedProperty spExtra = this.GetExtraProperty(spTarget.intValue, property);
+            SerializedProperty spExtra = GetExtraProperty(spTarget.intValue, property);
             if (spExtra != null)
             {
-                height += (
-                    EditorGUI.GetPropertyHeight(spExtra) +
-                    EditorGUIUtility.standardVerticalSpacing
-                );
+                height += EditorGUI.GetPropertyHeight(spExtra) +
+                          EditorGUIUtility.standardVerticalSpacing;
             }
 
             return height;

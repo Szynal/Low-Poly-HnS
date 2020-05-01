@@ -1,100 +1,100 @@
-﻿namespace LowPolyHnS.Inventory
+﻿using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
+
+namespace LowPolyHnS.Inventory
 {
-	using UnityEngine;
-	using UnityEngine.UI;
-	using UnityEngine.Events;
-	using UnityEngine.EventSystems;
+    public class DraggablePanel : MonoBehaviour
+    {
+        // PROPERTIES: ----------------------------------------------------------------------------
 
-	public class DraggablePanel : MonoBehaviour
-	{
-		// PROPERTIES: ----------------------------------------------------------------------------
+        public RectTransform targetPanel;
+        public bool constraintWithinScreen = true;
 
-		public RectTransform targetPanel;
-		public bool constraintWithinScreen = true;
+        private CanvasScaler canvasScaler;
 
-		private CanvasScaler canvasScaler;
+        // INITIALIZERS: --------------------------------------------------------------------------
 
-		// INITIALIZERS: --------------------------------------------------------------------------
+        public void Awake()
+        {
+            SetupEvents(EventTriggerType.BeginDrag, OnDragBegin);
+            SetupEvents(EventTriggerType.EndDrag, OnDragEnd);
+            SetupEvents(EventTriggerType.Drag, OnDragMove);
+        }
 
-		public void Awake()
-		{
-			this.SetupEvents(EventTriggerType.BeginDrag, this.OnDragBegin);
-			this.SetupEvents(EventTriggerType.EndDrag, this.OnDragEnd);
-			this.SetupEvents(EventTriggerType.Drag, this.OnDragMove);
-		}
+        // CALLBACK METHODS: ----------------------------------------------------------------------
 
-		// CALLBACK METHODS: ----------------------------------------------------------------------
+        private void OnDragBegin(BaseEventData eventData)
+        {
+            MovePanel(eventData);
+        }
 
-		private void OnDragBegin(BaseEventData eventData)
-		{
-			this.MovePanel(eventData);
-		}
+        private void OnDragEnd(BaseEventData eventData)
+        {
+            MovePanel(eventData);
+        }
 
-		private void OnDragEnd(BaseEventData eventData)
-		{
-			this.MovePanel(eventData);
-		}
+        private void OnDragMove(BaseEventData eventData)
+        {
+            MovePanel(eventData);
+        }
 
-		private void OnDragMove(BaseEventData eventData)
-		{
-			this.MovePanel(eventData);
-		}
+        private void MovePanel(BaseEventData eventData)
+        {
+            PointerEventData pointerData = (PointerEventData) eventData;
+            if (pointerData == null) return;
 
-		private void MovePanel(BaseEventData eventData)
-		{
-			PointerEventData pointerData = (PointerEventData)eventData;
-			if (pointerData == null) return;
+            Vector2 currentPosition = targetPanel.anchoredPosition;
+            Vector2 deltaUnscaled = GetPonterDataDeltaUnscaled(pointerData.delta);
 
-			Vector2 currentPosition = this.targetPanel.anchoredPosition;
-			Vector2 deltaUnscaled = this.GetPonterDataDeltaUnscaled(pointerData.delta);
+            currentPosition.x += deltaUnscaled.x;
+            currentPosition.y += deltaUnscaled.y;
 
-			currentPosition.x += deltaUnscaled.x;
-			currentPosition.y += deltaUnscaled.y;
+            if (constraintWithinScreen)
+            {
+                Vector3 pos = targetPanel.localPosition;
+                RectTransform parentPanel = (RectTransform) targetPanel.parent;
 
-			if (this.constraintWithinScreen)
-			{
-				Vector3 pos = this.targetPanel.localPosition;
-				RectTransform parentPanel = (RectTransform)this.targetPanel.parent;
+                Vector3 minPosition = parentPanel.rect.min - targetPanel.rect.min;
+                Vector3 maxPosition = parentPanel.rect.max - targetPanel.rect.max;
 
-				Vector3 minPosition = parentPanel.rect.min - this.targetPanel.rect.min;
-				Vector3 maxPosition = parentPanel.rect.max - this.targetPanel.rect.max;
+                currentPosition = new Vector2(
+                    Mathf.Clamp(currentPosition.x, minPosition.x, maxPosition.x),
+                    Mathf.Clamp(currentPosition.y, minPosition.y, maxPosition.y)
+                );
+            }
 
-				currentPosition = new Vector2(
-					Mathf.Clamp(currentPosition.x, minPosition.x, maxPosition.x),
-					Mathf.Clamp(currentPosition.y, minPosition.y, maxPosition.y)
-				);
-			}
+            targetPanel.anchoredPosition = currentPosition;
+        }
 
-			targetPanel.anchoredPosition = currentPosition;
-		}
+        private Vector2 GetPonterDataDeltaUnscaled(Vector2 delta)
+        {
+            if (canvasScaler == null) canvasScaler = transform.GetComponentInParent<CanvasScaler>();
+            if (canvasScaler == null) return delta;
 
-		private Vector2 GetPonterDataDeltaUnscaled(Vector2 delta)
-		{
-			if (this.canvasScaler == null) this.canvasScaler = transform.GetComponentInParent<CanvasScaler>();
-			if (this.canvasScaler == null) return delta;
+            Vector2 referenceResolution = canvasScaler.referenceResolution;
+            Vector2 currentResolution = new Vector2(Screen.width, Screen.height);
 
-			Vector2 referenceResolution = this.canvasScaler.referenceResolution;
-			Vector2 currentResolution = new Vector2(Screen.width, Screen.height);
+            float widthRatio = currentResolution.x / referenceResolution.x;
+            float heightRatio = currentResolution.y / referenceResolution.y;
+            float ratio = Mathf.Lerp(widthRatio, heightRatio, canvasScaler.matchWidthOrHeight);
 
-			float widthRatio = currentResolution.x / referenceResolution.x;
-			float heightRatio = currentResolution.y / referenceResolution.y;
-			float ratio = Mathf.Lerp(widthRatio, heightRatio, this.canvasScaler.matchWidthOrHeight);
+            return delta / ratio;
+        }
 
-			return delta/ratio;
-		}
+        // PRIVATE METHODS: -----------------------------------------------------------------------
 
-		// PRIVATE METHODS: -----------------------------------------------------------------------
+        private void SetupEvents(EventTriggerType eventType, UnityAction<BaseEventData> callback)
+        {
+            EventTrigger.Entry eventTriggerEntry = new EventTrigger.Entry();
+            eventTriggerEntry.eventID = eventType;
+            eventTriggerEntry.callback.AddListener(callback);
 
-		private void SetupEvents(EventTriggerType eventType, UnityAction<BaseEventData> callback)
-		{
-			EventTrigger.Entry eventTriggerEntry = new EventTrigger.Entry();
-			eventTriggerEntry.eventID = eventType;
-			eventTriggerEntry.callback.AddListener(callback);
+            EventTrigger eventTrigger = gameObject.GetComponent<EventTrigger>();
+            if (eventTrigger == null) eventTrigger = gameObject.AddComponent<EventTrigger>();
 
-			EventTrigger eventTrigger = gameObject.GetComponent<EventTrigger>();
-			if (eventTrigger == null) eventTrigger = gameObject.AddComponent<EventTrigger>();
-
-			eventTrigger.triggers.Add(eventTriggerEntry);
-		}
-	}
+            eventTrigger.triggers.Add(eventTriggerEntry);
+        }
+    }
 }

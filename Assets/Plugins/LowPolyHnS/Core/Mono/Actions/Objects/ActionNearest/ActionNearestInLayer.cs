@@ -1,26 +1,23 @@
-﻿namespace LowPolyHnS.Core
-{
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
+﻿using UnityEngine;
 
-	[AddComponentMenu("")]
-	public class ActionNearestInLayer : IActionNearest
-	{
+namespace LowPolyHnS.Core
+{
+    [AddComponentMenu("")]
+    public class ActionNearestInLayer : IActionNearest
+    {
         public LayerMask layerMask = -1;
 
         protected override int FilterLayerMask()
         {
-            return this.layerMask;
+            return layerMask;
         }
 
         // +--------------------------------------------------------------------------------------+
         // | EDITOR                                                                               |
         // +--------------------------------------------------------------------------------------+
 
-        #if UNITY_EDITOR
-        
+#if UNITY_EDITOR
+
         public static new string NAME = "Object/Nearest in LayerMask";
         private const string NODE_TITLE = "Get nearest object in LayerMask";
 
@@ -31,6 +28,6 @@
             return NODE_TITLE;
         }
 
-        #endif
+#endif
     }
 }

@@ -1,12 +1,10 @@
-﻿namespace LowPolyHnS.Core
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEngine.UI;
-    using UnityEditor;
-    using UnityEditor.UI;
+﻿using UnityEditor;
+using UnityEditor.UI;
+using UnityEngine;
+using UnityEngine.UI;
 
+namespace LowPolyHnS.Core
+{
     [CustomEditor(typeof(InputFieldVariable))]
     public class InputFieldVariableEditor : InputFieldEditor
     {
@@ -15,7 +13,7 @@
         private new void OnEnable()
         {
             base.OnEnable();
-            this.spVariable = serializedObject.FindProperty("variable");
+            spVariable = serializedObject.FindProperty("variable");
         }
 
         public override void OnInspectorGUI()
@@ -24,7 +22,7 @@
             EditorGUILayout.Space();
 
             serializedObject.Update();
-            EditorGUILayout.PropertyField(this.spVariable);
+            EditorGUILayout.PropertyField(spVariable);
             serializedObject.ApplyModifiedProperties();
         }
 

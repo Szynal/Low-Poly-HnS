@@ -1,10 +1,7 @@
-﻿namespace LowPolyHnS.Variables
-{
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
+﻿using System;
 
+namespace LowPolyHnS.Variables
+{
     [Serializable]
     public class VariableGlobalProperty
     {
@@ -16,36 +13,36 @@
 
         public VariableGlobalProperty()
         {
-            this.globalVariable = this.globalVariable ?? new HelperGlobalVariable();
-		}
+            globalVariable = globalVariable ?? new HelperGlobalVariable();
+        }
 
         // PUBLIC METHODS: ------------------------------------------------------------------------
 
         public object Get()
         {
-            return this.globalVariable.Get(null);
+            return globalVariable.Get();
         }
 
         public void Set(object value)
         {
-            this.globalVariable.Set(value, null);
+            globalVariable.Set(value);
         }
 
         public string GetVariableID()
         {
-            return this.globalVariable.name;
+            return globalVariable.name;
         }
 
         // OVERRIDERS: ----------------------------------------------------------------------------
 
-		public override string ToString()
-		{
-            return this.globalVariable.ToString();
-		}
+        public override string ToString()
+        {
+            return globalVariable.ToString();
+        }
 
         public string ToStringValue()
         {
-            return this.globalVariable.ToStringValue(null);
+            return globalVariable.ToStringValue();
         }
-	}
+    }
 }

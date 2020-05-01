@@ -1,7 +1,9 @@
-﻿namespace LowPolyHnS.Core.Hooks
-{
-	using UnityEngine;
+﻿using UnityEngine;
 
-	[AddComponentMenu("LowPolyHnS/Hooks/HookCamera", 100)]
-	public class HookCamera : IHook<HookCamera> { }
+namespace LowPolyHnS.Core.Hooks
+{
+    [AddComponentMenu("LowPolyHnS/Hooks/HookCamera", 100)]
+    public class HookCamera : IHook<HookCamera>
+    {
+    }
 }

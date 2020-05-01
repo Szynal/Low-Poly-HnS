@@ -1,14 +1,11 @@
-﻿using UnityEngineInternal;
+﻿using System.Collections.Generic;
+using LowPolyHnS.Core;
+using UnityEditor;
+using UnityEditorInternal;
+using UnityEngine;
+
 namespace LowPolyHnS.Inventory
 {
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEditor;
-    using UnityEditorInternal;
-    using LowPolyHnS.Core;
-    using LowPolyHnS.Variables;
-
     [CustomEditor(typeof(Container))]
     public class ContainerEditor : Editor
     {
@@ -29,21 +26,21 @@ namespace LowPolyHnS.Inventory
 
         private void OnEnable()
         {
-            this.container = this.target as Container;
+            container = target as Container;
 
-            this.spInitItems = this.serializedObject.FindProperty("initItems");
-            this.spSaveContainer = this.serializedObject.FindProperty("saveContainer");
-            this.spContainerUI = this.serializedObject.FindProperty("containerUI");
+            spInitItems = serializedObject.FindProperty("initItems");
+            spSaveContainer = serializedObject.FindProperty("saveContainer");
+            spContainerUI = serializedObject.FindProperty("containerUI");
 
-            this.initItemsList = new ReorderableList(
-                this.serializedObject,
-                this.spInitItems,
+            initItemsList = new ReorderableList(
+                serializedObject,
+                spInitItems,
                 true, true, true, true
             );
 
-            this.initItemsList.drawHeaderCallback = this.InitContainer_Header;
-            this.initItemsList.drawElementCallback = this.InitContainer_Paint;
-            this.initItemsList.elementHeightCallback = this.InitContainer_Height;
+            initItemsList.drawHeaderCallback = InitContainer_Header;
+            initItemsList.drawElementCallback = InitContainer_Paint;
+            initItemsList.elementHeightCallback = InitContainer_Height;
         }
 
         [InitializeOnLoadMethod]
@@ -52,8 +49,7 @@ namespace LowPolyHnS.Inventory
             LowPolyHnSToolbar.REGISTER_ITEMS.Push(new LowPolyHnSToolbar.Item(
                 string.Format(GCTOOLBAR_ICON_PATH),
                 "Create a Container",
-                ContainerEditor.CreateContainer,
-                100
+                CreateContainer
             ));
         }
 
@@ -64,21 +60,21 @@ namespace LowPolyHnS.Inventory
             serializedObject.Update();
             EditorGUILayout.Space();
 
-            if (Application.isPlaying) this.PaintRuntime();
-            else this.initItemsList.DoLayoutList();
+            if (Application.isPlaying) PaintRuntime();
+            else initItemsList.DoLayoutList();
 
             EditorGUILayout.Space();
-            EditorGUILayout.PropertyField(this.spContainerUI, GC_CONT_UI);
-            EditorGUILayout.PropertyField(this.spSaveContainer);
+            EditorGUILayout.PropertyField(spContainerUI, GC_CONT_UI);
+            EditorGUILayout.PropertyField(spSaveContainer);
 
-            GlobalEditorID.Paint(this.container);
+            GlobalEditorID.Paint(container);
 
             serializedObject.ApplyModifiedProperties();
         }
 
         private void PaintRuntime()
         {
-            foreach (KeyValuePair<int, Container.ItemData> element in this.container.data.items)
+            foreach (KeyValuePair<int, Container.ItemData> element in container.data.items)
             {
                 int uuid = element.Value.uuid;
                 if (!InventoryManager.Instance.itemsCatalogue.ContainsKey(uuid)) continue;
@@ -105,16 +101,14 @@ namespace LowPolyHnS.Inventory
 
         private void InitContainer_Paint(Rect rect, int index, bool isActive, bool isFocused)
         {
-            SerializedProperty spProperty = this.spInitItems.GetArrayElementAtIndex(index);
+            SerializedProperty spProperty = spInitItems.GetArrayElementAtIndex(index);
             EditorGUI.PropertyField(rect, spProperty, true);
         }
 
         private float InitContainer_Height(int index)
         {
-            return (
-                EditorGUI.GetPropertyHeight(this.spInitItems.GetArrayElementAtIndex(index)) +
-                EditorGUIUtility.standardVerticalSpacing
-            );
+            return EditorGUI.GetPropertyHeight(spInitItems.GetArrayElementAtIndex(index)) +
+                   EditorGUIUtility.standardVerticalSpacing;
         }
 
         // HIERARCHY CONTEXT MENU: ----------------------------------------------------------------

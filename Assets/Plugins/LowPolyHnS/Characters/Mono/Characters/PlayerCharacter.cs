@@ -7,16 +7,15 @@ namespace LowPolyHnS.Characters
     [AddComponentMenu("LowPolyHnS/Characters/Player Character", 100)]
     public class PlayerCharacter : Character
     {
-
         protected const string PLAYER_ID = "player";
         public static OnLoadSceneData ON_LOAD_SCENE_DATA;
 
-   // INITIALIZERS: --------------------------------------------------------------------------
+        // INITIALIZERS: --------------------------------------------------------------------------
 
         protected override void Awake()
         {
             if (!Application.isPlaying) return;
-         
+
             InitSaveData = new SaveData
             {
                 Position = transform.position,

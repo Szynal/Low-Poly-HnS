@@ -1,9 +1,10 @@
-﻿namespace LowPolyHnS.Core
-{
-    using UnityEngine;
-    using UnityEditor;
-    using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using UnityEditor;
+using UnityEditorInternal;
+using UnityEngine;
 
+namespace LowPolyHnS.Core
+{
     [CustomPropertyDrawer(typeof(TagSelectorAttribute))]
     public class TagSelectorPropertyDrawer : PropertyDrawer
     {
@@ -14,7 +15,7 @@
         {
             if (property.propertyType == SerializedPropertyType.String)
             {
-                if (tags.Count == 0) this.BuildTags();
+                if (tags.Count == 0) BuildTags();
 
                 EditorGUI.BeginProperty(position, label, property);
 
@@ -26,9 +27,9 @@
                 }
                 else
                 {
-                    for (int i = 1; i < this.tags.Count; i++)
+                    for (int i = 1; i < tags.Count; i++)
                     {
-                        if (this.tags[i] == propertyString)
+                        if (tags[i] == propertyString)
                         {
                             index = i;
                             break;
@@ -36,10 +37,10 @@
                     }
                 }
 
-                index = EditorGUI.Popup(position, label.text, index, this.tags.ToArray());
+                index = EditorGUI.Popup(position, label.text, index, tags.ToArray());
                 if (index >= 1)
                 {
-                    property.stringValue = this.tags[index];
+                    property.stringValue = tags[index];
                 }
                 else
                 {
@@ -58,10 +59,10 @@
 
         private void BuildTags()
         {
-            this.tags = new List<string>();
+            tags = new List<string>();
 
-            this.tags.Add(UNTAGGED);
-            this.tags.AddRange(UnityEditorInternal.InternalEditorUtility.tags);
+            tags.Add(UNTAGGED);
+            tags.AddRange(InternalEditorUtility.tags);
         }
     }
 }

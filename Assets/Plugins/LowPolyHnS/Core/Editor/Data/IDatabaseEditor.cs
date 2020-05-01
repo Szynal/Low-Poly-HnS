@@ -1,22 +1,33 @@
-﻿namespace LowPolyHnS.Core
+﻿using UnityEditor;
+
+namespace LowPolyHnS.Core
 {
-	using System;
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEditor;
+    public abstract class IDatabaseEditor : Editor
+    {
+        // ABSTRACT METHODS: ----------------------------------------------------------------------
 
-	public abstract class IDatabaseEditor : Editor 
-	{
-		// ABSTRACT METHODS: ----------------------------------------------------------------------
+        public abstract string GetName();
 
-		public abstract string GetName();
+        // VIRTUAL METHODS: -----------------------------------------------------------------------
 
-		// VIRTUAL METHODS: -----------------------------------------------------------------------
+        public virtual void OnPreferencesWindowGUI()
+        {
+            OnInspectorGUI();
+        }
 
-		public virtual void OnPreferencesWindowGUI() { this.OnInspectorGUI(); }
-		public virtual string GetDocumentationURL() {return "http://docs.LowPolyHnS.io";}
-		public virtual int GetPanelWeight() { return 50; }
-        public virtual bool CanBeDecoupled() { return false; }
-	}
+        public virtual string GetDocumentationURL()
+        {
+            return "http://docs.LowPolyHnS.io";
+        }
+
+        public virtual int GetPanelWeight()
+        {
+            return 50;
+        }
+
+        public virtual bool CanBeDecoupled()
+        {
+            return false;
+        }
+    }
 }

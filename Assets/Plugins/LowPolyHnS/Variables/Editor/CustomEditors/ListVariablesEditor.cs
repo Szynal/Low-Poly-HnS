@@ -1,13 +1,10 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using LowPolyHnS.Core;
+using UnityEditor;
+using UnityEngine;
+
 namespace LowPolyHnS.Variables
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEditor;
-    using LowPolyHnS.Core;
-
     [CustomEditor(typeof(ListVariables))]
     public class ListVariablesEditor : LocalVariablesEditor
     {
@@ -28,16 +25,16 @@ namespace LowPolyHnS.Variables
         {
             base.OnEnable();
 
-            this.list = this.target as ListVariables;
-            this.spType = this.serializedObject.FindProperty("type");
-            this.spSave = this.serializedObject.FindProperty("save");
+            list = target as ListVariables;
+            spType = serializedObject.FindProperty("type");
+            spSave = serializedObject.FindProperty("save");
         }
 
         // PAINT METHODS: -------------------------------------------------------------------------
 
         public override void OnInspectorGUI()
         {
-            if (Application.isPlaying) this.PaintRuntimeInspector(); 
+            if (Application.isPlaying) PaintRuntimeInspector();
             else base.OnInspectorGUI();
         }
 
@@ -45,7 +42,7 @@ namespace LowPolyHnS.Variables
         {
             EditorGUILayout.Space();
 
-            if (this.list.variables.Count == 0)
+            if (list.variables.Count == 0)
             {
                 EditorGUILayout.HelpBox("Empty List", MessageType.Info);
                 return;
@@ -55,19 +52,18 @@ namespace LowPolyHnS.Variables
             GUILayoutOption height = GUILayout.Height(20);
             EditorGUI.BeginDisabledGroup(true);
 
-            for (int i = 0; i < this.list.variables.Count; ++i)
+            for (int i = 0; i < list.variables.Count; ++i)
             {
-                object variable = this.list.variables[i].Get();
+                object variable = list.variables[i].Get();
                 string title = string.Format(
                     RUNTIME_NAME,
-                    this.list.iterator == i ? " ▸ " : string.Empty,
+                    list.iterator == i ? " ▸ " : string.Empty,
                     string.Format(REFERENCE_NAME, i, string.Empty)
                 );
 
-                string value = (variable == null 
-                    ? "(null)" 
-                    : variable.ToString()
-                );
+                string value = variable == null
+                    ? "(null)"
+                    : variable.ToString();
 
                 EditorGUILayout.BeginHorizontal();
 
@@ -81,7 +77,7 @@ namespace LowPolyHnS.Variables
             EditorGUILayout.Space();
 
             serializedObject.Update();
-            GlobalEditorID.Paint(this.list);
+            GlobalEditorID.Paint(list);
             serializedObject.ApplyModifiedProperties();
         }
 
@@ -95,27 +91,27 @@ namespace LowPolyHnS.Variables
             EditorGUILayout.BeginHorizontal();
 
             EditorGUI.BeginChangeCheck();
-            EditorGUILayout.PropertyField(this.spType, GUIContent.none, GUILayout.Width(150));
+            EditorGUILayout.PropertyField(spType, GUIContent.none, GUILayout.Width(150));
             if (EditorGUI.EndChangeCheck())
             {
-                for (int i = 0; i < this.subEditors.Length; ++i)
+                for (int i = 0; i < subEditors.Length; ++i)
                 {
-                    this.subEditors[i].serializedObject.ApplyModifiedProperties();
-                    this.subEditors[i].serializedObject.Update();
+                    subEditors[i].serializedObject.ApplyModifiedProperties();
+                    subEditors[i].serializedObject.Update();
 
-                    this.subEditors[i].spVariableType.intValue = this.spType.intValue;
+                    subEditors[i].spVariableType.intValue = spType.intValue;
 
-                    this.subEditors[i].serializedObject.ApplyModifiedPropertiesWithoutUndo();
-                    this.subEditors[i].serializedObject.Update();
+                    subEditors[i].serializedObject.ApplyModifiedPropertiesWithoutUndo();
+                    subEditors[i].serializedObject.Update();
                 }
             }
 
-            if (!this.CanSave() && this.spSave.boolValue) this.spSave.boolValue = false;
-            EditorGUI.BeginDisabledGroup(!this.CanSave());
+            if (!CanSave() && spSave.boolValue) spSave.boolValue = false;
+            EditorGUI.BeginDisabledGroup(!CanSave());
 
-            this.spSave.boolValue = EditorGUILayout.ToggleLeft(
-                this.spSave.displayName, 
-                this.spSave.boolValue
+            spSave.boolValue = EditorGUILayout.ToggleLeft(
+                spSave.displayName,
+                spSave.boolValue
             );
 
             EditorGUI.EndDisabledGroup();
@@ -125,16 +121,16 @@ namespace LowPolyHnS.Variables
         protected override string GetReferenceName(int index)
         {
             return string.Format(
-                REFERENCE_NAME, 
-                index, 
-                this.spSave.boolValue ? SAVE : string.Empty
+                REFERENCE_NAME,
+                index,
+                spSave.boolValue ? SAVE : string.Empty
             );
         }
 
         protected override void BeforePaintSubEditor(int index)
         {
-            this.subEditors[index].editableType = false;
-            this.subEditors[index].editableCommon = false;
+            subEditors[index].editableType = false;
+            subEditors[index].editableCommon = false;
         }
 
         protected override void AfterPaintSubEditorsList()
@@ -145,9 +141,9 @@ namespace LowPolyHnS.Variables
             if (GUILayout.Button("+", GUILayout.Height(20), GUILayout.Width(100)))
             {
                 string variableName = Guid.NewGuid().ToString("N");
-                MBVariable variable = this.CreateVariable(variableName);
+                MBVariable variable = CreateVariable(variableName);
 
-                variable.variable.type = this.spType.intValue;
+                variable.variable.type = spType.intValue;
                 Event.current.Use();
             }
 
@@ -159,7 +155,7 @@ namespace LowPolyHnS.Variables
 
         private bool CanSave()
         {
-            Variable.DataType type = (Variable.DataType)this.spType.enumValueIndex;
+            Variable.DataType type = (Variable.DataType) spType.enumValueIndex;
             return Variable.CanSave(type);
         }
 
@@ -171,5 +167,5 @@ namespace LowPolyHnS.Variables
             GameObject instance = CreateSceneObject.Create("List Variables");
             instance.AddComponent<ListVariables>();
         }
-	}
+    }
 }

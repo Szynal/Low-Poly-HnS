@@ -1,10 +1,8 @@
-﻿namespace LowPolyHnS.Core
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEngine.EventSystems;
+﻿using UnityEngine;
+using UnityEngine.EventSystems;
 
+namespace LowPolyHnS.Core
+{
     [AddComponentMenu("")]
     public class LowPolyHnSStandaloneInputModule : StandaloneInputModule
     {
@@ -21,7 +19,7 @@
 
         public GameObject GameObjectUnderPointer()
         {
-            return GameObjectUnderPointer(PointerInputModule.kMouseLeftId);
+            return GameObjectUnderPointer(kMouseLeftId);
         }
     }
 }

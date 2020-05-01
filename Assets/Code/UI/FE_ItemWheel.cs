@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using System.Threading.Tasks;
+using UnityEngine;
 
 public class FE_ItemWheel : MonoBehaviour
 {
@@ -12,32 +12,31 @@ public class FE_ItemWheel : MonoBehaviour
         public Vector3 Scale;
     }
 
-    [SerializeField] FE_ItemWheelItem[] slotObjects = null;
+    [SerializeField] private FE_ItemWheelItem[] slotObjects = null;
     public bool CanBeOpened = true;
-    [Space(5f)]
-    [SerializeField] List<FE_Item> listOfItems = null;
+    [Space(5f)] [SerializeField] private List<FE_Item> listOfItems;
 
-    private SlotTransform[] slotPositions = null;
-    private int middleIndex = 0;
-    private int selectedIndex = 0;
+    private SlotTransform[] slotPositions;
+    private int middleIndex;
+    private int selectedIndex;
 
     private void Awake()
     {
-        if(slotObjects.Length < 1)
+        if (slotObjects.Length < 1)
         {
             return;
         }
 
         slotPositions = new SlotTransform[slotObjects.Length];
 
-        for(int i = 0; i < slotObjects.Length; i++)
+        for (int i = 0; i < slotObjects.Length; i++)
         {
             slotPositions[i].Position = slotObjects[i].transform.localPosition;
             slotPositions[i].Rotation = slotObjects[i].transform.localRotation;
             slotPositions[i].Scale = slotObjects[i].transform.localScale;
         }
 
-       // middleIndex = slotObjects.Length / 2;
+        // middleIndex = slotObjects.Length / 2;
     }
 
     private void OnDisable()
@@ -73,14 +72,14 @@ public class FE_ItemWheel : MonoBehaviour
 
         listOfItems = _itemList;
 
-        if(_firstSelected == null)
+        if (_firstSelected == null)
         {
             _firstSelected = _itemList[0];
         }
 
-        for(int i = 0; i < _itemList.Count; i++)
+        for (int i = 0; i < _itemList.Count; i++)
         {
-            if(_itemList[i] == _firstSelected)
+            if (_itemList[i] == _firstSelected)
             {
                 selectedIndex = i;
                 break;
@@ -132,7 +131,8 @@ public class FE_ItemWheel : MonoBehaviour
                 continue;
             }
 
-            slotObjects[i].SetItem(listOfItems[arrayIndexWrapped(selectedIndex - (middleIndex - i), listOfItems.Count)]);
+            slotObjects[i]
+                .SetItem(listOfItems[arrayIndexWrapped(selectedIndex - (middleIndex - i), listOfItems.Count)]);
         }
     }
 
@@ -142,9 +142,9 @@ public class FE_ItemWheel : MonoBehaviour
 
         if (_input < 0)
         {
-            for(int i = middleIndex; i > 0; i --)
+            for (int i = middleIndex; i > 0; i--)
             {
-                if(slotObjects[i].gameObject.activeSelf == false)
+                if (slotObjects[i].gameObject.activeSelf == false)
                 {
                     _itemToActivateIndex = i;
                     break;
@@ -164,18 +164,23 @@ public class FE_ItemWheel : MonoBehaviour
         }
 
         slotObjects[_itemToActivateIndex].gameObject.SetActive(true);
-        slotObjects[_itemToActivateIndex].SetItem(listOfItems[arrayIndexWrapped(selectedIndex - (middleIndex - _itemToActivateIndex), listOfItems.Count)]);
+        slotObjects[_itemToActivateIndex]
+            .SetItem(listOfItems[
+                arrayIndexWrapped(selectedIndex - (middleIndex - _itemToActivateIndex), listOfItems.Count)]);
 
         float _lerpProgress = 0f;
-        while(_lerpProgress < 1f)
+        while (_lerpProgress < 1f)
         {
             _lerpProgress += Time.unscaledDeltaTime / _animTime;
 
-            for(int i = 0; i < slotObjects.Length; i++)
+            for (int i = 0; i < slotObjects.Length; i++)
             {
-                slotObjects[i].transform.localPosition = Vector3.Lerp(slotPositions[i].Position, slotPositions[arrayIndexWrapped(i - _input, slotPositions.Length)].Position, _lerpProgress);
-                slotObjects[i].transform.localRotation = Quaternion.Lerp(slotPositions[i].Rotation, slotPositions[arrayIndexWrapped(i - _input, slotPositions.Length)].Rotation, _lerpProgress);
-                slotObjects[i].transform.localScale = Vector3.Lerp(slotPositions[i].Scale, slotPositions[arrayIndexWrapped(i - _input, slotPositions.Length)].Scale, _lerpProgress);
+                slotObjects[i].transform.localPosition = Vector3.Lerp(slotPositions[i].Position,
+                    slotPositions[arrayIndexWrapped(i - _input, slotPositions.Length)].Position, _lerpProgress);
+                slotObjects[i].transform.localRotation = Quaternion.Lerp(slotPositions[i].Rotation,
+                    slotPositions[arrayIndexWrapped(i - _input, slotPositions.Length)].Rotation, _lerpProgress);
+                slotObjects[i].transform.localScale = Vector3.Lerp(slotPositions[i].Scale,
+                    slotPositions[arrayIndexWrapped(i - _input, slotPositions.Length)].Scale, _lerpProgress);
             }
 
             yield return null;
@@ -196,17 +201,17 @@ public class FE_ItemWheel : MonoBehaviour
 
     private int arrayIndexWrapped(int _index, int _arrayCount)
     {
-        if(_arrayCount == 1)
+        if (_arrayCount == 1)
         {
             return 0;
         }
 
-        if(_index >= _arrayCount)
+        if (_index >= _arrayCount)
         {
-            return Mathf.Clamp(_index - _arrayCount, 0, _arrayCount - 1);        
+            return Mathf.Clamp(_index - _arrayCount, 0, _arrayCount - 1);
         }
 
-        if(_index < 0)
+        if (_index < 0)
         {
             return Mathf.Clamp(_arrayCount + _index, 0, _arrayCount - 1);
         }

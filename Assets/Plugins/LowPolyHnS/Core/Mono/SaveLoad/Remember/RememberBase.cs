@@ -22,15 +22,15 @@ namespace LowPolyHnS.Core
 
         protected virtual void Start()
         {
-            if (!Application.isPlaying || this.exitingApplication) return;
+            if (!Application.isPlaying || exitingApplication) return;
             SaveLoadManager.Instance.Initialize(this);
         }
 
         protected virtual void OnDestroy()
         {
-            if (!Application.isPlaying || this.exitingApplication) return;
+            if (!Application.isPlaying || exitingApplication) return;
 
-            this.isDestroyed = true;
+            isDestroyed = true;
             SaveLoadManager.Instance.OnDestroyIGameSave(this);
         }
     }

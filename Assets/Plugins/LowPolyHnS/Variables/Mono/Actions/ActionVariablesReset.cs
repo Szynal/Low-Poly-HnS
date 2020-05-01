@@ -1,18 +1,16 @@
-﻿namespace LowPolyHnS.Variables
+﻿using LowPolyHnS.Core;
+using UnityEngine;
+
+namespace LowPolyHnS.Variables
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-	using LowPolyHnS.Core;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[AddComponentMenu("")]
-	public class ActionVariablesReset : IAction
-	{
+    [AddComponentMenu("")]
+    public class ActionVariablesReset : IAction
+    {
         // EXECUTABLE: ----------------------------------------------------------------------------
 
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
@@ -21,33 +19,33 @@
             return true;
         }
 
-		// +--------------------------------------------------------------------------------------+
-		// | EDITOR                                                                               |
-		// +--------------------------------------------------------------------------------------+
+        // +--------------------------------------------------------------------------------------+
+        // | EDITOR                                                                               |
+        // +--------------------------------------------------------------------------------------+
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 
         private const string HELPBOX = "Reset all variable values";
 
-		public static new string NAME = "Variables/Variables Reset";
+        public static new string NAME = "Variables/Variables Reset";
         private const string NODE_TITLE = "Reset variables";
 
-		// INSPECTOR METHODS: ---------------------------------------------------------------------
+        // INSPECTOR METHODS: ---------------------------------------------------------------------
 
-		public override string GetNodeTitle()
-		{
+        public override string GetNodeTitle()
+        {
             return NODE_TITLE;
-		}
+        }
 
-		public override void OnInspectorGUI()
-		{
-			this.serializedObject.Update();
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
 
             EditorGUILayout.HelpBox(HELPBOX, MessageType.Info);
 
-            this.serializedObject.ApplyModifiedProperties();
-		}
+            serializedObject.ApplyModifiedProperties();
+        }
 
-		#endif
-	}
+#endif
+    }
 }

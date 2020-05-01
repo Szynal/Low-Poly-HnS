@@ -1,15 +1,12 @@
-﻿namespace LowPolyHnS.Inventory
-{
-	using System.Collections;
-	using System.Collections.Generic;
-    using LowPolyHnS.Core;
-    using UnityEngine;
-	using UnityEngine.Events;
+﻿using LowPolyHnS.Core;
+using UnityEngine;
 
-	[AddComponentMenu("")]
-	public class ConditionContainerUI : ICondition
-	{
-		public enum State
+namespace LowPolyHnS.Inventory
+{
+    [AddComponentMenu("")]
+    public class ConditionContainerUI : ICondition
+    {
+        public enum State
         {
             IsOpen,
             IsClosed
@@ -17,9 +14,9 @@
 
         public State container = State.IsOpen;
 
-		public override bool Check(GameObject target)
-		{
-			switch (this.container)
+        public override bool Check(GameObject target)
+        {
+            switch (container)
             {
                 case State.IsOpen:
                     return ContainerUIManager.IsContainerOpen();
@@ -29,9 +26,9 @@
             }
 
             return false;
-		}
-        
-		#if UNITY_EDITOR
+        }
+
+#if UNITY_EDITOR
 
         public static new string NAME = "Inventory/Container UI";
         public const string CUSTOM_ICON_PATH = "Assets/Plugins/LowPolyHnS/Inventory/Icons/Conditions/";
@@ -40,9 +37,9 @@
 
         public override string GetNodeTitle()
         {
-            return string.Format(NODE_TITLE, this.container);
+            return string.Format(NODE_TITLE, container);
         }
 
-        #endif
+#endif
     }
 }

@@ -7,13 +7,13 @@ public class DeathCutscene : CutsceneController
     {
         GameManager.Instance.OnCutsceneEnd(0f, true);
 
-        if (hasItsOwnScene == true)
+        if (hasItsOwnScene)
         {
             SceneLoader.Instance.CloseCutscene(SceneName);
         }
         else
         {
-            if (oneShotOnly == true)
+            if (oneShotOnly)
             {
                 Destroy(gameObject);
             }

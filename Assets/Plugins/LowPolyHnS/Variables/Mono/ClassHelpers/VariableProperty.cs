@@ -1,10 +1,8 @@
-﻿namespace LowPolyHnS.Variables
-{
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
+﻿using System;
+using UnityEngine;
 
+namespace LowPolyHnS.Variables
+{
     [Serializable]
     public class VariableProperty
     {
@@ -27,19 +25,19 @@
 
         public VariableProperty()
         {
-			this.SetupVariables();
-		}
+            SetupVariables();
+        }
 
         public VariableProperty(Variable.VarType variableType)
         {
-			this.SetupVariables();
+            SetupVariables();
             switch (variableType)
             {
-                case Variable.VarType.GlobalVariable: 
+                case Variable.VarType.GlobalVariable:
                     this.variableType = GetVarType.GlobalVariable;
                     break;
 
-                case Variable.VarType.LocalVariable: 
+                case Variable.VarType.LocalVariable:
                     this.variableType = GetVarType.LocalVariable;
                     break;
 
@@ -51,26 +49,26 @@
 
         public VariableProperty(GetVarType variableType)
         {
-            this.SetupVariables();
+            SetupVariables();
             this.variableType = variableType;
         }
 
         private void SetupVariables()
         {
-            this.global = this.global ?? new HelperGlobalVariable();
-            this.local = this.local ?? new HelperLocalVariable();
-            this.list = this.list ?? new HelperGetListVariable();
+            global = global ?? new HelperGlobalVariable();
+            local = local ?? new HelperLocalVariable();
+            list = list ?? new HelperGetListVariable();
         }
 
         // PUBLIC METHODS: ------------------------------------------------------------------------
 
         public object Get(GameObject invoker = null)
         {
-            switch (this.variableType)
+            switch (variableType)
             {
-                case GetVarType.GlobalVariable: return this.global.Get(invoker);
-                case GetVarType.LocalVariable: return this.local.Get(invoker);
-                case GetVarType.ListVariable: return this.list.Get(invoker);
+                case GetVarType.GlobalVariable: return global.Get(invoker);
+                case GetVarType.LocalVariable: return local.Get(invoker);
+                case GetVarType.ListVariable: return list.Get(invoker);
             }
 
             return null;
@@ -78,21 +76,27 @@
 
         public void Set(object value, GameObject invoker = null)
         {
-            switch (this.variableType)
+            switch (variableType)
             {
-                case GetVarType.GlobalVariable: this.global.Set(value, invoker); break;
-                case GetVarType.LocalVariable: this.local.Set(value, invoker); break;
-                case GetVarType.ListVariable: this.list.Set(value, invoker); break;
+                case GetVarType.GlobalVariable:
+                    global.Set(value, invoker);
+                    break;
+                case GetVarType.LocalVariable:
+                    local.Set(value, invoker);
+                    break;
+                case GetVarType.ListVariable:
+                    list.Set(value, invoker);
+                    break;
             }
         }
 
         public string GetVariableID()
         {
-            switch (this.variableType)
+            switch (variableType)
             {
-                case GetVarType.GlobalVariable: return this.global.name;
-                case GetVarType.LocalVariable: return this.local.name;
-                case GetVarType.ListVariable: return this.list.select.ToString();
+                case GetVarType.GlobalVariable: return global.name;
+                case GetVarType.LocalVariable: return local.name;
+                case GetVarType.ListVariable: return list.select.ToString();
             }
 
             return "";
@@ -100,7 +104,7 @@
 
         public Variable.VarType GetVariableType()
         {
-            switch (this.variableType)
+            switch (variableType)
             {
                 case GetVarType.GlobalVariable: return Variable.VarType.GlobalVariable;
                 case GetVarType.LocalVariable: return Variable.VarType.LocalVariable;
@@ -119,42 +123,42 @@
         public GameObject GetLocalVariableGameObject()
         {
             Debug.LogWarning(UPGRADE_WARN1 + UPGRADE_WARN2);
-            return this.GetLocalVariableGameObject(null);
+            return GetLocalVariableGameObject(null);
         }
 
         // TODO: Remove in upgrade
         public GameObject GetListVariableGameObject()
         {
             Debug.LogWarning(UPGRADE_WARN1 + UPGRADE_WARN2);
-            return this.GetListVariableGameObject(null);
+            return GetListVariableGameObject(null);
         }
 
         #endregion
 
         public GameObject GetLocalVariableGameObject(GameObject invoker)
         {
-            return this.local.GetGameObject(invoker);
+            return local.GetGameObject(invoker);
         }
 
         public GameObject GetListVariableGameObject(GameObject invoker)
         {
-            return this.list.GetGameObject(invoker);
+            return list.GetGameObject(invoker);
         }
 
         public Variable.DataType GetVariableDataType(GameObject invoker)
         {
-            switch (this.variableType)
+            switch (variableType)
             {
-                case GetVarType.GlobalVariable: 
-                    return this.global.GetDataType(null);
+                case GetVarType.GlobalVariable:
+                    return global.GetDataType();
 
                 case GetVarType.LocalVariable:
-                    GameObject targetLocal = this.local.GetGameObject(invoker);
-                    return this.local.GetDataType(targetLocal);
+                    GameObject targetLocal = local.GetGameObject(invoker);
+                    return local.GetDataType(targetLocal);
 
                 case GetVarType.ListVariable:
-                    GameObject targetList = this.local.GetGameObject(invoker);
-                    return this.list.GetDataType(targetList);
+                    GameObject targetList = local.GetGameObject(invoker);
+                    return list.GetDataType(targetList);
             }
 
             return Variable.DataType.Null;
@@ -163,28 +167,34 @@
         // OVERRIDERS: ----------------------------------------------------------------------------
 
         public override string ToString()
-		{
+        {
             string varName = "";
-            switch (this.variableType)
+            switch (variableType)
             {
-                case GetVarType.GlobalVariable : varName = this.global.ToString(); break;
-                case GetVarType.LocalVariable: varName = this.local.ToString(); break;
-                case GetVarType.ListVariable: varName = this.list.ToString(); break;
+                case GetVarType.GlobalVariable:
+                    varName = global.ToString();
+                    break;
+                case GetVarType.LocalVariable:
+                    varName = local.ToString();
+                    break;
+                case GetVarType.ListVariable:
+                    varName = list.ToString();
+                    break;
             }
 
-            return (string.IsNullOrEmpty(varName) ? "(unknown)" : varName);
-		}
+            return string.IsNullOrEmpty(varName) ? "(unknown)" : varName;
+        }
 
         public string ToStringValue(GameObject invoker)
         {
-            switch (this.variableType)
+            switch (variableType)
             {
-                case GetVarType.GlobalVariable: return this.global.ToStringValue(invoker);
-                case GetVarType.LocalVariable: return this.local.ToStringValue(invoker);
-                case GetVarType.ListVariable: return this.list.ToStringValue(invoker);
+                case GetVarType.GlobalVariable: return global.ToStringValue(invoker);
+                case GetVarType.LocalVariable: return local.ToStringValue(invoker);
+                case GetVarType.ListVariable: return list.ToStringValue(invoker);
             }
 
             return "unknown";
         }
-	}
+    }
 }

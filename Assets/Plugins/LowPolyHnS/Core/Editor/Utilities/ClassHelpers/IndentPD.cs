@@ -1,9 +1,8 @@
-﻿namespace LowPolyHnS.Core
-{
-    using UnityEngine;
-    using UnityEditor;
-    using System.Collections.Generic;
+﻿using UnityEditor;
+using UnityEngine;
 
+namespace LowPolyHnS.Core
+{
     [CustomPropertyDrawer(typeof(IndentAttribute))]
     public class IndentPD : PropertyDrawer
     {

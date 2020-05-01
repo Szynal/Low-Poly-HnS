@@ -1,35 +1,31 @@
-﻿namespace LowPolyHnS.Inventory
-{
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-    using LowPolyHnS.Core;
-    using LowPolyHnS.Variables;
+﻿using LowPolyHnS.Core;
+using LowPolyHnS.Variables;
+using UnityEngine;
 
+namespace LowPolyHnS.Inventory
+{
     [AddComponentMenu("")]
-	public class ConditionContainer : ICondition
-	{
+    public class ConditionContainer : ICondition
+    {
         public TargetGameObject container = new TargetGameObject(TargetGameObject.Target.Invoker);
 
-        [Space]
-        public ItemHolder item = new ItemHolder();
+        [Space] public ItemHolder item = new ItemHolder();
         public NumberProperty amount = new NumberProperty(1);
 
-		public override bool Check(GameObject target)
-		{
-            GameObject containerGo = this.container.GetGameObject(target);
+        public override bool Check(GameObject target)
+        {
+            GameObject containerGo = container.GetGameObject(target);
             if (containerGo == null) return false;
 
             Container containerTarget = containerGo.GetComponent<Container>();
             if (containerTarget == null) return false;
-            if (this.item.item == null) return false;
+            if (item.item == null) return false;
 
-            int containerAmount = containerTarget.GetAmount(this.item.item.uuid);
+            int containerAmount = containerTarget.GetAmount(item.item.uuid);
             return containerAmount >= amount.GetInt(target);
-		}
+        }
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
 
         public const string CUSTOM_ICON_PATH = "Assets/Plugins/LowPolyHnS/Inventory/Icons/Conditions/";
 
@@ -38,9 +34,9 @@
 
         public override string GetNodeTitle()
         {
-            return string.Format(NODE_TITLE, this.container, this.item);
+            return string.Format(NODE_TITLE, container, item);
         }
 
-        #endif
+#endif
     }
 }

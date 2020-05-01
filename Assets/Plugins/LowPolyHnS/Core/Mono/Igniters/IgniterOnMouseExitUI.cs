@@ -1,17 +1,14 @@
-﻿namespace LowPolyHnS.Core
-{
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-    using LowPolyHnS.Variables;
-    using UnityEngine.EventSystems;
+﻿using UnityEngine;
+using UnityEngine.EventSystems;
 
+namespace LowPolyHnS.Core
+{
     [AddComponentMenu("")]
     public class IgniterOnMouseExitUI : Igniter, IPointerExitHandler
-	{
-		#if UNITY_EDITOR
-		public new static string NAME = "UI/On Mouse Exit UI";
-        #endif
+    {
+#if UNITY_EDITOR
+        public new static string NAME = "UI/On Mouse Exit UI";
+#endif
 
         private void Start()
         {
@@ -20,7 +17,7 @@
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            this.ExecuteTrigger(this.gameObject);
+            ExecuteTrigger(gameObject);
         }
     }
 }

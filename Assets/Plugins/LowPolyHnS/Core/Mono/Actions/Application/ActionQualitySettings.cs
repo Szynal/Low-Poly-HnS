@@ -1,18 +1,16 @@
-﻿namespace LowPolyHnS.Core
+﻿using LowPolyHnS.Variables;
+using UnityEngine;
+
+namespace LowPolyHnS.Core
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-    using LowPolyHnS.Variables;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[AddComponentMenu("")]
-	public class ActionQualitySettings : IAction
-	{
+    [AddComponentMenu("")]
+    public class ActionQualitySettings : IAction
+    {
         public NumberProperty level = new NumberProperty(0);
         public bool applyExpensiveSettings = true;
 
@@ -21,8 +19,8 @@
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
             QualitySettings.SetQualityLevel(
-                (int)this.level.GetValue(target), 
-                this.applyExpensiveSettings
+                (int) level.GetValue(target),
+                applyExpensiveSettings
             );
 
             return true;
@@ -32,45 +30,45 @@
         // | EDITOR                                                                               |
         // +--------------------------------------------------------------------------------------+
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
 
         public static new string NAME = "Application/Quality Settings";
-		private const string NODE_TITLE = "Change quality settings";
+        private const string NODE_TITLE = "Change quality settings";
 
-		// PROPERTIES: ----------------------------------------------------------------------------
+        // PROPERTIES: ----------------------------------------------------------------------------
 
-		private SerializedProperty spLevel;
+        private SerializedProperty spLevel;
         private SerializedProperty spApplyExpensive;
 
-		// INSPECTOR METHODS: ---------------------------------------------------------------------
+        // INSPECTOR METHODS: ---------------------------------------------------------------------
 
-		public override string GetNodeTitle()
-		{
+        public override string GetNodeTitle()
+        {
             return NODE_TITLE;
-		}
+        }
 
-		protected override void OnEnableEditorChild ()
-		{
-            this.spLevel = this.serializedObject.FindProperty("level");
-            this.spApplyExpensive = this.serializedObject.FindProperty("applyExpensiveSettings");
-		}
+        protected override void OnEnableEditorChild()
+        {
+            spLevel = serializedObject.FindProperty("level");
+            spApplyExpensive = serializedObject.FindProperty("applyExpensiveSettings");
+        }
 
-		protected override void OnDisableEditorChild ()
-		{
-            this.spLevel = null;
-            this.spApplyExpensive = null;
-		}
+        protected override void OnDisableEditorChild()
+        {
+            spLevel = null;
+            spApplyExpensive = null;
+        }
 
-		public override void OnInspectorGUI()
-		{
-			this.serializedObject.Update();
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
 
-            EditorGUILayout.PropertyField(this.spLevel);
-            EditorGUILayout.PropertyField(this.spApplyExpensive);
+            EditorGUILayout.PropertyField(spLevel);
+            EditorGUILayout.PropertyField(spApplyExpensive);
 
-			this.serializedObject.ApplyModifiedProperties();
-		}
+            serializedObject.ApplyModifiedProperties();
+        }
 
-		#endif
-	}
+#endif
+    }
 }

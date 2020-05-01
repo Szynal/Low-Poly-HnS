@@ -1,68 +1,66 @@
-﻿namespace LowPolyHnS.Core
+﻿using LowPolyHnS.Variables;
+using UnityEngine;
+
+namespace LowPolyHnS.Core
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-    using LowPolyHnS.Variables;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[AddComponentMenu("")]
-	public class ActionTimescale : IAction 
-	{
-		public NumberProperty timeScale = new NumberProperty(1.0f);
+    [AddComponentMenu("")]
+    public class ActionTimescale : IAction
+    {
+        public NumberProperty timeScale = new NumberProperty(1.0f);
 
         // EXECUTABLE: ----------------------------------------------------------------------------
 
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
-            float timeScaleValue = this.timeScale.GetValue(target);
+            float timeScaleValue = timeScale.GetValue(target);
             TimeManager.Instance.SetTimeScale(timeScaleValue);
             return true;
         }
 
-		// +--------------------------------------------------------------------------------------+
-		// | EDITOR                                                                               |
-		// +--------------------------------------------------------------------------------------+
+        // +--------------------------------------------------------------------------------------+
+        // | EDITOR                                                                               |
+        // +--------------------------------------------------------------------------------------+
 
-		#if UNITY_EDITOR
-        
-		public static new string NAME = "General/Time Scale";
-		private const string NODE_TITLE = "Change Time Scale to {0}";
+#if UNITY_EDITOR
 
-		// PROPERTIES: ----------------------------------------------------------------------------
+        public static new string NAME = "General/Time Scale";
+        private const string NODE_TITLE = "Change Time Scale to {0}";
 
-		private SerializedProperty spTimeScale;
+        // PROPERTIES: ----------------------------------------------------------------------------
 
-		// INSPECTOR METHODS: ---------------------------------------------------------------------
+        private SerializedProperty spTimeScale;
 
-		public override string GetNodeTitle()
-		{
-			return string.Format(NODE_TITLE, this.timeScale);
-		}
+        // INSPECTOR METHODS: ---------------------------------------------------------------------
 
-		protected override void OnEnableEditorChild ()
-		{
-			this.spTimeScale = this.serializedObject.FindProperty("timeScale");
-		}
+        public override string GetNodeTitle()
+        {
+            return string.Format(NODE_TITLE, timeScale);
+        }
 
-		protected override void OnDisableEditorChild ()
-		{
-			this.spTimeScale = null;
-		}
+        protected override void OnEnableEditorChild()
+        {
+            spTimeScale = serializedObject.FindProperty("timeScale");
+        }
 
-		public override void OnInspectorGUI()
-		{
-			this.serializedObject.Update();
+        protected override void OnDisableEditorChild()
+        {
+            spTimeScale = null;
+        }
 
-			EditorGUILayout.PropertyField(this.spTimeScale);
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
 
-			this.serializedObject.ApplyModifiedProperties();
-		}
+            EditorGUILayout.PropertyField(spTimeScale);
 
-		#endif
-	}
+            serializedObject.ApplyModifiedProperties();
+        }
+
+#endif
+    }
 }

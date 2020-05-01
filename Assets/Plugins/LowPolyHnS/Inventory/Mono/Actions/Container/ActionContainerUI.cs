@@ -1,14 +1,11 @@
-﻿namespace LowPolyHnS.Inventory
-{
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-    using LowPolyHnS.Core;
+﻿using LowPolyHnS.Core;
+using UnityEngine;
 
-	[AddComponentMenu("")]
-	public class ActionContainerUI : IAction
-	{
+namespace LowPolyHnS.Inventory
+{
+    [AddComponentMenu("")]
+    public class ActionContainerUI : IAction
+    {
         public enum Action
         {
             Open,
@@ -20,10 +17,10 @@
 
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
-            switch (this.action)
+            switch (action)
             {
                 case Action.Open:
-                    GameObject containerGo = this.container.GetGameObject(target);
+                    GameObject containerGo = container.GetGameObject(target);
                     if (containerGo == null) return true;
 
                     Container containerTarget = containerGo.GetComponent<Container>();
@@ -40,7 +37,7 @@
             return true;
         }
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
 
         public const string CUSTOM_ICON_PATH = "Assets/Plugins/LowPolyHnS/Inventory/Icons/Actions/";
         public static new string NAME = "Inventory/Container/Container UI";
@@ -49,9 +46,9 @@
 
         public override string GetNodeTitle()
         {
-            return string.Format(NODE_TITLE, this.action, this.container);
+            return string.Format(NODE_TITLE, action, container);
         }
 
-        #endif
+#endif
     }
 }

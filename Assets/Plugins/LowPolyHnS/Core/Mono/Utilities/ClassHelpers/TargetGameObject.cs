@@ -1,31 +1,32 @@
-﻿namespace LowPolyHnS.Core
-{
-    using System;
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using LowPolyHnS.Core.Hooks;
-    using LowPolyHnS.Variables;
-    using UnityEngine.Events;
+﻿using System;
+using LowPolyHnS.Core.Hooks;
+using LowPolyHnS.Variables;
+using UnityEngine;
+using UnityEngine.Events;
+using Object = UnityEngine.Object;
 
-    [System.Serializable]
-	public class TargetGameObject
-	{
-		public enum Target
-		{
-			Player,
+namespace LowPolyHnS.Core
+{
+    [Serializable]
+    public class TargetGameObject
+    {
+        public enum Target
+        {
+            Player,
             Camera,
-			Invoker,
-			GameObject,
+            Invoker,
+            GameObject,
             LocalVariable,
             ListVariable,
-            GlobalVariable,
-		}
+            GlobalVariable
+        }
 
         [Serializable]
-        public class ChangeEvent : UnityEvent { }
+        public class ChangeEvent : UnityEvent
+        {
+        }
 
-		// PROPERTIES: ----------------------------------------------------------------------------
+        // PROPERTIES: ----------------------------------------------------------------------------
 
         public Target target = Target.GameObject;
 
@@ -38,84 +39,86 @@
 
         // INITIALIZERS: --------------------------------------------------------------------------
 
-        public TargetGameObject() { }
+        public TargetGameObject()
+        {
+        }
 
-        public TargetGameObject(TargetGameObject.Target target) 
+        public TargetGameObject(Target target)
         {
             this.target = target;
         }
 
-		// PUBLIC METHODS: ------------------------------------------------------------------------
+        // PUBLIC METHODS: ------------------------------------------------------------------------
 
         public GameObject GetGameObject(GameObject invoker)
-		{
+        {
             GameObject result = null;
 
-			switch (this.target)
-			{
-    			case Target.Player :
+            switch (target)
+            {
+                case Target.Player:
                     if (HookPlayer.Instance != null) result = HookPlayer.Instance.gameObject;
-    				break;
+                    break;
 
                 case Target.Camera:
                     if (HookCamera.Instance != null) result = HookCamera.Instance.gameObject;
                     break;
 
-                    case Target.Invoker:
-    				result = invoker;
-    				break;
-                    
+                case Target.Invoker:
+                    result = invoker;
+                    break;
+
                 case Target.GameObject:
-                    result = this.gameObject;
-    				break;
+                    result = gameObject;
+                    break;
 
                 case Target.ListVariable:
-                    result = this.list.Get(invoker) as GameObject;
+                    result = list.Get(invoker) as GameObject;
                     break;
 
                 case Target.LocalVariable:
-                    result = this.local.Get(invoker) as GameObject;
+                    result = local.Get(invoker) as GameObject;
                     break;
 
                 case Target.GlobalVariable:
-                    result = this.global.Get(invoker) as GameObject;
+                    result = global.Get(invoker) as GameObject;
                     break;
             }
 
-			return result;
-		}
+            return result;
+        }
 
         public Transform GetTransform(GameObject invoker)
         {
-            GameObject targetGo = this.GetGameObject(invoker);
+            GameObject targetGo = GetGameObject(invoker);
             if (targetGo == null) return null;
             return targetGo.transform;
         }
 
-        public T GetComponent<T>(GameObject invoker) where T : UnityEngine.Object
+        public T GetComponent<T>(GameObject invoker) where T : Object
         {
-            GameObject targetGo = this.GetGameObject(invoker);
+            GameObject targetGo = GetGameObject(invoker);
             if (targetGo == null) return null;
             return targetGo.GetComponent<T>();
         }
 
         public object GetComponent(GameObject invoker, string type)
         {
-            GameObject targetGo = this.GetGameObject(invoker);
+            GameObject targetGo = GetGameObject(invoker);
             if (targetGo == null) return null;
             return targetGo.GetComponent(type);
         }
 
-        public T GetComponentInChildren<T>(GameObject invoker) where T : UnityEngine.Object
+        public T GetComponentInChildren<T>(GameObject invoker) where T : Object
         {
-            GameObject targetGo = this.GetGameObject(invoker);
+            GameObject targetGo = GetGameObject(invoker);
             if (targetGo == null) return null;
             return targetGo.GetComponentInChildren<T>();
         }
 
-        public T[] GetComponentsInChildren<T>(GameObject invoker) where T : UnityEngine.Object
+        public T[] GetComponentsInChildren<T>(GameObject invoker) where T : Object
         {
-            GameObject targetGo = this.GetGameObject(invoker);
+            GameObject targetGo = GetGameObject(invoker);
             if (targetGo == null) return new T[0];
             return targetGo.GetComponentsInChildren<T>();
         }
@@ -124,27 +127,27 @@
 
         public void StartListeningVariableChanges(GameObject invoker)
         {
-            switch (this.target)
+            switch (target)
             {
                 case Target.GlobalVariable:
                     VariablesManager.events.SetOnChangeGlobal(
-                        this.OnChangeVariable,
-                        this.global.name
+                        OnChangeVariable,
+                        global.name
                     );
                     break;
 
                 case Target.LocalVariable:
                     VariablesManager.events.SetOnChangeLocal(
-                        this.OnChangeVariable,
-                        this.local.GetGameObject(invoker),
-                        this.local.name
+                        OnChangeVariable,
+                        local.GetGameObject(invoker),
+                        local.name
                     );
                     break;
 
                 case Target.ListVariable:
                     VariablesManager.events.StartListenListAny(
-                        this.OnChangeVariable,
-                        this.list.GetListVariables(invoker).gameObject
+                        OnChangeVariable,
+                        list.GetListVariables(invoker).gameObject
                     );
                     break;
             }
@@ -152,27 +155,27 @@
 
         public void StopListeningVariableChanges(GameObject invoker)
         {
-            switch (this.target)
+            switch (target)
             {
                 case Target.GlobalVariable:
                     VariablesManager.events.RemoveChangeGlobal(
-                        this.OnChangeVariable,
-                        this.global.name
+                        OnChangeVariable,
+                        global.name
                     );
                     break;
 
                 case Target.LocalVariable:
                     VariablesManager.events.RemoveChangeLocal(
-                        this.OnChangeVariable,
-                        this.local.GetGameObject(invoker),
-                        this.local.name
+                        OnChangeVariable,
+                        local.GetGameObject(invoker),
+                        local.name
                     );
                     break;
 
                 case Target.ListVariable:
                     VariablesManager.events.StopListenListAny(
-                        this.OnChangeVariable,
-                        this.list.GetListVariables(invoker).gameObject
+                        OnChangeVariable,
+                        list.GetListVariables(invoker).gameObject
                     );
                     break;
             }
@@ -180,12 +183,12 @@
 
         private void OnChangeVariable(string variableID)
         {
-            this.eventChangeVariable.Invoke();
+            eventChangeVariable.Invoke();
         }
 
         private void OnChangeVariable(int index, object prev, object next)
         {
-            this.eventChangeVariable.Invoke();
+            eventChangeVariable.Invoke();
         }
 
         // UTILITIES: -----------------------------------------------------------------------------
@@ -193,32 +196,38 @@
         private const string NAME_LOCAL = "local[{0}]";
         private const string NAME_GLOBAL = "global[{0}]";
 
-        public override string ToString ()
-		{
-			string result = "(unknown)";
-			switch (this.target)
-			{
-    			case Target.Player : result = "Player"; break;
-    			case Target.Invoker: result = "Invoker"; break;
-                case Target.Camera: result = "Camera"; break;
-                case Target.GameObject: 
-                    result = this.gameObject != null ? this.gameObject.name : "(null)"; 
+        public override string ToString()
+        {
+            string result = "(unknown)";
+            switch (target)
+            {
+                case Target.Player:
+                    result = "Player";
                     break;
-                
+                case Target.Invoker:
+                    result = "Invoker";
+                    break;
+                case Target.Camera:
+                    result = "Camera";
+                    break;
+                case Target.GameObject:
+                    result = gameObject != null ? gameObject.name : "(null)";
+                    break;
+
                 case Target.LocalVariable:
-                    result = string.Format(NAME_LOCAL, this.local.name);
+                    result = string.Format(NAME_LOCAL, local.name);
                     break;
 
                 case Target.ListVariable:
-                    result = this.list.ToString();
+                    result = list.ToString();
                     break;
 
                 case Target.GlobalVariable:
-                    result = string.Format(NAME_GLOBAL, this.global.name);
+                    result = string.Format(NAME_GLOBAL, global.name);
                     break;
             }
 
-			return result;
-		}
-	}
+            return result;
+        }
+    }
 }

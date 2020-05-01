@@ -1,13 +1,9 @@
-﻿namespace LowPolyHnS.Inventory
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEngine.UI;
-    using LowPolyHnS.Core;
-    using LowPolyHnS.Variables;
-    using LowPolyHnS.Core.Hooks;
+﻿using LowPolyHnS.Core.Hooks;
+using UnityEngine;
+using UnityEngine.UI;
 
+namespace LowPolyHnS.Inventory
+{
     [AddComponentMenu("LowPolyHnS/UI/Weight")]
     public class WeightUI : MonoBehaviour
     {
@@ -16,25 +12,25 @@
         [Tooltip("Use {0} for the current inventory weight and {1} for the total available")]
         public string format = "{0} / {1}";
 
-        private bool isExitingApplication = false;
+        private bool isExitingApplication;
 
         // INITIALIZE METHODS: --------------------------------------------------------------------
 
         private void OnEnable()
         {
-            InventoryManager.Instance.eventChangePlayerInventory.AddListener(this.OnUpdate);
-            this.OnUpdate();
+            InventoryManager.Instance.eventChangePlayerInventory.AddListener(OnUpdate);
+            OnUpdate();
         }
 
         private void OnDisable()
         {
-            if (this.isExitingApplication) return;
-            InventoryManager.Instance.eventChangePlayerInventory.RemoveListener(this.OnUpdate);
+            if (isExitingApplication) return;
+            InventoryManager.Instance.eventChangePlayerInventory.RemoveListener(OnUpdate);
         }
 
         private void OnApplicationQuit()
         {
-            this.isExitingApplication = true;
+            isExitingApplication = true;
         }
 
         // PRIVATE METHODS: -----------------------------------------------------------------------
@@ -50,7 +46,7 @@
                 .maxInventoryWeight
                 .GetValue(player);
 
-            this.text.text = string.Format(this.format, curWeight, maxWeight);
+            text.text = string.Format(format, curWeight, maxWeight);
         }
     }
 }

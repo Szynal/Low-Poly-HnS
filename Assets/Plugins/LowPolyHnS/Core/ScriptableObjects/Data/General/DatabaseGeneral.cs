@@ -1,15 +1,13 @@
-﻿namespace LowPolyHnS.Core
-{
-	using System;
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-    using UnityEngine.Serialization;
-    using UnityEngine.Audio;
+﻿using UnityEngine;
+using UnityEngine.Audio;
+using UnityEngine.Serialization;
 
-    #if UNITY_EDITOR
+namespace LowPolyHnS.Core
+{
+#if UNITY_EDITOR
     using UnityEditor;
-    #endif
+
+#endif
 
     public class DatabaseGeneral : IDatabase
     {
@@ -28,11 +26,13 @@
 
         [FormerlySerializedAs("prefabMessage")]
         public GameObject prefabSimpleMessage;
+
         public GameObject prefabFloatingMessage;
         public GameObject prefabTouchstick;
 
         [Tooltip("Should saving/loading a game store/restore which scene the player was in?")]
         public bool saveScenes = true;
+
         [SerializeField] private IDataProvider provider;
 
         public float toolbarPositionX = 10f;
@@ -46,19 +46,19 @@
 
         public static DatabaseGeneral Load()
         {
-            return IDatabase.LoadDatabase<DatabaseGeneral>();
+            return LoadDatabase<DatabaseGeneral>();
         }
 
         public IDataProvider GetDataProvider()
         {
-            if (this.provider == null)
+            if (provider == null)
             {
-                this.provider = Resources.Load<IDataProvider>(
+                provider = Resources.Load<IDataProvider>(
                     PROVIDER_PATH
                 );
             }
 
-            return this.provider;
+            return provider;
         }
 
         public void ChangeDataProvider(IDataProvider provider)
@@ -69,12 +69,12 @@
 
         // OVERRIDE METHODS: ----------------------------------------------------------------------
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
 
         [InitializeOnLoadMethod]
         private static void InitializeOnLoad()
         {
-            IDatabase.Setup<DatabaseGeneral>();
+            Setup<DatabaseGeneral>();
         }
 
         public override int GetSidebarPriority()
@@ -82,6 +82,6 @@
             return 1;
         }
 
-        #endif
+#endif
     }
 }

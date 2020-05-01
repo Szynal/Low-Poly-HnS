@@ -1,19 +1,16 @@
-﻿namespace LowPolyHnS.Inventory
-{
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-    using LowPolyHnS.Core;
+﻿using LowPolyHnS.Core;
+using UnityEngine;
 
-	[AddComponentMenu("")]
-	public abstract class IActionContainer : IAction
-	{
+namespace LowPolyHnS.Inventory
+{
+    [AddComponentMenu("")]
+    public abstract class IActionContainer : IAction
+    {
         public TargetGameObject container = new TargetGameObject(TargetGameObject.Target.Invoker);
 
         protected Container GetContainer(GameObject target)
         {
-            GameObject containerGo = this.container.GetGameObject(target);
+            GameObject containerGo = container.GetGameObject(target);
             if (containerGo == null) return null;
 
             return containerGo.GetComponent<Container>();

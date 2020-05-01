@@ -1,11 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using UnityEditor;
 using UnityEngine;
-using UnityEditor;
 
 public class FE_ItemDatabaseWindow : EditorWindow
 {
-    private FE_ItemDatabase databaseObject = null;
+    private FE_ItemDatabase databaseObject;
     private SerializedObject m_serializedObject;
     private SerializedProperty m_serializedWeapons;
     private SerializedProperty m_serializedUseables;
@@ -21,10 +19,14 @@ public class FE_ItemDatabaseWindow : EditorWindow
             {
                 if (_assetGUIDs.Length > 1)
                 {
-                    Debug.LogWarning("There are more than 1 item databases in the assets. Only 1 item database is supported. Opening the database at path " + AssetDatabase.GUIDToAssetPath(_assetGUIDs[0]));
+                    Debug.LogWarning(
+                        "There are more than 1 item databases in the assets. Only 1 item database is supported. Opening the database at path " +
+                        AssetDatabase.GUIDToAssetPath(_assetGUIDs[0]));
                 }
 
-                databaseObject = (FE_ItemDatabase)AssetDatabase.LoadAssetAtPath(AssetDatabase.GUIDToAssetPath(_assetGUIDs[0]), typeof(FE_ItemDatabase));
+                databaseObject =
+                    (FE_ItemDatabase) AssetDatabase.LoadAssetAtPath(AssetDatabase.GUIDToAssetPath(_assetGUIDs[0]),
+                        typeof(FE_ItemDatabase));
                 databaseObject.SortLists();
             }
             else
@@ -44,8 +46,9 @@ public class FE_ItemDatabaseWindow : EditorWindow
     private void OnGUI()
     {
         Init();
-    
-        m_scrollPos = EditorGUILayout.BeginScrollView(m_scrollPos, GUILayout.Width(EditorGUIUtility.currentViewWidth), GUILayout.Height(position.height));
+
+        m_scrollPos = EditorGUILayout.BeginScrollView(m_scrollPos, GUILayout.Width(EditorGUIUtility.currentViewWidth),
+            GUILayout.Height(position.height));
         if (m_serializedObject != null)
         {
             m_serializedObject.Update();
@@ -57,37 +60,40 @@ public class FE_ItemDatabaseWindow : EditorWindow
         }
         else
         {
-            EditorGUI.LabelField(new Rect(Vector2.zero, new Vector2(EditorGUIUtility.currentViewWidth, position.height)), "Item database could not be found. \n Create a new item database asset before trying to edit it.");
+            EditorGUI.LabelField(
+                new Rect(Vector2.zero, new Vector2(EditorGUIUtility.currentViewWidth, position.height)),
+                "Item database could not be found. \n Create a new item database asset before trying to edit it.");
         }
 
         EditorGUILayout.EndScrollView();
     }
 
     private void showList(SerializedProperty _list)
-    {  
-       // EditorGUILayout.PropertyField(_list);
+    {
+        // EditorGUILayout.PropertyField(_list);
 
-       // if (_list.isExpanded == true)
-       // {
-            EditorGUILayout.PropertyField(_list.FindPropertyRelative("Array.size"));
+        // if (_list.isExpanded == true)
+        // {
+        EditorGUILayout.PropertyField(_list.FindPropertyRelative("Array.size"));
 
-            for (int i = 0; i < _list.arraySize; i++)
+        for (int i = 0; i < _list.arraySize; i++)
+        {
+            if (_list.GetArrayElementAtIndex(i).objectReferenceValue != null)
             {
-                if (_list.GetArrayElementAtIndex(i).objectReferenceValue != null)
-                {
-                    int _itemID = ((FE_Item)_list.GetArrayElementAtIndex(i).objectReferenceValue).itemID;
-                    EditorGUILayout.PropertyField(_list.GetArrayElementAtIndex(i), new GUIContent("Item ID: " + _itemID.ToString()));
-                }
-                else
-                {
-                    EditorGUILayout.PropertyField(_list.GetArrayElementAtIndex(i), new GUIContent("Item ID: ---"));
-                }
+                int _itemID = ((FE_Item) _list.GetArrayElementAtIndex(i).objectReferenceValue).itemID;
+                EditorGUILayout.PropertyField(_list.GetArrayElementAtIndex(i), new GUIContent("Item ID: " + _itemID));
             }
-      //  }
+            else
+            {
+                EditorGUILayout.PropertyField(_list.GetArrayElementAtIndex(i), new GUIContent("Item ID: ---"));
+            }
+        }
+
+        //  }
     }
 
     [MenuItem("FearEffect/Show item database")]
-    static void showWindow()
+    private static void showWindow()
     {
         FE_ItemDatabaseWindow _window = GetWindow<FE_ItemDatabaseWindow>("Item database");
         _window.Init();

@@ -1,16 +1,12 @@
-﻿namespace LowPolyHnS.Playables
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEngine.Timeline;
-    using UnityEngine.Playables;
-    using LowPolyHnS.Core;
+﻿using LowPolyHnS.Core;
+using UnityEngine.Timeline;
 
+namespace LowPolyHnS.Playables
+{
     [TrackColor(0.59f, 0.79f, 0.75f)]
     [TrackClipType(typeof(ConditionsAsset))]
     [TrackBindingType(typeof(Conditions))]
-    public class ConditionsTrack : TrackAsset 
+    public class ConditionsTrack : TrackAsset
     {
         protected override void OnCreateClip(TimelineClip clip)
         {

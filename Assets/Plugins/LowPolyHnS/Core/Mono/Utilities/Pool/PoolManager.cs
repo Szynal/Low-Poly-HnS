@@ -1,11 +1,10 @@
-﻿namespace LowPolyHnS.Pool
-{
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using LowPolyHnS.Core;
+﻿using System;
+using System.Collections.Generic;
+using LowPolyHnS.Core;
+using UnityEngine;
 
+namespace LowPolyHnS.Pool
+{
     [AddComponentMenu("")]
     public class PoolManager : Singleton<PoolManager>
     {
@@ -18,53 +17,53 @@
 
             public PoolData(PoolObject prefab)
             {
-                this.container = new GameObject(prefab.gameObject.name).transform;
-                this.container.SetParent(PoolManager.Instance.transform);
-                this.container.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
+                container = new GameObject(prefab.gameObject.name).transform;
+                container.SetParent(Instance.transform);
+                container.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
 
                 this.prefab = prefab;
-                this.Rebuild();
+                Rebuild();
             }
 
             private void Rebuild()
             {
-                this.instances = new List<GameObject>();
+                instances = new List<GameObject>();
                 prefab.gameObject.SetActive(false);
                 for (int i = 0; i < prefab.initCount; ++i)
                 {
                     GameObject instance = Instantiate(prefab.gameObject);
                     instance.SetActive(false);
-                    instance.transform.SetParent(this.container);
-                    this.instances.Add(instance);
+                    instance.transform.SetParent(container);
+                    instances.Add(instance);
                 }
             }
 
             public GameObject Get()
             {
-                int count = this.instances.Count;
-                if (count == 0) this.Rebuild();
+                int count = instances.Count;
+                if (count == 0) Rebuild();
 
                 for (int i = count - 1; i >= 0; --i)
                 {
-                    if (this.instances[i] == null)
+                    if (instances[i] == null)
                     {
-                        this.instances.RemoveAt(i);
+                        instances.RemoveAt(i);
                         continue;
                     }
 
-                    if (!this.instances[i].activeSelf)
+                    if (!instances[i].activeSelf)
                     {
-                        this.instances[i].SetActive(true);
-                        this.instances[i].transform.SetParent(this.container);
-                        return this.instances[i];
+                        instances[i].SetActive(true);
+                        instances[i].transform.SetParent(container);
+                        return instances[i];
                     }
                 }
 
                 prefab.gameObject.SetActive(false);
                 GameObject instance = Instantiate(prefab.gameObject);
-                instance.transform.SetParent(this.container);
+                instance.transform.SetParent(container);
 
-                this.instances.Add(instance);
+                instances.Add(instance);
                 return instance;
             }
         }
@@ -79,7 +78,7 @@
         protected override void OnCreate()
         {
             base.OnCreate();
-            this.pool = new Dictionary<int, PoolData>();
+            pool = new Dictionary<int, PoolData>();
         }
 
         // PUBLIC METHODS: -----------------------------------------------------
@@ -90,7 +89,7 @@
             PoolObject component = prefab.GetComponent<PoolObject>();
             if (component == null) component = prefab.AddComponent<PoolObject>();
 
-            return this.Pick(component);
+            return Pick(component);
         }
 
         public GameObject Pick(PoolObject prefab)
@@ -98,8 +97,8 @@
             if (prefab == null) return null;
             int instanceID = prefab.GetInstanceID();
 
-            if (!this.pool.ContainsKey(instanceID)) this.BuildPool(prefab);
-            return this.pool[instanceID].Get();
+            if (!pool.ContainsKey(instanceID)) BuildPool(prefab);
+            return pool[instanceID].Get();
         }
 
         // PRIVATE METHODS: ----------------------------------------------------
@@ -107,7 +106,7 @@
         private void BuildPool(PoolObject prefab)
         {
             int instanceID = prefab.GetInstanceID();
-            this.pool.Add(instanceID, new PoolData(prefab));
+            pool.Add(instanceID, new PoolData(prefab));
         }
     }
 }

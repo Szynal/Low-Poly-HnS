@@ -1,14 +1,17 @@
-﻿namespace LowPolyHnS.Variables
-{
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
+﻿using System;
+using UnityEngine;
 
+namespace LowPolyHnS.Variables
+{
     [Serializable]
     public class SpriteProperty : BaseProperty<Sprite>
     {
-        public SpriteProperty() : base() { }
-        public SpriteProperty(Sprite value) : base(value) { }
+        public SpriteProperty()
+        {
+        }
+
+        public SpriteProperty(Sprite value) : base(value)
+        {
+        }
     }
 }

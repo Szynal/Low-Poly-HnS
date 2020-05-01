@@ -1,20 +1,18 @@
-﻿namespace LowPolyHnS.Core
+﻿using System.Collections;
+using LowPolyHnS.Variables;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+namespace LowPolyHnS.Core
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-	using UnityEngine.SceneManagement;
-	using LowPolyHnS.Core;
-    using LowPolyHnS.Variables;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[AddComponentMenu("")]
-	public class ActionLoadScene : IAction 
-	{
+    [AddComponentMenu("")]
+    public class ActionLoadScene : IAction
+    {
         public StringProperty sceneName = new StringProperty();
         public LoadSceneMode mode = LoadSceneMode.Single;
         public bool async = false;
@@ -23,18 +21,18 @@
 
         public override IEnumerator Execute(GameObject target, IAction[] actions, int index)
         {
-            if (this.async)
+            if (async)
             {
                 AsyncOperation asyncOperation = SceneManager.LoadSceneAsync(
-                    this.sceneName.GetValue(target), 
-                    this.mode
+                    sceneName.GetValue(target),
+                    mode
                 );
 
                 yield return asyncOperation;
             }
             else
             {
-                SceneManager.LoadScene(this.sceneName.GetValue(target), this.mode);
+                SceneManager.LoadScene(sceneName.GetValue(target), mode);
                 yield return null;
             }
 
@@ -45,46 +43,46 @@
         // | EDITOR                                                                               |
         // +--------------------------------------------------------------------------------------+
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
 
         public static new string NAME = "Scene/Load Scene";
-		private const string NODE_TITLE = "Load scene {0}{1}";
+        private const string NODE_TITLE = "Load scene {0}{1}";
 
-		// PROPERTIES: ----------------------------------------------------------------------------
+        // PROPERTIES: ----------------------------------------------------------------------------
 
-		private SerializedProperty spSceneName;
+        private SerializedProperty spSceneName;
         private SerializedProperty spMode;
         private SerializedProperty spAsync;
 
         // INSPECTOR METHODS: ---------------------------------------------------------------------
 
         public override string GetNodeTitle()
-		{
-			return string.Format(
-                NODE_TITLE, 
-                this.sceneName,
-                (this.async ? " (Async)" : "")
+        {
+            return string.Format(
+                NODE_TITLE,
+                sceneName,
+                async ? " (Async)" : ""
             );
-		}
-
-		protected override void OnEnableEditorChild ()
-		{
-			this.spSceneName = this.serializedObject.FindProperty("sceneName");
-            this.spMode = this.serializedObject.FindProperty("mode");
-            this.spAsync = this.serializedObject.FindProperty("async");
         }
 
-		public override void OnInspectorGUI()
-		{
-			this.serializedObject.Update();
+        protected override void OnEnableEditorChild()
+        {
+            spSceneName = serializedObject.FindProperty("sceneName");
+            spMode = serializedObject.FindProperty("mode");
+            spAsync = serializedObject.FindProperty("async");
+        }
 
-			EditorGUILayout.PropertyField(this.spSceneName);
-            EditorGUILayout.PropertyField(this.spMode);
-            EditorGUILayout.PropertyField(this.spAsync);
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
 
-            this.serializedObject.ApplyModifiedProperties();
-		}
+            EditorGUILayout.PropertyField(spSceneName);
+            EditorGUILayout.PropertyField(spMode);
+            EditorGUILayout.PropertyField(spAsync);
 
-		#endif
-	}
+            serializedObject.ApplyModifiedProperties();
+        }
+
+#endif
+    }
 }

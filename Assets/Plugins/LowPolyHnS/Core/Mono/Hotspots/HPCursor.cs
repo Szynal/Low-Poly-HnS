@@ -1,51 +1,50 @@
-﻿namespace LowPolyHnS.Core
+﻿using System;
+using UnityEngine;
+
+namespace LowPolyHnS.Core
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
+    [AddComponentMenu("")]
+    public class HPCursor : IHPMonoBehaviour<HPCursor.Data>
+    {
+        [Serializable]
+        public class Data : IData
+        {
+            public Texture2D mouseOverCursor = null;
+            public Vector2 cursorPosition = Vector2.zero;
+        }
 
-	[AddComponentMenu("")]
-	public class HPCursor : IHPMonoBehaviour<HPCursor.Data>
-	{
-		[System.Serializable]
-		public class Data : IHPMonoBehaviour<HPCursor.Data>.IData
-		{
-			public Texture2D mouseOverCursor = null;
-			public Vector2 cursorPosition = Vector2.zero;
-		}
+        // OVERRIDE METHODS: ----------------------------------------------------------------------
 
-		// OVERRIDE METHODS: ----------------------------------------------------------------------
+        public override void Initialize()
+        {
+            if (!data.enabled) return;
+        }
 
-		public override void Initialize()
-		{
-			if (!this.data.enabled) return;
-		}
+        // HOVER CURSOR: --------------------------------------------------------------------------
 
-		// HOVER CURSOR: --------------------------------------------------------------------------
+        public override void HotspotMouseEnter()
+        {
+            if (data.enabled && data.mouseOverCursor != null)
+            {
+                Cursor.SetCursor(data.mouseOverCursor, data.cursorPosition, CursorMode.Auto);
+            }
+        }
 
-		public override void HotspotMouseEnter()
-		{
-            if (this.data.enabled && this.data.mouseOverCursor != null)
-			{
-				Cursor.SetCursor(this.data.mouseOverCursor, this.data.cursorPosition, CursorMode.Auto);
-			}
-		}
-
-		public override void HotspotMouseExit()
-		{
-            if (this.data.enabled && this.data.mouseOverCursor != null)
-			{
-				Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
-			}
-		}
+        public override void HotspotMouseExit()
+        {
+            if (data.enabled && data.mouseOverCursor != null)
+            {
+                Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
+            }
+        }
 
         public override void HotspotMouseOver()
         {
-            if (this.data.enabled && this.data.mouseOverCursor != null)
+            if (data.enabled && data.mouseOverCursor != null)
             {
-                if (this.IsWithinConstrainedRadius()) this.HotspotMouseEnter();
-                else this.HotspotMouseExit();
+                if (IsWithinConstrainedRadius()) HotspotMouseEnter();
+                else HotspotMouseExit();
             }
         }
-	}
+    }
 }

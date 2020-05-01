@@ -11,18 +11,18 @@ public class FE_FinaleChooser : MonoBehaviour
         Hana,
         Glas,
         Both
-    };
+    }
 
     public static FE_FinaleChooser Instance;
 
-    [SerializeField] List<FE_ActionContainer> hanaStateChanges = new List<FE_ActionContainer>();
-    [SerializeField] List<FE_ActionContainer> glasStateChanges = new List<FE_ActionContainer>();
-    [SerializeField] List<FE_ActionContainer> bothStateChanges = new List<FE_ActionContainer>();
-    [SerializeField] GameObject canvasObject = null;
+    [SerializeField] private List<FE_ActionContainer> hanaStateChanges = new List<FE_ActionContainer>();
+    [SerializeField] private List<FE_ActionContainer> glasStateChanges = new List<FE_ActionContainer>();
+    [SerializeField] private List<FE_ActionContainer> bothStateChanges = new List<FE_ActionContainer>();
+    [SerializeField] private GameObject canvasObject = null;
 
     private void Start()
     {
-        if(Instance == null)
+        if (Instance == null)
         {
             Instance = this;
         }
@@ -35,7 +35,7 @@ public class FE_FinaleChooser : MonoBehaviour
 
     private IEnumerator waitForCutsceneEnd()
     {
-        while(GameManager.Instance.IsInCutscene == true)
+        while (GameManager.Instance.IsInCutscene)
         {
             yield return null;
         }
@@ -48,7 +48,7 @@ public class FE_FinaleChooser : MonoBehaviour
     {
         canvasObject.SetActive(false);
 
-        if ((EFinaleType)_chosenType == EFinaleType.Hana)
+        if ((EFinaleType) _chosenType == EFinaleType.Hana)
         {
             Debug.Log("Chosen Hana");
             foreach (FE_ActionContainer _state in hanaStateChanges)
@@ -56,7 +56,7 @@ public class FE_FinaleChooser : MonoBehaviour
                 FE_StateChanger.HandleObjectChange(_state);
             }
         }
-        else if ((EFinaleType)_chosenType == EFinaleType.Glas)
+        else if ((EFinaleType) _chosenType == EFinaleType.Glas)
         {
             Debug.Log("Chosen Glas");
             foreach (FE_ActionContainer _state in glasStateChanges)

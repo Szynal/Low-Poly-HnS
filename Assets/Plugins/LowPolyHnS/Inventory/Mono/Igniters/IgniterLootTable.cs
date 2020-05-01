@@ -1,20 +1,17 @@
-﻿namespace LowPolyHnS.Inventory
-{
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-    using UnityEngine.EventSystems;
-    using LowPolyHnS.Core;
-    using LowPolyHnS.Variables;
+﻿using LowPolyHnS.Core;
+using LowPolyHnS.Variables;
+using UnityEngine;
 
+namespace LowPolyHnS.Inventory
+{
     [AddComponentMenu("")]
-	public class IgniterLootTable : Igniter 
-	{
-		#if UNITY_EDITOR
-		public new static string NAME = "Inventory/On Loot Table";
+    public class IgniterLootTable : Igniter
+    {
+#if UNITY_EDITOR
+        public new static string NAME = "Inventory/On Loot Table";
         public new static string ICON_PATH = "Assets/Plugins/LowPolyHnS/Inventory/Icons/Igniters/";
         public const string CUSTOM_ICON_PATH = "Assets/Plugins/LowPolyHnS/Inventory/Icons/Igniters/";
-        #endif
+#endif
 
         [Space] [VariableFilter(Variable.DataType.String)]
         public VariableProperty storeItemName = new VariableProperty();
@@ -24,13 +21,13 @@
 
         private void Start()
         {
-            LootTable.AddListener(this.OnUseLootTable);
+            LootTable.AddListener(OnUseLootTable);
         }
 
         private void OnDestroy()
         {
-            if (this.isExitingApplication) return;
-            LootTable.RemoveListener(this.OnUseLootTable);
+            if (isExitingApplication) return;
+            LootTable.RemoveListener(OnUseLootTable);
         }
 
         private void OnUseLootTable(LootTable.LootResult result)
@@ -38,10 +35,10 @@
             string itemName = result.item.itemName.GetText();
             float itemAmount = result.amount;
 
-            this.storeItemName.Set(itemName, gameObject);
-            this.storeItemAmount.Set(itemAmount, gameObject);
+            storeItemName.Set(itemName, gameObject);
+            storeItemAmount.Set(itemAmount, gameObject);
 
-            this.ExecuteTrigger(gameObject);
+            ExecuteTrigger(gameObject);
         }
     }
 }

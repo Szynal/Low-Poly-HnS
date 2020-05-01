@@ -1,14 +1,13 @@
-﻿namespace LowPolyHnS.Core
-{
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-    using LowPolyHnS.Variables;
+﻿using System.Collections;
+using System.Collections.Generic;
+using LowPolyHnS.Variables;
+using UnityEngine;
 
+namespace LowPolyHnS.Core
+{
     [AddComponentMenu("")]
-	public class ActionBlendShape : IAction
-	{
+    public class ActionBlendShape : IAction
+    {
         private class SMRData
         {
             public SkinnedMeshRenderer skin;
@@ -21,7 +20,7 @@
                 this.skin = skin;
                 this.index = index;
 
-                this.initWeight = this.skin.GetBlendShapeWeight(this.index);
+                initWeight = this.skin.GetBlendShapeWeight(this.index);
                 this.targetWeight = targetWeight;
             }
         }
@@ -29,17 +28,16 @@
         public TargetGameObject skinnedMeshRenderer = new TargetGameObject();
         [Space] public StringProperty blendShape = new StringProperty("Blend-Shape-Name");
 
-        [Space][Range(0f, 5f)] public float duration = 0.1f;
+        [Space] [Range(0f, 5f)] public float duration = 0.1f;
         public NumberProperty weight = new NumberProperty(1f);
 
         public override IEnumerator Execute(GameObject target, IAction[] actions, int index)
         {
-            SkinnedMeshRenderer[] candidateSkins = this
-                .skinnedMeshRenderer
+            SkinnedMeshRenderer[] candidateSkins = skinnedMeshRenderer
                 .GetComponentsInChildren<SkinnedMeshRenderer>(target);
-                
-            string blendShapeName = this.blendShape.GetValue(target);
-            float targetWeight = this.weight.GetValue(target);
+
+            string blendShapeName = blendShape.GetValue(target);
+            float targetWeight = weight.GetValue(target);
 
             List<SMRData> skins = new List<SMRData>();
             for (int i = 0; i < candidateSkins.Length; ++i)
@@ -49,25 +47,25 @@
                 if (blendShapeIndex >= 0)
                 {
                     skins.Add(new SMRData(
-                        candidate, 
+                        candidate,
                         blendShapeIndex,
                         targetWeight
                     ));
                 }
             }
-              
+
             if (skins.Count > 0)
             {
                 float initTime = Time.time;
-                while (initTime + this.duration > Time.time)
+                while (initTime + duration > Time.time)
                 {
-                    float t = (Time.time - initTime) / this.duration;
-                    this.SetWeights(skins, t);
+                    float t = (Time.time - initTime) / duration;
+                    SetWeights(skins, t);
                     yield return null;
                 }
             }
 
-            this.SetWeights(skins, 1f);
+            SetWeights(skins, 1f);
             yield return 0;
         }
 
@@ -80,14 +78,14 @@
             }
         }
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         public static new string NAME = "Animation/Blend Shape";
         private const string NODE_TITLE = "Change {0} blend shape: {1}";
 
         public override string GetNodeTitle()
         {
-            return string.Format(NODE_TITLE, this.skinnedMeshRenderer, this.blendShape);
+            return string.Format(NODE_TITLE, skinnedMeshRenderer, blendShape);
         }
-        #endif
+#endif
     }
 }

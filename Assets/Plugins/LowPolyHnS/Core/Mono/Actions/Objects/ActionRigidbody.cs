@@ -1,19 +1,16 @@
-﻿namespace LowPolyHnS.Core
+﻿using LowPolyHnS.Variables;
+using UnityEngine;
+
+namespace LowPolyHnS.Core
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-	using LowPolyHnS.Core;
-    using LowPolyHnS.Variables;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[AddComponentMenu("")]
-	public class ActionRigidbody : IAction
-	{
+    [AddComponentMenu("")]
+    public class ActionRigidbody : IAction
+    {
         public TargetGameObject target = new TargetGameObject(TargetGameObject.Target.GameObject);
 
         public bool changeMass = false;
@@ -34,21 +31,21 @@
             Rigidbody targetRB = targetGO.GetComponent<Rigidbody>();
             if (targetRB != null)
             {
-                targetRB.mass = this.mass.GetValue(target);
-                targetRB.useGravity = this.useGravity.GetValue(target);
-                targetRB.isKinematic = this.isKinematic.GetValue(target);
+                targetRB.mass = mass.GetValue(target);
+                targetRB.useGravity = useGravity.GetValue(target);
+                targetRB.isKinematic = isKinematic.GetValue(target);
             }
 
             return true;
         }
 
-		// +--------------------------------------------------------------------------------------+
-		// | EDITOR                                                                               |
-		// +--------------------------------------------------------------------------------------+
+        // +--------------------------------------------------------------------------------------+
+        // | EDITOR                                                                               |
+        // +--------------------------------------------------------------------------------------+
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 
-		public static new string NAME = "Object/Rigidbody";
+        public static new string NAME = "Object/Rigidbody";
         private const string NODE_TITLE = "Change {0} properties";
 
         private static readonly GUIContent GUICONTENT_EMPTY = new GUIContent(" ");
@@ -63,51 +60,51 @@
         public SerializedProperty spUseGravity;
         public SerializedProperty spIsKinematic;
 
-		// INSPECTOR METHODS: ---------------------------------------------------------------------
+        // INSPECTOR METHODS: ---------------------------------------------------------------------
 
-		public override string GetNodeTitle()
-		{
-            return string.Format(NODE_TITLE, this.target);
-		}
+        public override string GetNodeTitle()
+        {
+            return string.Format(NODE_TITLE, target);
+        }
 
-		protected override void OnEnableEditorChild ()
-		{
-            this.spTarget = this.serializedObject.FindProperty("target");
-            this.spChangeMass = this.serializedObject.FindProperty("changeMass");
-            this.spChangeUseGravity = this.serializedObject.FindProperty("changeUseGravity");
-            this.spChangeIsKinematic = this.serializedObject.FindProperty("changeIsKinematic");
+        protected override void OnEnableEditorChild()
+        {
+            spTarget = serializedObject.FindProperty("target");
+            spChangeMass = serializedObject.FindProperty("changeMass");
+            spChangeUseGravity = serializedObject.FindProperty("changeUseGravity");
+            spChangeIsKinematic = serializedObject.FindProperty("changeIsKinematic");
 
-            this.spMass = this.serializedObject.FindProperty("mass");
-            this.spUseGravity = this.serializedObject.FindProperty("useGravity");
-            this.spIsKinematic = this.serializedObject.FindProperty("isKinematic");
-		}
+            spMass = serializedObject.FindProperty("mass");
+            spUseGravity = serializedObject.FindProperty("useGravity");
+            spIsKinematic = serializedObject.FindProperty("isKinematic");
+        }
 
-		protected override void OnDisableEditorChild ()
-		{
-            this.spTarget = null;
-            this.spChangeMass = null;
-            this.spChangeUseGravity = null;
-            this.spChangeIsKinematic = null;
-            this.spMass = null;
-            this.spUseGravity = null;
-            this.spIsKinematic = null;
-		}
+        protected override void OnDisableEditorChild()
+        {
+            spTarget = null;
+            spChangeMass = null;
+            spChangeUseGravity = null;
+            spChangeIsKinematic = null;
+            spMass = null;
+            spUseGravity = null;
+            spIsKinematic = null;
+        }
 
-		public override void OnInspectorGUI()
-		{
-			this.serializedObject.Update();
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
 
-            EditorGUILayout.PropertyField(this.spTarget);
+            EditorGUILayout.PropertyField(spTarget);
             EditorGUILayout.Space();
 
-            this.PaintSection(this.spChangeMass, this.spMass);
+            PaintSection(spChangeMass, spMass);
             EditorGUILayout.Space();
-            this.PaintSection(this.spChangeUseGravity, this.spUseGravity);
+            PaintSection(spChangeUseGravity, spUseGravity);
             EditorGUILayout.Space();
-            this.PaintSection(this.spChangeIsKinematic, this.spIsKinematic);
+            PaintSection(spChangeIsKinematic, spIsKinematic);
 
-			this.serializedObject.ApplyModifiedProperties();
-		}
+            serializedObject.ApplyModifiedProperties();
+        }
 
         private void PaintSection(SerializedProperty spChange, SerializedProperty spProperty)
         {
@@ -117,6 +114,6 @@
             EditorGUI.EndDisabledGroup();
         }
 
-		#endif
-	}
+#endif
+    }
 }

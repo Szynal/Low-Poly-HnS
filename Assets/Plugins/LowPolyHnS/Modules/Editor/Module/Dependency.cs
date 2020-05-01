@@ -1,20 +1,11 @@
-﻿namespace LowPolyHnS.ModuleManager
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEditor;
+﻿using System;
 
-    [System.Serializable]
+namespace LowPolyHnS.ModuleManager
+{
+    [Serializable]
     public class Dependency
     {
-        public static Dependency NONE
-        {
-            get
-            {
-                return new Dependency("", Version.NONE);
-            }
-        }
+        public static Dependency NONE => new Dependency("", Version.NONE);
 
         // PROPERTIES: ----------------------------------------------------------------------------
 
@@ -25,7 +16,7 @@
 
         public Dependency(string name, Version version)
         {
-            this.moduleID = name;
+            moduleID = name;
             this.version = version;
         }
     }

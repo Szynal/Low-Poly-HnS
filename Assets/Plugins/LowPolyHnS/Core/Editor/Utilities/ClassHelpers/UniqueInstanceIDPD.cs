@@ -1,11 +1,9 @@
-﻿namespace LowPolyHnS.Core
-{
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEditor;
+﻿using System;
+using UnityEditor;
+using UnityEngine;
 
+namespace LowPolyHnS.Core
+{
     [CustomPropertyDrawer(typeof(UniqueInstanceID))]
     public class UniqueInstanceIDPD : PropertyDrawer
     {
@@ -19,21 +17,23 @@
         private const string NAME_REGN = "R";
 
         private const string MSG_REGEN1 = "Are you sure you want to generate a new unique ID for this component?";
-        private const string MSG_REGEN2 = "We recommend saving a copy of the previous ID in case you want to revert changes";
+
+        private const string MSG_REGEN2 =
+            "We recommend saving a copy of the previous ID in case you want to revert changes";
 
         // PROPERTIES: ----------------------------------------------------------------------------
 
-        private bool isEditing = false;
+        private bool isEditing;
 
         // PAINT METHODS: -------------------------------------------------------------------------
 
-		public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
-		{
+        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+        {
             SerializedProperty spValue = property.FindPropertyRelative(PROP_VALUE);
 
             if (string.IsNullOrEmpty(spValue.stringValue))
             {
-                this.GenerateUniqueID(spValue);
+                GenerateUniqueID(spValue);
             }
 
             Rect rectUUID = new Rect(
@@ -66,9 +66,9 @@
                 NAME_UUID
             );
 
-            EditorGUI.BeginDisabledGroup(!this.isEditing);
+            EditorGUI.BeginDisabledGroup(!isEditing);
             EditorGUI.PropertyField(
-                rectText, 
+                rectText,
                 spValue,
                 GUIContent.none,
                 false
@@ -77,17 +77,17 @@
 
             if (GUI.Button(rectEdit, NAME_EDIT, EditorStyles.miniButtonMid))
             {
-                this.isEditing = !this.isEditing;
+                isEditing = !isEditing;
             }
 
             if (GUI.Button(rectRegen, NAME_REGN, EditorStyles.miniButtonRight))
             {
                 if (EditorUtility.DisplayDialog(MSG_REGEN1, MSG_REGEN2, "Yes", "Cancel"))
                 {
-                    this.GenerateUniqueID(spValue);
+                    GenerateUniqueID(spValue);
                 }
             }
-		}
+        }
 
         // PRIVATE METHODS: -----------------------------------------------------------------------
 
@@ -95,5 +95,5 @@
         {
             property.stringValue = Guid.NewGuid().ToString("N");
         }
-	}
+    }
 }

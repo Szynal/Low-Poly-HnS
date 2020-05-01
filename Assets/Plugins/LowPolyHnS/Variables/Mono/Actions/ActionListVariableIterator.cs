@@ -1,16 +1,12 @@
-﻿namespace LowPolyHnS.Variables
-{
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-    using LowPolyHnS.Core;
-    using LowPolyHnS.Core.Hooks;
-    using UnityEditor;
+﻿using LowPolyHnS.Core;
+using UnityEditor;
+using UnityEngine;
 
+namespace LowPolyHnS.Variables
+{
     [AddComponentMenu("")]
-	public class ActionListVariableIterator : IAction
-	{
+    public class ActionListVariableIterator : IAction
+    {
         public enum Operation
         {
             VariableToIterator,
@@ -24,24 +20,25 @@
 
         [VariableFilter(Variable.DataType.Number)]
         public VariableProperty variable = new VariableProperty();
+
         public NumberProperty pointer = new NumberProperty(0);
 
         // EXECUTE METHOD: ------------------------------------------------------------------------
 
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
-            ListVariables list = this.listVariables.GetListVariables(target);
+            ListVariables list = listVariables.GetListVariables(target);
             if (list == null) return true;
 
-            switch (this.operation)
+            switch (operation)
             {
                 case Operation.VariableToIterator:
-                    int value = this.pointer.GetInt(target);
+                    int value = pointer.GetInt(target);
                     list.SetInterator(value);
                     break;
 
                 case Operation.IteratorToVariable:
-                    this.variable.Set(list.iterator, target);
+                    variable.Set(list.iterator, target);
                     break;
 
                 case Operation.IteratorToNext:
@@ -56,7 +53,7 @@
             return true;
         }
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
 
         private const string NODE_TITLE_1 = "Set List Variables {0} from iterator";
         private const string NODE_TITLE_2 = "Set iterator to List Variables {0}";
@@ -66,18 +63,18 @@
 
         public override string GetNodeTitle()
         {
-            switch (this.operation)
+            switch (operation)
             {
                 case Operation.VariableToIterator:
                     return string.Format(
                         NODE_TITLE_1,
-                        this.listVariables
+                        listVariables
                     );
 
                 case Operation.IteratorToVariable:
                     return string.Format(
                         NODE_TITLE_2,
-                        this.listVariables
+                        listVariables
                     );
 
                 case Operation.IteratorToNext:
@@ -103,34 +100,34 @@
 
         protected override void OnEnableEditorChild()
         {
-            this.spOperation = this.serializedObject.FindProperty("operation");
-            this.spListVariables = this.serializedObject.FindProperty("listVariables");
-            this.spVariable = this.serializedObject.FindProperty("variable");
-            this.spPointer = this.serializedObject.FindProperty("pointer");
+            spOperation = serializedObject.FindProperty("operation");
+            spListVariables = serializedObject.FindProperty("listVariables");
+            spVariable = serializedObject.FindProperty("variable");
+            spPointer = serializedObject.FindProperty("pointer");
         }
 
         public override void OnInspectorGUI()
         {
-            this.serializedObject.Update();
+            serializedObject.Update();
 
-            EditorGUILayout.PropertyField(this.spOperation);
-            EditorGUILayout.PropertyField(this.spListVariables);
+            EditorGUILayout.PropertyField(spOperation);
+            EditorGUILayout.PropertyField(spListVariables);
 
             EditorGUILayout.Space();
-            switch (this.spOperation.enumValueIndex)
+            switch (spOperation.enumValueIndex)
             {
-                case (int)Operation.VariableToIterator:
-                    EditorGUILayout.PropertyField(this.spPointer);
+                case (int) Operation.VariableToIterator:
+                    EditorGUILayout.PropertyField(spPointer);
                     break;
 
-                case (int)Operation.IteratorToVariable:
-                    EditorGUILayout.PropertyField(this.spVariable);
+                case (int) Operation.IteratorToVariable:
+                    EditorGUILayout.PropertyField(spVariable);
                     break;
             }
 
-            this.serializedObject.ApplyModifiedProperties();
+            serializedObject.ApplyModifiedProperties();
         }
 
-        #endif
+#endif
     }
 }

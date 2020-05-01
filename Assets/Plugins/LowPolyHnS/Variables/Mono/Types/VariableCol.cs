@@ -1,10 +1,9 @@
-﻿namespace LowPolyHnS.Variables
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
+﻿using System;
+using UnityEngine;
 
-    [System.Serializable]
+namespace LowPolyHnS.Variables
+{
+    [Serializable]
     public class VariableCol : VariableGeneric<Color>
     {
         public new const string NAME = "Color";
@@ -12,16 +11,18 @@
         // INITIALIZERS: --------------------------------------------------------------------------
 
         public VariableCol() : base(Color.white)
-        { }
+        {
+        }
 
         public VariableCol(Color value) : base(value)
-        { }
+        {
+        }
 
         // OVERRIDE METHODS: ----------------------------------------------------------------------
 
         public override bool CanSave()
         {
-            return VariableBase.CanSaveType(Variable.DataType.Color);
+            return CanSaveType(Variable.DataType.Color);
         }
 
         // PUBLIC STATIC METHODS: -----------------------------------------------------------------

@@ -1,149 +1,159 @@
-﻿namespace LowPolyHnS.Core
+﻿using UnityEngine;
+using UnityEngine.Events;
+
+namespace LowPolyHnS.Core
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-    using UnityEngine.Events;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[ExecuteInEditMode]
-	[AddComponentMenu("LowPolyHnS/Actions", 0)]
-	public class Actions : MonoBehaviour
-	{
-		public static bool IS_BLOCKING_ACTION_RUNNING = false;
+    [ExecuteInEditMode]
+    [AddComponentMenu("LowPolyHnS/Actions", 0)]
+    public class Actions : MonoBehaviour
+    {
+        public static bool IS_BLOCKING_ACTION_RUNNING;
 
-        public class ExecuteEvent : UnityEvent<GameObject> { }
+        public class ExecuteEvent : UnityEvent<GameObject>
+        {
+        }
 
-		// PROPERTIES: ----------------------------------------------------------------------------
+        // PROPERTIES: ----------------------------------------------------------------------------
 
-		#if UNITY_EDITOR
-		public int currentID = 0;
-		public int instanceID = 0;
-		#endif
+#if UNITY_EDITOR
+        public int currentID = 0;
+        public int instanceID = 0;
+#endif
 
-		public IActionsList actionsList;
+        public IActionsList actionsList;
 
-		[Tooltip("Only one foreground Actions collection can be executed at a given time.")]
-		public bool runInBackground = true;
-		[Tooltip("Useful for executing an Actions collection only once.")]
-		public bool destroyAfterFinishing = false;
-        private bool isDestroyed = false;
+        [Tooltip("Only one foreground Actions collection can be executed at a given time.")]
+        public bool runInBackground = true;
+
+        [Tooltip("Useful for executing an Actions collection only once.")]
+        public bool destroyAfterFinishing = false;
+
+        private bool isDestroyed;
 
         // EVENTS: --------------------------------------------------------------------------------
 
         public ExecuteEvent onExecute = new ExecuteEvent();
         public UnityEvent onFinish = new UnityEvent();
 
-		// INITIALIZERS: --------------------------------------------------------------------------
+        // INITIALIZERS: --------------------------------------------------------------------------
 
-		public void OnDestroy()
-		{
-            this.isDestroyed = true;
-			if (this.actionsList != null && this.actionsList.isExecuting && !this.runInBackground)
-			{
-				IS_BLOCKING_ACTION_RUNNING = false;
-			}
-		}
+        public void OnDestroy()
+        {
+            isDestroyed = true;
+            if (actionsList != null && actionsList.isExecuting && !runInBackground)
+            {
+                IS_BLOCKING_ACTION_RUNNING = false;
+            }
+        }
 
-		private void Awake()
-		{
-			if (this.actionsList == null) this.actionsList = gameObject.AddComponent<IActionsList>();
-		}
+        private void Awake()
+        {
+            if (actionsList == null) actionsList = gameObject.AddComponent<IActionsList>();
+        }
 
-		private void OnEnable()
-		{
-			if (this.actionsList == null) this.actionsList = gameObject.AddComponent<IActionsList>();
+        private void OnEnable()
+        {
+            if (actionsList == null) actionsList = gameObject.AddComponent<IActionsList>();
 
-            #if UNITY_EDITOR
-            if (this.actionsList.gameObject != this.gameObject)
+#if UNITY_EDITOR
+            if (actionsList.gameObject != gameObject)
             {
                 IActionsList newActionsList = gameObject.AddComponent<IActionsList>();
-                EditorUtility.CopySerialized(this.actionsList, newActionsList);
+                EditorUtility.CopySerialized(actionsList, newActionsList);
 
                 SerializedObject serializedObject = new SerializedObject(this);
                 serializedObject.FindProperty("actionsList").objectReferenceValue = newActionsList;
                 serializedObject.ApplyModifiedPropertiesWithoutUndo();
             }
-            #endif
+#endif
         }
 
-		#if UNITY_EDITOR
-		private void OnValidate()
-		{
-            if (this.actionsList == null)
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            if (actionsList == null)
             {
-                this.actionsList = gameObject.AddComponent<IActionsList>();
+                actionsList = gameObject.AddComponent<IActionsList>();
             }
         }
-		#endif
+#endif
 
-		// PUBLIC METHODS: ------------------------------------------------------------------------
+        // PUBLIC METHODS: ------------------------------------------------------------------------
 
         public virtual void Execute(GameObject target, params object[] parameters)
-		{
-			if (this.actionsList.isExecuting) return;
+        {
+            if (actionsList.isExecuting) return;
 
-			if (!this.runInBackground)
-			{
-				if (Actions.IS_BLOCKING_ACTION_RUNNING) return;
-				else Actions.IS_BLOCKING_ACTION_RUNNING = true;
-			}
+            if (!runInBackground)
+            {
+                if (IS_BLOCKING_ACTION_RUNNING) return;
+                IS_BLOCKING_ACTION_RUNNING = true;
+            }
 
-            if (this.onExecute != null) this.onExecute.Invoke(target);
-            this.actionsList.Execute(target, this.OnFinish, parameters);
-		}
+            if (onExecute != null) onExecute.Invoke(target);
+            actionsList.Execute(target, OnFinish, parameters);
+        }
 
         public virtual void Execute(params object[] parameters)
         {
-            this.Execute(null, parameters);
+            Execute(null, parameters);
         }
 
         public virtual void Execute()
         {
-            this.Execute(null, new object[0]);
+            Execute(null, new object[0]);
         }
 
         public virtual void ExecuteWithTarget(GameObject target)
         {
-            this.Execute(target);
+            Execute(target);
         }
 
         public virtual void OnFinish()
-		{
-            if (this.onFinish != null) this.onFinish.Invoke();
-			if (!this.runInBackground) Actions.IS_BLOCKING_ACTION_RUNNING = false;
+        {
+            if (onFinish != null) onFinish.Invoke();
+            if (!runInBackground) IS_BLOCKING_ACTION_RUNNING = false;
 
-            if (this.destroyAfterFinishing && !this.isDestroyed) 
-			{
-				Destroy(gameObject);
-			}
-		}
+            if (destroyAfterFinishing && !isDestroyed)
+            {
+                Destroy(gameObject);
+            }
+        }
 
         public virtual void Stop()
         {
-            if (this.actionsList == null) return;
-            this.actionsList.Stop();
+            if (actionsList == null) return;
+            actionsList.Stop();
         }
 
         // GIZMO METHODS: -------------------------------------------------------------------------
 
         private void OnDrawGizmos()
-		{
-			int numActions = (this.actionsList == null || this.actionsList.actions == null 
-				? 0 
-				: this.actionsList.actions.Length
-			);
+        {
+            int numActions = actionsList == null || actionsList.actions == null
+                ? 0
+                : actionsList.actions.Length;
 
-			switch (numActions)
-			{
-			case 0  : Gizmos.DrawIcon(transform.position, "Actions/actions0", true); break;
-			case 1  : Gizmos.DrawIcon(transform.position, "Actions/actions1", true); break;
-			case 2  : Gizmos.DrawIcon(transform.position, "Actions/actions2", true); break;
-			default : Gizmos.DrawIcon(transform.position, "Actions/actions3", true); break;
-			}
-		}
-	}
+            switch (numActions)
+            {
+                case 0:
+                    Gizmos.DrawIcon(transform.position, "Actions/actions0", true);
+                    break;
+                case 1:
+                    Gizmos.DrawIcon(transform.position, "Actions/actions1", true);
+                    break;
+                case 2:
+                    Gizmos.DrawIcon(transform.position, "Actions/actions2", true);
+                    break;
+                default:
+                    Gizmos.DrawIcon(transform.position, "Actions/actions3", true);
+                    break;
+            }
+        }
+    }
 }

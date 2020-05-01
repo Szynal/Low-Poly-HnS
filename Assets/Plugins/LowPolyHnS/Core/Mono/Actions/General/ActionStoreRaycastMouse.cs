@@ -1,20 +1,16 @@
-﻿namespace LowPolyHnS.Core
-{
-	using System.Collections;
-	using System.Collections.Generic;
-    using UnityEngine;
-	using UnityEngine.Events;
-    using LowPolyHnS.Core.Hooks;
-    using LowPolyHnS.Variables;
+﻿using LowPolyHnS.Core.Hooks;
+using LowPolyHnS.Variables;
+using UnityEngine;
 
+namespace LowPolyHnS.Core
+{
     [AddComponentMenu("")]
-	public class ActionStoreRaycastMouse : IAction
-	{
+    public class ActionStoreRaycastMouse : IAction
+    {
         [VariableFilter(Variable.DataType.Vector3)]
         public VariableProperty storePoint = new VariableProperty();
 
-        [Space]
-        [VariableFilter(Variable.DataType.GameObject)]
+        [Space] [VariableFilter(Variable.DataType.GameObject)]
         public VariableProperty storeGameObject = new VariableProperty();
 
         private RaycastHit[] hitBuffer = new RaycastHit[1];
@@ -23,18 +19,18 @@
         {
             Ray ray = HookCamera.Instance.Get<Camera>().ScreenPointToRay(Input.mousePosition);
 
-            int hitCount = Physics.RaycastNonAlloc(ray, this.hitBuffer);
+            int hitCount = Physics.RaycastNonAlloc(ray, hitBuffer);
             if (hitCount == 0) return true;
 
-            GameObject hitGO = this.hitBuffer[0].collider.gameObject;
+            GameObject hitGO = hitBuffer[0].collider.gameObject;
 
-            this.storePoint.Set(hitBuffer[0].point, target);
-            this.storeGameObject.Set(hitGO, target);
+            storePoint.Set(hitBuffer[0].point, target);
+            storeGameObject.Set(hitGO, target);
 
             return true;
         }
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         public static new string NAME = "Variables/Store Mouse World Position";
         private const string NODE_TITLE = "Store Mouse World Position";
 
@@ -43,6 +39,6 @@
             return NODE_TITLE;
         }
 
-        #endif
+#endif
     }
 }

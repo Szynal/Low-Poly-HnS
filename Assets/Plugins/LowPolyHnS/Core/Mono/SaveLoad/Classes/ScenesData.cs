@@ -1,11 +1,10 @@
-﻿namespace LowPolyHnS.Core
-{
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEngine.SceneManagement;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
+namespace LowPolyHnS.Core
+{
     [Serializable]
     public class ScenesData
     {
@@ -17,7 +16,7 @@
         public ScenesData(string mainScene)
         {
             this.mainScene = mainScene;
-            this.additiveScenes = new List<string>();
+            additiveScenes = new List<string>();
         }
 
         // PUBLIC METHODS: ------------------------------------------------------------------------
@@ -26,18 +25,18 @@
         {
             if (mode == LoadSceneMode.Single)
             {
-                this.mainScene = name;
-                this.additiveScenes = new List<string>();
+                mainScene = name;
+                additiveScenes = new List<string>();
             }
             else if (mode == LoadSceneMode.Additive)
             {
-                this.additiveScenes.Add(name);
+                additiveScenes.Add(name);
             }
         }
 
         public void Remove(string name)
         {
-            this.additiveScenes.Remove(name);
+            additiveScenes.Remove(name);
         }
 
         // IGAMESAVE INTERFACE: -------------------------------------------------------------------
@@ -59,7 +58,7 @@
 
         public IEnumerator OnLoad(object generic)
         {
-            ScenesData data = (ScenesData)generic;
+            ScenesData data = (ScenesData) generic;
 
             SceneManager.LoadScene(data.mainScene, LoadSceneMode.Single);
             yield return null;
@@ -70,14 +69,14 @@
                 yield return null;
             }
 
-            this.mainScene = data.mainScene;
-            this.additiveScenes = data.additiveScenes;
+            mainScene = data.mainScene;
+            additiveScenes = data.additiveScenes;
         }
 
         public void ResetData()
         {
-            this.mainScene = SceneManager.GetActiveScene().name;
-            this.additiveScenes = new List<string>();
+            mainScene = SceneManager.GetActiveScene().name;
+            additiveScenes = new List<string>();
         }
     }
 }

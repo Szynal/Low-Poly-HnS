@@ -7,8 +7,10 @@ public class CharacterHealth : Health
 {
     private CharacterMovement characterMovement;
     private CharacterAnimatorManger animatorManger;
-    [Header("CharacterHealth")]
-    [SerializeField] private DeathCutscene deathCutscene = null;
+
+    [Header("CharacterHealth")] [SerializeField]
+    private DeathCutscene deathCutscene = null;
+
     [SerializeField] private HealthBar sliderScript = null;
 
     public delegate void PlayerHealthChangeDelegate(int newHealth);

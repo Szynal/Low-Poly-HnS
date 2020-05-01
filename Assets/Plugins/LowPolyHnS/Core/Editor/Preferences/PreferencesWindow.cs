@@ -1,14 +1,10 @@
-﻿namespace LowPolyHnS.Core
-{
-    using System;
-    using System.Linq;
-    using System.Reflection;
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEditor;
-    using UnityEngine.Events;
+﻿using System;
+using System.Collections.Generic;
+using UnityEditor;
+using UnityEngine;
 
+namespace LowPolyHnS.Core
+{
     public class PreferencesWindow : EditorWindow
     {
         private const string WIN_TITLE = "LowPolyHnS Preferences";
@@ -29,13 +25,13 @@
             public DatabaseInfo(IDatabase data)
             {
                 this.data = data;
-                this.dataEditor = Editor.CreateEditor(this.data) as IDatabaseEditor;
-                this.name = this.dataEditor.GetName();
+                dataEditor = Editor.CreateEditor(this.data) as IDatabaseEditor;
+                name = dataEditor.GetName();
             }
 
             public int CompareTo(DatabaseInfo value)
             {
-                int valueA = this.dataEditor.GetPanelWeight();
+                int valueA = dataEditor.GetPanelWeight();
                 int valueB = value.dataEditor.GetPanelWeight();
                 return valueA.CompareTo(valueB);
             }
@@ -45,9 +41,9 @@
 
         private Vector2 scrollSidebar = Vector2.zero;
         private Vector2 scrollContent = Vector2.zero;
-        private int sidebarIndex = 0;
+        private int sidebarIndex;
 
-        private bool initStyles = false;
+        private bool initStyles;
         private GUIStyle styleSidebar;
 
         private static List<DatabaseInfo> DATABASES = new List<DatabaseInfo>();
@@ -56,51 +52,51 @@
 
         private void OnEnable()
         {
-            this.initStyles = false;
-            this.ChangeSidebarIndex(EditorPrefs.GetInt(KEY_SIDEBAR_INDEX, 0));
+            initStyles = false;
+            ChangeSidebarIndex(EditorPrefs.GetInt(KEY_SIDEBAR_INDEX, 0));
         }
 
         // GUI METHODS: ---------------------------------------------------------------------------
 
         private void OnGUI()
         {
-            if (PreferencesWindow.Instance == null)
+            if (Instance == null)
             {
-                PreferencesWindow.OpenWindow();
+                OpenWindow();
             }
 
-            if (!this.initStyles) this.InitializeStyles();
+            if (!initStyles) InitializeStyles();
 
-            int currentSidebarIndex = this.sidebarIndex;
+            int currentSidebarIndex = sidebarIndex;
             if (currentSidebarIndex < 0)
             {
                 currentSidebarIndex = 0;
-                this.ChangeSidebarIndex(currentSidebarIndex);
+                ChangeSidebarIndex(currentSidebarIndex);
             }
             else if (currentSidebarIndex >= DATABASES.Count)
             {
                 currentSidebarIndex = DATABASES.Count - 1;
-                this.ChangeSidebarIndex(currentSidebarIndex);
+                ChangeSidebarIndex(currentSidebarIndex);
             }
 
             EditorGUILayout.BeginHorizontal();
 
-            this.PaintSidebar(currentSidebarIndex);
+            PaintSidebar(currentSidebarIndex);
 
             EditorGUILayout.BeginVertical();
-            this.PaintToolbar(currentSidebarIndex);
-            this.PaintContent(currentSidebarIndex);
+            PaintToolbar(currentSidebarIndex);
+            PaintContent(currentSidebarIndex);
             EditorGUILayout.EndVertical();
 
-            this.Repaint();
+            Repaint();
             EditorGUILayout.EndHorizontal();
         }
 
         private void PaintSidebar(int currentSidebarIndex)
         {
-            this.scrollSidebar = EditorGUILayout.BeginScrollView(
-                this.scrollSidebar,
-                this.styleSidebar,
+            scrollSidebar = EditorGUILayout.BeginScrollView(
+                scrollSidebar,
+                styleSidebar,
                 GUILayout.MinWidth(SIDEBAR_WIDTH),
                 GUILayout.MaxWidth(SIDEBAR_WIDTH),
                 GUILayout.ExpandHeight(true)
@@ -115,15 +111,15 @@
             {
                 Rect itemRect = GUILayoutUtility.GetRect(GUIContent.none, CoreGUIStyles.GetItemPreferencesSidebar());
 
-                if (UnityEngine.Event.current.type == EventType.MouseDown &&
-                    itemRect.Contains(UnityEngine.Event.current.mousePosition))
+                if (Event.current.type == EventType.MouseDown &&
+                    itemRect.Contains(Event.current.mousePosition))
                 {
-                    this.ChangeSidebarIndex(i);
+                    ChangeSidebarIndex(i);
                 }
 
-                bool isActive = (currentSidebarIndex == i);
+                bool isActive = currentSidebarIndex == i;
 
-                if (UnityEngine.Event.current.type == EventType.Repaint)
+                if (Event.current.type == EventType.Repaint)
                 {
                     string text = DATABASES[i].name;
                     CoreGUIStyles.GetItemPreferencesSidebar().Draw(itemRect, text, isActive, isActive, false, false);
@@ -147,7 +143,7 @@
                 DATABASES.Add(new DatabaseInfo(databases[i]));
             }
 
-            DATABASES.Sort((DatabaseInfo x, DatabaseInfo y) =>
+            DATABASES.Sort((x, y) =>
             {
                 int valueX = x.data.GetSidebarPriority();
                 int valueY = y.data.GetSidebarPriority();
@@ -180,8 +176,8 @@
         private void PaintContent(int currentSidebarIndex)
         {
             if (DATABASES.Count == 0) return;
-            this.scrollContent = EditorGUILayout.BeginScrollView(
-                this.scrollContent,
+            scrollContent = EditorGUILayout.BeginScrollView(
+                scrollContent,
                 GUILayout.ExpandWidth(true),
                 GUILayout.ExpandHeight(true)
             );
@@ -199,83 +195,83 @@
             if (EditorGUIUtility.isProSkin) texture.SetPixel(0, 0, new Color(0f, 0f, 0f, 0.35f));
             else texture.SetPixel(0, 0, new Color(256f, 256f, 256f, 0.5f));
 
-			texture.alphaIsTransparency = true;
-			texture.Apply();
+            texture.alphaIsTransparency = true;
+            texture.Apply();
 
-			this.styleSidebar = new GUIStyle();
-			this.styleSidebar.normal.background = texture;
-			this.styleSidebar.margin = new RectOffset(0,0,0,0);
+            styleSidebar = new GUIStyle();
+            styleSidebar.normal.background = texture;
+            styleSidebar.margin = new RectOffset(0, 0, 0, 0);
 
-			this.initStyles = true;
-		}
+            initStyles = true;
+        }
 
-		// OPEN WINDOW SHORTCUT: ------------------------------------------------------------------
+        // OPEN WINDOW SHORTCUT: ------------------------------------------------------------------
 
-		[MenuItem("LowPolyHnS/Preferences %&k")]
-		public static PreferencesWindow OpenWindow()
-		{
-			PreferencesWindow window = EditorWindow.GetWindow<PreferencesWindow>(
-				true, 
-				PreferencesWindow.GetWindowTitle(), 
-				true
-			);
+        [MenuItem("LowPolyHnS/Preferences %&k")]
+        public static PreferencesWindow OpenWindow()
+        {
+            PreferencesWindow window = GetWindow<PreferencesWindow>(
+                true,
+                GetWindowTitle(),
+                true
+            );
 
-			PreferencesWindow.Instance = window;
+            Instance = window;
             window.LoadDatabases();
-			window.Show();
-			return window;
-		}
+            window.Show();
+            return window;
+        }
 
-	    [MenuItem("LowPolyHnS/Tools/Documentation...")]
-	    public static void OpenDocumentation()
-	    {
-		    Application.OpenURL("https://docs.LowPolyHnS.io");
-	    }
+        [MenuItem("LowPolyHnS/Tools/Documentation...")]
+        public static void OpenDocumentation()
+        {
+            Application.OpenURL("https://docs.LowPolyHnS.io");
+        }
 
-		public static void CloseWindow()
-		{
-			if (PreferencesWindow.Instance == null) return;
-			PreferencesWindow.Instance.Close();
-		}
+        public static void CloseWindow()
+        {
+            if (Instance == null) return;
+            Instance.Close();
+        }
 
-		public static void OpenWindowTab(string tabName)
-		{
-			PreferencesWindow window = PreferencesWindow.OpenWindow();
+        public static void OpenWindowTab(string tabName)
+        {
+            PreferencesWindow window = OpenWindow();
 
-			tabName = tabName.ToLower();
+            tabName = tabName.ToLower();
             for (int i = 0; i < DATABASES.Count; ++i)
-			{
-                if (DATABASES[i].name.ToLower() == tabName) 
-				{
-					window.sidebarIndex = i;
-					break;
-				}
-			}
-		}
-
-		private void ChangeSidebarIndex(int nextIndex)
-		{
-			this.sidebarIndex = nextIndex;
-			EditorPrefs.SetInt(KEY_SIDEBAR_INDEX, this.sidebarIndex);
-
-			string windowName = PreferencesWindow.GetWindowTitle();
-			this.titleContent = new GUIContent(windowName);
-		}
-
-		private static string GetWindowTitle()
-		{
-            return PreferencesWindow.WIN_TITLE;
-		}
-
-		// PUBLIC METHODS: ------------------------------------------------------------------------
-
-		public static void SetSidebarIndex(int index)
-		{
-			EditorPrefs.SetInt(KEY_SIDEBAR_INDEX, index);
-            if (PreferencesWindow.Instance != null)
             {
-                PreferencesWindow.Instance.ChangeSidebarIndex(index);
+                if (DATABASES[i].name.ToLower() == tabName)
+                {
+                    window.sidebarIndex = i;
+                    break;
+                }
             }
         }
-	}
+
+        private void ChangeSidebarIndex(int nextIndex)
+        {
+            sidebarIndex = nextIndex;
+            EditorPrefs.SetInt(KEY_SIDEBAR_INDEX, sidebarIndex);
+
+            string windowName = GetWindowTitle();
+            titleContent = new GUIContent(windowName);
+        }
+
+        private static string GetWindowTitle()
+        {
+            return WIN_TITLE;
+        }
+
+        // PUBLIC METHODS: ------------------------------------------------------------------------
+
+        public static void SetSidebarIndex(int index)
+        {
+            EditorPrefs.SetInt(KEY_SIDEBAR_INDEX, index);
+            if (Instance != null)
+            {
+                Instance.ChangeSidebarIndex(index);
+            }
+        }
+    }
 }

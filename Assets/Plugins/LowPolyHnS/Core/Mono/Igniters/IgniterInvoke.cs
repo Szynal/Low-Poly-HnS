@@ -1,17 +1,15 @@
-﻿namespace LowPolyHnS.Core
-{
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-    using LowPolyHnS.Variables;
+﻿using LowPolyHnS.Variables;
+using UnityEngine;
 
-	[AddComponentMenu("")]
-	public class IgniterInvoke : Igniter 
-	{
-		#if UNITY_EDITOR
-		public new static string NAME = "General/On Invoke";
-		public new static string COMMENT = "To invoke this Trigger call [Trigger instance].Execute()";
-        #endif
+namespace LowPolyHnS.Core
+{
+    [AddComponentMenu("")]
+    public class IgniterInvoke : Igniter
+    {
+#if UNITY_EDITOR
+        public new static string NAME = "General/On Invoke";
+        public new static string COMMENT = "To invoke this Trigger call [Trigger instance].Execute()";
+#endif
 
         [VariableFilter(Variable.DataType.GameObject)]
         public VariableProperty storeInvoker = new VariableProperty(Variable.VarType.GlobalVariable);

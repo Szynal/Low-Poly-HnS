@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 [CreateAssetMenu(fileName = "NewKnife", menuName = "FearEffect/Items/Premade/Knife", order = 0)]
 public class FE_Knife : FE_Weapon

@@ -1,16 +1,11 @@
-﻿namespace LowPolyHnS.Core
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEngine.Events;
-    using LowPolyHnS.Core;
-    using LowPolyHnS.Core.Hooks;
-    using LowPolyHnS.Variables;
+﻿using LowPolyHnS.Variables;
+using UnityEngine;
 
-    #if UNITY_EDITOR
-    using UnityEditor;
-    #endif
+namespace LowPolyHnS.Core
+{
+#if UNITY_EDITOR
+
+#endif
 
     [AddComponentMenu("")]
     public class ActionVariablesAssignNumber : IActionVariablesAssign
@@ -24,15 +19,15 @@
 
         public override void ExecuteAssignement(GameObject target)
         {
-			if (this.variable == null) return;
-            this.variable.Set(this.value, target);
+            if (variable == null) return;
+            variable.Set(value, target);
         }
 
         // +--------------------------------------------------------------------------------------+
         // | EDITOR                                                                               |
         // +--------------------------------------------------------------------------------------+
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
 
         public static new string NAME = "Variables/Variable Number";
 
@@ -40,7 +35,7 @@
 
         public override string GetNodeTitle()
         {
-            return string.Format(NODE_TITLE, "Number", this.variable);
+            return string.Format(NODE_TITLE, "Number", variable);
         }
 
         public override bool PaintInspectorTarget()
@@ -48,6 +43,6 @@
             return false;
         }
 
-        #endif
+#endif
     }
 }

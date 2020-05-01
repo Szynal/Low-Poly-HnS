@@ -1,54 +1,52 @@
-﻿namespace LowPolyHnS.Core
-{
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
+﻿using UnityEngine;
 
-	[AddComponentMenu("LowPolyHnS/Hotspot", 0)]
-	public class Hotspot : MonoBehaviour 
-	{
-		public HPCursor.Data cursorData;
-		public HPProximity.Data proximityData;
+namespace LowPolyHnS.Core
+{
+    [AddComponentMenu("LowPolyHnS/Hotspot", 0)]
+    public class Hotspot : MonoBehaviour
+    {
+        public HPCursor.Data cursorData;
+        public HPProximity.Data proximityData;
 
         public Trigger trigger;
 
-		// INITIALIZE: ----------------------------------------------------------------------------
+        // INITIALIZE: ----------------------------------------------------------------------------
 
-		private void Awake()
-		{
-            this.trigger = GetComponent<Trigger>();
+        private void Awake()
+        {
+            trigger = GetComponent<Trigger>();
 
-			this.cursorData = HPCursor.Create<HPCursor>(this, this.cursorData);
-			this.proximityData = HPProximity.Create<HPProximity>(this, this.proximityData);
-		}
+            cursorData = HPCursor.Create<HPCursor>(this, cursorData);
+            proximityData = HPProximity.Create<HPProximity>(this, proximityData);
+        }
 
-		// INTERACTION METHODS: -------------------------------------------------------------------
+        // INTERACTION METHODS: -------------------------------------------------------------------
 
-		private void OnMouseEnter() 
-		{ 
-			if (this.cursorData.enabled) this.cursorData.instance.HotspotMouseEnter();
-		}
+        private void OnMouseEnter()
+        {
+            if (cursorData.enabled) cursorData.instance.HotspotMouseEnter();
+        }
 
-		private void OnMouseExit() 
-		{ 
-			if (this.cursorData.enabled) this.cursorData.instance.HotspotMouseExit();
-		}
+        private void OnMouseExit()
+        {
+            if (cursorData.enabled) cursorData.instance.HotspotMouseExit();
+        }
 
         private void OnMouseOver()
         {
-            if (this.cursorData.enabled) this.cursorData.instance.HotspotMouseOver();
+            if (cursorData.enabled) cursorData.instance.HotspotMouseOver();
         }
 
         private void OnDestroy()
-		{
-			if (this.cursorData.enabled) this.cursorData.instance.HotspotMouseExit();
-		}
+        {
+            if (cursorData.enabled) cursorData.instance.HotspotMouseExit();
+        }
 
-		// GIZMO METHODS: -------------------------------------------------------------------------
+        // GIZMO METHODS: -------------------------------------------------------------------------
 
-		private void OnDrawGizmos()
-		{
-			Gizmos.DrawIcon(transform.position, "LowPolyHnS/Hotspot/hotspot", true);
-		}
-	}
+        private void OnDrawGizmos()
+        {
+            Gizmos.DrawIcon(transform.position, "LowPolyHnS/Hotspot/hotspot", true);
+        }
+    }
 }

@@ -1,13 +1,5 @@
 ﻿namespace LowPolyHnS.Inventory
 {
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEngine.UI;
-    using LowPolyHnS.Core;
-    using UnityEngine.EventSystems;
-    using LowPolyHnS.Core.Hooks;
-
     public class ContainerUIItemPlayer : IContainerUIItem
     {
         // CONSTRUCTOR & UPDATER: -----------------------------------------------------------------
@@ -17,29 +9,29 @@
             base.Setup(containerUIManager, item);
             this.item = item as Item;
 
-            this.UpdateUI();
+            UpdateUI();
         }
 
         // PUBLIC METHODS: ------------------------------------------------------------------------
 
         protected override int GetAmount()
         {
-            return InventoryManager.Instance.GetInventoryAmountOfItem(this.item.uuid);
+            return InventoryManager.Instance.GetInventoryAmountOfItem(item.uuid);
         }
 
         public override void OnClickButton()
         {
-            Container container = this.containerUIManager.currentContainer;
+            Container container = containerUIManager.currentContainer;
 
-            int subtract = InventoryManager.Instance.SubstractItemFromInventory(this.item.uuid, 1);
+            int subtract = InventoryManager.Instance.SubstractItemFromInventory(item.uuid);
             if (subtract <= 0) return;
 
-            container.AddItem(this.item.uuid, subtract);
+            container.AddItem(item.uuid, subtract);
 
-            this.containerUIManager.UpdateItems();
-            if (this.containerUIManager.onAdd != null)
+            containerUIManager.UpdateItems();
+            if (containerUIManager.onAdd != null)
             {
-                this.containerUIManager.onAdd.Invoke(this.item.uuid);
+                containerUIManager.onAdd.Invoke(item.uuid);
             }
         }
     }

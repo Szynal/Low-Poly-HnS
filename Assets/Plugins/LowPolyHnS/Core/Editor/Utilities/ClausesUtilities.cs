@@ -1,10 +1,8 @@
-﻿namespace LowPolyHnS.Core
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEditor;
+﻿using UnityEditor;
+using UnityEngine;
 
+namespace LowPolyHnS.Core
+{
     public static class ClausesUtilities
     {
         public enum Icon
@@ -24,7 +22,8 @@
         }
 
         private const string ICONS_PATH = "Assets/Plugins/LowPolyHnS/Extra/Icons/Utilities/{0}";
-        private static readonly string[] ICONS = new string[]
+
+        private static readonly string[] ICONS =
         {
             "Copy{0}.png",
             "Duplicate{0}.png",
@@ -37,10 +36,10 @@
             "Collapse{0}.png",
             "Expand{0}.png",
             "EyeOpen{0}.png",
-            "EyeClosed{0}.png",
+            "EyeClosed{0}.png"
         };
 
-        private static readonly string[] TEXTS = new string[]
+        private static readonly string[] TEXTS =
         {
             "",
             "",
@@ -56,7 +55,7 @@
             ""
         };
 
-        private static readonly string[] TOOLTIPS = new string[]
+        private static readonly string[] TOOLTIPS =
         {
             "Copy",
             "Duplicate",
@@ -78,7 +77,7 @@
 
         public static GUIContent Get(Icon icon)
         {
-            int iconIndex = (int)icon;
+            int iconIndex = (int) icon;
             if (GUICONTENTS[iconIndex] == null)
             {
                 string iconName = string.Format(ICONS[iconIndex], EditorGUIUtility.isProSkin

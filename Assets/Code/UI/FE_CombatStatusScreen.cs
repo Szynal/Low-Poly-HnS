@@ -1,21 +1,20 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class FE_CombatStatusScreen : MonoBehaviour
 {
-    [SerializeField] Image imgTargeting = null;
-    [SerializeField] Image imgAmmoWarning = null;
-    
-    [SerializeField] float ammoWarningAnimSpeed = 0.4f;
+    [SerializeField] private Image imgTargeting = null;
+    [SerializeField] private Image imgAmmoWarning = null;
 
-    private bool needWarning = false;
+    [SerializeField] private float ammoWarningAnimSpeed = 0.4f;
+
+    private bool needWarning;
     private Coroutine warningCoroutine;
 
     private void Awake()
     {
-        if(imgTargeting == null || imgAmmoWarning == null)
+        if (imgTargeting == null || imgAmmoWarning == null)
         {
             Debug.LogError("There are unassigned field in CombatStatusScreen " + name);
         }
@@ -27,7 +26,7 @@ public class FE_CombatStatusScreen : MonoBehaviour
     public void ShowTargetingStatus(bool _hasTarget, bool _critical)
     {
         imgTargeting.enabled = _hasTarget;
-        if(_critical == true)
+        if (_critical)
         {
             imgTargeting.color = Color.red;
         }
@@ -39,17 +38,17 @@ public class FE_CombatStatusScreen : MonoBehaviour
 
     public void AmmoLevelWarning(bool _isWarning)
     {
-        if(_isWarning == true)
+        if (_isWarning)
         {
             imgAmmoWarning.enabled = true;
             needWarning = true;
 
-            if(warningCoroutine != null)
+            if (warningCoroutine != null)
             {
                 StopCoroutine(warningCoroutine);
             }
 
-            if (gameObject.activeSelf == true)
+            if (gameObject.activeSelf)
             {
                 warningCoroutine = StartCoroutine(flashWarning());
             }
@@ -74,11 +73,11 @@ public class FE_CombatStatusScreen : MonoBehaviour
 
         imgAmmoWarning.color = _visibleColor;
 
-        while (needWarning == true)
+        while (needWarning)
         {
             _warnTime -= Time.deltaTime;
 
-            if(_warnTime <= 0f)
+            if (_warnTime <= 0f)
             {
                 if (imgAmmoWarning.color.a > 0f)
                 {
@@ -94,7 +93,5 @@ public class FE_CombatStatusScreen : MonoBehaviour
 
             yield return null;
         }
-
-        yield break;
     }
 }

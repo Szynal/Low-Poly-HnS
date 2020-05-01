@@ -1,10 +1,8 @@
-﻿namespace LowPolyHnS.Variables
-{
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
+namespace LowPolyHnS.Variables
+{
     [AddComponentMenu("LowPolyHnS/Managers/VariablesManager", 100)]
     public static class VariablesManager
     {
@@ -30,31 +28,29 @@
         public static object GetGlobal(string name)
         {
             Variable variable = GlobalVariablesManager.Instance.Get(name);
-            return (variable != null ? variable.Get() : null);
+            return variable != null ? variable.Get() : null;
         }
 
         public static object GetLocal(GameObject target, string name, bool inChildren = false)
         {
             Variable variable = LocalVariablesUtilities.Get(target, name, inChildren);
-            return (variable != null ? variable.Get() : null);
+            return variable != null ? variable.Get() : null;
         }
 
         public static Variable.DataType GetGlobalType(string name, bool inChildren = false)
         {
             Variable variable = GlobalVariablesManager.Instance.Get(name);
-            return (variable != null
-                ? (Variable.DataType)variable.type
-                : Variable.DataType.Null
-            );
+            return variable != null
+                ? (Variable.DataType) variable.type
+                : Variable.DataType.Null;
         }
 
         public static Variable.DataType GetLocalType(GameObject target, string name, bool inChildren = false)
         {
             Variable variable = LocalVariablesUtilities.Get(target, name, inChildren);
-            return (variable != null
-                ? (Variable.DataType)variable.type
-                : Variable.DataType.Null
-            );
+            return variable != null
+                ? (Variable.DataType) variable.type
+                : Variable.DataType.Null;
         }
 
         public static Variable GetListItem(GameObject target, ListVariables.Position position, int index = 0)
@@ -76,7 +72,7 @@
             if (variable != null)
             {
                 variable.Update(value);
-                VariablesManager.events.OnChangeGlobal(name);
+                events.OnChangeGlobal(name);
             }
         }
 
@@ -86,7 +82,7 @@
             if (variable != null)
             {
                 variable.Update(value);
-                VariablesManager.events.OnChangeLocal(target, name);
+                events.OnChangeLocal(target, name);
             }
         }
 
@@ -144,7 +140,7 @@
             if (target == null) return;
             for (int i = target.variables.Count - 1; i >= 0; --i)
             {
-                VariablesManager.ListRemove(target, i);
+                ListRemove(target, i);
             }
         }
 

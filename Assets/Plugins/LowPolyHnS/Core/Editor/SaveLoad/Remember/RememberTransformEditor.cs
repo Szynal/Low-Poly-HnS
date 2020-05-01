@@ -1,10 +1,7 @@
-﻿namespace LowPolyHnS.Core
-{
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEditor;
+﻿using UnityEditor;
 
+namespace LowPolyHnS.Core
+{
     [CustomEditor(typeof(RememberTransform))]
     public class RememberTransformEditor : RememberEditor
     {
@@ -21,16 +18,16 @@
         {
             base.OnEnable();
 
-            this.spRememberPosition = this.serializedObject.FindProperty("rememberPosition");
-            this.spRememberRotation = this.serializedObject.FindProperty("rememberRotation");
-            this.spRememberScale = this.serializedObject.FindProperty("rememberScale");
+            spRememberPosition = serializedObject.FindProperty("rememberPosition");
+            spRememberRotation = serializedObject.FindProperty("rememberRotation");
+            spRememberScale = serializedObject.FindProperty("rememberScale");
         }
 
         protected override void OnPaint()
         {
-            EditorGUILayout.PropertyField(this.spRememberPosition);
-            EditorGUILayout.PropertyField(this.spRememberRotation);
-            EditorGUILayout.PropertyField(this.spRememberScale);
+            EditorGUILayout.PropertyField(spRememberPosition);
+            EditorGUILayout.PropertyField(spRememberRotation);
+            EditorGUILayout.PropertyField(spRememberScale);
         }
     }
 }

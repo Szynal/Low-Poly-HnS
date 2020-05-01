@@ -1,243 +1,251 @@
-﻿namespace LowPolyHnS.Core
-{
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEditor;
+﻿using UnityEditor;
+using UnityEngine;
 
-	public abstract class CoreGUIStyles
-	{
+namespace LowPolyHnS.Core
+{
+    public abstract class CoreGUIStyles
+    {
         private const string TAG_BG_PATH = "Assets/Plugins/LowPolyHnS/Extra/Icons/Variables/Tag.png";
         private const string DROPZONE_NORMAL_PATH = "Assets/Plugins/LowPolyHnS/Characters/Icons/DropZoneNormal.png";
         private const string DROPZONE_ACTIVE_PATH = "Assets/Plugins/LowPolyHnS/Characters/Icons/DropZoneActive.png";
         private const string DROP_MARK_PATH = "Assets/Plugins/LowPolyHnS/Extra/Icons/EditorUI/DropMark.png";
 
         private static GUIStyle btnLeft;
-		private static GUIStyle btnRight;
-		private static GUIStyle btnMid;
-		private static GUIStyle btnToggleLeftAdd;
-		private static GUIStyle btnToggleLeftOn;
-		private static GUIStyle btnToggleLeftOff;
-		private static GUIStyle btnToggleMidOn;
-		private static GUIStyle btnToggleMidOff;
-		private static GUIStyle btnToggleRightOn;
-		private static GUIStyle btnToggleRightOff;
-		private static GUIStyle btnToggleNormalOn;
-		private static GUIStyle btnToggleNormalOff;
-		private static GUIStyle btnToggleOn;
-		private static GUIStyle btnToggleOff;
-		private static GUIStyle highlight;
-		private static GUIStyle dropMark;
-		private static GUIStyle boxExpanded;
-		private static GUIStyle box;
-		private static GUIStyle helpBox;
+        private static GUIStyle btnRight;
+        private static GUIStyle btnMid;
+        private static GUIStyle btnToggleLeftAdd;
+        private static GUIStyle btnToggleLeftOn;
+        private static GUIStyle btnToggleLeftOff;
+        private static GUIStyle btnToggleMidOn;
+        private static GUIStyle btnToggleMidOff;
+        private static GUIStyle btnToggleRightOn;
+        private static GUIStyle btnToggleRightOff;
+        private static GUIStyle btnToggleNormalOn;
+        private static GUIStyle btnToggleNormalOff;
+        private static GUIStyle btnToggleOn;
+        private static GUIStyle btnToggleOff;
+        private static GUIStyle highlight;
+        private static GUIStyle dropMark;
+        private static GUIStyle boxExpanded;
+        private static GUIStyle box;
+        private static GUIStyle helpBox;
         private static GUIStyle searchbox;
-		private static GUIStyle btnToolbar;
-		private static GUIStyle btnGridLeftOn;
-		private static GUIStyle btnGridLeftOff;
-		private static GUIStyle btnGridMidOn;
-		private static GUIStyle btnGridMidOff;
-		private static GUIStyle btnGridRightOn;
-		private static GUIStyle btnGridRightOff;
-		private static GUIStyle btnRigArrow;
-		private static GUIStyle btnLftArrow;
-		private static GUIStyle itemPreferencesSidebar;
+        private static GUIStyle btnToolbar;
+        private static GUIStyle btnGridLeftOn;
+        private static GUIStyle btnGridLeftOff;
+        private static GUIStyle btnGridMidOn;
+        private static GUIStyle btnGridMidOff;
+        private static GUIStyle btnGridRightOn;
+        private static GUIStyle btnGridRightOff;
+        private static GUIStyle btnRigArrow;
+        private static GUIStyle btnLftArrow;
+        private static GUIStyle itemPreferencesSidebar;
         private static GUIStyle labelTag;
         private static GUIStyle textarea;
         private static GUIStyle dropZoneNormal;
         private static GUIStyle dropZoneActive;
         private static GUIStyle globalIDText;
 
-		public static GUIStyle GetButtonLeft()
-		{
-			if (CoreGUIStyles.btnLeft == null) 
-			{
-				CoreGUIStyles.btnLeft = new GUIStyle(GUI.skin.GetStyle("ButtonLeft"));
-				CoreGUIStyles.btnLeft.richText = true;
-			}
+        public static GUIStyle GetButtonLeft()
+        {
+            if (btnLeft == null)
+            {
+                btnLeft = new GUIStyle(GUI.skin.GetStyle("ButtonLeft"));
+                btnLeft.richText = true;
+            }
 
-			return CoreGUIStyles.btnLeft;
-		}
+            return btnLeft;
+        }
 
-		public static GUIStyle GetButtonRight()
-		{
-			if (CoreGUIStyles.btnRight == null) 
-			{
-				CoreGUIStyles.btnRight = new GUIStyle(GUI.skin.GetStyle("ButtonRight"));
-				CoreGUIStyles.btnRight.richText = true;
-			}
-			return CoreGUIStyles.btnRight;
-		}
+        public static GUIStyle GetButtonRight()
+        {
+            if (btnRight == null)
+            {
+                btnRight = new GUIStyle(GUI.skin.GetStyle("ButtonRight"));
+                btnRight.richText = true;
+            }
 
-		public static GUIStyle GetButtonMid()
-		{
-			if (CoreGUIStyles.btnMid == null) 
-			{
-				CoreGUIStyles.btnMid = new GUIStyle(GUI.skin.GetStyle("ButtonMid"));
-				CoreGUIStyles.btnMid.richText = true;
-			}
-			return CoreGUIStyles.btnMid;
-		}
+            return btnRight;
+        }
 
-		public static GUIStyle GetToggleButtonLeftOn()
-		{
-			if (CoreGUIStyles.btnToggleLeftOn == null) 
-			{
-				CoreGUIStyles.btnToggleLeftOn = new GUIStyle(GUI.skin.GetStyle("ButtonLeft"));
-				CoreGUIStyles.btnToggleLeftOn.alignment = TextAnchor.MiddleLeft;
-				CoreGUIStyles.btnToggleLeftOn.normal = CoreGUIStyles.btnToggleLeftOn.onNormal;
-				CoreGUIStyles.btnToggleLeftOn.hover = CoreGUIStyles.btnToggleLeftOn.onHover;
-				CoreGUIStyles.btnToggleLeftOn.active = CoreGUIStyles.btnToggleLeftOn.onActive;
-				CoreGUIStyles.btnToggleLeftOn.focused = CoreGUIStyles.btnToggleLeftOn.onFocused;
-				CoreGUIStyles.btnToggleLeftOn.richText = true;
-				CoreGUIStyles.btnToggleLeftOn.margin.bottom = 0;
-			}
+        public static GUIStyle GetButtonMid()
+        {
+            if (btnMid == null)
+            {
+                btnMid = new GUIStyle(GUI.skin.GetStyle("ButtonMid"));
+                btnMid.richText = true;
+            }
 
-			return CoreGUIStyles.btnToggleLeftOn;
-		}
+            return btnMid;
+        }
 
-		public static GUIStyle GetToggleButtonLeftOff()
-		{
-			if (CoreGUIStyles.btnToggleLeftOff == null) 
-			{
-				CoreGUIStyles.btnToggleLeftOff = new GUIStyle(GUI.skin.GetStyle("ButtonLeft"));
-				CoreGUIStyles.btnToggleLeftOff.alignment = TextAnchor.MiddleLeft;
-				CoreGUIStyles.btnToggleLeftOff.richText = true;
-				CoreGUIStyles.btnToggleLeftOff.margin.bottom = 0;
-			}
-			return CoreGUIStyles.btnToggleLeftOff;
-		}
+        public static GUIStyle GetToggleButtonLeftOn()
+        {
+            if (btnToggleLeftOn == null)
+            {
+                btnToggleLeftOn = new GUIStyle(GUI.skin.GetStyle("ButtonLeft"));
+                btnToggleLeftOn.alignment = TextAnchor.MiddleLeft;
+                btnToggleLeftOn.normal = btnToggleLeftOn.onNormal;
+                btnToggleLeftOn.hover = btnToggleLeftOn.onHover;
+                btnToggleLeftOn.active = btnToggleLeftOn.onActive;
+                btnToggleLeftOn.focused = btnToggleLeftOn.onFocused;
+                btnToggleLeftOn.richText = true;
+                btnToggleLeftOn.margin.bottom = 0;
+            }
 
-		public static GUIStyle GetToggleButtonLeftAdd()
-		{
-			if (CoreGUIStyles.btnToggleLeftAdd == null)
-			{
-				CoreGUIStyles.btnToggleLeftAdd = new GUIStyle(GUI.skin.GetStyle("ButtonLeft"));
-				CoreGUIStyles.btnToggleLeftAdd.alignment = TextAnchor.MiddleCenter;
-				CoreGUIStyles.btnToggleLeftAdd.richText = true;
-			}
-			return CoreGUIStyles.btnToggleLeftAdd;
-		}
+            return btnToggleLeftOn;
+        }
 
-		public static GUIStyle GetToggleButtonMidOn()
-		{
-			if (CoreGUIStyles.btnToggleMidOn == null) 
-			{
-				CoreGUIStyles.btnToggleMidOn = new GUIStyle(GUI.skin.GetStyle("ButtonMid"));
-				CoreGUIStyles.btnToggleMidOn.alignment = TextAnchor.MiddleLeft;
-				CoreGUIStyles.btnToggleMidOn.normal = CoreGUIStyles.btnToggleMidOn.onNormal;
-				CoreGUIStyles.btnToggleMidOn.hover = CoreGUIStyles.btnToggleMidOn.onHover;
-				CoreGUIStyles.btnToggleMidOn.active = CoreGUIStyles.btnToggleMidOn.onActive;
-				CoreGUIStyles.btnToggleMidOn.focused = CoreGUIStyles.btnToggleMidOn.onFocused;
-				CoreGUIStyles.btnToggleMidOn.richText = true;
-				CoreGUIStyles.btnToggleMidOn.margin.bottom = 0;
-			}
+        public static GUIStyle GetToggleButtonLeftOff()
+        {
+            if (btnToggleLeftOff == null)
+            {
+                btnToggleLeftOff = new GUIStyle(GUI.skin.GetStyle("ButtonLeft"));
+                btnToggleLeftOff.alignment = TextAnchor.MiddleLeft;
+                btnToggleLeftOff.richText = true;
+                btnToggleLeftOff.margin.bottom = 0;
+            }
 
-			return CoreGUIStyles.btnToggleMidOn;
-		}
+            return btnToggleLeftOff;
+        }
 
-		public static GUIStyle GetToggleButtonMidOff()
-		{
-			if (CoreGUIStyles.btnToggleMidOff == null) 
-			{
-				CoreGUIStyles.btnToggleMidOff = new GUIStyle(GUI.skin.GetStyle("ButtonMid"));
-				CoreGUIStyles.btnToggleMidOff.alignment = TextAnchor.MiddleLeft;
-				CoreGUIStyles.btnToggleMidOff.richText = true;
-				CoreGUIStyles.btnToggleMidOff.margin.bottom = 0;
-			}
-			return CoreGUIStyles.btnToggleMidOff;
-		}
+        public static GUIStyle GetToggleButtonLeftAdd()
+        {
+            if (btnToggleLeftAdd == null)
+            {
+                btnToggleLeftAdd = new GUIStyle(GUI.skin.GetStyle("ButtonLeft"));
+                btnToggleLeftAdd.alignment = TextAnchor.MiddleCenter;
+                btnToggleLeftAdd.richText = true;
+            }
 
-		public static GUIStyle GetToggleButtonRightOn()
-		{
-			if (CoreGUIStyles.btnToggleRightOn == null) 
-			{
-				CoreGUIStyles.btnToggleRightOn = new GUIStyle(GUI.skin.GetStyle("ButtonRight"));
-				CoreGUIStyles.btnToggleRightOn.alignment = TextAnchor.MiddleLeft;
-				CoreGUIStyles.btnToggleRightOn.normal = CoreGUIStyles.btnToggleRightOn.onNormal;
-				CoreGUIStyles.btnToggleRightOn.hover = CoreGUIStyles.btnToggleRightOn.onHover;
-				CoreGUIStyles.btnToggleRightOn.active = CoreGUIStyles.btnToggleRightOn.onActive;
-				CoreGUIStyles.btnToggleRightOn.focused = CoreGUIStyles.btnToggleRightOn.onFocused;
-				CoreGUIStyles.btnToggleRightOn.richText = true;
-				CoreGUIStyles.btnToggleRightOn.margin.bottom = 0;
-			}
+            return btnToggleLeftAdd;
+        }
 
-			return CoreGUIStyles.btnToggleRightOn;
-		}
+        public static GUIStyle GetToggleButtonMidOn()
+        {
+            if (btnToggleMidOn == null)
+            {
+                btnToggleMidOn = new GUIStyle(GUI.skin.GetStyle("ButtonMid"));
+                btnToggleMidOn.alignment = TextAnchor.MiddleLeft;
+                btnToggleMidOn.normal = btnToggleMidOn.onNormal;
+                btnToggleMidOn.hover = btnToggleMidOn.onHover;
+                btnToggleMidOn.active = btnToggleMidOn.onActive;
+                btnToggleMidOn.focused = btnToggleMidOn.onFocused;
+                btnToggleMidOn.richText = true;
+                btnToggleMidOn.margin.bottom = 0;
+            }
 
-		public static GUIStyle GetToggleButtonRightOff()
-		{
-			if (CoreGUIStyles.btnToggleRightOff == null) 
-			{
-				CoreGUIStyles.btnToggleRightOff = new GUIStyle(GUI.skin.GetStyle("ButtonRight"));
-				CoreGUIStyles.btnToggleRightOff.alignment = TextAnchor.MiddleLeft;
-				CoreGUIStyles.btnToggleRightOff.richText = true;
-				CoreGUIStyles.btnToggleRightOff.margin.bottom = 0;
-			}
-			return CoreGUIStyles.btnToggleRightOff;
-		}
+            return btnToggleMidOn;
+        }
 
-		public static GUIStyle GetToggleButtonNormalOn()
-		{
-			if (CoreGUIStyles.btnToggleNormalOn == null) 
-			{
-				CoreGUIStyles.btnToggleNormalOn = new GUIStyle(CoreGUIStyles.GetToggleButtonNormalOff());
-				CoreGUIStyles.btnToggleNormalOn.alignment = TextAnchor.MiddleLeft;
-				CoreGUIStyles.btnToggleNormalOn.normal = CoreGUIStyles.btnToggleNormalOn.onNormal;
-				CoreGUIStyles.btnToggleNormalOn.hover = CoreGUIStyles.btnToggleNormalOn.onHover;
-				CoreGUIStyles.btnToggleNormalOn.active = CoreGUIStyles.btnToggleNormalOn.onActive;
-				CoreGUIStyles.btnToggleNormalOn.focused = CoreGUIStyles.btnToggleNormalOn.onFocused;
-				CoreGUIStyles.btnToggleNormalOn.richText = true;
-				CoreGUIStyles.btnToggleNormalOn.margin.bottom = 0;
-			}
-			return CoreGUIStyles.btnToggleNormalOn;
-		}
+        public static GUIStyle GetToggleButtonMidOff()
+        {
+            if (btnToggleMidOff == null)
+            {
+                btnToggleMidOff = new GUIStyle(GUI.skin.GetStyle("ButtonMid"));
+                btnToggleMidOff.alignment = TextAnchor.MiddleLeft;
+                btnToggleMidOff.richText = true;
+                btnToggleMidOff.margin.bottom = 0;
+            }
 
-		public static GUIStyle GetToggleButtonNormalOff()
-		{
-			if (CoreGUIStyles.btnToggleNormalOff == null) 
-			{
-				CoreGUIStyles.btnToggleNormalOff = new GUIStyle(GUI.skin.GetStyle("Button"));
-				CoreGUIStyles.btnToggleNormalOff.alignment = TextAnchor.MiddleLeft;
-				CoreGUIStyles.btnToggleNormalOff.richText = true;
-				CoreGUIStyles.btnToggleNormalOff.fixedHeight = 20f;
-				CoreGUIStyles.btnToggleNormalOff.margin.bottom = 0;
-			}
-			return CoreGUIStyles.btnToggleNormalOff;
-		}
+            return btnToggleMidOff;
+        }
 
-		public static GUIStyle GetToggleButtonOn()
-		{
-			if (CoreGUIStyles.btnToggleOn == null) 
-			{
-				CoreGUIStyles.btnToggleOn = new GUIStyle(CoreGUIStyles.GetToggleButtonOff());
-				CoreGUIStyles.btnToggleOn.alignment = TextAnchor.MiddleLeft;
-				CoreGUIStyles.btnToggleOn.normal = CoreGUIStyles.btnToggleOn.onNormal;
-				CoreGUIStyles.btnToggleOn.hover = CoreGUIStyles.btnToggleOn.onHover;
-				CoreGUIStyles.btnToggleOn.active = CoreGUIStyles.btnToggleOn.onActive;
-				CoreGUIStyles.btnToggleOn.focused = CoreGUIStyles.btnToggleOn.onFocused;
-				CoreGUIStyles.btnToggleOn.richText = true;
-				CoreGUIStyles.btnToggleOn.margin.bottom = 0;
-			}
-			return CoreGUIStyles.btnToggleOn;
-		}
+        public static GUIStyle GetToggleButtonRightOn()
+        {
+            if (btnToggleRightOn == null)
+            {
+                btnToggleRightOn = new GUIStyle(GUI.skin.GetStyle("ButtonRight"));
+                btnToggleRightOn.alignment = TextAnchor.MiddleLeft;
+                btnToggleRightOn.normal = btnToggleRightOn.onNormal;
+                btnToggleRightOn.hover = btnToggleRightOn.onHover;
+                btnToggleRightOn.active = btnToggleRightOn.onActive;
+                btnToggleRightOn.focused = btnToggleRightOn.onFocused;
+                btnToggleRightOn.richText = true;
+                btnToggleRightOn.margin.bottom = 0;
+            }
 
-		public static GUIStyle GetToggleButtonOff()
-		{
-			if (CoreGUIStyles.btnToggleOff == null) 
-			{
-				CoreGUIStyles.btnToggleOff = new GUIStyle(GUI.skin.GetStyle("LargeButton"));
-				CoreGUIStyles.btnToggleOff.alignment = TextAnchor.MiddleLeft;
-				CoreGUIStyles.btnToggleOff.richText = true;
-				CoreGUIStyles.btnToggleOff.margin.bottom = 0;
-				CoreGUIStyles.btnToggleOff.padding = new RectOffset(
-					30, CoreGUIStyles.btnToggleOff.padding.right,
-					CoreGUIStyles.btnToggleOff.padding.top,
-					CoreGUIStyles.btnToggleOff.padding.bottom
-				);
-			}
-			return CoreGUIStyles.btnToggleOff;
-		}
+            return btnToggleRightOn;
+        }
+
+        public static GUIStyle GetToggleButtonRightOff()
+        {
+            if (btnToggleRightOff == null)
+            {
+                btnToggleRightOff = new GUIStyle(GUI.skin.GetStyle("ButtonRight"));
+                btnToggleRightOff.alignment = TextAnchor.MiddleLeft;
+                btnToggleRightOff.richText = true;
+                btnToggleRightOff.margin.bottom = 0;
+            }
+
+            return btnToggleRightOff;
+        }
+
+        public static GUIStyle GetToggleButtonNormalOn()
+        {
+            if (btnToggleNormalOn == null)
+            {
+                btnToggleNormalOn = new GUIStyle(GetToggleButtonNormalOff());
+                btnToggleNormalOn.alignment = TextAnchor.MiddleLeft;
+                btnToggleNormalOn.normal = btnToggleNormalOn.onNormal;
+                btnToggleNormalOn.hover = btnToggleNormalOn.onHover;
+                btnToggleNormalOn.active = btnToggleNormalOn.onActive;
+                btnToggleNormalOn.focused = btnToggleNormalOn.onFocused;
+                btnToggleNormalOn.richText = true;
+                btnToggleNormalOn.margin.bottom = 0;
+            }
+
+            return btnToggleNormalOn;
+        }
+
+        public static GUIStyle GetToggleButtonNormalOff()
+        {
+            if (btnToggleNormalOff == null)
+            {
+                btnToggleNormalOff = new GUIStyle(GUI.skin.GetStyle("Button"));
+                btnToggleNormalOff.alignment = TextAnchor.MiddleLeft;
+                btnToggleNormalOff.richText = true;
+                btnToggleNormalOff.fixedHeight = 20f;
+                btnToggleNormalOff.margin.bottom = 0;
+            }
+
+            return btnToggleNormalOff;
+        }
+
+        public static GUIStyle GetToggleButtonOn()
+        {
+            if (btnToggleOn == null)
+            {
+                btnToggleOn = new GUIStyle(GetToggleButtonOff());
+                btnToggleOn.alignment = TextAnchor.MiddleLeft;
+                btnToggleOn.normal = btnToggleOn.onNormal;
+                btnToggleOn.hover = btnToggleOn.onHover;
+                btnToggleOn.active = btnToggleOn.onActive;
+                btnToggleOn.focused = btnToggleOn.onFocused;
+                btnToggleOn.richText = true;
+                btnToggleOn.margin.bottom = 0;
+            }
+
+            return btnToggleOn;
+        }
+
+        public static GUIStyle GetToggleButtonOff()
+        {
+            if (btnToggleOff == null)
+            {
+                btnToggleOff = new GUIStyle(GUI.skin.GetStyle("LargeButton"));
+                btnToggleOff.alignment = TextAnchor.MiddleLeft;
+                btnToggleOff.richText = true;
+                btnToggleOff.margin.bottom = 0;
+                btnToggleOff.padding = new RectOffset(
+                    30, btnToggleOff.padding.right,
+                    btnToggleOff.padding.top,
+                    btnToggleOff.padding.bottom
+                );
+            }
+
+            return btnToggleOff;
+        }
 
         /*
 		public static GUIStyle GetHighlight()
@@ -250,278 +258,280 @@
 			return CoreGUIStyles.highlight;
 		}*/
 
-		public static GUIStyle GetDropMarker()
-		{
-			if (CoreGUIStyles.dropMark == null)
-			{
+        public static GUIStyle GetDropMarker()
+        {
+            if (dropMark == null)
+            {
                 Texture2D texture = AssetDatabase.LoadAssetAtPath<Texture2D>(DROP_MARK_PATH);
 
-                CoreGUIStyles.dropMark = new GUIStyle();
-                CoreGUIStyles.dropMark.normal.background = texture;
-                CoreGUIStyles.dropMark.border = new RectOffset(7, 7, 0, 0);
-                CoreGUIStyles.dropMark.overflow = new RectOffset(4, -4, 6, -6);
-                CoreGUIStyles.dropMark.active = CoreGUIStyles.dropMark.normal;
-                CoreGUIStyles.dropMark.hover = CoreGUIStyles.dropMark.normal;
-                CoreGUIStyles.dropMark.focused = CoreGUIStyles.dropMark.normal;
-                CoreGUIStyles.dropMark.onNormal = CoreGUIStyles.dropMark.normal;
-                CoreGUIStyles.dropMark.onActive = CoreGUIStyles.dropMark.normal;
-                CoreGUIStyles.dropMark.onFocused = CoreGUIStyles.dropMark.normal;
+                dropMark = new GUIStyle();
+                dropMark.normal.background = texture;
+                dropMark.border = new RectOffset(7, 7, 0, 0);
+                dropMark.overflow = new RectOffset(4, -4, 6, -6);
+                dropMark.active = dropMark.normal;
+                dropMark.hover = dropMark.normal;
+                dropMark.focused = dropMark.normal;
+                dropMark.onNormal = dropMark.normal;
+                dropMark.onActive = dropMark.normal;
+                dropMark.onFocused = dropMark.normal;
             }
 
-			return CoreGUIStyles.dropMark;
-		}
+            return dropMark;
+        }
 
-		public static GUIStyle GetBoxExpanded()
-		{
-			if (CoreGUIStyles.boxExpanded == null)
-			{
-				CoreGUIStyles.boxExpanded = new GUIStyle(EditorStyles.helpBox);
-				CoreGUIStyles.boxExpanded.padding = new RectOffset(1,1,3,3);
-				CoreGUIStyles.boxExpanded.margin = new RectOffset(
-					CoreGUIStyles.boxExpanded.margin.left,
-					CoreGUIStyles.boxExpanded.margin.right,
-					0,0
-				);
-			}
-
-			return CoreGUIStyles.boxExpanded;
-		}
-
-		public static GUIStyle GetBox()
-		{
-			if (CoreGUIStyles.box == null)
-			{
-				CoreGUIStyles.box = new GUIStyle(EditorStyles.helpBox);
-				CoreGUIStyles.box.margin = new RectOffset(0,0,0,0);
-				CoreGUIStyles.box.padding = new RectOffset(5,5,5,5);
+        public static GUIStyle GetBoxExpanded()
+        {
+            if (boxExpanded == null)
+            {
+                boxExpanded = new GUIStyle(EditorStyles.helpBox);
+                boxExpanded.padding = new RectOffset(1, 1, 3, 3);
+                boxExpanded.margin = new RectOffset(
+                    boxExpanded.margin.left,
+                    boxExpanded.margin.right,
+                    0, 0
+                );
             }
 
-			return CoreGUIStyles.box;
-		}
+            return boxExpanded;
+        }
 
-		public static GUIStyle GetHelpBox()
-		{
-			if (CoreGUIStyles.helpBox == null)
-			{
-				CoreGUIStyles.helpBox = new GUIStyle(EditorStyles.helpBox);
-				CoreGUIStyles.helpBox.margin = new RectOffset(0,0,0,0);
-				CoreGUIStyles.helpBox.padding = new RectOffset(0,0,0,0);
-			}
+        public static GUIStyle GetBox()
+        {
+            if (box == null)
+            {
+                box = new GUIStyle(EditorStyles.helpBox);
+                box.margin = new RectOffset(0, 0, 0, 0);
+                box.padding = new RectOffset(5, 5, 5, 5);
+            }
 
-			return CoreGUIStyles.helpBox;
-		}
+            return box;
+        }
 
-		public static GUIStyle GetToolbarButton()
-		{
-			if (CoreGUIStyles.btnToolbar == null)
-			{
-				CoreGUIStyles.btnToolbar = new GUIStyle(EditorStyles.toolbarButton);
-			}
+        public static GUIStyle GetHelpBox()
+        {
+            if (helpBox == null)
+            {
+                helpBox = new GUIStyle(EditorStyles.helpBox);
+                helpBox.margin = new RectOffset(0, 0, 0, 0);
+                helpBox.padding = new RectOffset(0, 0, 0, 0);
+            }
 
-			return btnToolbar;
-		}
+            return helpBox;
+        }
+
+        public static GUIStyle GetToolbarButton()
+        {
+            if (btnToolbar == null)
+            {
+                btnToolbar = new GUIStyle(EditorStyles.toolbarButton);
+            }
+
+            return btnToolbar;
+        }
 
         public static GUIStyle GetSearchBox()
         {
-            if (CoreGUIStyles.searchbox == null)
+            if (searchbox == null)
             {
-                CoreGUIStyles.searchbox = new GUIStyle(GUI.skin.box);
-                CoreGUIStyles.searchbox.margin = new RectOffset(0, 0, 0, 0);
-                CoreGUIStyles.searchbox.padding = new RectOffset(5,5,5,5);
+                searchbox = new GUIStyle(GUI.skin.box);
+                searchbox.margin = new RectOffset(0, 0, 0, 0);
+                searchbox.padding = new RectOffset(5, 5, 5, 5);
             }
 
-            return CoreGUIStyles.searchbox;
+            return searchbox;
         }
 
-		// GRID BUTTONS: --------------------------------------------------------------------------
+        // GRID BUTTONS: --------------------------------------------------------------------------
 
-		public static GUIStyle GetGridButtonLeftOn()
-		{
-			if (CoreGUIStyles.btnGridLeftOn == null) 
-			{
-				CoreGUIStyles.btnGridLeftOn = new GUIStyle(GUI.skin.GetStyle("ButtonLeft"));
-				CoreGUIStyles.btnGridLeftOn.normal = CoreGUIStyles.btnGridLeftOn.onNormal;
-				CoreGUIStyles.btnGridLeftOn.hover = CoreGUIStyles.btnGridLeftOn.onHover;
-				CoreGUIStyles.btnGridLeftOn.active = CoreGUIStyles.btnGridLeftOn.onActive;
-				CoreGUIStyles.btnGridLeftOn.focused = CoreGUIStyles.btnGridLeftOn.onFocused;
-			}
+        public static GUIStyle GetGridButtonLeftOn()
+        {
+            if (btnGridLeftOn == null)
+            {
+                btnGridLeftOn = new GUIStyle(GUI.skin.GetStyle("ButtonLeft"));
+                btnGridLeftOn.normal = btnGridLeftOn.onNormal;
+                btnGridLeftOn.hover = btnGridLeftOn.onHover;
+                btnGridLeftOn.active = btnGridLeftOn.onActive;
+                btnGridLeftOn.focused = btnGridLeftOn.onFocused;
+            }
 
-			return CoreGUIStyles.btnGridLeftOn;
-		}
+            return btnGridLeftOn;
+        }
 
-		public static GUIStyle GetGridButtonLeftOff()
-		{
-			if (CoreGUIStyles.btnGridLeftOff == null) 
-			{
-				CoreGUIStyles.btnGridLeftOff = new GUIStyle(GUI.skin.GetStyle("ButtonLeft"));
-			}
-			return CoreGUIStyles.btnGridLeftOff;
-		}
+        public static GUIStyle GetGridButtonLeftOff()
+        {
+            if (btnGridLeftOff == null)
+            {
+                btnGridLeftOff = new GUIStyle(GUI.skin.GetStyle("ButtonLeft"));
+            }
 
-		public static GUIStyle GetGridButtonMidOn()
-		{
-			if (CoreGUIStyles.btnGridMidOn == null) 
-			{
-				CoreGUIStyles.btnGridMidOn = new GUIStyle(GUI.skin.GetStyle("ButtonMid"));
-				CoreGUIStyles.btnGridMidOn.normal = CoreGUIStyles.btnGridMidOn.onNormal;
-				CoreGUIStyles.btnGridMidOn.hover = CoreGUIStyles.btnGridMidOn.onHover;
-				CoreGUIStyles.btnGridMidOn.active = CoreGUIStyles.btnGridMidOn.onActive;
-				CoreGUIStyles.btnGridMidOn.focused = CoreGUIStyles.btnGridMidOn.onFocused;
-			}
+            return btnGridLeftOff;
+        }
 
-			return CoreGUIStyles.btnGridMidOn;
-		}
+        public static GUIStyle GetGridButtonMidOn()
+        {
+            if (btnGridMidOn == null)
+            {
+                btnGridMidOn = new GUIStyle(GUI.skin.GetStyle("ButtonMid"));
+                btnGridMidOn.normal = btnGridMidOn.onNormal;
+                btnGridMidOn.hover = btnGridMidOn.onHover;
+                btnGridMidOn.active = btnGridMidOn.onActive;
+                btnGridMidOn.focused = btnGridMidOn.onFocused;
+            }
 
-		public static GUIStyle GetGridButtonMidOff()
-		{
-			if (CoreGUIStyles.btnGridMidOff == null) 
-			{
-				CoreGUIStyles.btnGridMidOff = new GUIStyle(GUI.skin.GetStyle("ButtonMid"));
-			}
-			return CoreGUIStyles.btnGridMidOff;
-		}
+            return btnGridMidOn;
+        }
 
-		public static GUIStyle GetGridButtonRightOn()
-		{
-			if (CoreGUIStyles.btnGridRightOn == null) 
-			{
-				CoreGUIStyles.btnGridRightOn = new GUIStyle(GUI.skin.GetStyle("ButtonRight"));
-				CoreGUIStyles.btnGridRightOn.normal = CoreGUIStyles.btnGridRightOn.onNormal;
-				CoreGUIStyles.btnGridRightOn.hover = CoreGUIStyles.btnGridRightOn.onHover;
-				CoreGUIStyles.btnGridRightOn.active = CoreGUIStyles.btnGridRightOn.onActive;
-				CoreGUIStyles.btnGridRightOn.focused = CoreGUIStyles.btnGridRightOn.onFocused;
-			}
+        public static GUIStyle GetGridButtonMidOff()
+        {
+            if (btnGridMidOff == null)
+            {
+                btnGridMidOff = new GUIStyle(GUI.skin.GetStyle("ButtonMid"));
+            }
 
-			return CoreGUIStyles.btnGridRightOn;
-		}
+            return btnGridMidOff;
+        }
 
-		public static GUIStyle GetGridButtonRightOff()
-		{
-			if (CoreGUIStyles.btnGridRightOff == null) 
-			{
-				CoreGUIStyles.btnGridRightOff = new GUIStyle(GUI.skin.GetStyle("ButtonRight"));
-			}
+        public static GUIStyle GetGridButtonRightOn()
+        {
+            if (btnGridRightOn == null)
+            {
+                btnGridRightOn = new GUIStyle(GUI.skin.GetStyle("ButtonRight"));
+                btnGridRightOn.normal = btnGridRightOn.onNormal;
+                btnGridRightOn.hover = btnGridRightOn.onHover;
+                btnGridRightOn.active = btnGridRightOn.onActive;
+                btnGridRightOn.focused = btnGridRightOn.onFocused;
+            }
 
-			return CoreGUIStyles.btnGridRightOff;
-		}
+            return btnGridRightOn;
+        }
 
-		public static GUIStyle GetButtonLeftArrow()
-		{
-			if (CoreGUIStyles.btnLftArrow == null)
-			{
-				CoreGUIStyles.btnLftArrow = new GUIStyle(GUI.skin.GetStyle("AC LeftArrow"));
-			}
+        public static GUIStyle GetGridButtonRightOff()
+        {
+            if (btnGridRightOff == null)
+            {
+                btnGridRightOff = new GUIStyle(GUI.skin.GetStyle("ButtonRight"));
+            }
 
-			return CoreGUIStyles.btnLftArrow;
-		}
+            return btnGridRightOff;
+        }
 
-		public static GUIStyle GetButtonRightArrow()
-		{
-			if (CoreGUIStyles.btnRigArrow == null)
-			{
-				CoreGUIStyles.btnRigArrow = new GUIStyle(GUI.skin.GetStyle("AC RightArrow"));
-			}
+        public static GUIStyle GetButtonLeftArrow()
+        {
+            if (btnLftArrow == null)
+            {
+                btnLftArrow = new GUIStyle(GUI.skin.GetStyle("AC LeftArrow"));
+            }
 
-			return CoreGUIStyles.btnRigArrow;
-		}
+            return btnLftArrow;
+        }
 
-		public static GUIStyle GetItemPreferencesSidebar()
-		{
-			if (CoreGUIStyles.itemPreferencesSidebar == null)
-			{
-				CoreGUIStyles.itemPreferencesSidebar = new GUIStyle(GUI.skin.GetStyle("MenuItem"));
-				CoreGUIStyles.itemPreferencesSidebar.alignment = TextAnchor.MiddleRight;
-				CoreGUIStyles.itemPreferencesSidebar.active.background = null;
-				CoreGUIStyles.itemPreferencesSidebar.fixedHeight = 30f;
-			}
+        public static GUIStyle GetButtonRightArrow()
+        {
+            if (btnRigArrow == null)
+            {
+                btnRigArrow = new GUIStyle(GUI.skin.GetStyle("AC RightArrow"));
+            }
 
-			return CoreGUIStyles.itemPreferencesSidebar;
-		}
+            return btnRigArrow;
+        }
+
+        public static GUIStyle GetItemPreferencesSidebar()
+        {
+            if (itemPreferencesSidebar == null)
+            {
+                itemPreferencesSidebar = new GUIStyle(GUI.skin.GetStyle("MenuItem"));
+                itemPreferencesSidebar.alignment = TextAnchor.MiddleRight;
+                itemPreferencesSidebar.active.background = null;
+                itemPreferencesSidebar.fixedHeight = 30f;
+            }
+
+            return itemPreferencesSidebar;
+        }
 
         public static GUIStyle GetLabelTag()
         {
-            if (CoreGUIStyles.labelTag == null)
+            if (labelTag == null)
             {
-                CoreGUIStyles.labelTag = new GUIStyle();
+                labelTag = new GUIStyle();
                 Texture2D bg = AssetDatabase.LoadAssetAtPath<Texture2D>(TAG_BG_PATH);
 
-                CoreGUIStyles.labelTag.normal.background = bg;
-                CoreGUIStyles.labelTag.padding = new RectOffset(0, 0, 0, 0);
-                CoreGUIStyles.labelTag.margin = new RectOffset(0, 0, 0, 0);
-                CoreGUIStyles.labelTag.fontSize = 10;
-                CoreGUIStyles.labelTag.fontStyle = FontStyle.Normal;
-                CoreGUIStyles.labelTag.alignment = TextAnchor.MiddleCenter;
-                CoreGUIStyles.labelTag.normal.textColor = Color.white;
+                labelTag.normal.background = bg;
+                labelTag.padding = new RectOffset(0, 0, 0, 0);
+                labelTag.margin = new RectOffset(0, 0, 0, 0);
+                labelTag.fontSize = 10;
+                labelTag.fontStyle = FontStyle.Normal;
+                labelTag.alignment = TextAnchor.MiddleCenter;
+                labelTag.normal.textColor = Color.white;
             }
 
-            return CoreGUIStyles.labelTag;
+            return labelTag;
         }
 
         public static GUIStyle GetTextarea()
         {
-            if (CoreGUIStyles.textarea == null)
+            if (textarea == null)
             {
-                CoreGUIStyles.textarea = new GUIStyle(EditorStyles.textArea);
-                CoreGUIStyles.textarea.wordWrap = true;
+                textarea = new GUIStyle(EditorStyles.textArea);
+                textarea.wordWrap = true;
             }
 
-            return CoreGUIStyles.labelTag;
+            return labelTag;
         }
 
         public static GUIStyle GetDropZoneNormal()
         {
-            if (CoreGUIStyles.dropZoneNormal == null)
+            if (dropZoneNormal == null)
             {
-                CoreGUIStyles.dropZoneNormal = new GUIStyle(EditorStyles.helpBox);
+                dropZoneNormal = new GUIStyle(EditorStyles.helpBox);
                 Texture2D bgNormal = AssetDatabase.LoadAssetAtPath<Texture2D>(DROPZONE_NORMAL_PATH);
 
-                CoreGUIStyles.dropZoneNormal.normal.background = bgNormal;
-                CoreGUIStyles.dropZoneNormal.focused.background = bgNormal;
-                CoreGUIStyles.dropZoneNormal.active.background = bgNormal;
-                CoreGUIStyles.dropZoneNormal.hover.background = bgNormal;
+                dropZoneNormal.normal.background = bgNormal;
+                dropZoneNormal.focused.background = bgNormal;
+                dropZoneNormal.active.background = bgNormal;
+                dropZoneNormal.hover.background = bgNormal;
 
-                CoreGUIStyles.dropZoneNormal.border = new RectOffset(4,4,4,4);
-                CoreGUIStyles.dropZoneNormal.padding = new RectOffset(0, 0, 0, 0);
-                CoreGUIStyles.dropZoneNormal.margin  = new RectOffset(0, 0, 0, 0);
-                CoreGUIStyles.dropZoneNormal.alignment = TextAnchor.MiddleCenter;
+                dropZoneNormal.border = new RectOffset(4, 4, 4, 4);
+                dropZoneNormal.padding = new RectOffset(0, 0, 0, 0);
+                dropZoneNormal.margin = new RectOffset(0, 0, 0, 0);
+                dropZoneNormal.alignment = TextAnchor.MiddleCenter;
             }
 
-            return CoreGUIStyles.dropZoneNormal;
+            return dropZoneNormal;
         }
 
         public static GUIStyle GetDropZoneActive()
         {
-            if (CoreGUIStyles.dropZoneActive == null)
+            if (dropZoneActive == null)
             {
-                CoreGUIStyles.dropZoneActive = new GUIStyle(CoreGUIStyles.GetDropZoneNormal());
+                dropZoneActive = new GUIStyle(GetDropZoneNormal());
                 Texture2D bgActive = AssetDatabase.LoadAssetAtPath<Texture2D>(DROPZONE_ACTIVE_PATH);
 
-                CoreGUIStyles.dropZoneActive.normal.background = bgActive;
-                CoreGUIStyles.dropZoneActive.focused.background = bgActive;
-                CoreGUIStyles.dropZoneActive.active.background = bgActive;
-                CoreGUIStyles.dropZoneActive.hover.background = bgActive;
+                dropZoneActive.normal.background = bgActive;
+                dropZoneActive.focused.background = bgActive;
+                dropZoneActive.active.background = bgActive;
+                dropZoneActive.hover.background = bgActive;
 
-                CoreGUIStyles.dropZoneActive.normal.textColor = Color.black;
-                CoreGUIStyles.dropZoneActive.focused.textColor = Color.black;
-                CoreGUIStyles.dropZoneActive.active.textColor = Color.black;
-                CoreGUIStyles.dropZoneActive.hover.textColor = Color.black;
+                dropZoneActive.normal.textColor = Color.black;
+                dropZoneActive.focused.textColor = Color.black;
+                dropZoneActive.active.textColor = Color.black;
+                dropZoneActive.hover.textColor = Color.black;
             }
 
-            return CoreGUIStyles.dropZoneActive;
+            return dropZoneActive;
         }
 
         public static GUIStyle GlobalIDText()
         {
-            if (CoreGUIStyles.globalIDText == null)
+            if (globalIDText == null)
             {
-                CoreGUIStyles.globalIDText = new GUIStyle(EditorStyles.textField);
-                CoreGUIStyles.globalIDText.margin = CoreGUIStyles.GetButtonMid().margin;
-                CoreGUIStyles.globalIDText.padding = CoreGUIStyles.GetButtonMid().padding;
-                CoreGUIStyles.globalIDText.contentOffset = CoreGUIStyles.GetButtonMid().contentOffset;
-                CoreGUIStyles.globalIDText.alignment = TextAnchor.MiddleCenter;
+                globalIDText = new GUIStyle(EditorStyles.textField);
+                globalIDText.margin = GetButtonMid().margin;
+                globalIDText.padding = GetButtonMid().padding;
+                globalIDText.contentOffset = GetButtonMid().contentOffset;
+                globalIDText.alignment = TextAnchor.MiddleCenter;
             }
 
-            return CoreGUIStyles.globalIDText;
+            return globalIDText;
         }
     }
 }

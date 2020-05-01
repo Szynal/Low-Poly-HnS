@@ -1,48 +1,45 @@
-﻿namespace LowPolyHnS.Core
+﻿using UnityEngine;
+
+namespace LowPolyHnS.Core
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-	using LowPolyHnS.Core.Hooks;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[AddComponentMenu("")]
-	public class ActionTransform : IAction 
-	{
-		public enum RELATIVE
-		{
-			Local,
-			Global
-		}
+    [AddComponentMenu("")]
+    public class ActionTransform : IAction
+    {
+        public enum RELATIVE
+        {
+            Local,
+            Global
+        }
 
-		public enum PARENT
-		{
-			DontChange,
-			ChangeParent,
-			ClearParent
-		}
+        public enum PARENT
+        {
+            DontChange,
+            ChangeParent,
+            ClearParent
+        }
 
         // PROPERTIES: ----------------------------------------------------------------------------
 
         public TargetGameObject target = new TargetGameObject(TargetGameObject.Target.Player);
 
-		public PARENT changeParent = PARENT.DontChange;
+        public PARENT changeParent = PARENT.DontChange;
         public TargetGameObject newParent = new TargetGameObject(TargetGameObject.Target.GameObject);
 
-		public bool changePosition = false;
-		public RELATIVE positionRelativity = RELATIVE.Global;
+        public bool changePosition = false;
+        public RELATIVE positionRelativity = RELATIVE.Global;
         public TargetPosition position = new TargetPosition();
 
-		public bool changeRotation = false;
-		public RELATIVE rotationRelativity = RELATIVE.Global;
-		public Vector3 rotation = Vector3.zero;
+        public bool changeRotation = false;
+        public RELATIVE rotationRelativity = RELATIVE.Global;
+        public Vector3 rotation = Vector3.zero;
 
-		public bool changeScale = false;
-		public Vector3 scale = Vector3.one;
+        public bool changeScale = false;
+        public Vector3 scale = Vector3.one;
 
         // EXECUTABLE: ----------------------------------------------------------------------------
 
@@ -51,10 +48,10 @@
             Transform targetTrans = this.target.GetTransform(target);
             if (targetTrans != null)
             {
-                switch (this.changeParent)
+                switch (changeParent)
                 {
                     case PARENT.ChangeParent:
-                        Transform newParentTransform = this.newParent.GetTransform(target);
+                        Transform newParentTransform = newParent.GetTransform(target);
                         if (newParentTransform != null) targetTrans.SetParent(newParentTransform);
                         break;
 
@@ -63,139 +60,147 @@
                         break;
                 }
 
-                if (this.changePosition)
+                if (changePosition)
                 {
-                    switch (this.positionRelativity)
+                    switch (positionRelativity)
                     {
-                        case RELATIVE.Local: targetTrans.localPosition = this.position.GetPosition(target); break;
-                        case RELATIVE.Global: targetTrans.position = this.position.GetPosition(target); break;
+                        case RELATIVE.Local:
+                            targetTrans.localPosition = position.GetPosition(target);
+                            break;
+                        case RELATIVE.Global:
+                            targetTrans.position = position.GetPosition(target);
+                            break;
                     }
                 }
 
-                if (this.changeRotation)
+                if (changeRotation)
                 {
-                    switch (this.rotationRelativity)
+                    switch (rotationRelativity)
                     {
-                        case RELATIVE.Local: targetTrans.localRotation = Quaternion.Euler(this.rotation); break;
-                        case RELATIVE.Global: targetTrans.rotation = Quaternion.Euler(this.rotation); break;
+                        case RELATIVE.Local:
+                            targetTrans.localRotation = Quaternion.Euler(rotation);
+                            break;
+                        case RELATIVE.Global:
+                            targetTrans.rotation = Quaternion.Euler(rotation);
+                            break;
                     }
                 }
 
-                if (this.changeScale)
+                if (changeScale)
                 {
-                    targetTrans.localScale = this.scale;
+                    targetTrans.localScale = scale;
                 }
             }
 
             return true;
         }
 
-		// +--------------------------------------------------------------------------------------+
-		// | EDITOR                                                                               |
-		// +--------------------------------------------------------------------------------------+
+        // +--------------------------------------------------------------------------------------+
+        // | EDITOR                                                                               |
+        // +--------------------------------------------------------------------------------------+
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 
-		public static new string NAME = "Object/Transform";
-		private const string NODE_TITLE = "Change {0} transform properties";
+        public static new string NAME = "Object/Transform";
+        private const string NODE_TITLE = "Change {0} transform properties";
 
-		// PROPERTIES: ----------------------------------------------------------------------------
+        // PROPERTIES: ----------------------------------------------------------------------------
 
-		private SerializedProperty spTarget;
+        private SerializedProperty spTarget;
 
-		private SerializedProperty spChangeParent;
-		private SerializedProperty spNewParent;
+        private SerializedProperty spChangeParent;
+        private SerializedProperty spNewParent;
 
-		private SerializedProperty spChangePosition;
-		private SerializedProperty spPositionRelativity;
-		private SerializedProperty spPosition;
+        private SerializedProperty spChangePosition;
+        private SerializedProperty spPositionRelativity;
+        private SerializedProperty spPosition;
 
-		private SerializedProperty spChangeRotation;
-		private SerializedProperty spRotationRelativity;
-		private SerializedProperty spRotation;
+        private SerializedProperty spChangeRotation;
+        private SerializedProperty spRotationRelativity;
+        private SerializedProperty spRotation;
 
-		private SerializedProperty spChangeScale;
-		private SerializedProperty spScale;
+        private SerializedProperty spChangeScale;
+        private SerializedProperty spScale;
 
-		// INSPECTOR METHODS: ---------------------------------------------------------------------
+        // INSPECTOR METHODS: ---------------------------------------------------------------------
 
-		public override string GetNodeTitle()
-		{
-			return string.Format(NODE_TITLE, this.target.ToString());
-		}
+        public override string GetNodeTitle()
+        {
+            return string.Format(NODE_TITLE, target);
+        }
 
-		protected override void OnEnableEditorChild ()
-		{
-			this.spTarget = serializedObject.FindProperty("target");
+        protected override void OnEnableEditorChild()
+        {
+            spTarget = serializedObject.FindProperty("target");
 
-			this.spChangeParent = serializedObject.FindProperty("changeParent");
-			this.spNewParent = serializedObject.FindProperty("newParent");
+            spChangeParent = serializedObject.FindProperty("changeParent");
+            spNewParent = serializedObject.FindProperty("newParent");
 
-			this.spChangePosition = serializedObject.FindProperty("changePosition");
-			this.spPositionRelativity = serializedObject.FindProperty("positionRelativity");
-			this.spPosition = serializedObject.FindProperty("position");
+            spChangePosition = serializedObject.FindProperty("changePosition");
+            spPositionRelativity = serializedObject.FindProperty("positionRelativity");
+            spPosition = serializedObject.FindProperty("position");
 
-			this.spChangeRotation = serializedObject.FindProperty("changeRotation");
-			this.spRotationRelativity = serializedObject.FindProperty("rotationRelativity");
-			this.spRotation = serializedObject.FindProperty("rotation");
+            spChangeRotation = serializedObject.FindProperty("changeRotation");
+            spRotationRelativity = serializedObject.FindProperty("rotationRelativity");
+            spRotation = serializedObject.FindProperty("rotation");
 
-			this.spChangeScale = serializedObject.FindProperty("changeScale");
-			this.spScale = serializedObject.FindProperty("scale");
-		}
+            spChangeScale = serializedObject.FindProperty("changeScale");
+            spScale = serializedObject.FindProperty("scale");
+        }
 
-		protected override void OnDisableEditorChild ()
-		{
-            this.spTarget = null;
-			this.spChangeParent = null;
-			this.spNewParent = null;
-			this.spChangePosition = null;
-			this.spPositionRelativity = null;
-			this.spPosition = null;
-			this.spChangeRotation = null;
-			this.spRotationRelativity = null;
-			this.spRotation = null;
-			this.spChangeScale = null;
-			this.spScale = null;
-		}
+        protected override void OnDisableEditorChild()
+        {
+            spTarget = null;
+            spChangeParent = null;
+            spNewParent = null;
+            spChangePosition = null;
+            spPositionRelativity = null;
+            spPosition = null;
+            spChangeRotation = null;
+            spRotationRelativity = null;
+            spRotation = null;
+            spChangeScale = null;
+            spScale = null;
+        }
 
-		public override void OnInspectorGUI()
-		{
-			this.serializedObject.Update();
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
 
-			EditorGUILayout.PropertyField(this.spTarget);
+            EditorGUILayout.PropertyField(spTarget);
 
-			EditorGUILayout.PropertyField(this.spChangeParent);
-			if (this.spChangeParent.intValue == (int)PARENT.ChangeParent)
-			{
-				EditorGUILayout.PropertyField(this.spNewParent);
+            EditorGUILayout.PropertyField(spChangeParent);
+            if (spChangeParent.intValue == (int) PARENT.ChangeParent)
+            {
+                EditorGUILayout.PropertyField(spNewParent);
                 EditorGUILayout.Space();
-			}
+            }
 
-			EditorGUILayout.PropertyField(this.spChangePosition);
-			if (this.spChangePosition.boolValue)
-			{
-				EditorGUILayout.PropertyField(this.spPositionRelativity);
-				EditorGUILayout.PropertyField(this.spPosition);
+            EditorGUILayout.PropertyField(spChangePosition);
+            if (spChangePosition.boolValue)
+            {
+                EditorGUILayout.PropertyField(spPositionRelativity);
+                EditorGUILayout.PropertyField(spPosition);
                 EditorGUILayout.Space();
-			}
+            }
 
-			EditorGUILayout.PropertyField(this.spChangeRotation);
-			if (this.spChangeRotation.boolValue)
-			{
-				EditorGUILayout.PropertyField(this.spRotationRelativity);
-				EditorGUILayout.PropertyField(this.spRotation);
+            EditorGUILayout.PropertyField(spChangeRotation);
+            if (spChangeRotation.boolValue)
+            {
+                EditorGUILayout.PropertyField(spRotationRelativity);
+                EditorGUILayout.PropertyField(spRotation);
                 EditorGUILayout.Space();
-			}
+            }
 
-			EditorGUILayout.PropertyField(this.spChangeScale);
-			if (this.spChangeScale.boolValue)
-			{
-				EditorGUILayout.PropertyField(this.spScale);
-			}
+            EditorGUILayout.PropertyField(spChangeScale);
+            if (spChangeScale.boolValue)
+            {
+                EditorGUILayout.PropertyField(spScale);
+            }
 
-			this.serializedObject.ApplyModifiedProperties();
-		}
+            serializedObject.ApplyModifiedProperties();
+        }
 
-		#endif
-	}
+#endif
+    }
 }

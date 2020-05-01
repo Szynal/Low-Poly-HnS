@@ -1,17 +1,11 @@
-﻿namespace LowPolyHnS.Core
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEngine.UI;
-    using UnityEngine.Events;
-    using LowPolyHnS.Core;
-    using LowPolyHnS.Core.Hooks;
-    using LowPolyHnS.Variables;
+﻿using LowPolyHnS.Variables;
+using UnityEngine;
 
-    #if UNITY_EDITOR
-    using UnityEditor;
-    #endif
+namespace LowPolyHnS.Core
+{
+#if UNITY_EDITOR
+
+#endif
 
     [AddComponentMenu("")]
     public class ActionVariablesAssignSprite : IActionVariablesAssign
@@ -25,14 +19,14 @@
 
         public override void ExecuteAssignement(GameObject target)
         {
-            this.variable.Set(this.value, target);
+            variable.Set(value, target);
         }
 
         // +--------------------------------------------------------------------------------------+
         // | EDITOR                                                                               |
         // +--------------------------------------------------------------------------------------+
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
 
         public static new string NAME = "Variables/Variable Sprite";
 
@@ -40,7 +34,7 @@
 
         public override string GetNodeTitle()
         {
-            return string.Format(NODE_TITLE, "Sprite", this.variable);
+            return string.Format(NODE_TITLE, "Sprite", variable);
         }
 
         public override bool PaintInspectorTarget()
@@ -48,6 +42,6 @@
             return false;
         }
 
-        #endif
+#endif
     }
 }

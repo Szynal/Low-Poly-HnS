@@ -1,19 +1,16 @@
-﻿namespace LowPolyHnS.Core
+﻿using LowPolyHnS.Variables;
+using UnityEngine;
+
+namespace LowPolyHnS.Core
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-	using LowPolyHnS.Core;
-    using LowPolyHnS.Variables;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[AddComponentMenu("")]
-	public class ActionEnableComponent : IAction 
-	{
+    [AddComponentMenu("")]
+    public class ActionEnableComponent : IAction
+    {
         public TargetGameObject target = new TargetGameObject(TargetGameObject.Target.GameObject);
         [Space] public string componentName = "";
 
@@ -23,14 +20,14 @@
 
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
-            if (string.IsNullOrEmpty(this.componentName)) return true;
+            if (string.IsNullOrEmpty(componentName)) return true;
 
             GameObject targetGo = this.target.GetGameObject(target);
-            Component component = targetGo.GetComponent(this.componentName);
+            Component component = targetGo.GetComponent(componentName);
 
             if (component != null)
             {
-                bool value = this.enable.GetValue(target);
+                bool value = enable.GetValue(target);
                 if (component == null) return true;
 
                 if (component is Renderer)
@@ -62,63 +59,63 @@
             return true;
         }
 
-		// +--------------------------------------------------------------------------------------+
-		// | EDITOR                                                                               |
-		// +--------------------------------------------------------------------------------------+
+        // +--------------------------------------------------------------------------------------+
+        // | EDITOR                                                                               |
+        // +--------------------------------------------------------------------------------------+
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 
-		public static new string NAME = "Object/Enable Component";
-		private const string NODE_TITLE = "{0} component {1}";
+        public static new string NAME = "Object/Enable Component";
+        private const string NODE_TITLE = "{0} component {1}";
         private const string SELECT_TEXT = "Select Target Component";
 
-		// PROPERTIES: ----------------------------------------------------------------------------
+        // PROPERTIES: ----------------------------------------------------------------------------
 
-		private SerializedProperty spTarget;
+        private SerializedProperty spTarget;
         private SerializedProperty spComponentName;
-		private SerializedProperty spEnable;
+        private SerializedProperty spEnable;
 
-		// INSPECTOR METHODS: ---------------------------------------------------------------------
+        // INSPECTOR METHODS: ---------------------------------------------------------------------
 
-		public override string GetNodeTitle()
-		{
-			return string.Format(
-				NODE_TITLE, 
-                this.enable,
-                this.componentName
+        public override string GetNodeTitle()
+        {
+            return string.Format(
+                NODE_TITLE,
+                enable,
+                componentName
             );
-		}
+        }
 
-		protected override void OnEnableEditorChild ()
-		{
-			this.spTarget = this.serializedObject.FindProperty("target");
-            this.spComponentName = this.serializedObject.FindProperty("componentName");
-            this.spEnable = this.serializedObject.FindProperty("enable");
-		}
+        protected override void OnEnableEditorChild()
+        {
+            spTarget = serializedObject.FindProperty("target");
+            spComponentName = serializedObject.FindProperty("componentName");
+            spEnable = serializedObject.FindProperty("enable");
+        }
 
-		protected override void OnDisableEditorChild ()
-		{
-			this.spTarget = null;
-            this.spComponentName = null;
-            this.spEnable = null;
-		}
+        protected override void OnDisableEditorChild()
+        {
+            spTarget = null;
+            spComponentName = null;
+            spEnable = null;
+        }
 
-		public override void OnInspectorGUI()
-		{
-			this.serializedObject.Update();
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
 
-			EditorGUILayout.PropertyField(this.spTarget);
+            EditorGUILayout.PropertyField(spTarget);
 
-            EditorGUILayout.PropertyField(this.spComponentName);
-            this.spComponentName.stringValue = this.spComponentName.stringValue.Replace(
+            EditorGUILayout.PropertyField(spComponentName);
+            spComponentName.stringValue = spComponentName.stringValue.Replace(
                 " ", string.Empty
             );
 
-            EditorGUILayout.PropertyField(this.spEnable);
+            EditorGUILayout.PropertyField(spEnable);
 
-			this.serializedObject.ApplyModifiedProperties();
-		}
+            serializedObject.ApplyModifiedProperties();
+        }
 
-		#endif
-	}
+#endif
+    }
 }

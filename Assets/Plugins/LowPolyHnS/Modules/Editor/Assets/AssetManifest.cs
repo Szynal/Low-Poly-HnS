@@ -1,13 +1,11 @@
-﻿namespace LowPolyHnS.ModuleManager
-{
-    using System;
-    using System.IO;
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEditor;
-    using LowPolyHnS.Core;
+﻿using System;
+using System.IO;
+using LowPolyHnS.Core;
+using UnityEditor;
+using UnityEngine;
 
+namespace LowPolyHnS.ModuleManager
+{
     [Serializable]
     public class AssetManifest : ScriptableObject
     {
@@ -29,7 +27,7 @@
 
         public static AssetManifest GetInstance()
         {
-            if (AssetManifest.Instance != null) return AssetManifest.Instance;
+            if (Instance != null) return Instance;
 
             AssetManifest manifest;
             string absPath = Path.Combine(Application.dataPath, Path.Combine(ASSET_PATH, ASSET_NAME));
@@ -44,19 +42,19 @@
                 string dirPath = string.Format(RELATIVE_PATH, ASSET_PATH, "");
                 LowPolyHnSUtilities.CreateFolderStructure(dirPath);
 
-                manifest = ScriptableObject.CreateInstance<AssetManifest>();
+                manifest = CreateInstance<AssetManifest>();
                 AssetDatabase.CreateAsset(manifest, relPath);
             }
 
-            AssetManifest.Instance = manifest;
-            return AssetManifest.Instance;
+            Instance = manifest;
+            return Instance;
         }
 
         // PUBLIC METHODS: ------------------------------------------------------------------------
 
         public ModuleManifest[] GetManifests()
         {
-            return this.manifests;
+            return manifests;
         }
 
         public void UpdateManifest(Module module)
@@ -64,7 +62,7 @@
             SerializedObject serializedObject = new SerializedObject(this);
             SerializedProperty propManifests = serializedObject.FindProperty(PROP_MANIFESTS);
 
-            int manifestIndex = this.GetManifestIndex(module);
+            int manifestIndex = GetManifestIndex(module);
             if (manifestIndex >= 0)
             {
                 propManifests = propManifests.GetArrayElementAtIndex(manifestIndex);
@@ -87,7 +85,7 @@
             SerializedObject serializedObject = new SerializedObject(this);
             SerializedProperty propManifests = serializedObject.FindProperty(PROP_MANIFESTS);
 
-            int manifestIndex = this.GetManifestIndex(module);
+            int manifestIndex = GetManifestIndex(module);
             if (manifestIndex >= 0)
             {
                 propManifests.DeleteArrayElementAtIndex(manifestIndex);
@@ -101,9 +99,9 @@
 
         private int GetManifestIndex(Module module)
         {
-            for (int i = 0; i < this.manifests.Length; ++i)
+            for (int i = 0; i < manifests.Length; ++i)
             {
-                if (this.manifests[i].module.moduleID == module.moduleID) return i;
+                if (manifests[i].module.moduleID == module.moduleID) return i;
             }
 
             return -1;

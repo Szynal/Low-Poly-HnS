@@ -1,11 +1,10 @@
-﻿namespace LowPolyHnS.Core
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
+namespace LowPolyHnS.Core
+{
     [AddComponentMenu("")]
-    public class TimeManager : Singleton<TimeManager> 
+    public class TimeManager : Singleton<TimeManager>
     {
         private const int LAYER_DEFAULT = 0;
         private const float PHYSICS_TIMESTEP = 0.02f;
@@ -24,56 +23,56 @@
                 this.from = from;
 
                 this.duration = duration;
-                this.startTime = Time.time;
+                startTime = Time.time;
             }
 
             public float Get()
             {
-                if (Mathf.Approximately(this.duration, 0f)) return this.to;
+                if (Mathf.Approximately(duration, 0f)) return to;
 
-                float t = (Time.time - this.startTime) / this.duration;
-                return Mathf.SmoothStep(this.from, this.to, t);
+                float t = (Time.time - startTime) / duration;
+                return Mathf.SmoothStep(from, to, t);
             }
         }
 
         // PROPERTIES: ----------------------------------------------------------------------------
 
         private Dictionary<int, TimeData> timeScales = new Dictionary<int, TimeData>();
-        private float iterateTime = 0.0f;
+        private float iterateTime;
 
         // PUBLIC METHODS: ------------------------------------------------------------------------
 
         public void SetTimeScale(float timeScale, int layer = LAYER_DEFAULT)
         {
-            this.timeScales[layer] = new TimeData(0f, timeScale);
-            this.RecalculateTimeScale();
+            timeScales[layer] = new TimeData(0f, timeScale);
+            RecalculateTimeScale();
         }
 
         public void SetSmoothTimeScale(float timeScale, float duration, int layer = LAYER_DEFAULT)
         {
-            this.iterateTime = Mathf.Max(this.iterateTime, Time.time + duration);
+            iterateTime = Mathf.Max(iterateTime, Time.time + duration);
 
             float from = 1.0f;
-            if (this.timeScales.ContainsKey(layer))
+            if (timeScales.ContainsKey(layer))
             {
-                from = this.timeScales[layer].Get();
+                from = timeScales[layer].Get();
             }
 
-            this.timeScales[layer] = new TimeData(duration, timeScale, from);         
+            timeScales[layer] = new TimeData(duration, timeScale, from);
         }
 
         // UPDATE METHOD: -------------------------------------------------------------------------
 
         private void Update()
         {
-            if (Time.time > this.iterateTime) return;
-            this.RecalculateTimeScale();
+            if (Time.time > iterateTime) return;
+            RecalculateTimeScale();
         }
 
         private void RecalculateTimeScale()
         {
-            float scale = this.timeScales.Count > 0 ? 99f : 1.0f;
-            foreach (KeyValuePair<int, TimeData> item in this.timeScales)
+            float scale = timeScales.Count > 0 ? 99f : 1.0f;
+            foreach (KeyValuePair<int, TimeData> item in timeScales)
             {
                 scale = Mathf.Min(scale, item.Value.Get());
             }

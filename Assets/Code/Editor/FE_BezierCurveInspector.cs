@@ -14,8 +14,11 @@ public class FE_BezierCurveInspector : Editor
 
     public override void OnInspectorGUI()
     {
-        pos1 = EditorGUILayout.ObjectField("Start position", pos1, typeof(Transform), allowSceneObjects: true) as Transform;
-        pos2 = EditorGUILayout.ObjectField("End position", pos2, typeof(Transform), allowSceneObjects: true) as Transform;
+        pos1 =
+            EditorGUILayout.ObjectField("Start position", pos1, typeof(Transform),
+                allowSceneObjects: true) as Transform;
+        pos2 =
+            EditorGUILayout.ObjectField("End position", pos2, typeof(Transform), allowSceneObjects: true) as Transform;
 
         if (pos1 != null || pos2 != null)
         {
@@ -27,6 +30,7 @@ public class FE_BezierCurveInspector : Editor
                 {
                     curve.SetPoint(0, pos1.position);
                 }
+
                 if (pos2 != null)
                 {
                     curve.SetPoint(2, pos2.position);
@@ -43,7 +47,7 @@ public class FE_BezierCurveInspector : Editor
     {
         curve = target as FE_BezierCurve;
         handleTransform = curve.transform;
-        if(Tools.pivotRotation == PivotRotation.Local)
+        if (Tools.pivotRotation == PivotRotation.Local)
             handleRotation = handleTransform.rotation;
         else
             handleRotation = Quaternion.identity;
@@ -53,17 +57,17 @@ public class FE_BezierCurveInspector : Editor
         Vector3 _point2 = showPoint(2);
 
         Handles.color = Color.gray;
-		Handles.DrawLine(_point0, _point1);
-		Handles.DrawLine(_point1, _point2);
+        Handles.DrawLine(_point0, _point1);
+        Handles.DrawLine(_point1, _point2);
 
-		Handles.color = Color.white;
-		Vector3 lineStart = curve.GetPoint(0f);
-		for (int i = 1; i <= lineSteps; i++) 
+        Handles.color = Color.white;
+        Vector3 lineStart = curve.GetPoint(0f);
+        for (int i = 1; i <= lineSteps; i++)
         {
-			Vector3 lineEnd = curve.GetPoint(i / (float)lineSteps);
-			Handles.DrawLine(lineStart, lineEnd);
-			lineStart = lineEnd;
-		}
+            Vector3 lineEnd = curve.GetPoint(i / (float) lineSteps);
+            Handles.DrawLine(lineStart, lineEnd);
+            lineStart = lineEnd;
+        }
     }
 
     private Vector3 showPoint(int _index)
@@ -72,7 +76,7 @@ public class FE_BezierCurveInspector : Editor
         EditorGUI.BeginChangeCheck();
         _ret = Handles.DoPositionHandle(_ret, handleRotation);
 
-        if(EditorGUI.EndChangeCheck())
+        if (EditorGUI.EndChangeCheck())
         {
             Undo.RecordObject(curve, "Move point");
             EditorUtility.SetDirty(curve);

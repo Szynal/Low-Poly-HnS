@@ -1,19 +1,16 @@
-﻿namespace LowPolyHnS.Core
+﻿using LowPolyHnS.Variables;
+using UnityEngine;
+
+namespace LowPolyHnS.Core
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-	using LowPolyHnS.Core;
-    using LowPolyHnS.Variables;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[AddComponentMenu("")]
-	public class ActionCancelActions : IAction
-	{
+    [AddComponentMenu("")]
+    public class ActionCancelActions : IAction
+    {
         public enum Source
         {
             Actions,
@@ -22,6 +19,7 @@
 
         public Source source = Source.Actions;
         public Actions actions;
+
         [VariableFilter(Variable.DataType.GameObject)]
         public VariableProperty variable = new VariableProperty(Variable.VarType.LocalVariable);
 
@@ -30,21 +28,21 @@
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
             Actions targetActions = null;
-            switch (this.source)
+            switch (source)
             {
                 case Source.Actions:
                     targetActions = this.actions;
                     break;
 
                 case Source.Variable:
-                    GameObject value = this.variable.Get(target) as GameObject;
+                    GameObject value = variable.Get(target) as GameObject;
                     if (value != null) targetActions = value.GetComponentInChildren<Actions>();
                     break;
             }
 
             if (targetActions != null && targetActions.actionsList != null)
             {
-                if (this.stopImmidiately) targetActions.Stop();
+                if (stopImmidiately) targetActions.Stop();
                 else targetActions.actionsList.Cancel();
             }
 
@@ -55,7 +53,7 @@
         // | EDITOR                                                                               |
         // +--------------------------------------------------------------------------------------+
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
 
         public static new string NAME = "General/Cancel Actions";
         private const string NODE_TITLE = "Cancel action {0} {1}";
@@ -71,65 +69,64 @@
         // INSPECTOR METHODS: ---------------------------------------------------------------------
 
         public override string GetNodeTitle()
-		{
+        {
             string actionsName = string.Empty;
-            switch (this.source)
+            switch (source)
             {
                 case Source.Actions:
-                    actionsName = (this.actions == null
+                    actionsName = actions == null
                         ? "(none)"
-                        : this.actions.gameObject.name
-                    );
+                        : actions.gameObject.name;
                     break;
 
                 case Source.Variable:
-                    actionsName = this.variable.ToString();
+                    actionsName = variable.ToString();
                     break;
             }
 
             return string.Format(
                 NODE_TITLE,
                 actionsName,
-                this.stopImmidiately ? "(immidiately)" : string.Empty
+                stopImmidiately ? "(immidiately)" : string.Empty
             );
-		}
-
-		protected override void OnEnableEditorChild ()
-		{
-            this.spSource = serializedObject.FindProperty("source");
-            this.spActions = serializedObject.FindProperty("actions");
-            this.spVariable = serializedObject.FindProperty("variable");
-            this.spStopImmidiately = serializedObject.FindProperty("stopImmidiately");
         }
 
-		protected override void OnDisableEditorChild ()
-		{
-            this.spSource = null;
-            this.spActions = null;
-            this.spVariable = null;
-            this.spStopImmidiately = null;
+        protected override void OnEnableEditorChild()
+        {
+            spSource = serializedObject.FindProperty("source");
+            spActions = serializedObject.FindProperty("actions");
+            spVariable = serializedObject.FindProperty("variable");
+            spStopImmidiately = serializedObject.FindProperty("stopImmidiately");
         }
 
-		public override void OnInspectorGUI()
-		{
-			this.serializedObject.Update();
+        protected override void OnDisableEditorChild()
+        {
+            spSource = null;
+            spActions = null;
+            spVariable = null;
+            spStopImmidiately = null;
+        }
 
-            EditorGUILayout.PropertyField(this.spSource);
-            switch (this.spSource.enumValueIndex)
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
+
+            EditorGUILayout.PropertyField(spSource);
+            switch (spSource.enumValueIndex)
             {
-                case (int)Source.Actions:
-                    EditorGUILayout.PropertyField(this.spActions);
+                case (int) Source.Actions:
+                    EditorGUILayout.PropertyField(spActions);
                     break;
 
-                case (int)Source.Variable:
-                    EditorGUILayout.PropertyField(this.spVariable);
+                case (int) Source.Variable:
+                    EditorGUILayout.PropertyField(spVariable);
                     break;
             }
-            
-            EditorGUILayout.PropertyField(this.spStopImmidiately);
-            this.serializedObject.ApplyModifiedProperties();
-		}
 
-		#endif
-	}
+            EditorGUILayout.PropertyField(spStopImmidiately);
+            serializedObject.ApplyModifiedProperties();
+        }
+
+#endif
+    }
 }

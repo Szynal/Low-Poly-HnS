@@ -1,25 +1,22 @@
-﻿namespace LowPolyHnS.Core
-{
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
+﻿using UnityEngine;
 
-	[AddComponentMenu("")]
-	public class ActionNearestTag : IActionNearest
-	{
-        [Space][TagSelector] public string tagName = "";
+namespace LowPolyHnS.Core
+{
+    [AddComponentMenu("")]
+    public class ActionNearestTag : IActionNearest
+    {
+        [Space] [TagSelector] public string tagName = "";
 
         protected override bool FilterCondition(GameObject item)
         {
-            return item.CompareTag(this.tagName);
+            return item.CompareTag(tagName);
         }
 
         // +--------------------------------------------------------------------------------------+
         // | EDITOR                                                                               |
         // +--------------------------------------------------------------------------------------+
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
 
         public static new string NAME = "Object/Nearest with Tag";
         private const string NODE_TITLE = "Get nearest object with tag {0}";
@@ -28,9 +25,9 @@
 
         public override string GetNodeTitle()
         {
-            return string.Format(NODE_TITLE, this.tagName);
+            return string.Format(NODE_TITLE, tagName);
         }
 
-        #endif
+#endif
     }
 }

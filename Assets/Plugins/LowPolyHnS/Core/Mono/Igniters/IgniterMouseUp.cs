@@ -1,12 +1,10 @@
-﻿namespace LowPolyHnS.Core
-{
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
+﻿using UnityEngine;
 
-	[AddComponentMenu("")]
-	public class IgniterMouseUp : Igniter 
-	{
+namespace LowPolyHnS.Core
+{
+    [AddComponentMenu("")]
+    public class IgniterMouseUp : Igniter
+    {
         public enum MouseButton
         {
             Left = KeyCode.Mouse0,
@@ -16,16 +14,16 @@
 
         public MouseButton mouseButton = MouseButton.Left;
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
         public new static string NAME = "Input/On Mouse Up";
-		#endif
+#endif
 
-		private void Update()
-		{
-			if (Input.GetKeyUp((KeyCode)this.mouseButton))
-			{
-                this.ExecuteTrigger(gameObject);
-			}
-		}
-	}
+        private void Update()
+        {
+            if (Input.GetKeyUp((KeyCode) mouseButton))
+            {
+                ExecuteTrigger(gameObject);
+            }
+        }
+    }
 }

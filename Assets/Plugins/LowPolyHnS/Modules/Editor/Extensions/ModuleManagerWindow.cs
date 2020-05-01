@@ -1,11 +1,8 @@
-﻿namespace LowPolyHnS.ModuleManager
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEditor;
-    using LowPolyHnS.Core;
+﻿using UnityEditor;
+using UnityEngine;
 
+namespace LowPolyHnS.ModuleManager
+{
     public class ModuleManagerWindow : EditorWindow
     {
         private const string WINDOW_TITLE = "Module Manager";
@@ -32,61 +29,60 @@
         public static void OpenModuleManager()
         {
             Rect windowRect = new Rect(0f, 0f, WINDOW_W, WINDOW_H);
-            ModuleManagerWindow.WINDOW = EditorWindow.GetWindowWithRect<ModuleManagerWindow>(
+            WINDOW = GetWindowWithRect<ModuleManagerWindow>(
                 windowRect, true, WINDOW_TITLE, true
             );
 
             ModuleManager.SetDirty();
-            ModuleManagerWindow.WINDOW.Show();
+            WINDOW.Show();
 
-            #if UNITY_2018_1_OR_NEWER
+#if UNITY_2018_1_OR_NEWER
             EditorApplication.hierarchyChanged += ModuleManager.SetDirty;
-            #else
+#else
             EditorApplication.hierarchyWindowChanged += ModuleManager.SetDirty;
-            #endif
-            
+#endif
         }
 
         private static void CloseModuleManager()
         {
-            if (ModuleManagerWindow.WINDOW != null)
+            if (WINDOW != null)
             {
-                ModuleManagerWindow.WINDOW.Close();
+                WINDOW.Close();
             }
         }
 
-		private void OnDestroy()
-		{
-            #if UNITY_2018_1_OR_NEWER
-            EditorApplication.hierarchyChanged -= ModuleManager.SetDirty;
-            #else
-            EditorApplication.hierarchyWindowChanged -= ModuleManager.SetDirty;
-            #endif
-		}
-
-		// PAINT METHODS: -------------------------------------------------------------------------
-
-		void OnGUI()
+        private void OnDestroy()
         {
-            this.InitializeStyles();
-            if (ModuleManagerWindow.WINDOW == null)
+#if UNITY_2018_1_OR_NEWER
+            EditorApplication.hierarchyChanged -= ModuleManager.SetDirty;
+#else
+            EditorApplication.hierarchyWindowChanged -= ModuleManager.SetDirty;
+#endif
+        }
+
+        // PAINT METHODS: -------------------------------------------------------------------------
+
+        private void OnGUI()
+        {
+            InitializeStyles();
+            if (WINDOW == null)
             {
-                ModuleManagerWindow.OpenModuleManager();
+                OpenModuleManager();
             }
 
             EditorGUILayout.BeginHorizontal();
-            this.sidebarScroll = EditorGUILayout.BeginScrollView(
-                this.sidebarScroll,
+            sidebarScroll = EditorGUILayout.BeginScrollView(
+                sidebarScroll,
                 false, false,
                 GUIStyle.none,
                 GUIStyle.none,
-                this.sidebarStyle,
+                sidebarStyle,
                 GUILayout.MinWidth(WINDOW_SIDE_WIDTH),
                 GUILayout.MaxWidth(WINDOW_SIDE_WIDTH),
                 GUILayout.ExpandHeight(true)
             );
 
-            this.PaintSidebar();
+            PaintSidebar();
 
             EditorGUILayout.EndScrollView();
             Rect borderRect = GUILayoutUtility.GetRect(1f, 1f, GUILayout.ExpandHeight(true), GUILayout.Width(1f));
@@ -94,7 +90,7 @@
 
             EditorGUILayout.BeginVertical();
 
-            this.PaintContent();
+            PaintContent();
 
             EditorGUILayout.EndVertical();
             EditorGUILayout.EndHorizontal();
@@ -112,9 +108,9 @@
 
         private void PaintContent()
         {
-            this.PaintToolbar();
-            this.contentScroll = EditorGUILayout.BeginScrollView(
-                this.contentScroll,
+            PaintToolbar();
+            contentScroll = EditorGUILayout.BeginScrollView(
+                contentScroll,
                 GUIStyle.none,
                 GUI.skin.verticalScrollbar
             );
@@ -122,13 +118,13 @@
             EditorGUILayout.Space();
 
             ModuleManifest[] manifests = ModuleManager.GetProjectManifests();
-            if (this.sidebarIndex < 0 || this.sidebarIndex >= manifests.Length)
+            if (sidebarIndex < 0 || sidebarIndex >= manifests.Length)
             {
                 ModuleManagerContent.PaintContentMessage();
             }
             else
             {
-                ModuleManifest manifest = manifests[this.sidebarIndex];
+                ModuleManifest manifest = manifests[sidebarIndex];
                 ModuleManagerContent.PaintProjectModule(manifest);
             }
 
@@ -153,7 +149,7 @@
 
         private void InitializeStyles()
         {
-            if (this.stylesInitialized) return;
+            if (stylesInitialized) return;
 
             Texture2D texture = new Texture2D(1, 1);
             if (EditorGUIUtility.isProSkin) texture.SetPixel(0, 0, new Color(0f, 0f, 0f, 0.35f));
@@ -162,9 +158,9 @@
             texture.alphaIsTransparency = true;
             texture.Apply();
 
-            this.sidebarStyle = new GUIStyle();
-            this.sidebarStyle.normal.background = texture;
-            this.sidebarStyle.margin = new RectOffset(0, 0, 0, 0);
+            sidebarStyle = new GUIStyle();
+            sidebarStyle.normal.background = texture;
+            sidebarStyle.margin = new RectOffset(0, 0, 0, 0);
         }
     }
 }

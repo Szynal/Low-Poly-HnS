@@ -1,16 +1,16 @@
-﻿namespace LowPolyHnS.Core
-{
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEngine.UI;
-    using UnityEngine.Events;
-    using UnityEngine.EventSystems;
+﻿using System;
+using System.Collections;
+using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
-    #if UNITY_EDITOR
+namespace LowPolyHnS.Core
+{
+#if UNITY_EDITOR
     using UnityEditor.Events;
-    #endif
+
+#endif
 
     [RequireComponent(typeof(Image))]
     [RequireComponent(typeof(Actions))]
@@ -18,11 +18,13 @@
     public class ButtonActions : Selectable, IPointerClickHandler, ISubmitHandler
     {
         [Serializable]
-        public class ButtonActionsEvent : UnityEvent<GameObject> { }
+        public class ButtonActionsEvent : UnityEvent<GameObject>
+        {
+        }
 
         // PROPERTIES: ----------------------------------------------------------------------------
 
-        public Actions actions = null;
+        public Actions actions;
         public ButtonActionsEvent onClick = new ButtonActionsEvent();
 
         // INITIALIZERS: --------------------------------------------------------------------------
@@ -37,27 +39,27 @@
 
         // VALIDATE: ------------------------------------------------------------------------------
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         private new void OnValidate()
         {
             base.OnValidate();
 
-            if (this.actions == null)
+            if (actions == null)
             {
-                this.actions = gameObject.GetComponent<Actions>();
-                if (this.actions == null) return;
+                actions = gameObject.GetComponent<Actions>();
+                if (actions == null) return;
 
-                this.onClick.RemoveAllListeners();
-                UnityEventTools.AddObjectPersistentListener<GameObject>(
-                    this.onClick,
-                    this.actions.ExecuteWithTarget,
+                onClick.RemoveAllListeners();
+                UnityEventTools.AddObjectPersistentListener(
+                    onClick,
+                    actions.ExecuteWithTarget,
                     gameObject
                 );
             }
 
-            this.actions.hideFlags = HideFlags.HideInInspector;
+            actions.hideFlags = HideFlags.HideInInspector;
         }
-        #endif
+#endif
 
         // INTERFACES: ----------------------------------------------------------------------------
 
@@ -65,12 +67,12 @@
         {
             if (eventData.button != PointerEventData.InputButton.Left) return;
 
-            this.Press();
+            Press();
         }
 
         public virtual void OnSubmit(BaseEventData eventData)
         {
-            this.Press();
+            Press();
 
             if (!IsActive() || !IsInteractable()) return;
             DoStateTransition(SelectionState.Pressed, false);
@@ -96,7 +98,7 @@
         private void Press()
         {
             if (!IsActive() || !IsInteractable()) return;
-            if (this.onClick != null) this.onClick.Invoke(gameObject);
+            if (onClick != null) onClick.Invoke(gameObject);
         }
     }
 }

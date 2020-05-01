@@ -1,11 +1,9 @@
-﻿namespace LowPolyHnS.Variables
-{
-    using System.IO;
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEditor;
+﻿using System.IO;
+using UnityEditor;
+using UnityEngine;
 
+namespace LowPolyHnS.Variables
+{
     public class TagsEditorWindow : PopupWindowContent
     {
         private const string TITLE = "Tag Settings";
@@ -24,13 +22,12 @@
                 GlobalTagsEditor.NAME_ASSET
             ));
 
-            if (instance == null) this.editorWindow.Close();
-            this.tagsEditor = (GlobalTagsEditor)Editor.CreateEditor(instance);
+            if (instance == null) editorWindow.Close();
+            tagsEditor = (GlobalTagsEditor) Editor.CreateEditor(instance);
         }
 
         public override void OnClose()
         {
-
         }
 
         public override Vector2 GetWindowSize()
@@ -40,10 +37,10 @@
 
         public override void OnGUI(Rect rect)
         {
-            if (this.tagsEditor == null) return;
+            if (tagsEditor == null) return;
 
-            this.scroll = EditorGUILayout.BeginScrollView(
-                this.scroll, 
+            scroll = EditorGUILayout.BeginScrollView(
+                scroll,
                 EditorStyles.inspectorDefaultMargins
             );
 
@@ -51,7 +48,7 @@
             EditorGUILayout.LabelField(TITLE, EditorStyles.centeredGreyMiniLabel);
             EditorGUILayout.Space();
 
-            this.tagsEditor.OnInspectorGUI();
+            tagsEditor.OnInspectorGUI();
 
             EditorGUILayout.Space();
             EditorGUILayout.EndScrollView();

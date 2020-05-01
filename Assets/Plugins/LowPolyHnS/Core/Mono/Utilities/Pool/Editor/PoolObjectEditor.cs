@@ -1,10 +1,7 @@
-﻿namespace LowPolyHnS.Pool
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEditor;
+﻿using UnityEditor;
 
+namespace LowPolyHnS.Pool
+{
     [CustomEditor(typeof(PoolObject))]
     public class PoolObjectEditor : Editor
     {
@@ -13,18 +10,18 @@
 
         private void OnEnable()
         {
-            this.spInitCount = this.serializedObject.FindProperty("initCount");
-            this.spDuration = this.serializedObject.FindProperty("duration");
+            spInitCount = serializedObject.FindProperty("initCount");
+            spDuration = serializedObject.FindProperty("duration");
         }
 
         public override void OnInspectorGUI()
         {
-            this.serializedObject.Update();
+            serializedObject.Update();
 
-            EditorGUILayout.PropertyField(this.spInitCount);
-            EditorGUILayout.PropertyField(this.spDuration);
+            EditorGUILayout.PropertyField(spInitCount);
+            EditorGUILayout.PropertyField(spDuration);
 
-            this.serializedObject.ApplyModifiedProperties();
+            serializedObject.ApplyModifiedProperties();
         }
     }
 }

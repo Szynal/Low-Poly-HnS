@@ -1,14 +1,17 @@
-﻿namespace LowPolyHnS.Variables
-{
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
+﻿using System;
+using UnityEngine;
 
+namespace LowPolyHnS.Variables
+{
     [Serializable]
     public class Vector2Property : BaseProperty<Vector2>
     {
-        public Vector2Property() : base() { }
-        public Vector2Property(Vector2 value) : base(value) { }
+        public Vector2Property()
+        {
+        }
+
+        public Vector2Property(Vector2 value) : base(value)
+        {
+        }
     }
 }

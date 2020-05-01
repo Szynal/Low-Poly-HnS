@@ -1,24 +1,35 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using LowPolyHnS;
 using UnityEngine;
 
 public class FE_AmmoPickup : FE_InteractableObject, ISaveable
 {
-    [Header("Properties for AmmoPickup")]
-    [SerializeField] Sprite ammoSprite = default;
-    public Sprite GetSprite()           { return ammoSprite; }
+    [Header("Properties for AmmoPickup")] [SerializeField]
+    private Sprite ammoSprite = default;
 
-    [SerializeField] EAmmoType pickupAmmoType = default;
-    public EAmmoType GetAmmoType()      { return pickupAmmoType; }
+    public Sprite GetSprite()
+    {
+        return ammoSprite;
+    }
 
-    [SerializeField] int pickupAmount = 0;
-    public int GetAmount()              { return pickupAmount; }
+    [SerializeField] private EAmmoType pickupAmmoType;
 
-    [SerializeField] float rotationSpeed = 35f;
+    public EAmmoType GetAmmoType()
+    {
+        return pickupAmmoType;
+    }
 
-    [Header("ID used for saving. Change only by using IDManager!")]
-    [SerializeField] public int SaveableID = -1;
+    [SerializeField] private int pickupAmount;
+
+    public int GetAmount()
+    {
+        return pickupAmount;
+    }
+
+    [SerializeField] private float rotationSpeed = 35f;
+
+    [Header("ID used for saving. Change only by using IDManager!")] [SerializeField]
+    public int SaveableID = -1;
 
     protected override void Awake()
     {
@@ -26,7 +37,8 @@ public class FE_AmmoPickup : FE_InteractableObject, ISaveable
 
         if (SaveableID < 0)
         {
-            Debug.LogWarning("Saveable object " + gameObject.name + " has an invalid saveableID set up. It will cause erroneous behaviour when saving or loading the game!");
+            Debug.LogWarning("Saveable object " + gameObject.name +
+                             " has an invalid saveableID set up. It will cause erroneous behaviour when saving or loading the game!");
         }
     }
 
@@ -48,7 +60,7 @@ public class FE_AmmoPickup : FE_InteractableObject, ISaveable
         }
         else
         {
-            Debug.Log("Ammo on " + gameObject.name + " couldn't be picked up..."); 
+            Debug.Log("Ammo on " + gameObject.name + " couldn't be picked up...");
         }
     }
 
@@ -58,7 +70,7 @@ public class FE_AmmoPickup : FE_InteractableObject, ISaveable
 
         _saveState.SaveableID = SaveableID;
 
-        _saveState.AmmoID = (int)pickupAmmoType;
+        _saveState.AmmoID = (int) pickupAmmoType;
         _saveState.AmmoAmount = pickupAmount;
 
         _saveState.Position_X = transform.position.x;
@@ -70,22 +82,22 @@ public class FE_AmmoPickup : FE_InteractableObject, ISaveable
 
     public void OnLoad(PlayerSaveState _loadState)
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 
     public void OnLoad(EnemySaveState _loadState)
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 
     public void OnLoad(MultipleStateObjectManagerState _loadState)
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 
     public void OnLoad(PickupState _loadState)
     {
-        pickupAmmoType = (EAmmoType)_loadState.AmmoID;
+        pickupAmmoType = (EAmmoType) _loadState.AmmoID;
         pickupAmount = _loadState.AmmoAmount;
 
         transform.position = new Vector3(_loadState.Position_X, _loadState.Position_Y, _loadState.Position_Z);
@@ -99,7 +111,7 @@ public class FE_AmmoPickup : FE_InteractableObject, ISaveable
 
     public void OnLoad(ActionTriggerState _loadState)
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 
     void ISaveable.OnDestroy()

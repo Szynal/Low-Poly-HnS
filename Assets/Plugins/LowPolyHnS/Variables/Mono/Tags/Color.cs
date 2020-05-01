@@ -1,42 +1,40 @@
-﻿namespace LowPolyHnS.Variables
-{
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
+﻿using System;
+using UnityEngine;
 
+namespace LowPolyHnS.Variables
+{
     [Serializable]
     public class HexColor
     {
         public string hex;
 
-        private bool init = false;
+        private bool init;
         private Color color;
 
         // INITIALIZERS: --------------------------------------------------------------------------
 
         public HexColor()
         {
-            this.hex = "#ffffff";
-            this.init = false;
-            this.color = Color.white;
+            hex = "#ffffff";
+            init = false;
+            color = Color.white;
         }
 
         public HexColor(string hex)
         {
             this.hex = hex;
-            this.init = false;
-            this.color = Color.white;
+            init = false;
+            color = Color.white;
         }
 
         // PUBLIC METHODS: ------------------------------------------------------------------------
 
         public Color GetColor()
         {
-            if (!this.init)
+            if (!init)
             {
-                this.init = true;
-                ColorUtility.TryParseHtmlString(this.hex, out this.color);
+                init = true;
+                ColorUtility.TryParseHtmlString(hex, out color);
             }
 
             return color;

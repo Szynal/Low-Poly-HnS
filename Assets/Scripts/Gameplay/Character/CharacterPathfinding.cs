@@ -1,28 +1,23 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Net.Http.Headers;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.AI;
-
 
 namespace LowPolyHnS
 {
     public class CharacterPathfinding : MonoBehaviour
     {
         public Transform goalPoint;
-        RaycastHit hitInfo = new RaycastHit();
-        private NavMeshAgent agent = null;
-        private CharacterMovement movement = null;
+        private RaycastHit hitInfo;
+        private NavMeshAgent agent;
+        private CharacterMovement movement;
 
 
-        void Start()
+        private void Start()
         {
             agent = GetComponent<NavMeshAgent>();
             movement = GetComponent<CharacterMovement>();
-
         }
 
-        void Update()
+        private void Update()
         {
             if (Input.GetMouseButtonUp(0) && movement.MouseTimer < 0.3f)
             {
@@ -34,8 +29,5 @@ namespace LowPolyHnS
                 }
             }
         }
-
-        
     }
 }
-

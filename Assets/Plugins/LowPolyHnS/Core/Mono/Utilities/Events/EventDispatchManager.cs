@@ -1,14 +1,17 @@
-﻿namespace LowPolyHnS.Core
-{
-    using System;
-    using System.Collections.Generic;
-    using UnityEngine.Events;
-    using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Events;
 
+namespace LowPolyHnS.Core
+{
     [AddComponentMenu("")]
     public class EventDispatchManager : Singleton<EventDispatchManager>
     {
-        [Serializable] public class Dispatcher : UnityEvent<GameObject> { }
+        [Serializable]
+        public class Dispatcher : UnityEvent<GameObject>
+        {
+        }
 
         // PROPERTIES: ----------------------------------------------------------------------------
 
@@ -19,35 +22,35 @@
         protected override void OnCreate()
         {
             base.OnCreate();
-            this.events = new Dictionary<string, Dispatcher>();
+            events = new Dictionary<string, Dispatcher>();
         }
 
         // PUBLIC METHODS: ------------------------------------------------------------------------
 
         public void Dispatch(string name, GameObject invoker)
         {
-            this.RequireInit(ref name);
-            this.events[name].Invoke(invoker);
+            RequireInit(ref name);
+            events[name].Invoke(invoker);
         }
 
         public void Subscribe(string name, UnityAction<GameObject> callback)
         {
-            this.RequireInit(ref name);
-            this.events[name].AddListener(callback);
+            RequireInit(ref name);
+            events[name].AddListener(callback);
         }
 
         public void Unsubscribe(string name, UnityAction<GameObject> callback)
         {
-            this.RequireInit(ref name);
-            this.events[name].RemoveListener(callback);
+            RequireInit(ref name);
+            events[name].RemoveListener(callback);
         }
 
         public string[] GetSubscribedKeys()
         {
             int index = 0;
-            string[] keys = new string[this.events.Keys.Count];
+            string[] keys = new string[events.Keys.Count];
 
-            foreach (string key in this.events.Keys)
+            foreach (string key in events.Keys)
             {
                 keys[index] = key;
             }
@@ -61,8 +64,8 @@
         {
             eventName = eventName.Trim().Replace(" ", "-").ToLower();
 
-            if (this.events.ContainsKey(eventName)) return;
-            this.events.Add(eventName, new Dispatcher());
+            if (events.ContainsKey(eventName)) return;
+            events.Add(eventName, new Dispatcher());
         }
     }
 }

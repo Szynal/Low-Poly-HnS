@@ -1,10 +1,8 @@
-﻿namespace LowPolyHnS.Variables
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
+﻿using System;
 
-    [System.Serializable]
+namespace LowPolyHnS.Variables
+{
+    [Serializable]
     public class VariableStr : VariableGeneric<string>
     {
         public new const string NAME = "String";
@@ -12,16 +10,18 @@
         // INITIALIZERS: --------------------------------------------------------------------------
 
         public VariableStr()
-        { }
+        {
+        }
 
         public VariableStr(string value) : base(value)
-        { }
+        {
+        }
 
         // OVERRIDE METHODS: ----------------------------------------------------------------------
 
         public override bool CanSave()
         {
-            return VariableBase.CanSaveType(Variable.DataType.String);
+            return CanSaveType(Variable.DataType.String);
         }
 
         // PUBLIC STATIC METHODS: -----------------------------------------------------------------

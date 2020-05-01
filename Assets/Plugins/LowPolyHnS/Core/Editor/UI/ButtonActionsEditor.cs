@@ -1,12 +1,10 @@
-﻿namespace LowPolyHnS.Core
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEditor;
-    using UnityEngine.UI;
-    using UnityEditor.UI;
+﻿using UnityEditor;
+using UnityEditor.UI;
+using UnityEngine;
+using UnityEngine.UI;
 
+namespace LowPolyHnS.Core
+{
     [CustomEditor(typeof(ButtonActions))]
     public class ButtonActionsEditor : SelectableEditor
     {
@@ -19,7 +17,7 @@
             SerializedProperty spActions = serializedObject.FindProperty("actions");
             if (spActions.objectReferenceValue != null)
             {
-                this.editorActions = Editor.CreateEditor(
+                editorActions = CreateEditor(
                     spActions.objectReferenceValue
                 ) as ActionsEditor;
             }
@@ -31,10 +29,11 @@
             EditorGUILayout.Space();
 
             serializedObject.Update();
-            if (this.editorActions != null)
+            if (editorActions != null)
             {
-                this.editorActions.OnInspectorGUI();
+                editorActions.OnInspectorGUI();
             }
+
             serializedObject.ApplyModifiedProperties();
         }
 

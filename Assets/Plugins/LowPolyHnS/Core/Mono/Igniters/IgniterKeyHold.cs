@@ -1,63 +1,63 @@
-﻿namespace LowPolyHnS.Core
-{
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
+﻿using UnityEngine;
 
-	[AddComponentMenu("")]
-	public class IgniterKeyHold : Igniter 
-	{
+namespace LowPolyHnS.Core
+{
+    [AddComponentMenu("")]
+    public class IgniterKeyHold : Igniter
+    {
         public enum ReleaseType
         {
             OnKeyUp,
             OnTimeout
         }
 
-		public KeyCode keyCode = KeyCode.Space;
+        public KeyCode keyCode = KeyCode.Space;
         public float holdTime = 0.5f;
         public ReleaseType execute = ReleaseType.OnKeyUp;
 
         private float downTime = -9999.0f;
-        private bool isPressing = false;
+        private bool isPressing;
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
         public new static string NAME = "Input/On Key Hold";
-        #endif
+#endif
 
-		private void Update()
-		{
-            if (this.isPressing && (Time.time - this.downTime) > this.holdTime)
+        private void Update()
+        {
+            if (isPressing && Time.time - downTime > holdTime)
             {
-                switch (this.execute)
+                switch (execute)
                 {
                     case ReleaseType.OnKeyUp:
-                        if (Input.GetKeyUp(this.keyCode))
+                        if (Input.GetKeyUp(keyCode))
                         {
-                            this.isPressing = false;
-                            this.ExecuteTrigger(gameObject);
+                            isPressing = false;
+                            ExecuteTrigger(gameObject);
                         }
+
                         break;
 
                     case ReleaseType.OnTimeout:
-                        if (Input.GetKey(this.keyCode))
+                        if (Input.GetKey(keyCode))
                         {
-                            this.isPressing = false;
-                            this.ExecuteTrigger(gameObject);
+                            isPressing = false;
+                            ExecuteTrigger(gameObject);
                         }
+
                         break;
                 }
             }
 
-            if (Input.GetKeyDown(this.keyCode))
+            if (Input.GetKeyDown(keyCode))
             {
-                this.downTime = Time.time;
-                this.isPressing = true;
+                downTime = Time.time;
+                isPressing = true;
             }
 
-            if (Input.GetKeyUp(this.keyCode))
+            if (Input.GetKeyUp(keyCode))
             {
-                this.isPressing = false;
+                isPressing = false;
             }
-		}
-	}
+        }
+    }
 }

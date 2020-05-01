@@ -1,19 +1,15 @@
-﻿namespace LowPolyHnS.Core
+﻿using UnityEngine;
+
+namespace LowPolyHnS.Core
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-	using LowPolyHnS.Core;
-    using LowPolyHnS.Variables;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[AddComponentMenu("")]
-	public class ActionToggleActive : IAction 
-	{
+    [AddComponentMenu("")]
+    public class ActionToggleActive : IAction
+    {
         public TargetGameObject target = new TargetGameObject();
 
         // EXECUTABLE: ----------------------------------------------------------------------------
@@ -26,48 +22,48 @@
             return true;
         }
 
-		// +--------------------------------------------------------------------------------------+
-		// | EDITOR                                                                               |
-		// +--------------------------------------------------------------------------------------+
+        // +--------------------------------------------------------------------------------------+
+        // | EDITOR                                                                               |
+        // +--------------------------------------------------------------------------------------+
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 
-		public static new string NAME = "Object/Toggle Active";
-		private const string NODE_TITLE = "Toggle object {1} active state";
+        public static new string NAME = "Object/Toggle Active";
+        private const string NODE_TITLE = "Toggle object {1} active state";
 
-		// PROPERTIES: ----------------------------------------------------------------------------
+        // PROPERTIES: ----------------------------------------------------------------------------
 
-		private SerializedProperty spTarget;
+        private SerializedProperty spTarget;
 
-		// INSPECTOR METHODS: ---------------------------------------------------------------------
+        // INSPECTOR METHODS: ---------------------------------------------------------------------
 
-		public override string GetNodeTitle()
-		{
-			return string.Format(
-				NODE_TITLE, 
-				this.target
-			);
-		}
+        public override string GetNodeTitle()
+        {
+            return string.Format(
+                NODE_TITLE,
+                target
+            );
+        }
 
-		protected override void OnEnableEditorChild ()
-		{
-			this.spTarget = this.serializedObject.FindProperty("target");
-		}
+        protected override void OnEnableEditorChild()
+        {
+            spTarget = serializedObject.FindProperty("target");
+        }
 
-		protected override void OnDisableEditorChild ()
-		{
-			this.spTarget = null;
-		}
+        protected override void OnDisableEditorChild()
+        {
+            spTarget = null;
+        }
 
-		public override void OnInspectorGUI()
-		{
-			this.serializedObject.Update();
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
 
-			EditorGUILayout.PropertyField(this.spTarget);
+            EditorGUILayout.PropertyField(spTarget);
 
-			this.serializedObject.ApplyModifiedProperties();
-		}
+            serializedObject.ApplyModifiedProperties();
+        }
 
-		#endif
-	}
+#endif
+    }
 }

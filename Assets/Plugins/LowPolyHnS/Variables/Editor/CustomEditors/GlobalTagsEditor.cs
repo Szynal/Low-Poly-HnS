@@ -1,13 +1,10 @@
-﻿namespace LowPolyHnS.Variables
-{
-    using System;
-    using System.IO;
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEditor;
-    using LowPolyHnS.Core;
+﻿using System;
+using System.IO;
+using UnityEditor;
+using UnityEngine;
 
+namespace LowPolyHnS.Variables
+{
     [CustomEditor(typeof(GlobalTags))]
     public class GlobalTagsEditor : Editor
     {
@@ -40,46 +37,46 @@
         private SerializedProperty spTags;
         private SerializedPropertyTag[] spTagElements;
 
-		// INITIALIZERS: --------------------------------------------------------------------------
+        // INITIALIZERS: --------------------------------------------------------------------------
 
-		private void OnEnable()
-		{
-            this.spTags = serializedObject.FindProperty("tags");
-            if (this.spTags.arraySize != MAX_TAGS)
+        private void OnEnable()
+        {
+            spTags = serializedObject.FindProperty("tags");
+            if (spTags.arraySize != MAX_TAGS)
             {
-                this.spTags.arraySize = MAX_TAGS;
+                spTags.arraySize = MAX_TAGS;
                 serializedObject.ApplyModifiedProperties();
                 serializedObject.Update();
             }
 
-            this.spTagElements = new SerializedPropertyTag[MAX_TAGS];
+            spTagElements = new SerializedPropertyTag[MAX_TAGS];
             for (int i = 0; i < MAX_TAGS; ++i)
             {
-                SerializedProperty spTag = this.spTags.GetArrayElementAtIndex(i);
-                this.spTagElements[i] = new SerializedPropertyTag(
+                SerializedProperty spTag = spTags.GetArrayElementAtIndex(i);
+                spTagElements[i] = new SerializedPropertyTag(
                     spTag.FindPropertyRelative("name"),
                     spTag.FindPropertyRelative("color")
                 );
             }
-		}
+        }
 
-		// PAINT METHODS: -------------------------------------------------------------------------
+        // PAINT METHODS: -------------------------------------------------------------------------
 
-		public override void OnInspectorGUI()
-		{
+        public override void OnInspectorGUI()
+        {
             serializedObject.Update();
 
             for (int i = 0; i < MAX_TAGS; ++i)
             {
-                this.PaintTag(
+                PaintTag(
                     i,
-                    this.spTagElements[i].spName,
-                    this.spTagElements[i].spColor
+                    spTagElements[i].spName,
+                    spTagElements[i].spColor
                 );
             }
 
             serializedObject.ApplyModifiedProperties();
-		}
+        }
 
         private void PaintTag(int index, SerializedProperty spName, SerializedProperty spColor)
         {
@@ -119,8 +116,8 @@
             if (GLOBAL_TAGS_INSTANCE == null)
             {
                 GLOBAL_TAGS_INSTANCE = AssetDatabase.LoadAssetAtPath<GlobalTags>(Path.Combine(
-                    GlobalTagsEditor.PATH_ASSET,
-                    GlobalTagsEditor.NAME_ASSET
+                    PATH_ASSET,
+                    NAME_ASSET
                 ));
             }
 
@@ -130,7 +127,7 @@
 
         public static string[] GetTagNames()
         {
-            Tag[] tagInstances = GlobalTagsEditor.GetTags();
+            Tag[] tagInstances = GetTags();
             if (tagInstances.Length == 0) return new string[0];
 
             string[] tags = new string[tagInstances.Length];
@@ -141,5 +138,5 @@
 
             return tags;
         }
-	}
+    }
 }

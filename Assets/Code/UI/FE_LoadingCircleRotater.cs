@@ -3,13 +3,13 @@ using UnityEngine.UI;
 
 public class FE_LoadingCircleRotater : MonoBehaviour
 {
-    [SerializeField] Transform transformToRotate = null;
-    [SerializeField] float rotationSpeed = 30f;
-    [SerializeField] Image[] imagesToFade = null;
-    [SerializeField] float fadeTime = 1f;
+    [SerializeField] private Transform transformToRotate = null;
+    [SerializeField] private float rotationSpeed = 30f;
+    [SerializeField] private Image[] imagesToFade = null;
+    [SerializeField] private float fadeTime = 1f;
 
-    private bool isDisabling = false;
-    private float fadeProgress = 0f;
+    private bool isDisabling;
+    private float fadeProgress;
 
     private void OnEnable()
     {
@@ -22,19 +22,20 @@ public class FE_LoadingCircleRotater : MonoBehaviour
     }
 
     private void Update()
-    {      
+    {
         transformToRotate.Rotate(0f, 0f, rotationSpeed * Time.unscaledDeltaTime);
 
-        if (isDisabling == true)
+        if (isDisabling)
         {
             fadeProgress += Time.unscaledDeltaTime / fadeTime;
 
-            for(int i = 0; i < imagesToFade.Length; i++)
+            for (int i = 0; i < imagesToFade.Length; i++)
             {
-                imagesToFade[i].color = Color.Lerp(getFullColor(imagesToFade[i].color), getFadedColor(imagesToFade[i].color), fadeProgress);
+                imagesToFade[i].color = Color.Lerp(getFullColor(imagesToFade[i].color),
+                    getFadedColor(imagesToFade[i].color), fadeProgress);
             }
 
-            if(fadeProgress >= 1f)
+            if (fadeProgress >= 1f)
             {
                 gameObject.SetActive(false);
             }

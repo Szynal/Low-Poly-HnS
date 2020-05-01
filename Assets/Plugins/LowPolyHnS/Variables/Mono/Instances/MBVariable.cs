@@ -1,9 +1,7 @@
-﻿namespace LowPolyHnS.Variables
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
+﻿using UnityEngine;
 
+namespace LowPolyHnS.Variables
+{
     [AddComponentMenu("")]
     public class MBVariable : MonoBehaviour
     {
@@ -11,15 +9,15 @@
 
         // EDITOR METHODS: ------------------------------------------------------------------------
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
 
         public bool isExpanded = false;
 
         public bool CanSave()
         {
-            return this.variable.CanSave();
+            return variable.CanSave();
         }
 
-        #endif
+#endif
     }
 }

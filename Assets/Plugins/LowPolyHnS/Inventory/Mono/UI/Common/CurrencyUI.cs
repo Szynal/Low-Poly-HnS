@@ -1,35 +1,32 @@
-﻿namespace LowPolyHnS.Inventory
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEngine.UI;
-    using LowPolyHnS.Core;
+﻿using UnityEngine;
+using UnityEngine.UI;
 
+namespace LowPolyHnS.Inventory
+{
     [AddComponentMenu("LowPolyHnS/UI/Currency")]
     public class CurrencyUI : MonoBehaviour
     {
         public Text text;
 
-        private bool isExitingApplication = false;
+        private bool isExitingApplication;
 
         // INITIALIZE METHODS: --------------------------------------------------------------------
 
         private void OnEnable()
         {
-            InventoryManager.Instance.eventChangePlayerCurrency.AddListener(this.OnUpdate);
-            this.OnUpdate();
+            InventoryManager.Instance.eventChangePlayerCurrency.AddListener(OnUpdate);
+            OnUpdate();
         }
 
         private void OnDisable()
         {
-            if (this.isExitingApplication) return;
-            InventoryManager.Instance.eventChangePlayerCurrency.RemoveListener(this.OnUpdate);
+            if (isExitingApplication) return;
+            InventoryManager.Instance.eventChangePlayerCurrency.RemoveListener(OnUpdate);
         }
 
         private void OnApplicationQuit()
         {
-            this.isExitingApplication = true;
+            isExitingApplication = true;
         }
 
         // PRIVATE METHODS: -----------------------------------------------------------------------
@@ -37,7 +34,7 @@
         private void OnUpdate()
         {
             int currency = InventoryManager.Instance.GetCurrency();
-            this.text.text = currency.ToString();
+            text.text = currency.ToString();
         }
     }
 }

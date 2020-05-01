@@ -1,18 +1,16 @@
-﻿namespace LowPolyHnS.Core
-{
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-    using UnityEngine.Audio;
+﻿using UnityEngine;
+using UnityEngine.Audio;
 
-    #if UNITY_EDITOR
+namespace LowPolyHnS.Core
+{
+#if UNITY_EDITOR
     using UnityEditor;
-    #endif
+
+#endif
 
     [AddComponentMenu("")]
-	public class ActionPlaySound : IAction 
-	{
+    public class ActionPlaySound : IAction
+    {
         public enum AudioMixerType
         {
             None,
@@ -20,51 +18,51 @@
             DefaultSoundMixer
         }
 
-		public AudioClip audioClip;
+        public AudioClip audioClip;
         public AudioMixerType audioMixer = AudioMixerType.DefaultSoundMixer;
         [Indent] public AudioMixerGroup mixerGroup;
 
         [Space] public float fadeIn;
         [Range(0f, 1f)] public float volume = 1.0f;
 
-		// EXECUTABLE: ----------------------------------------------------------------------------
+        // EXECUTABLE: ----------------------------------------------------------------------------
 
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
             AudioMixerGroup mixer = null;
-            switch (this.audioMixer)
+            switch (audioMixer)
             {
                 case AudioMixerType.DefaultSoundMixer:
                     mixer = DatabaseGeneral.Load().soundAudioMixer;
                     break;
 
                 case AudioMixerType.Custom:
-                    mixer = this.mixerGroup;
+                    mixer = mixerGroup;
                     break;
             }
 
-            AudioManager.Instance.PlaySound2D(this.audioClip, this.fadeIn, this.volume, mixer);
+            AudioManager.Instance.PlaySound2D(audioClip, fadeIn, volume, mixer);
             return true;
         }
 
-		// +--------------------------------------------------------------------------------------+
-		// | EDITOR                                                                               |
-		// +--------------------------------------------------------------------------------------+
+        // +--------------------------------------------------------------------------------------+
+        // | EDITOR                                                                               |
+        // +--------------------------------------------------------------------------------------+
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 
-		public static new string NAME = "Audio/Play Sound";
-		private const string NODE_TITLE = "Play Sound {0}";
+        public static new string NAME = "Audio/Play Sound";
+        private const string NODE_TITLE = "Play Sound {0}";
 
         // INSPECTOR METHODS: ---------------------------------------------------------------------
 
-		public override string GetNodeTitle()
-		{
-			return string.Format(
-				NODE_TITLE,
-				this.audioClip == null ? "(none)" : this.audioClip.name
-			);
-		}
+        public override string GetNodeTitle()
+        {
+            return string.Format(
+                NODE_TITLE,
+                audioClip == null ? "(none)" : audioClip.name
+            );
+        }
 
         private SerializedProperty spAudioClip;
         private SerializedProperty spAudioMixer;
@@ -75,30 +73,30 @@
 
         protected override void OnEnableEditorChild()
         {
-            this.spAudioClip = this.serializedObject.FindProperty("audioClip");
-            this.spAudioMixer = this.serializedObject.FindProperty("audioMixer");
-            this.spMixerGroup = this.serializedObject.FindProperty("mixerGroup");
-            this.spFadeIn = this.serializedObject.FindProperty("fadeIn");
-            this.spVolume = this.serializedObject.FindProperty("volume");
+            spAudioClip = serializedObject.FindProperty("audioClip");
+            spAudioMixer = serializedObject.FindProperty("audioMixer");
+            spMixerGroup = serializedObject.FindProperty("mixerGroup");
+            spFadeIn = serializedObject.FindProperty("fadeIn");
+            spVolume = serializedObject.FindProperty("volume");
         }
 
         public override void OnInspectorGUI()
         {
-            this.serializedObject.Update();
+            serializedObject.Update();
 
-            EditorGUILayout.PropertyField(this.spAudioClip);
-            EditorGUILayout.PropertyField(this.spAudioMixer);
-            if (this.spAudioMixer.enumValueIndex == (int)AudioMixerType.Custom)
+            EditorGUILayout.PropertyField(spAudioClip);
+            EditorGUILayout.PropertyField(spAudioMixer);
+            if (spAudioMixer.enumValueIndex == (int) AudioMixerType.Custom)
             {
-                EditorGUILayout.PropertyField(this.spMixerGroup);
+                EditorGUILayout.PropertyField(spMixerGroup);
             }
 
-            EditorGUILayout.PropertyField(this.spFadeIn);
-            EditorGUILayout.PropertyField(this.spVolume);
+            EditorGUILayout.PropertyField(spFadeIn);
+            EditorGUILayout.PropertyField(spVolume);
 
-            this.serializedObject.ApplyModifiedProperties();
+            serializedObject.ApplyModifiedProperties();
         }
 
-        #endif
+#endif
     }
 }

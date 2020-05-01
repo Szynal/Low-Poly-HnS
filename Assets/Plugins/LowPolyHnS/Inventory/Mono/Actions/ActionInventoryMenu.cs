@@ -1,96 +1,94 @@
-﻿namespace LowPolyHnS.Inventory
+﻿using LowPolyHnS.Core;
+using UnityEngine;
+
+namespace LowPolyHnS.Inventory
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-	using LowPolyHnS.Core;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[AddComponentMenu("")]
-	public class ActionInventoryMenu : IAction 
-	{
-		public enum MENU_TYPE
-		{
-			Inventory
-		}
+    [AddComponentMenu("")]
+    public class ActionInventoryMenu : IAction
+    {
+        public enum MENU_TYPE
+        {
+            Inventory
+        }
 
-		public enum ACTION_TYPE
-		{
-			Open,
-			Close
-		}
+        public enum ACTION_TYPE
+        {
+            Open,
+            Close
+        }
 
-		public MENU_TYPE menuType = MENU_TYPE.Inventory;
-		public ACTION_TYPE actionType = ACTION_TYPE.Open;
+        public MENU_TYPE menuType = MENU_TYPE.Inventory;
+        public ACTION_TYPE actionType = ACTION_TYPE.Open;
 
         // EXECUTABLE: -------------------------------------------------------------------------------------------------
 
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
-            switch (this.menuType)
+            switch (menuType)
             {
                 case MENU_TYPE.Inventory:
-                    if (this.actionType == ACTION_TYPE.Open) InventoryUIManager.OpenInventory();
-                    if (this.actionType == ACTION_TYPE.Close) InventoryUIManager.CloseInventory();
+                    if (actionType == ACTION_TYPE.Open) InventoryUIManager.OpenInventory();
+                    if (actionType == ACTION_TYPE.Close) InventoryUIManager.CloseInventory();
                     break;
             }
 
             return true;
         }
 
-		// +-----------------------------------------------------------------------------------------------------------+
-		// | EDITOR                                                                                                    |
-		// +-----------------------------------------------------------------------------------------------------------+
+        // +-----------------------------------------------------------------------------------------------------------+
+        // | EDITOR                                                                                                    |
+        // +-----------------------------------------------------------------------------------------------------------+
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 
-		public const string CUSTOM_ICON_PATH = "Assets/Plugins/LowPolyHnS/Inventory/Icons/Actions/";
+        public const string CUSTOM_ICON_PATH = "Assets/Plugins/LowPolyHnS/Inventory/Icons/Actions/";
 
-		public static new string NAME = "Inventory/Inventory UI";
-		private const string NODE_TITLE = "{0} {1} menu";
+        public static new string NAME = "Inventory/Inventory UI";
+        private const string NODE_TITLE = "{0} {1} menu";
 
-		// PROPERTIES: -------------------------------------------------------------------------------------------------
+        // PROPERTIES: -------------------------------------------------------------------------------------------------
 
-		private SerializedProperty spMenuType;
-		private SerializedProperty spActionType;
+        private SerializedProperty spMenuType;
+        private SerializedProperty spActionType;
 
-		// INSPECTOR METHODS: ------------------------------------------------------------------------------------------
+        // INSPECTOR METHODS: ------------------------------------------------------------------------------------------
 
-		public override string GetNodeTitle()
-		{
-			return string.Format(
-				NODE_TITLE, 
-				this.actionType.ToString(),
-				this.menuType.ToString()
-			);
-		}
+        public override string GetNodeTitle()
+        {
+            return string.Format(
+                NODE_TITLE,
+                actionType.ToString(),
+                menuType.ToString()
+            );
+        }
 
-		protected override void OnEnableEditorChild ()
-		{
-			this.spMenuType = this.serializedObject.FindProperty("menuType");
-			this.spActionType = this.serializedObject.FindProperty("actionType");
-		}
+        protected override void OnEnableEditorChild()
+        {
+            spMenuType = serializedObject.FindProperty("menuType");
+            spActionType = serializedObject.FindProperty("actionType");
+        }
 
-		protected override void OnDisableEditorChild ()
-		{
-			this.spMenuType = null;
-			this.spActionType = null;
-		}
+        protected override void OnDisableEditorChild()
+        {
+            spMenuType = null;
+            spActionType = null;
+        }
 
-		public override void OnInspectorGUI()
-		{
-			this.serializedObject.Update();
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
 
-			EditorGUILayout.PropertyField(this.spMenuType);
-			EditorGUILayout.PropertyField(this.spActionType);
+            EditorGUILayout.PropertyField(spMenuType);
+            EditorGUILayout.PropertyField(spActionType);
 
-			this.serializedObject.ApplyModifiedProperties();
-		}
+            serializedObject.ApplyModifiedProperties();
+        }
 
-		#endif
-	}
+#endif
+    }
 }

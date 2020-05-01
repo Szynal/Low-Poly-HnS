@@ -1,19 +1,17 @@
-﻿namespace LowPolyHnS.Core
-{
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEditor;
-    using UnityEngine.UI;
-    using UnityEditor.UI;
+﻿using UnityEditor;
+using UnityEngine;
+using UnityEngine.UI;
 
-    #if UNITY_EDITOR
+namespace LowPolyHnS.Core
+{
+#if UNITY_EDITOR
     using UnityEditor.SceneManagement;
-    #endif
+
+#endif
 
 
     public abstract class CreateSceneObject
-	{
+    {
         private const string NAME_FMT = "{0} ({1})";
 
         private static DefaultControls.Resources standardResources;
@@ -27,27 +25,28 @@
 
         // PUBLIC METHODS: ------------------------------------------------------------------------
 
-		public static GameObject Create(string name, bool autoSelect = true)
-		{
+        public static GameObject Create(string name, bool autoSelect = true)
+        {
             if (GameObject.Find(name) != null)
             {
                 int index = 1;
                 string uniqueName = "";
 
-                do 
+                do
                 {
                     uniqueName = string.Format(NAME_FMT, name, index);
                     ++index;
                 } while (GameObject.Find(uniqueName) != null);
+
                 name = uniqueName;
             }
 
-			GameObject newGameObject = new GameObject(name);
-            return CreateSceneObject.Create(newGameObject, autoSelect);
-		}
+            GameObject newGameObject = new GameObject(name);
+            return Create(newGameObject, autoSelect);
+        }
 
-		public static GameObject Create(GameObject newGameObject, bool autoSelect = true)
-		{
+        public static GameObject Create(GameObject newGameObject, bool autoSelect = true)
+        {
             if (Selection.activeTransform != null && Selection.activeGameObject != newGameObject)
             {
                 newGameObject.transform.SetParent(Selection.activeTransform);
@@ -65,13 +64,13 @@
                 }
             }
 
-            #if UNITY_EDITOR
+#if UNITY_EDITOR
             if (!Application.isPlaying) EditorSceneManager.MarkSceneDirty(newGameObject.scene);
-            #endif
+#endif
 
             if (autoSelect) Selection.activeGameObject = newGameObject;
             return newGameObject;
-		}
+        }
 
         // PUBLIC UI METHODS: ---------------------------------------------------------------------
 
@@ -95,12 +94,12 @@
         {
             GameObject selection = Selection.activeGameObject;
 
-            Canvas canvas = (selection != null) ? selection.GetComponentInParent<Canvas>() : null;
+            Canvas canvas = selection != null ? selection.GetComponentInParent<Canvas>() : null;
             if (canvas != null && canvas.gameObject.activeInHierarchy)
             {
                 return canvas.gameObject;
             }
-            
+
             canvas = Object.FindObjectOfType(typeof(Canvas)) as Canvas;
             if (canvas != null && canvas.gameObject.activeInHierarchy)
             {
@@ -113,5 +112,5 @@
             newObject.AddComponent<GraphicRaycaster>();
             return newObject;
         }
-	}
+    }
 }

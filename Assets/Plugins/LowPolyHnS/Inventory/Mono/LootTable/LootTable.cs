@@ -1,16 +1,19 @@
-﻿namespace LowPolyHnS.Inventory
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEngine.Events;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Events;
+using Random = UnityEngine.Random;
 
+namespace LowPolyHnS.Inventory
+{
     [CreateAssetMenu(fileName = "New Loot Table", menuName = "LowPolyHnS/Inventory/Loot Table")]
     public class LootTable : ScriptableObject
     {
-        public class EventLoot : UnityEvent<LootResult> { }
+        public class EventLoot : UnityEvent<LootResult>
+        {
+        }
 
-        [System.Serializable]
+        [Serializable]
         public class Loot
         {
             public ItemHolder item = new ItemHolder();
@@ -26,21 +29,21 @@
 
             public Loot()
             {
-                this.item = new ItemHolder();
-                this.amount = 1;
-                this.weight = 1;
+                item = new ItemHolder();
+                amount = 1;
+                weight = 1;
             }
         }
 
-        [System.Serializable]
+        [Serializable]
         public class LootResult
         {
-            public Item item = null;
-            public int amount = 0;
+            public Item item;
+            public int amount;
 
             public LootResult(ItemHolder itemHolder, int amount)
             {
-                if (itemHolder != null) this.item = itemHolder.item;
+                if (itemHolder != null) item = itemHolder.item;
                 this.amount = amount;
             }
         }
@@ -59,19 +62,19 @@
             List<Loot> chances = new List<Loot>();
             int totalWeight = 0;
 
-            if (this.noDropWeight > 0)
+            if (noDropWeight > 0)
             {
-                totalWeight += this.noDropWeight;
-                chances.Add(new Loot(null, 0, this.noDropWeight));
+                totalWeight += noDropWeight;
+                chances.Add(new Loot(null, 0, noDropWeight));
             }
 
-            for (int i = 0; i < this.loot.Length; ++i)
+            for (int i = 0; i < loot.Length; ++i)
             {
-                chances.Add(this.loot[i]);
-                totalWeight += this.loot[i].weight;
+                chances.Add(loot[i]);
+                totalWeight += loot[i].weight;
             }
 
-            chances.Sort((Loot x, Loot y) => y.weight.CompareTo(x.weight));
+            chances.Sort((x, y) => y.weight.CompareTo(x.weight));
             int random = Random.Range(0, totalWeight);
 
             for (int i = 0; i < chances.Count; ++i)

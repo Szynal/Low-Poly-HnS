@@ -1,18 +1,15 @@
-﻿namespace LowPolyHnS.Core
+﻿using UnityEngine;
+
+namespace LowPolyHnS.Core
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-    using LowPolyHnS.Variables;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[AddComponentMenu("")]
+    [AddComponentMenu("")]
     public class ConditionRigidbody : ICondition
-	{
+    {
         public enum Condition
         {
             IsKinematic,
@@ -22,66 +19,66 @@
         public TargetGameObject target = new TargetGameObject(TargetGameObject.Target.GameObject);
         public Condition condition = Condition.IsKinematic;
 
-		// EXECUTABLE: ----------------------------------------------------------------------------
-		
+        // EXECUTABLE: ----------------------------------------------------------------------------
+
         public override bool Check(GameObject target)
-		{
+        {
             GameObject targetGO = this.target.GetGameObject(target);
             if (targetGO == null) return true;
 
             Rigidbody rb = targetGO.GetComponent<Rigidbody>();
             if (rb == null) return false;
 
-            switch (this.condition)
+            switch (condition)
             {
-                case Condition.IsKinematic : return rb.isKinematic;
-                case Condition.IsSleeping : return rb.IsSleeping();
+                case Condition.IsKinematic: return rb.isKinematic;
+                case Condition.IsSleeping: return rb.IsSleeping();
             }
 
             return false;
-		}
+        }
 
-		// +--------------------------------------------------------------------------------------+
-		// | EDITOR                                                                               |
-		// +--------------------------------------------------------------------------------------+
+        // +--------------------------------------------------------------------------------------+
+        // | EDITOR                                                                               |
+        // +--------------------------------------------------------------------------------------+
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 
-		public static new string NAME = "Object/Rigidbody";
+        public static new string NAME = "Object/Rigidbody";
         private const string NODE_TITLE = "Rigidbody: {0} {1}";
 
-		// PROPERTIES: ----------------------------------------------------------------------------
+        // PROPERTIES: ----------------------------------------------------------------------------
 
-		private SerializedProperty spTarget;
+        private SerializedProperty spTarget;
         private SerializedProperty spCondition;
 
-		// INSPECTOR METHODS: ---------------------------------------------------------------------
+        // INSPECTOR METHODS: ---------------------------------------------------------------------
 
-		public override string GetNodeTitle()
-		{
+        public override string GetNodeTitle()
+        {
             return string.Format(
-                NODE_TITLE, 
-                this.target, 
-                this.condition.ToString()
+                NODE_TITLE,
+                target,
+                condition.ToString()
             );
-		}
+        }
 
-		protected override void OnEnableEditorChild ()
-		{
-			this.spTarget = this.serializedObject.FindProperty("target");
-            this.spCondition = this.serializedObject.FindProperty("condition");
-		}
+        protected override void OnEnableEditorChild()
+        {
+            spTarget = serializedObject.FindProperty("target");
+            spCondition = serializedObject.FindProperty("condition");
+        }
 
-		public override void OnInspectorGUI()
-		{
-			this.serializedObject.Update();
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
 
-			EditorGUILayout.PropertyField(this.spTarget);
-            EditorGUILayout.PropertyField(this.spCondition);
+            EditorGUILayout.PropertyField(spTarget);
+            EditorGUILayout.PropertyField(spCondition);
 
-			this.serializedObject.ApplyModifiedProperties();
-		}
+            serializedObject.ApplyModifiedProperties();
+        }
 
-		#endif
-	}
+#endif
+    }
 }

@@ -1,15 +1,14 @@
-﻿namespace LowPolyHnS.Variables
-{
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEngine.SceneManagement;
-    using LowPolyHnS.Core;
+﻿using System;
+using System.Collections.Generic;
+using LowPolyHnS.Core;
+using UnityEngine;
 
-    #if UNITY_EDITOR
+namespace LowPolyHnS.Variables
+{
+#if UNITY_EDITOR
     using UnityEditor;
-    #endif
+
+#endif
 
     [AddComponentMenu("LowPolyHnS/Local Variables")]
     public class LocalVariables : GlobalID, IGameSave
@@ -20,17 +19,17 @@
 
         public MBVariable[] references = new MBVariable[0];
 
-        protected bool initalized = false;
+        protected bool initalized;
         private Dictionary<string, Variable> variables;
 
         // PUBLIC METHODS: ------------------------------------------------------------------------
 
         public Variable Get(string name)
         {
-            this.Initialize();
-            if (this.variables != null && this.variables.ContainsKey(name))
+            Initialize();
+            if (variables != null && variables.ContainsKey(name))
             {
-                return this.variables[name];
+                return variables[name];
             }
 
             return null;
@@ -38,31 +37,31 @@
 
         // INITIALIZERS: --------------------------------------------------------------------------
 
-		protected virtual void Start()
-		{
+        protected virtual void Start()
+        {
             if (!Application.isPlaying) return;
-            this.Initialize();
+            Initialize();
             SaveLoadManager.Instance.Initialize(this);
-		}
+        }
 
-		protected void Initialize(bool force = false)
-		{
-            string gid = this.GetID();
+        protected void Initialize(bool force = false)
+        {
+            string gid = GetID();
             if (!REGISTER.ContainsKey(gid))
             {
                 REGISTER.Add(gid, this);
             }
 
-            this.RequireInit(force);
-		}
+            RequireInit(force);
+        }
 
         protected virtual void OnDestroy()
-		{
-            this.OnDestroyGID();
+        {
+            OnDestroyGID();
             if (!Application.isPlaying) return;
-            if (this.exitingApplication) return;
+            if (exitingApplication) return;
 
-            string gid = this.GetID();
+            string gid = GetID();
             if (REGISTER.ContainsKey(gid))
             {
                 REGISTER.Remove(gid);
@@ -70,16 +69,16 @@
 
             if (SaveLoadManager.IS_EXITING) return;
             SaveLoadManager.Instance.OnDestroyIGameSave(this);
-		}
+        }
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         private void Reset()
         {
             SerializedProperty spReferences = null;
-            for (int i = 0; i < this.references.Length; ++i)
+            for (int i = 0; i < references.Length; ++i)
             {
-                MBVariable reference = this.references[i];
-                if (reference != null && reference.gameObject != this.gameObject)
+                MBVariable reference = references[i];
+                if (reference != null && reference.gameObject != gameObject)
                 {
                     MBVariable newVariable = gameObject.AddComponent<MBVariable>();
                     EditorUtility.CopySerialized(reference, newVariable);
@@ -96,36 +95,36 @@
 
             if (spReferences != null) spReferences.serializedObject.ApplyModifiedPropertiesWithoutUndo();
         }
-        #endif
+#endif
 
         // PRIVATE METHODS: -----------------------------------------------------------------------
 
         protected virtual void RequireInit(bool force = false)
         {
-            if (this.initalized && !force) return;
-            this.initalized = true;
+            if (initalized && !force) return;
+            initalized = true;
 
-            this.variables = new Dictionary<string, Variable>();
-            for (int i = 0; i < this.references.Length; ++i)
+            variables = new Dictionary<string, Variable>();
+            for (int i = 0; i < references.Length; ++i)
             {
-                Variable variable = this.references[i].variable;
+                Variable variable = references[i].variable;
                 if (variable == null) continue;
 
                 string variableName = variable.name;
-                if (!this.variables.ContainsKey(variableName))
+                if (!variables.ContainsKey(variableName))
                 {
-                    this.variables.Add(variableName, new Variable(variable));
+                    variables.Add(variableName, new Variable(variable));
                 }
             }
         }
 
-		// IGAMESAVE: -----------------------------------------------------------------------------
+        // IGAMESAVE: -----------------------------------------------------------------------------
 
-		public virtual string GetUniqueName()
+        public virtual string GetUniqueName()
         {
             string uniqueName = string.Format(
                 "variables:local:{0}",
-                this.GetID()
+                GetID()
             );
 
             return uniqueName;
@@ -140,12 +139,12 @@
         {
             DatabaseVariables.Container container = new DatabaseVariables.Container();
             container.variables = new List<Variable>();
-            if (this.variables == null || this.variables.Count == 0)
+            if (variables == null || variables.Count == 0)
             {
                 return container;
             }
 
-            foreach (KeyValuePair<string, Variable> item in this.variables)
+            foreach (KeyValuePair<string, Variable> item in variables)
             {
                 if (item.Value != null && item.Value.CanSave() && item.Value.save)
                 {
@@ -158,14 +157,14 @@
 
         public virtual void ResetData()
         {
-            this.RequireInit(true);
+            RequireInit(true);
         }
 
         public virtual void OnLoad(object generic)
         {
             if (generic == null) return;
 
-            DatabaseVariables.Container container = (DatabaseVariables.Container)generic;
+            DatabaseVariables.Container container = (DatabaseVariables.Container) generic;
             int variablesContainerCount = container.variables.Count;
 
             for (int i = 0; i < variablesContainerCount; ++i)
@@ -173,12 +172,12 @@
                 Variable variablesContainerVariable = container.variables[i];
                 string varName = variablesContainerVariable.name;
 
-                if (this.variables.ContainsKey(varName) && this.variables[varName].CanSave() && 
-                    this.variables[varName].save)
+                if (variables.ContainsKey(varName) && variables[varName].CanSave() &&
+                    variables[varName].save)
                 {
-                    if (this.variables[varName].Get() != variablesContainerVariable.Get())
+                    if (variables[varName].Get() != variablesContainerVariable.Get())
                     {
-                        this.variables[varName] = variablesContainerVariable;
+                        variables[varName] = variablesContainerVariable;
                         VariablesManager.events.OnChangeLocal(gameObject, varName);
                     }
                 }

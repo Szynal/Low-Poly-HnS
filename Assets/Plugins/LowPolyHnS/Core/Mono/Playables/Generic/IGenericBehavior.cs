@@ -1,32 +1,29 @@
-﻿namespace LowPolyHnS.Playables
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEngine.Playables;
-    using LowPolyHnS.Core;
+﻿using UnityEngine;
+using UnityEngine.Playables;
 
+namespace LowPolyHnS.Playables
+{
     public abstract class IGenericBehavior<T> : PlayableBehaviour
     {
         protected T interactable;
-        protected bool execute = false;
+        protected bool execute;
 
         public GameObject invoker;
 
         public override void OnBehaviourPlay(Playable playable, FrameData info)
         {
-            this.execute = true;
+            execute = true;
         }
 
         public override void ProcessFrame(Playable playable, FrameData info, object playerData)
         {
             if (!Application.isPlaying) return;
-            this.interactable = (T)playerData;
+            interactable = (T) playerData;
 
-            if (this.interactable != null && this.execute)
+            if (interactable != null && execute)
             {
-                this.Execute();
-                this.execute = false;
+                Execute();
+                execute = false;
             }
         }
 

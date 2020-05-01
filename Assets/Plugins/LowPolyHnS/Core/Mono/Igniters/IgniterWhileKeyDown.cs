@@ -1,24 +1,22 @@
-﻿namespace LowPolyHnS.Core
-{
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
+﻿using UnityEngine;
 
-	[AddComponentMenu("")]
-	public class IgniterWhileKeyDown : Igniter 
-	{
+namespace LowPolyHnS.Core
+{
+    [AddComponentMenu("")]
+    public class IgniterWhileKeyDown : Igniter
+    {
         public KeyCode key = KeyCode.Space;
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
         public new static string NAME = "Input/While Key Down";
-		#endif
+#endif
 
-		private void Update()
-		{
-			if (Input.GetKey(this.key))
-			{
-                this.ExecuteTrigger(gameObject);
-			}
-		}
-	}
+        private void Update()
+        {
+            if (Input.GetKey(key))
+            {
+                ExecuteTrigger(gameObject);
+            }
+        }
+    }
 }

@@ -1,42 +1,35 @@
-﻿namespace LowPolyHnS.Inventory
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEngine.EventSystems;
-    using UnityEngine.Events;
-    using UnityEngine.UI;
-    using LowPolyHnS.Core;
-    using LowPolyHnS.Core.Hooks;
+﻿using LowPolyHnS.Core.Hooks;
+using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
+namespace LowPolyHnS.Inventory
+{
     [AddComponentMenu("LowPolyHnS/UI/Hotbar Item")]
     public class HotbarUI : MonoBehaviour
     {
-        [Space]
-        public KeyCode keyCode = KeyCode.Space;
+        [Space] public KeyCode keyCode = KeyCode.Space;
 
-        [InventoryMultiItemType]
-        public int acceptItemTypes = -1;
+        [InventoryMultiItemType] public int acceptItemTypes = -1;
 
-        [Space]
-        public Image itemImage;
+        [Space] public Image itemImage;
         public Text itemText;
         public Text itemDescription;
 
-        [Space]
-        public UnityEvent eventOnHoverEnter;
+        [Space] public UnityEvent eventOnHoverEnter;
         public UnityEvent eventOnHoverExit;
 
-        private Item item = null;
+        private Item item;
 
         // INITIALIZERS: --------------------------------------------------------------------------
 
         private void Awake()
         {
-            this.SetupEvents(EventTriggerType.PointerEnter, this.OnPointerEnter);
-            this.SetupEvents(EventTriggerType.PointerExit, this.OnPointerExit);
+            SetupEvents(EventTriggerType.PointerEnter, OnPointerEnter);
+            SetupEvents(EventTriggerType.PointerExit, OnPointerExit);
 
-            this.UpdateUI();
+            UpdateUI();
         }
 
         protected void SetupEvents(EventTriggerType eventType, UnityAction<BaseEventData> callback)
@@ -55,10 +48,10 @@
 
         private void Update()
         {
-            if (this.item == null) return;
-            if (!Input.GetKeyDown(this.keyCode)) return;
+            if (item == null) return;
+            if (!Input.GetKeyDown(keyCode)) return;
 
-            InventoryManager.Instance.ConsumeItem(this.item.uuid, HookPlayer.Instance.gameObject);
+            InventoryManager.Instance.ConsumeItem(item.uuid, HookPlayer.Instance.gameObject);
         }
 
         // PUBLIC METHODS: ------------------------------------------------------------------------
@@ -66,64 +59,67 @@
         public bool BindItem(Item item)
         {
             if (item == null) return false;
-            if ((item.itemTypes & this.acceptItemTypes) == 0) return false;
+            if ((item.itemTypes & acceptItemTypes) == 0) return false;
             if (InventoryManager.Instance.GetInventoryAmountOfItem(item.uuid) == 0) return false;
 
             this.item = item;
-            this.UpdateUI();
+            UpdateUI();
 
-            InventoryManager.Instance.eventChangePlayerInventory.AddListener(this.UpdateUI);
+            InventoryManager.Instance.eventChangePlayerInventory.AddListener(UpdateUI);
             return true;
         }
 
         public void UnbindItem()
         {
-            this.item = null;
+            item = null;
 
-            this.OnPointerExit(null);
-            this.UpdateUI();
+            OnPointerExit(null);
+            UpdateUI();
 
-            InventoryManager.Instance.eventChangePlayerInventory.RemoveListener(this.UpdateUI);
+            InventoryManager.Instance.eventChangePlayerInventory.RemoveListener(UpdateUI);
         }
 
         // CALLBACK METHODS: ----------------------------------------------------------------------
 
         private void UpdateUI()
         {
-            if (this.item != null &&
-                InventoryManager.Instance.GetInventoryAmountOfItem(this.item.uuid) == 0)
+            if (item != null &&
+                InventoryManager.Instance.GetInventoryAmountOfItem(item.uuid) == 0)
             {
-                this.UnbindItem();
+                UnbindItem();
                 return;
             }
 
-            if (this.itemImage != null) this.itemImage.overrideSprite = this.item != null
-                    ? this.item.sprite
+            if (itemImage != null)
+                itemImage.overrideSprite = item != null
+                    ? item.sprite
                     : null;
 
-            if (this.itemText != null) this.itemText.text = this.item != null
-                    ? this.item.itemName.GetText()
+            if (itemText != null)
+                itemText.text = item != null
+                    ? item.itemName.GetText()
                     : string.Empty;
 
-            if (this.itemDescription != null) this.itemDescription.text = this.item != null
-                    ? this.item.itemDescription.GetText()
+            if (itemDescription != null)
+                itemDescription.text = item != null
+                    ? item.itemDescription.GetText()
                     : string.Empty;
         }
 
         public void OnDrop(Item item)
         {
-            this.BindItem(item);
+            BindItem(item);
         }
 
         protected void OnPointerEnter(BaseEventData eventData)
         {
-            if (this.item == null) return;
-            if (this.eventOnHoverEnter != null) this.eventOnHoverEnter.Invoke();
+            if (item == null) return;
+            if (eventOnHoverEnter != null) eventOnHoverEnter.Invoke();
         }
 
         protected void OnPointerExit(BaseEventData eventData)
         {
-            if (this.eventOnHoverExit != null) this.eventOnHoverExit.Invoke();
+            if (eventOnHoverExit != null) eventOnHoverExit.Invoke();
         }
     }
 }

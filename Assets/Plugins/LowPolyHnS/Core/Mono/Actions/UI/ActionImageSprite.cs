@@ -1,20 +1,17 @@
-﻿namespace LowPolyHnS.Core
+﻿using LowPolyHnS.Variables;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace LowPolyHnS.Core
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-    using UnityEngine.UI;
-	using UnityEngine.Events;
-	using LowPolyHnS.Core;
-    using LowPolyHnS.Variables;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[AddComponentMenu("")]
-	public class ActionImageSprite : IAction
-	{
+    [AddComponentMenu("")]
+    public class ActionImageSprite : IAction
+    {
         public Image image;
         public SpriteProperty sprite = new SpriteProperty();
 
@@ -22,57 +19,57 @@
 
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
-            if (this.image != null)
+            if (image != null)
             {
-                this.image.sprite = this.sprite.GetValue(target);
+                image.sprite = sprite.GetValue(target);
             }
 
             return true;
         }
 
-		// +--------------------------------------------------------------------------------------+
-		// | EDITOR                                                                               |
-		// +--------------------------------------------------------------------------------------+
+        // +--------------------------------------------------------------------------------------+
+        // | EDITOR                                                                               |
+        // +--------------------------------------------------------------------------------------+
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 
-	    public static new string NAME = "UI/Image Sprite";
-		private const string NODE_TITLE = "Change Image sprite";
+        public static new string NAME = "UI/Image Sprite";
+        private const string NODE_TITLE = "Change Image sprite";
 
-		// PROPERTIES: ----------------------------------------------------------------------------
+        // PROPERTIES: ----------------------------------------------------------------------------
 
-		private SerializedProperty spImage;
+        private SerializedProperty spImage;
         private SerializedProperty spSprite;
 
-		// INSPECTOR METHODS: ---------------------------------------------------------------------
+        // INSPECTOR METHODS: ---------------------------------------------------------------------
 
-		public override string GetNodeTitle()
-		{
+        public override string GetNodeTitle()
+        {
             return NODE_TITLE;
-		}
+        }
 
-		protected override void OnEnableEditorChild ()
-		{
-            this.spImage = this.serializedObject.FindProperty("image");
-            this.spSprite = this.serializedObject.FindProperty("sprite");
-		}
+        protected override void OnEnableEditorChild()
+        {
+            spImage = serializedObject.FindProperty("image");
+            spSprite = serializedObject.FindProperty("sprite");
+        }
 
-		protected override void OnDisableEditorChild ()
-		{
-            this.spImage = null;
-            this.spSprite = null;
-		}
+        protected override void OnDisableEditorChild()
+        {
+            spImage = null;
+            spSprite = null;
+        }
 
-		public override void OnInspectorGUI()
-		{
-			this.serializedObject.Update();
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
 
-            EditorGUILayout.PropertyField(this.spImage);
-            EditorGUILayout.PropertyField(this.spSprite);
+            EditorGUILayout.PropertyField(spImage);
+            EditorGUILayout.PropertyField(spSprite);
 
-			this.serializedObject.ApplyModifiedProperties();
-		}
+            serializedObject.ApplyModifiedProperties();
+        }
 
-		#endif
-	}
+#endif
+    }
 }

@@ -1,12 +1,10 @@
-﻿namespace LowPolyHnS.Inventory
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEngine.Events;
-    using LowPolyHnS.Core;
-    using System;
+﻿using System;
+using System.Collections.Generic;
+using LowPolyHnS.Core;
+using UnityEngine;
 
+namespace LowPolyHnS.Inventory
+{
     [AddComponentMenu("LowPolyHnS/Managers/Merchant Manager", 100)]
     public class MerchantManager : Singleton<MerchantManager>, IGameSave
     {
@@ -15,7 +13,7 @@
         {
             public string merchantID = "";
             public string itemID = "";
-            public int remainingAmount = 0;
+            public int remainingAmount;
 
             public MerchantData(string merchantID, string itemID, int remainingAmount)
             {
@@ -53,7 +51,7 @@
         public int GetMerchantAmount(Merchant merchant, Item item)
         {
             string key = MerchantData.GetKey(merchant.uuid, item.uuid.ToString());
-            if (!this.wares.ContainsKey(key))
+            if (!wares.ContainsKey(key))
             {
                 int maxAmount = -1;
                 for (int i = 0; maxAmount == -1 && i < merchant.warehouse.wares.Length; ++i)
@@ -72,15 +70,15 @@
                     }
                 }
 
-                this.wares.Add(key, new MerchantData(merchant.uuid, item.uuid.ToString(), maxAmount));
+                wares.Add(key, new MerchantData(merchant.uuid, item.uuid.ToString(), maxAmount));
             }
 
-            return this.wares[key].remainingAmount;
+            return wares[key].remainingAmount;
         }
 
         public bool BuyFromMerchant(Merchant merchant, Item item, int buyAmount)
         {
-            int curAmount = this.GetMerchantAmount(merchant, item);
+            int curAmount = GetMerchantAmount(merchant, item);
 
             int remainingAmount = curAmount - buyAmount;
             if (remainingAmount < 0) return false;
@@ -88,16 +86,16 @@
             if (InventoryManager.Instance.BuyItem(item.uuid, buyAmount, merchant))
             {
                 string key = MerchantData.GetKey(merchant.uuid, item.uuid.ToString());
-                if (!this.wares.ContainsKey(key))
+                if (!wares.ContainsKey(key))
                 {
-                    this.wares.Add(
+                    wares.Add(
                         key,
                         new MerchantData(merchant.uuid, item.uuid.ToString(), remainingAmount)
                     );
                 }
                 else
                 {
-                    this.wares[key].remainingAmount = remainingAmount;
+                    wares[key].remainingAmount = remainingAmount;
                 }
 
                 return true;
@@ -116,7 +114,7 @@
         public object GetSaveData()
         {
             MerchantSaveData data = new MerchantSaveData();
-            foreach (KeyValuePair<string, MerchantData> item in this.wares)
+            foreach (KeyValuePair<string, MerchantData> item in wares)
             {
                 data.warehouses.Add(item.Value);
             }
@@ -139,21 +137,21 @@
             MerchantSaveData saveData = generic as MerchantSaveData;
             if (saveData == null) saveData = new MerchantSaveData();
 
-            this.wares = new Dictionary<string, MerchantData>();
+            wares = new Dictionary<string, MerchantData>();
 
             for (int i = 0; i < saveData.warehouses.Count; ++i)
             {
                 MerchantData saveDataItem = saveData.warehouses[i];
                 string key = MerchantData.GetKey(saveDataItem.merchantID, saveDataItem.itemID);
 
-                if (this.wares.ContainsKey(key)) continue;
-                this.wares.Add(key, saveDataItem);
+                if (wares.ContainsKey(key)) continue;
+                wares.Add(key, saveDataItem);
             }
         }
 
         public void ResetData()
         {
-            this.wares = new Dictionary<string, MerchantData>();
+            wares = new Dictionary<string, MerchantData>();
         }
     }
 }

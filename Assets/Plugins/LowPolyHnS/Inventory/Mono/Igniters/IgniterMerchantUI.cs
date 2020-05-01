@@ -1,18 +1,16 @@
-﻿namespace LowPolyHnS.Inventory
-{
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-    using LowPolyHnS.Core;
+﻿using LowPolyHnS.Core;
+using UnityEngine;
 
+namespace LowPolyHnS.Inventory
+{
     [AddComponentMenu("")]
-    public class IgniterMerchantUI : Igniter 
-	{
-		#if UNITY_EDITOR
+    public class IgniterMerchantUI : Igniter
+    {
+#if UNITY_EDITOR
         public new static string NAME = "Inventory/On Merchant UI";
         public new static string ICON_PATH = "Assets/Plugins/LowPolyHnS/Inventory/Icons/Igniters/";
         public const string CUSTOM_ICON_PATH = "Assets/Plugins/LowPolyHnS/Inventory/Icons/Igniters/";
-        #endif
+#endif
 
         public enum State
         {
@@ -24,13 +22,13 @@
 
         private void Start()
         {
-            InventoryManager.Instance.eventMerchantUI.AddListener(this.OnChangeState);
+            InventoryManager.Instance.eventMerchantUI.AddListener(OnChangeState);
         }
 
         private void OnChangeState(bool state)
         {
-            if (state == true  && this.detect == State.OnOpen)  this.ExecuteTrigger(gameObject);
-            if (state == false && this.detect == State.OnClose) this.ExecuteTrigger(gameObject);
+            if (state && detect == State.OnOpen) ExecuteTrigger(gameObject);
+            if (state == false && detect == State.OnClose) ExecuteTrigger(gameObject);
         }
     }
 }

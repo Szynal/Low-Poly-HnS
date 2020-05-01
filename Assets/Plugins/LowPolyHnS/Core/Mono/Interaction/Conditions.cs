@@ -1,57 +1,57 @@
-﻿namespace LowPolyHnS.Core
+﻿using System.Collections;
+using UnityEngine;
+using UnityEngine.Events;
+
+namespace LowPolyHnS.Core
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-    using UnityEngine.Events;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[ExecuteInEditMode]
+    [ExecuteInEditMode]
     [AddComponentMenu("LowPolyHnS/Conditions", 0)]
-    public class Conditions : MonoBehaviour 
-	{
+    public class Conditions : MonoBehaviour
+    {
         public Clause[] clauses = new Clause[0];
-		public Actions defaultActions;
+        public Actions defaultActions;
 
         // EVENTS: --------------------------------------------------------------------------------
 
         public UnityEvent onInteract = new UnityEvent();
 
-		// INTERACT METHOD: -----------------------------------------------------------------------
+        // INTERACT METHOD: -----------------------------------------------------------------------
 
         public virtual void Interact()
         {
-            this.Interact(null, new object[0]);
+            Interact(null);
         }
 
         public virtual void Interact(GameObject target, params object[] parameters)
-		{
-            if (this.onInteract != null) this.onInteract.Invoke();
-			for (int i = 0; i < this.clauses.Length; ++i)
-			{
-                if (this.clauses[i].CheckConditions(target, parameters))
-				{
-                    this.clauses[i].ExecuteActions(target, parameters);
-					return;
-				}
-			}
+        {
+            if (onInteract != null) onInteract.Invoke();
+            for (int i = 0; i < clauses.Length; ++i)
+            {
+                if (clauses[i].CheckConditions(target, parameters))
+                {
+                    clauses[i].ExecuteActions(target, parameters);
+                    return;
+                }
+            }
 
-			if (this.defaultActions != null) 
-			{
-				this.defaultActions.Execute(target);
-			}
-		}
+            if (defaultActions != null)
+            {
+                defaultActions.Execute(target);
+            }
+        }
 
         public virtual IEnumerator InteractCoroutine(GameObject target = null)
         {
-            for (int i = 0; i < this.clauses.Length; ++i)
+            for (int i = 0; i < clauses.Length; ++i)
             {
-                if (this.clauses[i].CheckConditions(target))
+                if (clauses[i].CheckConditions(target))
                 {
-                    Actions actions = this.clauses[i].actions;
+                    Actions actions = clauses[i].actions;
                     if (actions != null)
                     {
                         Coroutine coroutine = CoroutinesManager.Instance.StartCoroutine(
@@ -65,25 +65,24 @@
                 }
             }
 
-            if (this.defaultActions != null)
+            if (defaultActions != null)
             {
                 Coroutine coroutine = CoroutinesManager.Instance.StartCoroutine(
-                    this.defaultActions.actionsList.ExecuteCoroutine(target, null)
+                    defaultActions.actionsList.ExecuteCoroutine(target, null)
                 );
 
                 yield return coroutine;
-                yield break;
             }
         }
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         private void OnEnable()
         {
             SerializedProperty spClauses = null;
-            for (int i = 0; i < this.clauses.Length; ++i)
+            for (int i = 0; i < clauses.Length; ++i)
             {
-                Clause clause = this.clauses[i];
-                if (clause != null && clause.gameObject != this.gameObject)
+                Clause clause = clauses[i];
+                if (clause != null && clause.gameObject != gameObject)
                 {
                     Clause newClause = gameObject.AddComponent(clause.GetType()) as Clause;
                     EditorUtility.CopySerialized(clause, newClause);
@@ -100,20 +99,28 @@
 
             if (spClauses != null) spClauses.serializedObject.ApplyModifiedPropertiesWithoutUndo();
         }
-        #endif
+#endif
 
         // GIZMO METHODS: -------------------------------------------------------------------------
 
         private void OnDrawGizmos()
-		{
-            int numClauses = (this.clauses == null ? 0 : this.clauses.Length);
+        {
+            int numClauses = clauses == null ? 0 : clauses.Length;
             switch (numClauses)
             {
-                case 0:  Gizmos.DrawIcon(transform.position, "LowPolyHnS/Conditions/conditions0", true); break;
-                case 1:  Gizmos.DrawIcon(transform.position, "LowPolyHnS/Conditions/conditions1", true); break;
-                case 2:  Gizmos.DrawIcon(transform.position, "LowPolyHnS/Conditions/conditions2", true); break;
-                default: Gizmos.DrawIcon(transform.position, "LowPolyHnS/Conditions/conditions3", true); break;
+                case 0:
+                    Gizmos.DrawIcon(transform.position, "LowPolyHnS/Conditions/conditions0", true);
+                    break;
+                case 1:
+                    Gizmos.DrawIcon(transform.position, "LowPolyHnS/Conditions/conditions1", true);
+                    break;
+                case 2:
+                    Gizmos.DrawIcon(transform.position, "LowPolyHnS/Conditions/conditions2", true);
+                    break;
+                default:
+                    Gizmos.DrawIcon(transform.position, "LowPolyHnS/Conditions/conditions3", true);
+                    break;
             }
-		}
-	}
+        }
+    }
 }

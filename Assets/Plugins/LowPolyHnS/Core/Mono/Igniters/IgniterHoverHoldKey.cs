@@ -1,17 +1,14 @@
-﻿namespace LowPolyHnS.Core
-{
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-    using LowPolyHnS.Variables;
+﻿using UnityEngine;
 
-	[AddComponentMenu("")]
-	public class IgniterHoverHoldKey : Igniter 
-	{
-		#if UNITY_EDITOR
-		public new static string NAME = "Input/On Hover Hold Key";
-		public new static bool REQUIRES_COLLIDER = true;
-        #endif
+namespace LowPolyHnS.Core
+{
+    [AddComponentMenu("")]
+    public class IgniterHoverHoldKey : Igniter
+    {
+#if UNITY_EDITOR
+        public new static string NAME = "Input/On Hover Hold Key";
+        public new static bool REQUIRES_COLLIDER = true;
+#endif
 
         public enum ReleaseType
         {
@@ -19,62 +16,64 @@
             OnTimeout
         }
 
-		public KeyCode keyCode = KeyCode.E;
+        public KeyCode keyCode = KeyCode.E;
         public float holdTime = 0.5f;
         public ReleaseType execute = ReleaseType.OnKeyUp;
 
-        private bool isPressing = false;
-		private bool isMouseOver = false;
+        private bool isPressing;
+        private bool isMouseOver;
         private float downTime = -9999.0f;
 
-		private void Update()
-		{
-            if (this.isMouseOver)
+        private void Update()
+        {
+            if (isMouseOver)
             {
-                if (this.isPressing && Time.time > this.downTime + this.holdTime)
+                if (isPressing && Time.time > downTime + holdTime)
                 {
-                    switch (this.execute)
+                    switch (execute)
                     {
                         case ReleaseType.OnKeyUp:
-                            if (Input.GetKeyUp(this.keyCode))
+                            if (Input.GetKeyUp(keyCode))
                             {
-                                this.isPressing = false;
-                                this.ExecuteTrigger(gameObject);
+                                isPressing = false;
+                                ExecuteTrigger(gameObject);
                             }
+
                             break;
 
                         case ReleaseType.OnTimeout:
-                            if (Input.GetKey(this.keyCode))
+                            if (Input.GetKey(keyCode))
                             {
-                                this.isPressing = false;
-                                this.ExecuteTrigger(gameObject);
+                                isPressing = false;
+                                ExecuteTrigger(gameObject);
                             }
+
                             break;
                     }
                 }
 
-                if (Input.GetKeyDown(this.keyCode))
+                if (Input.GetKeyDown(keyCode))
                 {
-                    this.isPressing = true;
-                    this.downTime = Time.time;
+                    isPressing = true;
+                    downTime = Time.time;
                 }
 
-                if (Input.GetKeyUp(this.keyCode))
+                if (Input.GetKeyUp(keyCode))
                 {
-                    this.isPressing = false;
+                    isPressing = false;
                 }
             }
-		}
+        }
 
-		private void OnMouseExit()
-		{
-			this.isMouseOver = false;
-            this.isPressing = false;
-		}
+        private void OnMouseExit()
+        {
+            isMouseOver = false;
+            isPressing = false;
+        }
 
-		private void OnMouseEnter()
-		{
-			this.isMouseOver = true;
-		}
-	}
+        private void OnMouseEnter()
+        {
+            isMouseOver = true;
+        }
+    }
 }

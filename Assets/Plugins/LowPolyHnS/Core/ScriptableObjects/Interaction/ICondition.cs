@@ -1,86 +1,85 @@
-﻿namespace LowPolyHnS.Core
+﻿using UnityEngine;
+
+namespace LowPolyHnS.Core
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	public abstract class ICondition : MonoBehaviour 
-	{
+    public abstract class ICondition : MonoBehaviour
+    {
         public virtual bool Check()
-		{
-			return true;
-		}
+        {
+            return true;
+        }
 
         public virtual bool Check(GameObject target)
         {
-            return this.Check();
+            return Check();
         }
 
         public virtual bool Check(GameObject target, params object[] parameters)
         {
-            return this.Check(target);
+            return Check(target);
         }
 
-		// +--------------------------------------------------------------------------------------+
-		// | EDITOR                                                                               |
-		// +--------------------------------------------------------------------------------------+
+        // +--------------------------------------------------------------------------------------+
+        // | EDITOR                                                                               |
+        // +--------------------------------------------------------------------------------------+
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 
-		// PROPERTIES: ----------------------------------------------------------------------------
+        // PROPERTIES: ----------------------------------------------------------------------------
 
-		public static string NAME = "General/Empty Condition";
-		protected SerializedObject serializedObject;
+        public static string NAME = "General/Empty Condition";
+        protected SerializedObject serializedObject;
         public bool isExpanded = false;
 
-		// METHODS: -------------------------------------------------------------------------------
-        
-		private void Awake()
-		{
-			this.hideFlags = HideFlags.HideInInspector | HideFlags.HideInHierarchy;
-		}
+        // METHODS: -------------------------------------------------------------------------------
 
-		private void OnEnable()
-		{
-			this.hideFlags = HideFlags.HideInInspector | HideFlags.HideInHierarchy;
-		}
+        private void Awake()
+        {
+            hideFlags = HideFlags.HideInInspector | HideFlags.HideInHierarchy;
+        }
 
-		private void OnValidate()
-		{
-			this.hideFlags = HideFlags.HideInInspector | HideFlags.HideInHierarchy;
-		}
+        private void OnEnable()
+        {
+            hideFlags = HideFlags.HideInInspector | HideFlags.HideInHierarchy;
+        }
 
-		public void OnEnableEditor(UnityEngine.Object condition)
-		{
-			this.serializedObject = new SerializedObject(condition);
-			this.serializedObject.Update();
+        private void OnValidate()
+        {
+            hideFlags = HideFlags.HideInInspector | HideFlags.HideInHierarchy;
+        }
 
-			this.OnEnableEditorChild();
-		}
+        public void OnEnableEditor(Object condition)
+        {
+            serializedObject = new SerializedObject(condition);
+            serializedObject.Update();
+
+            OnEnableEditorChild();
+        }
 
         public void OnInspectorGUIEditor()
         {
-            if (this.serializedObject == null) return;
-            this.OnInspectorGUI();
+            if (serializedObject == null) return;
+            OnInspectorGUI();
         }
 
         // VIRTUAL AND ABSTRACT METHODS: ----------------------------------------------------------
 
         public virtual string GetNodeTitle()
         {
-            return this.GetType().Name;
+            return GetType().Name;
         }
 
         public virtual void OnInspectorGUI()
         {
-            if (this.serializedObject.targetObject != null)
+            if (serializedObject.targetObject != null)
             {
-                this.serializedObject.Update();
-                SerializedProperty iterator = this.serializedObject.GetIterator();
+                serializedObject.Update();
+                SerializedProperty iterator = serializedObject.GetIterator();
                 bool enterChildren = true;
                 while (iterator.NextVisible(enterChildren))
                 {
@@ -88,16 +87,21 @@
 
                     if ("m_Script" == iterator.propertyPath) continue;
                     if ("isExpanded" == iterator.propertyPath) continue;
-                    EditorGUILayout.PropertyField(iterator, true, new GUILayoutOption[0]);
+                    EditorGUILayout.PropertyField(iterator, true);
                 }
 
-                this.serializedObject.ApplyModifiedProperties();
+                serializedObject.ApplyModifiedProperties();
             }
         }
 
-        protected virtual void OnEnableEditorChild()  {}
-        protected virtual void OnDisableEditorChild() {}
+        protected virtual void OnEnableEditorChild()
+        {
+        }
 
-		#endif
-	}
+        protected virtual void OnDisableEditorChild()
+        {
+        }
+
+#endif
+    }
 }

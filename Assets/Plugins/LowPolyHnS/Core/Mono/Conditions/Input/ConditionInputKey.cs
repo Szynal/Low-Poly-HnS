@@ -1,94 +1,104 @@
-﻿namespace LowPolyHnS.Core
+﻿using UnityEngine;
+
+namespace LowPolyHnS.Core
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[AddComponentMenu("")]
-	public class ConditionInputKey : ICondition
-	{
-		public enum STATE 
-		{
-			BeingPressed,
-			JustPressed,
-			JustReleased
-		}
+    [AddComponentMenu("")]
+    public class ConditionInputKey : ICondition
+    {
+        public enum STATE
+        {
+            BeingPressed,
+            JustPressed,
+            JustReleased
+        }
 
-		// PROPERTIES: -------------------------------------------------------------------------------------------------
+        // PROPERTIES: -------------------------------------------------------------------------------------------------
 
-		public KeyCode key = KeyCode.Space;
-		public STATE state = STATE.JustReleased;
+        public KeyCode key = KeyCode.Space;
+        public STATE state = STATE.JustReleased;
 
-		// EXECUTABLE: -------------------------------------------------------------------------------------------------
-		
-		public override bool Check()
-		{
-			bool result = false;
-			switch (this.state)
-			{
-			case STATE.BeingPressed : result = Input.GetKey(this.key); break;
-			case STATE.JustPressed  : result = Input.GetKeyDown(this.key); break;
-			case STATE.JustReleased : result = Input.GetKeyUp(this.key); break;
-			}
+        // EXECUTABLE: -------------------------------------------------------------------------------------------------
 
-			return result;
-		}
+        public override bool Check()
+        {
+            bool result = false;
+            switch (state)
+            {
+                case STATE.BeingPressed:
+                    result = Input.GetKey(key);
+                    break;
+                case STATE.JustPressed:
+                    result = Input.GetKeyDown(key);
+                    break;
+                case STATE.JustReleased:
+                    result = Input.GetKeyUp(key);
+                    break;
+            }
 
-		// +-----------------------------------------------------------------------------------------------------------+
-		// | EDITOR                                                                                                    |
-		// +-----------------------------------------------------------------------------------------------------------+
+            return result;
+        }
 
-		#if UNITY_EDITOR
+        // +-----------------------------------------------------------------------------------------------------------+
+        // | EDITOR                                                                                                    |
+        // +-----------------------------------------------------------------------------------------------------------+
 
-		public static new string NAME = "Input/Keyboard";
-		private const string NODE_TITLE = "Is {0} {1}";
+#if UNITY_EDITOR
 
-		// PROPERTIES: -------------------------------------------------------------------------------------------------
+        public static new string NAME = "Input/Keyboard";
+        private const string NODE_TITLE = "Is {0} {1}";
 
-		private SerializedProperty spKey;
-		private SerializedProperty spState;
+        // PROPERTIES: -------------------------------------------------------------------------------------------------
 
-		// INSPECTOR METHODS: ------------------------------------------------------------------------------------------
+        private SerializedProperty spKey;
+        private SerializedProperty spState;
 
-		public override string GetNodeTitle()
-		{
-			string keyName = this.key.ToString();
-			string keyState = "";
-			switch (this.state)
-			{
-			case STATE.BeingPressed : keyState = "Being Pressed"; break;
-			case STATE.JustPressed  : keyState = "Just Pressed";  break;
-			case STATE.JustReleased : keyState = "Just Released"; break;
-			}
+        // INSPECTOR METHODS: ------------------------------------------------------------------------------------------
 
-			return string.Format(
-				NODE_TITLE, 
-				keyName,
-				keyState
-			);
-		}
+        public override string GetNodeTitle()
+        {
+            string keyName = key.ToString();
+            string keyState = "";
+            switch (state)
+            {
+                case STATE.BeingPressed:
+                    keyState = "Being Pressed";
+                    break;
+                case STATE.JustPressed:
+                    keyState = "Just Pressed";
+                    break;
+                case STATE.JustReleased:
+                    keyState = "Just Released";
+                    break;
+            }
 
-		protected override void OnEnableEditorChild ()
-		{
-			this.spKey = this.serializedObject.FindProperty("key");
-			this.spState = this.serializedObject.FindProperty("state");
-		}
+            return string.Format(
+                NODE_TITLE,
+                keyName,
+                keyState
+            );
+        }
 
-		public override void OnInspectorGUI()
-		{
-			this.serializedObject.Update();
+        protected override void OnEnableEditorChild()
+        {
+            spKey = serializedObject.FindProperty("key");
+            spState = serializedObject.FindProperty("state");
+        }
 
-			EditorGUILayout.PropertyField(this.spKey);
-			EditorGUILayout.PropertyField(this.spState);
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
 
-			this.serializedObject.ApplyModifiedProperties();
-		}
+            EditorGUILayout.PropertyField(spKey);
+            EditorGUILayout.PropertyField(spState);
 
-		#endif
-	}
+            serializedObject.ApplyModifiedProperties();
+        }
+
+#endif
+    }
 }

@@ -1,24 +1,22 @@
-﻿namespace LowPolyHnS.Messages
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEngine.Events;
-    using UnityEngine.Audio;
-    using LowPolyHnS.Core;
-    using LowPolyHnS.Localization;
+﻿using System.Collections;
+using LowPolyHnS.Core;
+using LowPolyHnS.Localization;
+using UnityEngine;
+using UnityEngine.Audio;
 
-    #if UNITY_EDITOR
+namespace LowPolyHnS.Messages
+{
+#if UNITY_EDITOR
     using UnityEditor;
-    #endif
+
+#endif
 
     [AddComponentMenu("")]
     public class ActionFloatingMessage : IAction
     {
         public AudioClip audioClip;
 
-        [LocStringNoPostProcess]
-        public LocString message = new LocString();
+        [LocStringNoPostProcess] public LocString message = new LocString();
 
         public Color color = Color.white;
         public float time = 2.0f;
@@ -26,7 +24,7 @@
         public TargetGameObject target = new TargetGameObject(TargetGameObject.Target.GameObject);
         public Vector3 offset = new Vector3(0, 2, 0);
 
-        private bool forceStop = false;
+        private bool forceStop;
 
         // EXECUTABLE: ----------------------------------------------------------------------------
 
@@ -35,24 +33,24 @@
             Transform targetTransform = this.target.GetTransform(target);
             if (targetTransform != null)
             {
-                if (this.audioClip != null)
+                if (audioClip != null)
                 {
                     AudioMixerGroup voiceMixer = DatabaseGeneral.Load().voiceAudioMixer;
-                    AudioManager.Instance.PlayVoice(this.audioClip, 0f, 1f, voiceMixer);
+                    AudioManager.Instance.PlayVoice(audioClip, 0f, 1f, voiceMixer);
                 }
 
                 FloatingMessageManager.Show(
-                    this.message.GetText(), this.color,
-                    targetTransform, this.offset, this.time
+                    message.GetText(), color,
+                    targetTransform, offset, time
                 );
 
-                float waitTime = Time.time + this.time;
-                WaitUntil waitUntil = new WaitUntil(() => Time.time > waitTime || this.forceStop);
+                float waitTime = Time.time + time;
+                WaitUntil waitUntil = new WaitUntil(() => Time.time > waitTime || forceStop);
                 yield return waitUntil;
 
-                if (this.audioClip != null)
+                if (audioClip != null)
                 {
-                    AudioManager.Instance.StopVoice(this.audioClip);
+                    AudioManager.Instance.StopVoice(audioClip);
                 }
             }
 
@@ -61,7 +59,7 @@
 
         public override void Stop()
         {
-            this.forceStop = true;
+            forceStop = true;
         }
 
 #if UNITY_EDITOR
@@ -83,39 +81,38 @@
         {
             return string.Format(
                 NODE_TITLE,
-                (this.message.content.Length > 23
-                    ? this.message.content.Substring(0, 20) + "..."
-                    : this.message.content
-                )
+                message.content.Length > 23
+                    ? message.content.Substring(0, 20) + "..."
+                    : message.content
             );
         }
 
         protected override void OnEnableEditorChild()
         {
-            this.spAudioClip = this.serializedObject.FindProperty("audioClip");
-            this.spMessage = this.serializedObject.FindProperty("message");
-            this.spColor = this.serializedObject.FindProperty("color");
-            this.spTime = this.serializedObject.FindProperty("time");
+            spAudioClip = serializedObject.FindProperty("audioClip");
+            spMessage = serializedObject.FindProperty("message");
+            spColor = serializedObject.FindProperty("color");
+            spTime = serializedObject.FindProperty("time");
 
-            this.spTarget = this.serializedObject.FindProperty("target");
-            this.spOffset = this.serializedObject.FindProperty("offset");
+            spTarget = serializedObject.FindProperty("target");
+            spOffset = serializedObject.FindProperty("offset");
         }
 
         public override void OnInspectorGUI()
         {
-            this.serializedObject.Update();
+            serializedObject.Update();
 
-            EditorGUILayout.PropertyField(this.spMessage);
-            EditorGUILayout.PropertyField(this.spAudioClip);
-            EditorGUILayout.PropertyField(this.spColor);
+            EditorGUILayout.PropertyField(spMessage);
+            EditorGUILayout.PropertyField(spAudioClip);
+            EditorGUILayout.PropertyField(spColor);
 
             EditorGUILayout.Space();
-            EditorGUILayout.PropertyField(this.spTime);
+            EditorGUILayout.PropertyField(spTime);
 
-            if (this.spAudioClip.objectReferenceValue != null)
+            if (spAudioClip.objectReferenceValue != null)
             {
-                AudioClip clip = (AudioClip)this.spAudioClip.objectReferenceValue;
-                if (!Mathf.Approximately(clip.length, this.spTime.floatValue))
+                AudioClip clip = (AudioClip) spAudioClip.objectReferenceValue;
+                if (!Mathf.Approximately(clip.length, spTime.floatValue))
                 {
                     Rect btnRect = GUILayoutUtility.GetRect(GUIContent.none, EditorStyles.miniButton);
                     btnRect = new Rect(
@@ -127,16 +124,16 @@
 
                     if (GUI.Button(btnRect, "Use Audio Length", EditorStyles.miniButton))
                     {
-                        this.spTime.floatValue = clip.length;
+                        spTime.floatValue = clip.length;
                     }
                 }
             }
 
             EditorGUILayout.Space();
-            EditorGUILayout.PropertyField(this.spTarget);
-            EditorGUILayout.PropertyField(this.spOffset);
+            EditorGUILayout.PropertyField(spTarget);
+            EditorGUILayout.PropertyField(spOffset);
 
-            this.serializedObject.ApplyModifiedProperties();
+            serializedObject.ApplyModifiedProperties();
         }
 #endif
     }

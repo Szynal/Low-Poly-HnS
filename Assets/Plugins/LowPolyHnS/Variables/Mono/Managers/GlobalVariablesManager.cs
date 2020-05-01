@@ -1,41 +1,40 @@
-﻿namespace LowPolyHnS.Variables
-{
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using LowPolyHnS.Core;
+﻿using System;
+using System.Collections.Generic;
+using LowPolyHnS.Core;
+using UnityEngine;
 
+namespace LowPolyHnS.Variables
+{
     [AddComponentMenu("")]
     public class GlobalVariablesManager : Singleton<GlobalVariablesManager>, IGameSave
     {
         // PROPERTIES: ----------------------------------------------------------------------------
 
         private Dictionary<string, Variable> variables;
-        private bool igamesaveInitialized = false;
+        private bool igamesaveInitialized;
 
         // INITIALIZERS: --------------------------------------------------------------------------
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void InitializeOnLoad()
         {
-            GlobalVariablesManager.Instance.WakeUp();
+            Instance.WakeUp();
         }
 
         protected override void OnCreate()
         {
             base.OnCreate();
-            this.RequireInit();
+            RequireInit();
         }
 
         // PUBLIC METHODS: ------------------------------------------------------------------------
 
         public Variable Get(string name)
         {
-            this.RequireInit();
-            if (this.variables.ContainsKey(name))
+            RequireInit();
+            if (variables.ContainsKey(name))
             {
-                return this.variables[name];
+                return variables[name];
             }
 
             return null;
@@ -43,12 +42,12 @@
 
         public string[] GetNames()
         {
-            this.RequireInit();
+            RequireInit();
 
-            string[] names = new string[this.variables.Count];
+            string[] names = new string[variables.Count];
             int index = 0;
 
-            foreach (KeyValuePair<string, Variable> item in this.variables)
+            foreach (KeyValuePair<string, Variable> item in variables)
             {
                 names[index] = item.Key;
                 index += 1;
@@ -59,18 +58,18 @@
 
         private void RequireInit(bool force = false)
         {
-            if (this.variables != null && !force) return;
+            if (variables != null && !force) return;
 
-            if (!this.igamesaveInitialized)
+            if (!igamesaveInitialized)
             {
                 SaveLoadManager.Instance.Initialize(this);
-                this.igamesaveInitialized = true;
+                igamesaveInitialized = true;
             }
 
             DatabaseVariables database = IDatabase.LoadDatabaseCopy<DatabaseVariables>();
             GlobalVariables globalVariables = database.GetGlobalVariables();
 
-            this.variables = new Dictionary<string, Variable>();
+            variables = new Dictionary<string, Variable>();
             if (globalVariables == null) return;
 
             for (int i = 0; i < globalVariables.references.Length; ++i)
@@ -80,9 +79,9 @@
                 if (variable == null) continue;
                 string variableName = variable.name;
 
-                if (!this.variables.ContainsKey(variableName))
+                if (!variables.ContainsKey(variableName))
                 {
-                    this.variables.Add(variableName, variable);
+                    variables.Add(variableName, variable);
                 }
             }
         }
@@ -104,7 +103,7 @@
             DatabaseVariables.Container container = new DatabaseVariables.Container();
             container.variables = new List<Variable>();
 
-            foreach (KeyValuePair<string, Variable> item in this.variables)
+            foreach (KeyValuePair<string, Variable> item in variables)
             {
                 if (item.Value.CanSave() && item.Value.save)
                 {
@@ -117,14 +116,14 @@
 
         public void ResetData()
         {
-            this.RequireInit(true);
+            RequireInit(true);
         }
 
         public void OnLoad(object generic)
         {
-            this.RequireInit();
+            RequireInit();
 
-            DatabaseVariables.Container container = (DatabaseVariables.Container)generic;
+            DatabaseVariables.Container container = (DatabaseVariables.Container) generic;
             int variablesContainerCount = container.variables.Count;
 
             for (int i = 0; i < variablesContainerCount; ++i)
@@ -132,12 +131,12 @@
                 Variable variablesContainerVariable = container.variables[i];
                 string varName = variablesContainerVariable.name;
 
-                if (this.variables.ContainsKey(varName) && this.variables[varName].CanSave() &&
-                    this.variables[varName].save)
+                if (variables.ContainsKey(varName) && variables[varName].CanSave() &&
+                    variables[varName].save)
                 {
-                    if (this.variables[varName].Get() != variablesContainerVariable.Get())
+                    if (variables[varName].Get() != variablesContainerVariable.Get())
                     {
-                        this.variables[varName] = variablesContainerVariable;
+                        variables[varName] = variablesContainerVariable;
                         VariablesManager.events.OnChangeGlobal(varName);
                     }
                 }

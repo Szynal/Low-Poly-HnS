@@ -1,9 +1,9 @@
-﻿namespace LowPolyHnS.Core
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
+﻿using UnityEngine;
 
+namespace LowPolyHnS.Core
+{
     [AddComponentMenu("")]
-    public class CoroutinesManager : Singleton<CoroutinesManager> {}
+    public class CoroutinesManager : Singleton<CoroutinesManager>
+    {
+    }
 }

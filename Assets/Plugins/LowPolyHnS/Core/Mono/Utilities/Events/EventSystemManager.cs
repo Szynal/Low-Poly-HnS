@@ -1,33 +1,30 @@
-﻿namespace LowPolyHnS.Core
-{
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.EventSystems;
-	using UnityEngine.SceneManagement;
-    using LowPolyHnS.Core.Hooks;
+﻿using LowPolyHnS.Core.Hooks;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
-	[AddComponentMenu("LowPolyHnS/Managers/EventSystemManager", 100)]
-	public class EventSystemManager : Singleton<EventSystemManager>
-	{
-        protected override void OnCreate ()
-		{
-            EventSystem eventSystem = GameObject.FindObjectOfType<EventSystem>();
-            StandaloneInputModule input = GameObject.FindObjectOfType<StandaloneInputModule>();
+namespace LowPolyHnS.Core
+{
+    [AddComponentMenu("LowPolyHnS/Managers/EventSystemManager", 100)]
+    public class EventSystemManager : Singleton<EventSystemManager>
+    {
+        protected override void OnCreate()
+        {
+            EventSystem eventSystem = FindObjectOfType<EventSystem>();
+            StandaloneInputModule input = FindObjectOfType<StandaloneInputModule>();
 
             if (input != null) Destroy(input);
             if (eventSystem != null) Destroy(eventSystem);
 
             gameObject.AddComponent<EventSystem>();
-            this.inputModule = gameObject.AddComponent<LowPolyHnSStandaloneInputModule>();
+            inputModule = gameObject.AddComponent<LowPolyHnSStandaloneInputModule>();
 
-			SceneManager.sceneLoaded += this.OnSceneLoad;
+            SceneManager.sceneLoaded += OnSceneLoad;
         }
 
-		public void Wakeup()
-		{
-			return;
-		}
+        public void Wakeup()
+        {
+        }
 
         // PROPERTIES: ----------------------------------------------------------------------------
 
@@ -37,21 +34,21 @@
 
         public GameObject GetPointerGameObject(int pointerID = -1)
         {
-            return this.inputModule.GameObjectUnderPointer(pointerID);
+            return inputModule.GameObjectUnderPointer(pointerID);
         }
 
         public bool IsPointerOverUI(int pointerID = -1)
         {
-            GameObject pointer = this.GetPointerGameObject(pointerID);
+            GameObject pointer = GetPointerGameObject(pointerID);
             if (pointer == null) return false;
 
-            return (pointer.transform as RectTransform != null);
+            return pointer.transform as RectTransform != null;
         }
 
-		public void OnSceneLoad(Scene scene, LoadSceneMode loadSceneMode)
-		{
-            this.RequireInit();
-		}
+        public void OnSceneLoad(Scene scene, LoadSceneMode loadSceneMode)
+        {
+            RequireInit();
+        }
 
         // PRIVATE METHODS: -----------------------------------------------------------------------
 
@@ -59,7 +56,7 @@
         {
             if (HookCamera.Instance == null)
             {
-                this.RequireCamera();
+                RequireCamera();
             }
 
             if (HookCamera.Instance != null)
@@ -85,7 +82,6 @@
             if (cameraComp != null)
             {
                 cameraComp.gameObject.AddComponent<HookCamera>();
-                return;
             }
         }
     }

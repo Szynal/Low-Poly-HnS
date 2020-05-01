@@ -1,15 +1,18 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class FE_InteractionPanel : MonoBehaviour
 {
-    [SerializeField] float showAnimTime = 0.8f;
-    private float basePos = 0;
+    [SerializeField] private float showAnimTime = 0.8f;
+    private float basePos;
     private RectTransform rectTransform;
-    private Coroutine animCoroutine = null;
-    private bool isVisible = false;
-    public bool GetVisibility()             { return isVisible; }
+    private Coroutine animCoroutine;
+    private bool isVisible;
+
+    public bool GetVisibility()
+    {
+        return isVisible;
+    }
 
     private void Awake()
     {
@@ -32,6 +35,7 @@ public class FE_InteractionPanel : MonoBehaviour
         {
             StopCoroutine(animCoroutine);
         }
+
         animCoroutine = StartCoroutine(animatePanel(true, showAnimTime));
         isVisible = true;
     }
@@ -42,14 +46,17 @@ public class FE_InteractionPanel : MonoBehaviour
         {
             StopCoroutine(animCoroutine);
         }
-        if (gameObject.activeInHierarchy == true)
+
+        if (gameObject.activeInHierarchy)
         {
             animCoroutine = StartCoroutine(animatePanel(false, showAnimTime));
         }
         else
         {
-            rectTransform.anchoredPosition = new Vector3(rectTransform.anchoredPosition.x, basePos - rectTransform.rect.height / 2f, 0f);
+            rectTransform.anchoredPosition = new Vector3(rectTransform.anchoredPosition.x,
+                basePos - rectTransform.rect.height / 2f, 0f);
         }
+
         isVisible = false;
     }
 
@@ -69,7 +76,8 @@ public class FE_InteractionPanel : MonoBehaviour
         {
             _time -= Time.unscaledDeltaTime * _lerpRate;
 
-            rectTransform.anchoredPosition = new Vector3(rectTransform.anchoredPosition.x, Mathf.Lerp(_startyY, _desiredY, 1f - _time), 0f); //1 - time, bo zmniejszamy czas zamiast zwiekszac
+            rectTransform.anchoredPosition = new Vector3(rectTransform.anchoredPosition.x,
+                Mathf.Lerp(_startyY, _desiredY, 1f - _time), 0f); //1 - time, bo zmniejszamy czas zamiast zwiekszac
 
             if (Mathf.Abs(rectTransform.anchoredPosition.y - _desiredY) <= 1f)
             {

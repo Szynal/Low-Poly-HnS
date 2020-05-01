@@ -1,22 +1,18 @@
-﻿namespace LowPolyHnS.Core
+﻿using LowPolyHnS.Variables;
+using UnityEngine;
+using UnityEngine.Serialization;
+
+namespace LowPolyHnS.Core
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-	using LowPolyHnS.Core;
-    using LowPolyHnS.Variables;
-    using UnityEngine.Serialization;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[AddComponentMenu("")]
-	public class ActionLight : IAction
-	{
-        [FormerlySerializedAs("light")]
-        public Light lightTarget;
+    [AddComponentMenu("")]
+    public class ActionLight : IAction
+    {
+        [FormerlySerializedAs("light")] public Light lightTarget;
 
         public bool changeRange = false;
         public NumberProperty range = new NumberProperty(10f);
@@ -31,30 +27,30 @@
 
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
-            if (this.lightTarget != null)
+            if (lightTarget != null)
             {
-                if (this.changeRange) this.lightTarget.range = this.range.GetValue(target);
-                if (this.changeIntensity) this.lightTarget.intensity = this.intensity.GetValue(target);
-                if (this.changeColor) this.lightTarget.color = this.color.GetValue(target);
+                if (changeRange) lightTarget.range = range.GetValue(target);
+                if (changeIntensity) lightTarget.intensity = intensity.GetValue(target);
+                if (changeColor) lightTarget.color = color.GetValue(target);
             }
 
             return true;
         }
 
-		// +--------------------------------------------------------------------------------------+
-		// | EDITOR                                                                               |
-		// +--------------------------------------------------------------------------------------+
+        // +--------------------------------------------------------------------------------------+
+        // | EDITOR                                                                               |
+        // +--------------------------------------------------------------------------------------+
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 
-		public static new string NAME = "Object/Light";
+        public static new string NAME = "Object/Light";
         private const string NODE_TITLE = "Change light {0}";
 
         private static readonly GUIContent GUICONTENT_LIGHT = new GUIContent("Light");
 
-		// PROPERTIES: ----------------------------------------------------------------------------
+        // PROPERTIES: ----------------------------------------------------------------------------
 
-		private SerializedProperty spLight;
+        private SerializedProperty spLight;
         private SerializedProperty spChangeRange;
         private SerializedProperty spRange;
         private SerializedProperty spChangeIntensity;
@@ -62,65 +58,65 @@
         private SerializedProperty spChangeColor;
         private SerializedProperty spColor;
 
-		// INSPECTOR METHODS: ---------------------------------------------------------------------
+        // INSPECTOR METHODS: ---------------------------------------------------------------------
 
-		public override string GetNodeTitle()
-		{
+        public override string GetNodeTitle()
+        {
             return string.Format(
                 NODE_TITLE,
-                (this.lightTarget == null ? "(none)" : this.lightTarget.gameObject.name)
+                lightTarget == null ? "(none)" : lightTarget.gameObject.name
             );
-		}
+        }
 
-		protected override void OnEnableEditorChild ()
-		{
-            this.spLight = this.serializedObject.FindProperty("lightTarget");
-            this.spChangeRange = this.serializedObject.FindProperty("changeRange");
-            this.spRange = this.serializedObject.FindProperty("range");
-            this.spChangeIntensity = this.serializedObject.FindProperty("changeIntensity");
-            this.spIntensity = this.serializedObject.FindProperty("intensity");
-            this.spChangeColor = this.serializedObject.FindProperty("changeColor");
-            this.spColor = this.serializedObject.FindProperty("color");
-		}
+        protected override void OnEnableEditorChild()
+        {
+            spLight = serializedObject.FindProperty("lightTarget");
+            spChangeRange = serializedObject.FindProperty("changeRange");
+            spRange = serializedObject.FindProperty("range");
+            spChangeIntensity = serializedObject.FindProperty("changeIntensity");
+            spIntensity = serializedObject.FindProperty("intensity");
+            spChangeColor = serializedObject.FindProperty("changeColor");
+            spColor = serializedObject.FindProperty("color");
+        }
 
-		protected override void OnDisableEditorChild ()
-		{
-            this.spLight = null;
-            this.spChangeRange = null;
-            this.spRange = null;
-            this.spChangeIntensity = null;
-            this.spIntensity = null;
-            this.spChangeColor = null;
-            this.spColor = null;
-		}
+        protected override void OnDisableEditorChild()
+        {
+            spLight = null;
+            spChangeRange = null;
+            spRange = null;
+            spChangeIntensity = null;
+            spIntensity = null;
+            spChangeColor = null;
+            spColor = null;
+        }
 
-		public override void OnInspectorGUI()
-		{
-			this.serializedObject.Update();
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
 
-            EditorGUILayout.PropertyField(this.spLight, GUICONTENT_LIGHT);
+            EditorGUILayout.PropertyField(spLight, GUICONTENT_LIGHT);
             EditorGUILayout.Space();
 
-            EditorGUILayout.PropertyField(this.spChangeRange);
-            EditorGUI.BeginDisabledGroup(!this.spChangeRange.boolValue);
-            EditorGUILayout.PropertyField(this.spRange);
+            EditorGUILayout.PropertyField(spChangeRange);
+            EditorGUI.BeginDisabledGroup(!spChangeRange.boolValue);
+            EditorGUILayout.PropertyField(spRange);
             EditorGUI.EndDisabledGroup();
 
             EditorGUILayout.Space();
-            EditorGUILayout.PropertyField(this.spChangeIntensity);
-            EditorGUI.BeginDisabledGroup(!this.spChangeIntensity.boolValue);
-            EditorGUILayout.PropertyField(this.spIntensity);
+            EditorGUILayout.PropertyField(spChangeIntensity);
+            EditorGUI.BeginDisabledGroup(!spChangeIntensity.boolValue);
+            EditorGUILayout.PropertyField(spIntensity);
             EditorGUI.EndDisabledGroup();
 
             EditorGUILayout.Space();
-            EditorGUILayout.PropertyField(this.spChangeColor);
-            EditorGUI.BeginDisabledGroup(!this.spChangeColor.boolValue);
-            EditorGUILayout.PropertyField(this.spColor);
+            EditorGUILayout.PropertyField(spChangeColor);
+            EditorGUI.BeginDisabledGroup(!spChangeColor.boolValue);
+            EditorGUILayout.PropertyField(spColor);
             EditorGUI.EndDisabledGroup();
 
-			this.serializedObject.ApplyModifiedProperties();
-		}
+            serializedObject.ApplyModifiedProperties();
+        }
 
-		#endif
-	}
+#endif
+    }
 }

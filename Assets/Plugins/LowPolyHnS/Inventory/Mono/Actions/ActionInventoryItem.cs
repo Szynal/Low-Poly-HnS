@@ -1,107 +1,105 @@
-﻿namespace LowPolyHnS.Inventory
+﻿using LowPolyHnS.Core;
+using UnityEngine;
+
+namespace LowPolyHnS.Inventory
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-	using LowPolyHnS.Core;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[AddComponentMenu("")]
-	public class ActionInventoryItem : IAction 
-	{
-		public enum ITEM_ACTION
-		{
-			Add,
-			Substract,
-			Consume
-		}
+    [AddComponentMenu("")]
+    public class ActionInventoryItem : IAction
+    {
+        public enum ITEM_ACTION
+        {
+            Add,
+            Substract,
+            Consume
+        }
 
-		public ITEM_ACTION operation = ITEM_ACTION.Add;
-		public ItemHolder itemHolder;
-		public int amount = 1;
+        public ITEM_ACTION operation = ITEM_ACTION.Add;
+        public ItemHolder itemHolder;
+        public int amount = 1;
 
         // EXECUTABLE: -------------------------------------------------------------------------------------------------
 
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
-            switch (this.operation)
+            switch (operation)
             {
                 case ITEM_ACTION.Add:
-                    InventoryManager.Instance.AddItemToInventory(this.itemHolder.item.uuid, this.amount);
+                    InventoryManager.Instance.AddItemToInventory(itemHolder.item.uuid, amount);
                     break;
 
                 case ITEM_ACTION.Substract:
-                    InventoryManager.Instance.SubstractItemFromInventory(this.itemHolder.item.uuid, this.amount);
+                    InventoryManager.Instance.SubstractItemFromInventory(itemHolder.item.uuid, amount);
                     break;
 
                 case ITEM_ACTION.Consume:
-                    InventoryManager.Instance.ConsumeItem(this.itemHolder.item.uuid);
+                    InventoryManager.Instance.ConsumeItem(itemHolder.item.uuid);
                     break;
             }
 
             return true;
         }
 
-		// +-----------------------------------------------------------------------------------------------------------+
-		// | EDITOR                                                                                                    |
-		// +-----------------------------------------------------------------------------------------------------------+
+        // +-----------------------------------------------------------------------------------------------------------+
+        // | EDITOR                                                                                                    |
+        // +-----------------------------------------------------------------------------------------------------------+
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 
-		public const string CUSTOM_ICON_PATH = "Assets/Plugins/LowPolyHnS/Inventory/Icons/Actions/";
+        public const string CUSTOM_ICON_PATH = "Assets/Plugins/LowPolyHnS/Inventory/Icons/Actions/";
 
-		public static new string NAME = "Inventory/Item";
-		private const string NODE_TITLE = "{0} {1} {2} item{3}";
+        public static new string NAME = "Inventory/Item";
+        private const string NODE_TITLE = "{0} {1} {2} item{3}";
 
-		// PROPERTIES: -------------------------------------------------------------------------------------------------
+        // PROPERTIES: -------------------------------------------------------------------------------------------------
 
-		private SerializedProperty spOperation;
-		private SerializedProperty spItemHolder;
-		private SerializedProperty spAmount;
+        private SerializedProperty spOperation;
+        private SerializedProperty spItemHolder;
+        private SerializedProperty spAmount;
 
-		// INSPECTOR METHODS: ------------------------------------------------------------------------------------------
+        // INSPECTOR METHODS: ------------------------------------------------------------------------------------------
 
-		public override string GetNodeTitle()
-		{
-			return string.Format(
-				NODE_TITLE, 
-				this.operation.ToString(),
-				this.amount.ToString(),
-				(this.itemHolder.item == null ? "nothing" : this.itemHolder.item.itemName.content),
-				(this.amount != 1 ? "s" : "")
-			);
-		}
+        public override string GetNodeTitle()
+        {
+            return string.Format(
+                NODE_TITLE,
+                operation.ToString(),
+                amount.ToString(),
+                itemHolder.item == null ? "nothing" : itemHolder.item.itemName.content,
+                amount != 1 ? "s" : ""
+            );
+        }
 
-		protected override void OnEnableEditorChild ()
-		{
-			this.spOperation = this.serializedObject.FindProperty("operation");
-			this.spItemHolder = this.serializedObject.FindProperty("itemHolder");
-			this.spAmount = this.serializedObject.FindProperty("amount");
-		}
+        protected override void OnEnableEditorChild()
+        {
+            spOperation = serializedObject.FindProperty("operation");
+            spItemHolder = serializedObject.FindProperty("itemHolder");
+            spAmount = serializedObject.FindProperty("amount");
+        }
 
-		protected override void OnDisableEditorChild ()
-		{
-			this.spOperation = null;
-			this.spItemHolder = null;
-			this.spAmount = null;
-		}
+        protected override void OnDisableEditorChild()
+        {
+            spOperation = null;
+            spItemHolder = null;
+            spAmount = null;
+        }
 
-		public override void OnInspectorGUI()
-		{
-			this.serializedObject.Update();
-			EditorGUILayout.PropertyField(this.spOperation);
-			EditorGUILayout.PropertyField(this.spItemHolder);
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
+            EditorGUILayout.PropertyField(spOperation);
+            EditorGUILayout.PropertyField(spItemHolder);
 
-			EditorGUILayout.PropertyField(this.spAmount);
-			this.spAmount.intValue = Mathf.Max(0, this.spAmount.intValue);
+            EditorGUILayout.PropertyField(spAmount);
+            spAmount.intValue = Mathf.Max(0, spAmount.intValue);
 
-			this.serializedObject.ApplyModifiedProperties();
-		}
+            serializedObject.ApplyModifiedProperties();
+        }
 
-		#endif
-	}
+#endif
+    }
 }

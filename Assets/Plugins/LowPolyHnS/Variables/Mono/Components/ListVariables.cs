@@ -1,11 +1,11 @@
-﻿namespace LowPolyHnS.Variables
-{
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using LowPolyHnS.Core;
+﻿using System;
+using System.Collections.Generic;
+using LowPolyHnS.Core;
+using UnityEngine;
+using Random = UnityEngine.Random;
 
+namespace LowPolyHnS.Variables
+{
     [DisallowMultipleComponent]
     [AddComponentMenu("LowPolyHnS/List Variables")]
     public class ListVariables : LocalVariables
@@ -18,7 +18,7 @@
             Previous,
             Current,
             Next,
-            Random,
+            Random
         }
 
         // PROPERTIES: ----------------------------------------------------------------------------
@@ -35,7 +35,7 @@
         {
             if (!Application.isPlaying) return;
 
-            this.Initialize(true);
+            Initialize(true);
             if (save) SaveLoadManager.Instance.Initialize(this);
         }
 
@@ -43,31 +43,31 @@
 
         public Variable Get(int index)
         {
-            this.Initialize();
-            if (index < 0 || index >= this.variables.Count) return null;
-            return this.variables[index];
+            Initialize();
+            if (index < 0 || index >= variables.Count) return null;
+            return variables[index];
         }
 
         public Variable Get(Position position, int index = 0)
         {
-            this.Initialize();
+            Initialize();
             switch (position)
             {
-                case Position.Index: return this.Get(index);
-                case Position.First: return this.Get(0);
-                case Position.Last: return this.Get(this.variables.Count - 1);
-                case Position.Current: return this.Get(this.iterator);
+                case Position.Index: return Get(index);
+                case Position.First: return Get(0);
+                case Position.Last: return Get(variables.Count - 1);
+                case Position.Current: return Get(iterator);
                 case Position.Next:
-                    this.NextIterator();
-                    return this.Get(this.iterator);
+                    NextIterator();
+                    return Get(iterator);
 
                 case Position.Previous:
-                    this.PrevIterator();
-                    return this.Get(this.iterator);
+                    PrevIterator();
+                    return Get(iterator);
 
                 case Position.Random:
-                    int randomIndex = UnityEngine.Random.Range(0, this.variables.Count);
-                    return this.Get(randomIndex);
+                    int randomIndex = Random.Range(0, variables.Count);
+                    return Get(randomIndex);
             }
 
             return null;
@@ -75,138 +75,138 @@
 
         public void Push(object value, int index)
         {
-            this.Initialize();
+            Initialize();
             Variable variable = new Variable(
                 Guid.NewGuid().ToString("N"),
-                this.type,
+                type,
                 value,
-                this.save
+                save
             );
 
             index = Math.Max(index, 0);
-            index = Math.Min(index, this.variables.Count);
-            this.variables.Insert(index, variable);
+            index = Math.Min(index, variables.Count);
+            variables.Insert(index, variable);
 
             VariablesManager.events.OnListAdd(gameObject, index, value);
         }
 
         public void Push(object value, Position position = Position.Last, int index = 0)
         {
-            this.Initialize();
+            Initialize();
             switch (position)
             {
                 case Position.Index:
-                    this.Push(value, index);
+                    Push(value, index);
                     break;
 
-                case Position.First: 
-                    this.Push(value, 0); 
+                case Position.First:
+                    Push(value, 0);
                     break;
 
-                case Position.Last: 
-                    this.Push(value, this.variables.Count); 
+                case Position.Last:
+                    Push(value, variables.Count);
                     break;
 
-                case Position.Current: 
-                    this.Push(value, this.iterator);
+                case Position.Current:
+                    Push(value, iterator);
                     break;
 
                 case Position.Next:
-                    this.Push(value, this.iterator + 1);
+                    Push(value, iterator + 1);
                     break;
 
                 case Position.Previous:
-                    this.Push(value, this.iterator - 1);
+                    Push(value, iterator - 1);
                     break;
 
                 case Position.Random:
-                    int random = UnityEngine.Random.Range(0, this.variables.Count);
-                    this.Push(value, random);
+                    int random = Random.Range(0, variables.Count);
+                    Push(value, random);
                     break;
             }
         }
 
         public void Remove(int index)
         {
-            this.Initialize();
-            if (index < 0 || index >= this.variables.Count) return;
+            Initialize();
+            if (index < 0 || index >= variables.Count) return;
 
-            object value = this.variables[index].Get();
-            this.variables.RemoveAt(index);
+            object value = variables[index].Get();
+            variables.RemoveAt(index);
 
-            VariablesManager.events.OnListRemove(gameObject, this.iterator, value);
+            VariablesManager.events.OnListRemove(gameObject, iterator, value);
         }
 
         public void Remove(Position position = Position.First, int index = 0)
         {
-            this.Initialize();
+            Initialize();
             switch (position)
             {
                 case Position.Index:
-                    this.Remove(index);
+                    Remove(index);
                     break;
 
                 case Position.First:
-                    this.Remove(0);
+                    Remove(0);
                     break;
 
                 case Position.Last:
-                    this.Remove(this.variables.Count - 1);
+                    Remove(variables.Count - 1);
                     break;
 
                 case Position.Current:
-                    this.Remove(this.iterator);
+                    Remove(iterator);
                     break;
 
                 case Position.Next:
-                    this.Remove(this.iterator + 1);
+                    Remove(iterator + 1);
                     break;
 
                 case Position.Previous:
-                    this.Remove(this.iterator - 1);
+                    Remove(iterator - 1);
                     break;
 
                 case Position.Random:
-                    int random = UnityEngine.Random.Range(0, this.variables.Count);
-                    this.Remove(random);
+                    int random = Random.Range(0, variables.Count);
+                    Remove(random);
                     break;
             }
         }
 
         public void SetInterator(int value)
         {
-            this.iterator = Mathf.Clamp(
+            iterator = Mathf.Clamp(
                 value,
-                0, this.variables.Count - 1
+                0, variables.Count - 1
             );
         }
 
         public void NextIterator()
         {
-            this.iterator += 1;
-            if (this.iterator >= this.variables.Count) this.iterator = 0;
+            iterator += 1;
+            if (iterator >= variables.Count) iterator = 0;
         }
 
         public void PrevIterator()
         {
-            this.iterator -= 1;
-            if (this.iterator < 0) this.iterator = this.variables.Count - 1;
+            iterator -= 1;
+            if (iterator < 0) iterator = variables.Count - 1;
         }
 
         // PRIVATE METHODS: -----------------------------------------------------------------------
 
         protected override void RequireInit(bool force = false)
         {
-            if (this.initalized && !force) return;
-            this.initalized = true;
+            if (initalized && !force) return;
+            initalized = true;
 
-            this.variables = new List<Variable>();
-            for (int i = 0; i < this.references.Length; ++i)
+            variables = new List<Variable>();
+            for (int i = 0; i < references.Length; ++i)
             {
-                Variable variable = this.references[i].variable;
+                Variable variable = references[i].variable;
                 if (variable == null) continue;
 
-                this.variables.Add(new Variable(variable));
+                variables.Add(new Variable(variable));
             }
         }
 
@@ -216,7 +216,7 @@
         {
             string uniqueName = string.Format(
                 "variables:list:{0}",
-                this.GetID()
+                GetID()
             );
 
             return uniqueName;
@@ -226,14 +226,14 @@
         {
             DatabaseVariables.Container container = new DatabaseVariables.Container();
             container.variables = new List<Variable>();
-            if (this.variables == null || this.variables.Count == 0)
+            if (variables == null || variables.Count == 0)
             {
                 return container;
             }
 
-            foreach (Variable item in this.variables)
+            foreach (Variable item in variables)
             {
-                if (this.save && item != null && item.CanSave())
+                if (save && item != null && item.CanSave())
                 {
                     container.variables.Add(item);
                 }
@@ -244,20 +244,20 @@
 
         public override void ResetData()
         {
-            this.RequireInit(true);
+            RequireInit(true);
         }
 
         public override void OnLoad(object generic)
         {
             if (generic == null) return;
-            if (!this.save) return;
+            if (!save) return;
 
-            DatabaseVariables.Container container = (DatabaseVariables.Container)generic;
-            while (this.variables.Count > 0) this.Remove(Position.First);
+            DatabaseVariables.Container container = (DatabaseVariables.Container) generic;
+            while (variables.Count > 0) Remove();
 
             for (int i = 0; i < container.variables.Count; ++i)
             {
-                this.Push(container.variables[i].Get(), i);
+                Push(container.variables[i].Get(), i);
             }
         }
     }

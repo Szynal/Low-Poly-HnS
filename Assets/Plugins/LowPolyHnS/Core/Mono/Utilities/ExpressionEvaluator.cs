@@ -1,7 +1,7 @@
-﻿namespace LowPolyHnS.Core
-{
-    using LowPolyHnS.Core.Math;
+﻿using LowPolyHnS.Core.Math;
 
+namespace LowPolyHnS.Core
+{
     public static class ExpressionEvaluator
     {
         public static float Evaluate(string expression)

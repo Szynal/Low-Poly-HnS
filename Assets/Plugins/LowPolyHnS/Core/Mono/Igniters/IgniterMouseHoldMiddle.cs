@@ -1,17 +1,15 @@
-﻿namespace LowPolyHnS.Core
-{
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.EventSystems;
+﻿using UnityEngine;
+using UnityEngine.EventSystems;
 
-	[AddComponentMenu("")]
+namespace LowPolyHnS.Core
+{
+    [AddComponentMenu("")]
     public class IgniterMouseHoldMiddle : Igniter, IPointerDownHandler, IPointerUpHandler, IPointerExitHandler
     {
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         public new static string NAME = "Input/On Mouse Middle Hold";
         public new static bool REQUIRES_COLLIDER = true;
-        #endif
+#endif
 
         private const PointerEventData.InputButton MOUSE_BUTTON = PointerEventData.InputButton.Middle;
 
@@ -25,7 +23,7 @@
         public ReleaseType execute = ReleaseType.OnMouseUp;
 
         private float downTime = -999.0f;
-        private bool isPressing = false;
+        private bool isPressing;
 
         private void Start()
         {
@@ -34,13 +32,13 @@
 
         private void Update()
         {
-            if (this.execute == ReleaseType.OnTimeout && this.isPressing)
+            if (execute == ReleaseType.OnTimeout && isPressing)
             {
-                if (Input.GetMouseButton((int)MOUSE_BUTTON) &&
-                    (Time.time - this.downTime) > this.holdTime)
+                if (Input.GetMouseButton((int) MOUSE_BUTTON) &&
+                    Time.time - downTime > holdTime)
                 {
-                    this.isPressing = false;
-                    this.ExecuteTrigger(gameObject);
+                    isPressing = false;
+                    ExecuteTrigger(gameObject);
                 }
             }
         }
@@ -49,26 +47,26 @@
         {
             if (eventData.button == PointerEventData.InputButton.Left)
             {
-                this.isPressing = true;
-                this.downTime = Time.time;
+                isPressing = true;
+                downTime = Time.time;
             }
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            this.isPressing = false;
+            isPressing = false;
         }
 
         public void OnPointerUp(PointerEventData eventData)
         {
             if (eventData.button != MOUSE_BUTTON) return;
-            if (!this.isPressing) return;
+            if (!isPressing) return;
 
-            this.isPressing = false;
+            isPressing = false;
 
-            if (this.execute == ReleaseType.OnMouseUp && (Time.time - this.downTime) > this.holdTime)
+            if (execute == ReleaseType.OnMouseUp && Time.time - downTime > holdTime)
             {
-                this.ExecuteTrigger(gameObject);
+                ExecuteTrigger(gameObject);
             }
         }
     }

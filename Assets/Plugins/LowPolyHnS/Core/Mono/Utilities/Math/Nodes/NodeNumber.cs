@@ -2,7 +2,7 @@
 {
     public class NodeNumber : Node
     {
-        private readonly float number = 0.0f;
+        private readonly float number;
 
         // INITIALIZERS: --------------------------------------------------------------------------
 
@@ -15,7 +15,7 @@
 
         public override float Evaluate()
         {
-            return this.number;
+            return number;
         }
     }
 }

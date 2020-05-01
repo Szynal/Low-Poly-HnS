@@ -1,69 +1,67 @@
-﻿namespace LowPolyHnS.Inventory
+﻿using LowPolyHnS.Core;
+using UnityEngine;
+
+namespace LowPolyHnS.Inventory
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-	using LowPolyHnS.Core;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[AddComponentMenu("")]
-	public class ConditionCurrency : ICondition
-	{
-		public int currencyAmount;
+    [AddComponentMenu("")]
+    public class ConditionCurrency : ICondition
+    {
+        public int currencyAmount;
 
-		// EXECUTABLE: -------------------------------------------------------------------------------------------------
+        // EXECUTABLE: -------------------------------------------------------------------------------------------------
 
-		public override bool Check()
-		{
-			int currentCurrency = InventoryManager.Instance.GetCurrency();
-			return this.currencyAmount <= currentCurrency;
-		}
+        public override bool Check()
+        {
+            int currentCurrency = InventoryManager.Instance.GetCurrency();
+            return currencyAmount <= currentCurrency;
+        }
 
-		// +-----------------------------------------------------------------------------------------------------------+
-		// | EDITOR                                                                                                    |
-		// +-----------------------------------------------------------------------------------------------------------+
+        // +-----------------------------------------------------------------------------------------------------------+
+        // | EDITOR                                                                                                    |
+        // +-----------------------------------------------------------------------------------------------------------+
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 
-		public const string CUSTOM_ICON_PATH = "Assets/Plugins/LowPolyHnS/Inventory/Icons/Conditions/";
+        public const string CUSTOM_ICON_PATH = "Assets/Plugins/LowPolyHnS/Inventory/Icons/Conditions/";
 
-		public static new string NAME = "Inventory/Enough Currency";
-		private const string NODE_TITLE = "Player has at least {0} of currency";
+        public static new string NAME = "Inventory/Enough Currency";
+        private const string NODE_TITLE = "Player has at least {0} of currency";
 
-		// PROPERTIES: -------------------------------------------------------------------------------------------------
+        // PROPERTIES: -------------------------------------------------------------------------------------------------
 
-		private SerializedProperty spCurrencyAmount;
+        private SerializedProperty spCurrencyAmount;
 
-		// INSPECTOR METHODS: ------------------------------------------------------------------------------------------
+        // INSPECTOR METHODS: ------------------------------------------------------------------------------------------
 
-		public override string GetNodeTitle()
-		{
-			return string.Format(NODE_TITLE, this.currencyAmount);
-		}
+        public override string GetNodeTitle()
+        {
+            return string.Format(NODE_TITLE, currencyAmount);
+        }
 
-		protected override void OnEnableEditorChild ()
-		{
-			this.spCurrencyAmount = this.serializedObject.FindProperty("currencyAmount");
-		}
+        protected override void OnEnableEditorChild()
+        {
+            spCurrencyAmount = serializedObject.FindProperty("currencyAmount");
+        }
 
-		protected override void OnDisableEditorChild ()
-		{
-			this.spCurrencyAmount = null;
-		}
+        protected override void OnDisableEditorChild()
+        {
+            spCurrencyAmount = null;
+        }
 
-		public override void OnInspectorGUI()
-		{
-			this.serializedObject.Update();
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
 
-			EditorGUILayout.PropertyField(this.spCurrencyAmount);
+            EditorGUILayout.PropertyField(spCurrencyAmount);
 
-			this.serializedObject.ApplyModifiedProperties();
-		}
+            serializedObject.ApplyModifiedProperties();
+        }
 
-		#endif
-	}
+#endif
+    }
 }

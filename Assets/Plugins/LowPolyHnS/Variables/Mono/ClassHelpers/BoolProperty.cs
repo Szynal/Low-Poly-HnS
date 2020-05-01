@@ -1,14 +1,16 @@
-﻿namespace LowPolyHnS.Variables
-{
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
+﻿using System;
 
+namespace LowPolyHnS.Variables
+{
     [Serializable]
     public class BoolProperty : BaseProperty<bool>
     {
-        public BoolProperty() : base() { }
-        public BoolProperty(bool value) : base(value) { }
+        public BoolProperty()
+        {
+        }
+
+        public BoolProperty(bool value) : base(value)
+        {
+        }
     }
 }

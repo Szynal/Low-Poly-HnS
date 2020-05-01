@@ -1,23 +1,21 @@
-﻿namespace LowPolyHnS.Inventory
-{
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-    using LowPolyHnS.Core;
-    using LowPolyHnS.Core.Hooks;
+﻿using LowPolyHnS.Core;
+using LowPolyHnS.Core.Hooks;
+using UnityEngine;
 
+namespace LowPolyHnS.Inventory
+{
     [AddComponentMenu("")]
-    public class IgniterCurrency : Igniter 
-	{
-		#if UNITY_EDITOR
+    public class IgniterCurrency : Igniter
+    {
+#if UNITY_EDITOR
         public new static string NAME = "Inventory/On Currency Change";
         public new static string ICON_PATH = "Assets/Plugins/LowPolyHnS/Inventory/Icons/Igniters/";
         public const string CUSTOM_ICON_PATH = "Assets/Plugins/LowPolyHnS/Inventory/Icons/Igniters/";
-        #endif
+#endif
 
         private void Start()
         {
-            InventoryManager.Instance.eventChangePlayerCurrency.AddListener(this.OnCurrencyChange);
+            InventoryManager.Instance.eventChangePlayerCurrency.AddListener(OnCurrencyChange);
         }
 
         private void OnCurrencyChange()
@@ -26,7 +24,7 @@
                 ? HookPlayer.Instance.gameObject
                 : gameObject;
 
-            this.ExecuteTrigger(invoker);
+            ExecuteTrigger(invoker);
         }
     }
 }

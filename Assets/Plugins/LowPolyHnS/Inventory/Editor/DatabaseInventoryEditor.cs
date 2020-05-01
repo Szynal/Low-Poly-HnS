@@ -1,106 +1,102 @@
-﻿namespace LowPolyHnS.Inventory
-{
-	using System;
-	using System.IO;
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEditor;
-	using UnityEditor.AnimatedValues;
-	using System.Linq;
-	using System.Reflection;
-	using LowPolyHnS.Core;
+﻿using System;
+using System.Collections.Generic;
+using LowPolyHnS.Core;
+using UnityEditor;
+using UnityEngine;
+using Object = UnityEngine.Object;
 
-	[CustomEditor(typeof(DatabaseInventory))]
-	public class DatabaseInventoryEditor : IDatabaseEditor
-	{
-		private const string PROP_INVENTORY_CATALOGUE = "inventoryCatalogue";
-		private const string PROP_INVENTORY_CATALOGUE_ITEMS = "items";
-		private const string PROP_INVENTORY_CATALOGUE_RECIPE = "recipes";
+namespace LowPolyHnS.Inventory
+{
+    [CustomEditor(typeof(DatabaseInventory))]
+    public class DatabaseInventoryEditor : IDatabaseEditor
+    {
+        private const string PROP_INVENTORY_CATALOGUE = "inventoryCatalogue";
+        private const string PROP_INVENTORY_CATALOGUE_ITEMS = "items";
+        private const string PROP_INVENTORY_CATALOGUE_RECIPE = "recipes";
         private const string PROP_INVENTORY_CATALOGUE_TYPES = "itemTypes";
 
-		private const string PROP_INVENTORY_SETTINGS = "inventorySettings";
+        private const string PROP_INVENTORY_SETTINGS = "inventorySettings";
         private const string PROP_CONTAINER_UI_PREFAB = "containerUIPrefab";
         private const string PROP_MERCHANT_UI_PREFAB = "merchantUIPrefab";
         private const string PROP_INVENTORY_UI_PREFAB = "inventoryUIPrefab";
-		private const string PROP_INVENTORY_ONDRAG_GRABITEM = "onDragGrabItem";
-		private const string PROP_ITEM_CURSOR_DRAG = "cursorDrag";
-		private const string PROP_ITEM_CURSOR_DRAG_HS = "cursorDragHotspot";
+        private const string PROP_INVENTORY_ONDRAG_GRABITEM = "onDragGrabItem";
+        private const string PROP_ITEM_CURSOR_DRAG = "cursorDrag";
+        private const string PROP_ITEM_CURSOR_DRAG_HS = "cursorDragHotspot";
 
-		private const string PROP_ITEM_DRAG_TO_COMBINE = "dragItemsToCombine";
+        private const string PROP_ITEM_DRAG_TO_COMBINE = "dragItemsToCombine";
         private const string PROP_STOPTIME_ONOPEN = "pauseTimeOnUI";
-		private const string PROP_DROP_ITEM_OUTSIDE = "canDropItems";
+        private const string PROP_DROP_ITEM_OUTSIDE = "canDropItems";
         private const string PROP_SAVE_INVENTORY = "saveInventory";
         private const string PROP_DROP_MAX_DISTANCE = "dropItemMaxDistance";
 
         private const string PROP_LIMIT_WEIGHT = "limitInventoryWeight";
         private const string PROP_MAX_WEIGHT = "maxInventoryWeight";
 
-		private const string MSG_EMPTY_CATALOGUE = "There are no items. Add one clicking the 'Create Item' button";
-		private const string MSG_EMPTY_RECIPES = "There are no recipes. Add one clicking the 'Create Recipe' button";
+        private const string MSG_EMPTY_CATALOGUE = "There are no items. Add one clicking the 'Create Item' button";
+        private const string MSG_EMPTY_RECIPES = "There are no recipes. Add one clicking the 'Create Recipe' button";
 
-		private const string SEARCHBOX_NAME = "searchbox";
+        private const string SEARCHBOX_NAME = "searchbox";
 
         private static readonly GUIContent GC_MERCHANT = new GUIContent("Merchant UI Prefab (opt)");
         private static readonly GUIContent GC_CONTAINER = new GUIContent("Container UI Prefab (opt)");
         private static readonly GUIContent GC_INVENTORY = new GUIContent("Inventory UI Prefab (opt)");
 
         private class ItemsData
-		{
-			public ItemEditor cachedEditor;
-			public SerializedProperty spItem;
+        {
+            public ItemEditor cachedEditor;
+            public SerializedProperty spItem;
 
-			public ItemsData(SerializedProperty item)
-			{
-				this.spItem = item;
+            public ItemsData(SerializedProperty item)
+            {
+                spItem = item;
 
-				Editor cache = this.cachedEditor;
-				Editor.CreateCachedEditor(item.objectReferenceValue, typeof(ItemEditor), ref cache);
-				this.cachedEditor = (ItemEditor)cache;
-			}
-		}
+                Editor cache = cachedEditor;
+                CreateCachedEditor(item.objectReferenceValue, typeof(ItemEditor), ref cache);
+                cachedEditor = (ItemEditor) cache;
+            }
+        }
 
-		private class RecipeData
-		{
-			public RecipeEditor cachedEditor;
-			public SerializedProperty spRecipe;
+        private class RecipeData
+        {
+            public RecipeEditor cachedEditor;
+            public SerializedProperty spRecipe;
 
             public RecipeData(SerializedProperty recipe)
-			{
-                this.spRecipe = recipe;
+            {
+                spRecipe = recipe;
 
-				Editor cache = this.cachedEditor;
-				Editor.CreateCachedEditor(recipe.objectReferenceValue, typeof(RecipeEditor), ref cache);
-				this.cachedEditor = (RecipeEditor)cache;
-			}
-		}
+                Editor cache = cachedEditor;
+                CreateCachedEditor(recipe.objectReferenceValue, typeof(RecipeEditor), ref cache);
+                cachedEditor = (RecipeEditor) cache;
+            }
+        }
 
-        private static readonly GUIContent[] TAB_NAMES = new GUIContent[]
-		{
-			new GUIContent("Catalogue"),
+        private static readonly GUIContent[] TAB_NAMES =
+        {
+            new GUIContent("Catalogue"),
             new GUIContent("Types"),
-			new GUIContent("Recipes"),
-			new GUIContent("Settings")
-		};
+            new GUIContent("Recipes"),
+            new GUIContent("Settings")
+        };
 
-		// PROPERTIES: -------------------------------------------------------------------------------------------------
+        // PROPERTIES: -------------------------------------------------------------------------------------------------
 
-		private int tabIndex = 0;
+        private int tabIndex;
 
-		public SerializedProperty spItems;
+        public SerializedProperty spItems;
         public SerializedProperty spRecipes;
         public SerializedProperty spItemTypes;
 
         private SerializedProperty spContainerUIPrefab;
         private SerializedProperty spMerchantUIPrefab;
-		private SerializedProperty spInventoryUIPrefab;
-		private SerializedProperty spItemOnDragGrabItem;
-		private SerializedProperty spItemCursorDrag;
+        private SerializedProperty spInventoryUIPrefab;
+        private SerializedProperty spItemOnDragGrabItem;
+        private SerializedProperty spItemCursorDrag;
         private SerializedProperty spSaveInventory;
 
         private SerializedProperty spItemCursorDragHotspot;
 
-		private SerializedProperty spItemDragToCombine;
+        private SerializedProperty spItemDragToCombine;
         private SerializedProperty spInventoryStopTime;
         private SerializedProperty spCanDropItems;
         private SerializedProperty spDropMaxDistance;
@@ -108,15 +104,15 @@
         private SerializedProperty spLimitWeight;
         private SerializedProperty spMaxWeight;
 
-		private List<ItemsData> itemsData;
-		private List<RecipeData> recipesData;
+        private List<ItemsData> itemsData;
+        private List<RecipeData> recipesData;
 
-		private GUIStyle searchFieldStyle;
-		private GUIStyle searchCloseOnStyle;
-		private GUIStyle searchCloseOffStyle;
+        private GUIStyle searchFieldStyle;
+        private GUIStyle searchCloseOnStyle;
+        private GUIStyle searchCloseOffStyle;
 
-		public string searchText = "";
-		public bool searchFocus = true;
+        public string searchText = "";
+        public bool searchFocus = true;
 
         public EditorSortableList editorSortableListItems;
         public EditorSortableList editorSortableListRecipes;
@@ -127,59 +123,59 @@
         public Dictionary<int, Rect> itemsHandleRectRow = new Dictionary<int, Rect>();
         public Dictionary<int, Rect> recipesHandleRectRow = new Dictionary<int, Rect>();
 
-		// INITIALIZE: -------------------------------------------------------------------------------------------------
+        // INITIALIZE: -------------------------------------------------------------------------------------------------
 
-		private void OnEnable()
-		{
+        private void OnEnable()
+        {
             if (target == null || serializedObject == null) return;
 
-			SerializedProperty spInventoryCatalogue = serializedObject.FindProperty(PROP_INVENTORY_CATALOGUE);
-			this.spItems = spInventoryCatalogue.FindPropertyRelative(PROP_INVENTORY_CATALOGUE_ITEMS);
-			this.spRecipes = spInventoryCatalogue.FindPropertyRelative(PROP_INVENTORY_CATALOGUE_RECIPE);
-            this.spItemTypes = spInventoryCatalogue.FindPropertyRelative(PROP_INVENTORY_CATALOGUE_TYPES);
+            SerializedProperty spInventoryCatalogue = serializedObject.FindProperty(PROP_INVENTORY_CATALOGUE);
+            spItems = spInventoryCatalogue.FindPropertyRelative(PROP_INVENTORY_CATALOGUE_ITEMS);
+            spRecipes = spInventoryCatalogue.FindPropertyRelative(PROP_INVENTORY_CATALOGUE_RECIPE);
+            spItemTypes = spInventoryCatalogue.FindPropertyRelative(PROP_INVENTORY_CATALOGUE_TYPES);
 
-			SerializedProperty spInventorySettings = serializedObject.FindProperty(PROP_INVENTORY_SETTINGS);
-            this.spMerchantUIPrefab = spInventorySettings.FindPropertyRelative(PROP_MERCHANT_UI_PREFAB);
-            this.spContainerUIPrefab = spInventorySettings.FindPropertyRelative(PROP_CONTAINER_UI_PREFAB);
-            this.spInventoryUIPrefab = spInventorySettings.FindPropertyRelative(PROP_INVENTORY_UI_PREFAB);
-			this.spItemOnDragGrabItem = spInventorySettings.FindPropertyRelative(PROP_INVENTORY_ONDRAG_GRABITEM);
-			this.spItemCursorDrag = spInventorySettings.FindPropertyRelative(PROP_ITEM_CURSOR_DRAG);
-            this.spSaveInventory = spInventorySettings.FindPropertyRelative(PROP_SAVE_INVENTORY);
+            SerializedProperty spInventorySettings = serializedObject.FindProperty(PROP_INVENTORY_SETTINGS);
+            spMerchantUIPrefab = spInventorySettings.FindPropertyRelative(PROP_MERCHANT_UI_PREFAB);
+            spContainerUIPrefab = spInventorySettings.FindPropertyRelative(PROP_CONTAINER_UI_PREFAB);
+            spInventoryUIPrefab = spInventorySettings.FindPropertyRelative(PROP_INVENTORY_UI_PREFAB);
+            spItemOnDragGrabItem = spInventorySettings.FindPropertyRelative(PROP_INVENTORY_ONDRAG_GRABITEM);
+            spItemCursorDrag = spInventorySettings.FindPropertyRelative(PROP_ITEM_CURSOR_DRAG);
+            spSaveInventory = spInventorySettings.FindPropertyRelative(PROP_SAVE_INVENTORY);
 
-            this.spItemCursorDragHotspot = spInventorySettings.FindPropertyRelative(PROP_ITEM_CURSOR_DRAG_HS);
+            spItemCursorDragHotspot = spInventorySettings.FindPropertyRelative(PROP_ITEM_CURSOR_DRAG_HS);
 
-			this.spItemDragToCombine = spInventorySettings.FindPropertyRelative(PROP_ITEM_DRAG_TO_COMBINE);
-			this.spInventoryStopTime = spInventorySettings.FindPropertyRelative(PROP_STOPTIME_ONOPEN);
-			this.spCanDropItems = spInventorySettings.FindPropertyRelative(PROP_DROP_ITEM_OUTSIDE);
-            this.spDropMaxDistance = spInventorySettings.FindPropertyRelative(PROP_DROP_MAX_DISTANCE);
+            spItemDragToCombine = spInventorySettings.FindPropertyRelative(PROP_ITEM_DRAG_TO_COMBINE);
+            spInventoryStopTime = spInventorySettings.FindPropertyRelative(PROP_STOPTIME_ONOPEN);
+            spCanDropItems = spInventorySettings.FindPropertyRelative(PROP_DROP_ITEM_OUTSIDE);
+            spDropMaxDistance = spInventorySettings.FindPropertyRelative(PROP_DROP_MAX_DISTANCE);
 
-            this.spLimitWeight = spInventorySettings.FindPropertyRelative(PROP_LIMIT_WEIGHT);
-            this.spMaxWeight = spInventorySettings.FindPropertyRelative(PROP_MAX_WEIGHT);
+            spLimitWeight = spInventorySettings.FindPropertyRelative(PROP_LIMIT_WEIGHT);
+            spMaxWeight = spInventorySettings.FindPropertyRelative(PROP_MAX_WEIGHT);
 
-			int itemsSize = this.spItems.arraySize;
-			this.itemsData = new List<ItemsData>();
-			for (int i = 0; i < itemsSize; ++i)
-			{
-				this.itemsData.Add(new ItemsData(this.spItems.GetArrayElementAtIndex(i)));
-			}
+            int itemsSize = spItems.arraySize;
+            itemsData = new List<ItemsData>();
+            for (int i = 0; i < itemsSize; ++i)
+            {
+                itemsData.Add(new ItemsData(spItems.GetArrayElementAtIndex(i)));
+            }
 
-			int recipesSize = this.spRecipes.arraySize;
-			this.recipesData = new List<RecipeData>();
-			for (int i = 0; i < recipesSize; ++i)
-			{
-				this.recipesData.Add(new RecipeData(this.spRecipes.GetArrayElementAtIndex(i)));
-			}
+            int recipesSize = spRecipes.arraySize;
+            recipesData = new List<RecipeData>();
+            for (int i = 0; i < recipesSize; ++i)
+            {
+                recipesData.Add(new RecipeData(spRecipes.GetArrayElementAtIndex(i)));
+            }
 
-            this.editorSortableListItems = new EditorSortableList();
-            this.editorSortableListRecipes = new EditorSortableList();
-		}
+            editorSortableListItems = new EditorSortableList();
+            editorSortableListRecipes = new EditorSortableList();
+        }
 
-		// OVERRIDE METHODS: -------------------------------------------------------------------------------------------
+        // OVERRIDE METHODS: -------------------------------------------------------------------------------------------
 
-		public override string GetName ()
-		{
-			return "Inventory";
-		}
+        public override string GetName()
+        {
+            return "Inventory";
+        }
 
         public override bool CanBeDecoupled()
         {
@@ -188,100 +184,108 @@
 
         // GUI METHODS: ------------------------------------------------------------------------------------------------
 
-        public override void OnInspectorGUI ()
-		{
-			this.OnPreferencesWindowGUI();
-		}
+        public override void OnInspectorGUI()
+        {
+            OnPreferencesWindowGUI();
+        }
 
-		public override void OnPreferencesWindowGUI()
-		{
-			this.serializedObject.Update();
+        public override void OnPreferencesWindowGUI()
+        {
+            serializedObject.Update();
 
-			int prevTabIndex = this.tabIndex;
-			this.tabIndex = GUILayout.Toolbar(this.tabIndex, TAB_NAMES);
-			if (prevTabIndex != this.tabIndex) this.ResetSearch();
+            int prevTabIndex = tabIndex;
+            tabIndex = GUILayout.Toolbar(tabIndex, TAB_NAMES);
+            if (prevTabIndex != tabIndex) ResetSearch();
 
-			EditorGUILayout.Space();
+            EditorGUILayout.Space();
 
-			switch (this.tabIndex)
-			{
-			case 0 : this.PaintCatalogue(); break;
-            case 1 : this.PaintTypes(); break;
-			case 2 : this.PaintRecipes(); break;
-			case 3 : this.PaintSettings(); break;
-			}
+            switch (tabIndex)
+            {
+                case 0:
+                    PaintCatalogue();
+                    break;
+                case 1:
+                    PaintTypes();
+                    break;
+                case 2:
+                    PaintRecipes();
+                    break;
+                case 3:
+                    PaintSettings();
+                    break;
+            }
 
-			this.serializedObject.ApplyModifiedPropertiesWithoutUndo();
-		}
+            serializedObject.ApplyModifiedPropertiesWithoutUndo();
+        }
 
-		private void PaintCatalogue()
-		{
+        private void PaintCatalogue()
+        {
             ItemEditor.ItemReturnOperation returnOp = new ItemEditor.ItemReturnOperation();
             int removeIndex = -1;
             int duplicateIndex = -1;
 
-            this.PaintSearch();
+            PaintSearch();
 
-			int itemsCatalogueSize = this.spItems.arraySize;
-			if (itemsCatalogueSize == 0)
-			{
-				EditorGUILayout.HelpBox(MSG_EMPTY_CATALOGUE, MessageType.Info);
-			}
+            int itemsCatalogueSize = spItems.arraySize;
+            if (itemsCatalogueSize == 0)
+            {
+                EditorGUILayout.HelpBox(MSG_EMPTY_CATALOGUE, MessageType.Info);
+            }
 
-			for (int i = 0; i < itemsCatalogueSize; ++i)
-			{
-				if (this.itemsData[i].cachedEditor == null) continue;
-                returnOp = this.itemsData[i].cachedEditor.OnPreferencesWindowGUI(this, i);
+            for (int i = 0; i < itemsCatalogueSize; ++i)
+            {
+                if (itemsData[i].cachedEditor == null) continue;
+                returnOp = itemsData[i].cachedEditor.OnPreferencesWindowGUI(this, i);
                 if (returnOp.removeIndex) removeIndex = i;
                 if (returnOp.duplicateIndex) duplicateIndex = i;
             }
 
-			EditorGUILayout.Space();
-			EditorGUILayout.BeginHorizontal();
-			GUILayout.FlexibleSpace();
+            EditorGUILayout.Space();
+            EditorGUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
 
-			if (GUILayout.Button("Create Item", GUILayout.MaxWidth(200)))
-			{
-				this.ResetSearch();
+            if (GUILayout.Button("Create Item", GUILayout.MaxWidth(200)))
+            {
+                ResetSearch();
 
-				int insertIndex = itemsCatalogueSize;
-				this.spItems.InsertArrayElementAtIndex(insertIndex);
+                int insertIndex = itemsCatalogueSize;
+                spItems.InsertArrayElementAtIndex(insertIndex);
 
-				Item item = Item.CreateItemInstance();
-				this.spItems.GetArrayElementAtIndex(insertIndex).objectReferenceValue = item;
-				this.itemsData.Insert(insertIndex, new ItemsData(this.spItems.GetArrayElementAtIndex(insertIndex)));
-			}
+                Item item = Item.CreateItemInstance();
+                spItems.GetArrayElementAtIndex(insertIndex).objectReferenceValue = item;
+                itemsData.Insert(insertIndex, new ItemsData(spItems.GetArrayElementAtIndex(insertIndex)));
+            }
 
-			GUILayout.FlexibleSpace();
-			EditorGUILayout.EndHorizontal();
+            GUILayout.FlexibleSpace();
+            EditorGUILayout.EndHorizontal();
 
-			if (removeIndex != -1)
-			{
-				this.itemsData[removeIndex].cachedEditor.OnDestroyItem();
-				UnityEngine.Object deleteItem = this.itemsData[removeIndex].cachedEditor.target;
-				this.spItems.RemoveFromObjectArrayAt(removeIndex);
-				this.itemsData.RemoveAt(removeIndex);
+            if (removeIndex != -1)
+            {
+                itemsData[removeIndex].cachedEditor.OnDestroyItem();
+                Object deleteItem = itemsData[removeIndex].cachedEditor.target;
+                spItems.RemoveFromObjectArrayAt(removeIndex);
+                itemsData.RemoveAt(removeIndex);
 
-				string path = AssetDatabase.GetAssetPath(deleteItem);
-				DestroyImmediate(deleteItem, true);
-				AssetDatabase.ImportAsset(path);
-			}
+                string path = AssetDatabase.GetAssetPath(deleteItem);
+                DestroyImmediate(deleteItem, true);
+                AssetDatabase.ImportAsset(path);
+            }
             else if (duplicateIndex != -1)
             {
-                this.ResetSearch();
+                ResetSearch();
 
                 int srcIndex = duplicateIndex;
                 int insertIndex = duplicateIndex + 1;
 
-                this.spItems.InsertArrayElementAtIndex(insertIndex);
+                spItems.InsertArrayElementAtIndex(insertIndex);
 
                 Item item = Item.CreateItemInstance();
                 EditorUtility.CopySerialized(
-                    this.spItems.GetArrayElementAtIndex(srcIndex).objectReferenceValue,
+                    spItems.GetArrayElementAtIndex(srcIndex).objectReferenceValue,
                     item
                 );
 
-                SerializedProperty newItem = this.spItems.GetArrayElementAtIndex(insertIndex);
+                SerializedProperty newItem = spItems.GetArrayElementAtIndex(insertIndex);
                 newItem.objectReferenceValue = item;
 
                 newItem.serializedObject.ApplyModifiedPropertiesWithoutUndo();
@@ -291,19 +295,19 @@
 
                 newItemData.cachedEditor.serializedObject
                     .FindProperty("actionsOnClick")
-                    .objectReferenceValue = this.MakeCopyOf(item.actionsOnClick);
+                    .objectReferenceValue = MakeCopyOf(item.actionsOnClick);
 
                 newItemData.cachedEditor.serializedObject
                     .FindProperty("actionsOnEquip")
-                    .objectReferenceValue = this.MakeCopyOf(item.actionsOnEquip);
+                    .objectReferenceValue = MakeCopyOf(item.actionsOnEquip);
 
                 newItemData.cachedEditor.serializedObject
                     .FindProperty("actionsOnUnequip")
-                    .objectReferenceValue = this.MakeCopyOf(item.actionsOnUnequip);
+                    .objectReferenceValue = MakeCopyOf(item.actionsOnUnequip);
 
                 newItemData.cachedEditor.serializedObject
                     .FindProperty("conditionsEquip")
-                    .objectReferenceValue = this.MakeCopyOf(item.conditionsEquip);
+                    .objectReferenceValue = MakeCopyOf(item.conditionsEquip);
 
                 int uuid = Mathf.Abs(Guid.NewGuid().GetHashCode());
                 newItemData.cachedEditor.spUUID.intValue = uuid;
@@ -312,21 +316,21 @@
                 newItemData.cachedEditor.serializedObject.Update();
                 newItemData.cachedEditor.OnEnable();
 
-                this.itemsData.Insert(insertIndex, newItemData);
+                itemsData.Insert(insertIndex, newItemData);
             }
 
-            EditorSortableList.SwapIndexes swapIndexes = this.editorSortableListItems.GetSortIndexes();
+            EditorSortableList.SwapIndexes swapIndexes = editorSortableListItems.GetSortIndexes();
             if (swapIndexes != null)
             {
-                this.spItems.MoveArrayElement(swapIndexes.src, swapIndexes.dst);
+                spItems.MoveArrayElement(swapIndexes.src, swapIndexes.dst);
 
-                ItemsData tempItem = this.itemsData[swapIndexes.src];
-                this.itemsData[swapIndexes.src] = this.itemsData[swapIndexes.dst];
-                this.itemsData[swapIndexes.dst] = tempItem;
+                ItemsData tempItem = itemsData[swapIndexes.src];
+                itemsData[swapIndexes.src] = itemsData[swapIndexes.dst];
+                itemsData[swapIndexes.dst] = tempItem;
             }
-		}
+        }
 
-        private GameObject MakeCopyOf(UnityEngine.Object original)
+        private GameObject MakeCopyOf(Object original)
         {
             string originalPath = AssetDatabase.GetAssetPath(original);
             string targetPath = AssetDatabase.GenerateUniqueAssetPath(originalPath);
@@ -339,10 +343,10 @@
 
         private void PaintTypes()
         {
-            this.spItemTypes.arraySize = ItemType.MAX;
+            spItemTypes.arraySize = ItemType.MAX;
             for (int i = 0; i < ItemType.MAX; ++i)
             {
-                SerializedProperty spItemType = this.spItemTypes.GetArrayElementAtIndex(i);
+                SerializedProperty spItemType = spItemTypes.GetArrayElementAtIndex(i);
                 EditorGUILayout.BeginHorizontal();
 
                 EditorGUILayout.PropertyField(
@@ -355,148 +359,148 @@
             }
         }
 
-		private void PaintRecipes()
-		{
-			int removeIndex = -1;
+        private void PaintRecipes()
+        {
+            int removeIndex = -1;
 
-			int recipeCatalogueSize = this.spRecipes.arraySize;
-			if (recipeCatalogueSize == 0)
-			{
-				EditorGUILayout.HelpBox(MSG_EMPTY_RECIPES, MessageType.Info);
-			}
+            int recipeCatalogueSize = spRecipes.arraySize;
+            if (recipeCatalogueSize == 0)
+            {
+                EditorGUILayout.HelpBox(MSG_EMPTY_RECIPES, MessageType.Info);
+            }
 
-			for (int i = 0; i < recipeCatalogueSize; ++i)
-			{
-				bool removeRecipe = this.recipesData[i].cachedEditor.OnPreferencesWindowGUI(this, i);
-				if (removeRecipe) removeIndex = i;
-			}
+            for (int i = 0; i < recipeCatalogueSize; ++i)
+            {
+                bool removeRecipe = recipesData[i].cachedEditor.OnPreferencesWindowGUI(this, i);
+                if (removeRecipe) removeIndex = i;
+            }
 
-			EditorGUILayout.Space();
-			EditorGUILayout.BeginHorizontal();
-			GUILayout.FlexibleSpace();
+            EditorGUILayout.Space();
+            EditorGUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
 
-			if (GUILayout.Button("Create Recipe", GUILayout.MaxWidth(200)))
-			{
-				this.ResetSearch();
+            if (GUILayout.Button("Create Recipe", GUILayout.MaxWidth(200)))
+            {
+                ResetSearch();
 
-				int insertIndex = recipeCatalogueSize;
-				this.spRecipes.InsertArrayElementAtIndex(insertIndex);
+                int insertIndex = recipeCatalogueSize;
+                spRecipes.InsertArrayElementAtIndex(insertIndex);
 
-				Recipe recipe = Recipe.CreateRecipeInstance();
-				this.spRecipes.GetArrayElementAtIndex(insertIndex).objectReferenceValue = recipe;
-				this.recipesData.Insert(insertIndex, new RecipeData(this.spRecipes.GetArrayElementAtIndex(insertIndex)));
-			}
+                Recipe recipe = Recipe.CreateRecipeInstance();
+                spRecipes.GetArrayElementAtIndex(insertIndex).objectReferenceValue = recipe;
+                recipesData.Insert(insertIndex, new RecipeData(spRecipes.GetArrayElementAtIndex(insertIndex)));
+            }
 
-			GUILayout.FlexibleSpace();
-			EditorGUILayout.EndHorizontal();
+            GUILayout.FlexibleSpace();
+            EditorGUILayout.EndHorizontal();
 
-			if (removeIndex != -1)
-			{
-				this.recipesData[removeIndex].cachedEditor.OnDestroyRecipe();
-				UnityEngine.Object deleteRecipe = this.recipesData[removeIndex].cachedEditor.target;
+            if (removeIndex != -1)
+            {
+                recipesData[removeIndex].cachedEditor.OnDestroyRecipe();
+                Object deleteRecipe = recipesData[removeIndex].cachedEditor.target;
 
-				this.spRecipes.RemoveFromObjectArrayAt(removeIndex);
-				this.recipesData.RemoveAt(removeIndex);
+                spRecipes.RemoveFromObjectArrayAt(removeIndex);
+                recipesData.RemoveAt(removeIndex);
 
-				string path = AssetDatabase.GetAssetPath(deleteRecipe);
-				DestroyImmediate(deleteRecipe, true);
-				AssetDatabase.ImportAsset(path);
-			}
+                string path = AssetDatabase.GetAssetPath(deleteRecipe);
+                DestroyImmediate(deleteRecipe, true);
+                AssetDatabase.ImportAsset(path);
+            }
 
-            EditorSortableList.SwapIndexes swapIndexes = this.editorSortableListRecipes.GetSortIndexes();
+            EditorSortableList.SwapIndexes swapIndexes = editorSortableListRecipes.GetSortIndexes();
             if (swapIndexes != null)
             {
-                this.spRecipes.MoveArrayElement(swapIndexes.src, swapIndexes.dst);
+                spRecipes.MoveArrayElement(swapIndexes.src, swapIndexes.dst);
 
-                RecipeData tempRecipt = this.recipesData[swapIndexes.src];
-                this.recipesData[swapIndexes.src] = this.recipesData[swapIndexes.dst];
-                this.recipesData[swapIndexes.dst] = tempRecipt;
+                RecipeData tempRecipt = recipesData[swapIndexes.src];
+                recipesData[swapIndexes.src] = recipesData[swapIndexes.dst];
+                recipesData[swapIndexes.dst] = tempRecipt;
             }
-		}
+        }
 
-		private void PaintSettings()
-		{
-			EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+        private void PaintSettings()
+        {
+            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
 
-			EditorGUILayout.LabelField("User Interface", EditorStyles.boldLabel);
-            EditorGUILayout.PropertyField(this.spMerchantUIPrefab, GC_MERCHANT);
-            EditorGUILayout.PropertyField(this.spContainerUIPrefab, GC_CONTAINER);
-            EditorGUILayout.PropertyField(this.spInventoryUIPrefab, GC_INVENTORY);
-			EditorGUILayout.PropertyField(this.spItemOnDragGrabItem);
-
-			EditorGUILayout.Space();
-			EditorGUILayout.PropertyField(this.spItemCursorDrag);
-			EditorGUILayout.BeginHorizontal();
-			EditorGUILayout.PrefixLabel(this.spItemCursorDragHotspot.displayName);
-			EditorGUILayout.PropertyField(this.spItemCursorDragHotspot, GUIContent.none);
-			EditorGUILayout.EndHorizontal();
-
-			EditorGUILayout.Space();
-			EditorGUILayout.EndVertical();
-
-			EditorGUILayout.BeginVertical(EditorStyles.helpBox);
-			EditorGUILayout.LabelField("Behavior Configuration", EditorStyles.boldLabel);
-			EditorGUILayout.PropertyField(this.spItemDragToCombine);
-			EditorGUILayout.PropertyField(this.spInventoryStopTime);
-            EditorGUILayout.PropertyField(this.spSaveInventory);
+            EditorGUILayout.LabelField("User Interface", EditorStyles.boldLabel);
+            EditorGUILayout.PropertyField(spMerchantUIPrefab, GC_MERCHANT);
+            EditorGUILayout.PropertyField(spContainerUIPrefab, GC_CONTAINER);
+            EditorGUILayout.PropertyField(spInventoryUIPrefab, GC_INVENTORY);
+            EditorGUILayout.PropertyField(spItemOnDragGrabItem);
 
             EditorGUILayout.Space();
-			EditorGUILayout.PropertyField(this.spCanDropItems);
-            EditorGUI.BeginDisabledGroup(!this.spCanDropItems.boolValue);
-            EditorGUILayout.PropertyField(this.spDropMaxDistance);
+            EditorGUILayout.PropertyField(spItemCursorDrag);
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.PrefixLabel(spItemCursorDragHotspot.displayName);
+            EditorGUILayout.PropertyField(spItemCursorDragHotspot, GUIContent.none);
+            EditorGUILayout.EndHorizontal();
+
+            EditorGUILayout.Space();
+            EditorGUILayout.EndVertical();
+
+            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+            EditorGUILayout.LabelField("Behavior Configuration", EditorStyles.boldLabel);
+            EditorGUILayout.PropertyField(spItemDragToCombine);
+            EditorGUILayout.PropertyField(spInventoryStopTime);
+            EditorGUILayout.PropertyField(spSaveInventory);
+
+            EditorGUILayout.Space();
+            EditorGUILayout.PropertyField(spCanDropItems);
+            EditorGUI.BeginDisabledGroup(!spCanDropItems.boolValue);
+            EditorGUILayout.PropertyField(spDropMaxDistance);
             EditorGUI.EndDisabledGroup();
 
             EditorGUILayout.Space();
-            EditorGUILayout.PropertyField(this.spLimitWeight);
+            EditorGUILayout.PropertyField(spLimitWeight);
             EditorGUI.indentLevel++;
-            EditorGUI.BeginDisabledGroup(!this.spLimitWeight.boolValue);
-            EditorGUILayout.PropertyField(this.spMaxWeight);
+            EditorGUI.BeginDisabledGroup(!spLimitWeight.boolValue);
+            EditorGUILayout.PropertyField(spMaxWeight);
             EditorGUI.EndDisabledGroup();
             EditorGUI.indentLevel++;
 
-			EditorGUILayout.EndVertical();
-		}
+            EditorGUILayout.EndVertical();
+        }
 
-		// PRIVATE METHODS: --------------------------------------------------------------------------------------------
+        // PRIVATE METHODS: --------------------------------------------------------------------------------------------
 
-		private void PaintSearch()
-		{
-			if (this.searchFieldStyle == null) this.searchFieldStyle = new GUIStyle(GUI.skin.FindStyle("SearchTextField"));
-			if (this.searchCloseOnStyle == null) this.searchCloseOnStyle = new GUIStyle(GUI.skin.FindStyle("SearchCancelButton"));
-			if (this.searchCloseOffStyle == null) this.searchCloseOffStyle = new GUIStyle(GUI.skin.FindStyle("SearchCancelButtonEmpty"));
+        private void PaintSearch()
+        {
+            if (searchFieldStyle == null) searchFieldStyle = new GUIStyle(GUI.skin.FindStyle("SearchTextField"));
+            if (searchCloseOnStyle == null) searchCloseOnStyle = new GUIStyle(GUI.skin.FindStyle("SearchCancelButton"));
+            if (searchCloseOffStyle == null)
+                searchCloseOffStyle = new GUIStyle(GUI.skin.FindStyle("SearchCancelButtonEmpty"));
 
-			EditorGUILayout.BeginHorizontal();
-			GUILayout.Space(5f);
+            EditorGUILayout.BeginHorizontal();
+            GUILayout.Space(5f);
 
-			GUI.SetNextControlName(SEARCHBOX_NAME);
-			this.searchText = EditorGUILayout.TextField(this.searchText, this.searchFieldStyle);
+            GUI.SetNextControlName(SEARCHBOX_NAME);
+            searchText = EditorGUILayout.TextField(searchText, searchFieldStyle);
 
-			if (this.searchFocus)
-			{
-				EditorGUI.FocusTextInControl(SEARCHBOX_NAME);
-				this.searchFocus = false;
-			}
+            if (searchFocus)
+            {
+                EditorGUI.FocusTextInControl(SEARCHBOX_NAME);
+                searchFocus = false;
+            }
 
-			GUIStyle style = (string.IsNullOrEmpty(this.searchText) 
-				? this.searchCloseOffStyle 
-				: this.searchCloseOnStyle
-			);
+            GUIStyle style = string.IsNullOrEmpty(searchText)
+                ? searchCloseOffStyle
+                : searchCloseOnStyle;
 
-			if (GUILayout.Button("", style)) 
-			{
-				this.ResetSearch();
-			}
+            if (GUILayout.Button("", style))
+            {
+                ResetSearch();
+            }
 
-			GUILayout.Space(5f);
-			EditorGUILayout.EndHorizontal();
-		}
+            GUILayout.Space(5f);
+            EditorGUILayout.EndHorizontal();
+        }
 
-		private void ResetSearch()
-		{
-			this.searchText = "";
-			GUIUtility.keyboardControl = 0;
-			EditorGUIUtility.keyboardControl = 0;
-			this.searchFocus = true;
-		}
+        private void ResetSearch()
+        {
+            searchText = "";
+            GUIUtility.keyboardControl = 0;
+            GUIUtility.keyboardControl = 0;
+            searchFocus = true;
+        }
     }
 }

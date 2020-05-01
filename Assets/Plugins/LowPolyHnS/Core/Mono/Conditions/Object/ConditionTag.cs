@@ -1,50 +1,46 @@
-﻿namespace LowPolyHnS.Core
+﻿using UnityEngine;
+
+namespace LowPolyHnS.Core
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-	using LowPolyHnS.Core;
+#if UNITY_EDITOR
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[AddComponentMenu("")]
-	public class ConditionTag : ICondition
-	{
+    [AddComponentMenu("")]
+    public class ConditionTag : ICondition
+    {
         public TargetGameObject targetGameObject = new TargetGameObject();
 
         [TagSelector] public string conditionTag = "";
 
-		// EXECUTABLE: ----------------------------------------------------------------------------
+        // EXECUTABLE: ----------------------------------------------------------------------------
 
         public override bool Check(GameObject target)
-		{
-            GameObject result = this.targetGameObject.GetGameObject(target);
+        {
+            GameObject result = targetGameObject.GetGameObject(target);
             if (result == null) return false;
 
-            return result.CompareTag(this.conditionTag);
-		}
+            return result.CompareTag(conditionTag);
+        }
 
-		// +--------------------------------------------------------------------------------------+
-		// | EDITOR                                                                               |
-		// +--------------------------------------------------------------------------------------+
+        // +--------------------------------------------------------------------------------------+
+        // | EDITOR                                                                               |
+        // +--------------------------------------------------------------------------------------+
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 
-		public static new string NAME = "Object/Tag";
-		private const string NODE_TITLE = "Has {0} tag {1}";
+        public static new string NAME = "Object/Tag";
+        private const string NODE_TITLE = "Has {0} tag {1}";
 
-		public override string GetNodeTitle()
-		{
+        public override string GetNodeTitle()
+        {
             return string.Format(
                 NODE_TITLE,
-                this.targetGameObject,
-                (string.IsNullOrEmpty(this.conditionTag) ? "none" : this.conditionTag)
+                targetGameObject,
+                string.IsNullOrEmpty(conditionTag) ? "none" : conditionTag
             );
-		}
+        }
 
-		#endif
-	}
+#endif
+    }
 }

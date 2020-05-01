@@ -1,10 +1,8 @@
-﻿namespace LowPolyHnS.Inventory
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEngine.UI;
+﻿using UnityEngine;
+using UnityEngine.UI;
 
+namespace LowPolyHnS.Inventory
+{
     public abstract class IMerchantUIItem : MonoBehaviour
     {
         protected static DatabaseInventory DATABASE_INVENTORY;

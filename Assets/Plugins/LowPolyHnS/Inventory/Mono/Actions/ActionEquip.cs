@@ -1,30 +1,26 @@
-﻿namespace LowPolyHnS.Inventory
+﻿using LowPolyHnS.Core;
+using UnityEngine;
+
+namespace LowPolyHnS.Inventory
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-	using LowPolyHnS.Core;
-    using LowPolyHnS.Characters;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[AddComponentMenu("")]
-	public class ActionEquip : IAction
-	{
+    [AddComponentMenu("")]
+    public class ActionEquip : IAction
+    {
         public TargetGameObject character = new TargetGameObject(TargetGameObject.Target.Player);
         public ItemHolder item = new ItemHolder();
 
-        [InventorySingleItemType]
-        public int type = 0;
+        [InventorySingleItemType] public int type = 0;
 
         // EXECUTABLE: ----------------------------------------------------------------------------
 
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
-            GameObject targetObject = this.character.GetGameObject(target);
+            GameObject targetObject = character.GetGameObject(target);
             if (target == null)
             {
                 Debug.LogError("No target found in Action: Equip");
@@ -32,9 +28,9 @@
             }
 
             InventoryManager.Instance.Equip(
-                targetObject, 
-                this.item.item.uuid, 
-                this.type
+                targetObject,
+                item.item.uuid,
+                type
             );
 
             return true;
@@ -44,55 +40,55 @@
         // | EDITOR                                                                               |
         // +--------------------------------------------------------------------------------------+
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
 
         public const string CUSTOM_ICON_PATH = "Assets/Plugins/LowPolyHnS/Inventory/Icons/Actions/";
 
         public static new string NAME = "Inventory/Equip Item";
         private const string NODE_TITLE = "Equip {0} on {1}";
 
-		// PROPERTIES: ----------------------------------------------------------------------------
+        // PROPERTIES: ----------------------------------------------------------------------------
 
-		private SerializedProperty spCharacter;
+        private SerializedProperty spCharacter;
         private SerializedProperty spItem;
         private SerializedProperty spType;
 
-		// INSPECTOR METHODS: ---------------------------------------------------------------------
+        // INSPECTOR METHODS: ---------------------------------------------------------------------
 
-		public override string GetNodeTitle()
-		{
-			return string.Format(
-                NODE_TITLE, 
-                (this.item.item == null ? "nothing" : this.item.item.itemName.content),
-                this.character
+        public override string GetNodeTitle()
+        {
+            return string.Format(
+                NODE_TITLE,
+                item.item == null ? "nothing" : item.item.itemName.content,
+                character
             );
-		}
+        }
 
-		protected override void OnEnableEditorChild ()
-		{
-            this.spCharacter = this.serializedObject.FindProperty("character");
-            this.spItem = this.serializedObject.FindProperty("item");
-            this.spType = this.serializedObject.FindProperty("type");
-		}
+        protected override void OnEnableEditorChild()
+        {
+            spCharacter = serializedObject.FindProperty("character");
+            spItem = serializedObject.FindProperty("item");
+            spType = serializedObject.FindProperty("type");
+        }
 
-		protected override void OnDisableEditorChild ()
-		{
-            this.spCharacter = null;
-            this.spItem = null;
-            this.spType = null;
-		}
+        protected override void OnDisableEditorChild()
+        {
+            spCharacter = null;
+            spItem = null;
+            spType = null;
+        }
 
-		public override void OnInspectorGUI()
-		{
-			this.serializedObject.Update();
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
 
-            EditorGUILayout.PropertyField(this.spCharacter);
-            EditorGUILayout.PropertyField(this.spItem);
-            EditorGUILayout.PropertyField(this.spType);
+            EditorGUILayout.PropertyField(spCharacter);
+            EditorGUILayout.PropertyField(spItem);
+            EditorGUILayout.PropertyField(spType);
 
-			this.serializedObject.ApplyModifiedProperties();
-		}
+            serializedObject.ApplyModifiedProperties();
+        }
 
-		#endif
-	}
+#endif
+    }
 }

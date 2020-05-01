@@ -1,59 +1,57 @@
-﻿namespace LowPolyHnS.Variables
+﻿using LowPolyHnS.Core;
+using UnityEngine;
+
+namespace LowPolyHnS.Variables
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-	using LowPolyHnS.Core;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[AddComponentMenu("")]
-	public abstract class ActionVariableOperationBase : IAction
-	{
+    [AddComponentMenu("")]
+    public abstract class ActionVariableOperationBase : IAction
+    {
         [VariableFilter(Variable.DataType.Number)]
         public VariableProperty variable = new VariableProperty(Variable.VarType.GlobalVariable);
 
         public float value = 1f;
 
-		// +--------------------------------------------------------------------------------------+
-		// | EDITOR                                                                               |
-		// +--------------------------------------------------------------------------------------+
+        // +--------------------------------------------------------------------------------------+
+        // | EDITOR                                                                               |
+        // +--------------------------------------------------------------------------------------+
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 
-		// PROPERTIES: ----------------------------------------------------------------------------
+        // PROPERTIES: ----------------------------------------------------------------------------
 
         private SerializedProperty spVariable;
         private SerializedProperty spValue;
 
-		// INSPECTOR METHODS: ---------------------------------------------------------------------
+        // INSPECTOR METHODS: ---------------------------------------------------------------------
 
-		protected override void OnEnableEditorChild ()
-		{
-            this.spVariable = this.serializedObject.FindProperty("variable");
-            this.spValue = this.serializedObject.FindProperty("value");
-		}
+        protected override void OnEnableEditorChild()
+        {
+            spVariable = serializedObject.FindProperty("variable");
+            spValue = serializedObject.FindProperty("value");
+        }
 
-		protected override void OnDisableEditorChild ()
-		{
-            this.spVariable = null;
-            this.spValue = null;
-		}
+        protected override void OnDisableEditorChild()
+        {
+            spVariable = null;
+            spValue = null;
+        }
 
-		public override void OnInspectorGUI()
-		{
-			this.serializedObject.Update();
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
 
-            EditorGUILayout.PropertyField(this.spVariable);
+            EditorGUILayout.PropertyField(spVariable);
             EditorGUILayout.Space();
-            EditorGUILayout.PropertyField(this.spValue);
+            EditorGUILayout.PropertyField(spValue);
 
-			this.serializedObject.ApplyModifiedProperties();
-		}
+            serializedObject.ApplyModifiedProperties();
+        }
 
-		#endif
-	}
+#endif
+    }
 }

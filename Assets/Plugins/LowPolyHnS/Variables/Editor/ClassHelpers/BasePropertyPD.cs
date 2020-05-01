@@ -1,10 +1,8 @@
-﻿namespace LowPolyHnS.Variables
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEditor;
+﻿using UnityEditor;
+using UnityEngine;
 
+namespace LowPolyHnS.Variables
+{
     public class BasePropertyPD : PropertyDrawer
     {
         private const string PROP_OPTION = "optionIndex";
@@ -15,15 +13,15 @@
 
         private static readonly GUIContent GUICONTENT_EMPTY = new GUIContent(" ");
 
-        private bool init = false;
+        private bool init;
 
         // PAINT METHODS: -------------------------------------------------------------------------
 
-		public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
-		{
-            if (!this.init)
+        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+        {
+            if (!init)
             {
-                int allowTypesMask = this.GetAllowTypesMask();
+                int allowTypesMask = GetAllowTypesMask();
                 property
                     .FindPropertyRelative(PROP_GLOBAL)
                     .FindPropertyRelative(HelperGenericVariablePD.PROP_ALLOW_TYPES_MASK)
@@ -34,7 +32,7 @@
                     .FindPropertyRelative(HelperGenericVariablePD.PROP_ALLOW_TYPES_MASK)
                     .intValue = allowTypesMask;
 
-                this.init = true;
+                init = true;
             }
 
             Rect rectOption = new Rect(
@@ -56,12 +54,20 @@
             int option = spOption.intValue;
             switch (option)
             {
-                case 0 : this.PaintContent(property, rectContent, PROP_VALUE); break;
-                case 1 : this.PaintContent(property, rectContent, PROP_GLOBAL); break;    
-                case 2 : this.PaintContent(property, rectContent, PROP_LOCAL); break;
-                case 3 : this.PaintContent(property, rectContent, PROP_LIST); break;
+                case 0:
+                    PaintContent(property, rectContent, PROP_VALUE);
+                    break;
+                case 1:
+                    PaintContent(property, rectContent, PROP_GLOBAL);
+                    break;
+                case 2:
+                    PaintContent(property, rectContent, PROP_LOCAL);
+                    break;
+                case 3:
+                    PaintContent(property, rectContent, PROP_LIST);
+                    break;
             }
-		}
+        }
 
         private void PaintContent(SerializedProperty property, Rect rect, string prop)
         {
@@ -71,8 +77,8 @@
 
         // HEIGHT METHOD: -------------------------------------------------------------------------
 
-		public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
-		{
+        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+        {
             SerializedProperty spOption = property.FindPropertyRelative(PROP_OPTION);
 
             int option = spOption.intValue;
@@ -80,14 +86,22 @@
 
             switch (option)
             {
-                case 0: height += this.GetHeight(property, PROP_VALUE); break;
-                case 1: height += this.GetHeight(property, PROP_GLOBAL); break;
-                case 2: height += this.GetHeight(property, PROP_LOCAL); break;
-                case 3: height += this.GetHeight(property, PROP_LIST); break;
+                case 0:
+                    height += GetHeight(property, PROP_VALUE);
+                    break;
+                case 1:
+                    height += GetHeight(property, PROP_GLOBAL);
+                    break;
+                case 2:
+                    height += GetHeight(property, PROP_LOCAL);
+                    break;
+                case 3:
+                    height += GetHeight(property, PROP_LIST);
+                    break;
             }
 
             return height;
-		}
+        }
 
         private float GetHeight(SerializedProperty property, string name)
         {
@@ -101,5 +115,5 @@
         {
             return ~0;
         }
-	}
+    }
 }

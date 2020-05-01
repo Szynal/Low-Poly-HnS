@@ -1,55 +1,55 @@
-﻿namespace LowPolyHnS.Core
+﻿using System.Collections;
+using UnityEngine;
+
+namespace LowPolyHnS.Core
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-	using LowPolyHnS.Core;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[AddComponentMenu("")]
-	public class ActionRestartActions : IAction
-	{
+    [AddComponentMenu("")]
+    public class ActionRestartActions : IAction
+    {
         public override IEnumerator Execute(GameObject target, IAction[] actions, int index)
-		{
+        {
             yield return int.MinValue;
-		}
+        }
 
-		// +--------------------------------------------------------------------------------------+
-		// | EDITOR                                                                               |
-		// +--------------------------------------------------------------------------------------+
+        // +--------------------------------------------------------------------------------------+
+        // | EDITOR                                                                               |
+        // +--------------------------------------------------------------------------------------+
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 
-	    public static new string NAME = "General/Restart Actions";
-		private const string NODE_TITLE = "Restart the action";
+        public static new string NAME = "General/Restart Actions";
+        private const string NODE_TITLE = "Restart the action";
         private const string MESSAGE = "Restart the execution of this Actions component";
 
-		// INSPECTOR METHODS: ---------------------------------------------------------------------
+        // INSPECTOR METHODS: ---------------------------------------------------------------------
 
-		public override string GetNodeTitle()
-		{
+        public override string GetNodeTitle()
+        {
             return NODE_TITLE;
-		}
+        }
 
-		protected override void OnEnableEditorChild ()
-		{ }
+        protected override void OnEnableEditorChild()
+        {
+        }
 
-		protected override void OnDisableEditorChild ()
-		{ }
+        protected override void OnDisableEditorChild()
+        {
+        }
 
-		public override void OnInspectorGUI()
-		{
-			this.serializedObject.Update();
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
 
             EditorGUILayout.HelpBox(MESSAGE, MessageType.Info);
 
-			this.serializedObject.ApplyModifiedProperties();
-		}
+            serializedObject.ApplyModifiedProperties();
+        }
 
-		#endif
-	}
+#endif
+    }
 }

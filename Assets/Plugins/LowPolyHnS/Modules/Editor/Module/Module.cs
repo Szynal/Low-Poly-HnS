@@ -1,11 +1,9 @@
-﻿namespace LowPolyHnS.ModuleManager
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEditor;
+﻿using System;
+using UnityEditor;
 
-    [System.Serializable]
+namespace LowPolyHnS.ModuleManager
+{
+    [Serializable]
     public class Module
     {
         // PROPERTIES: ----------------------------------------------------------------------------
@@ -24,16 +22,11 @@
         public string authorMail;
         public string authorSite;
 
-        public bool includesData  = false;
+        public bool includesData = false;
         public string[] codePaths = new string[0];
         public string[] dataPaths = new string[0];
 
         // INITIALIZERS: --------------------------------------------------------------------------
-
-        public Module()
-        {
-
-        }
 
         public static void UpdateModule(SerializedProperty spModule, Module other)
         {

@@ -1,10 +1,7 @@
-﻿namespace LowPolyHnS.Variables
-{
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
+﻿using System;
 
+namespace LowPolyHnS.Variables
+{
     [Serializable]
     public abstract class VariableBase
     {

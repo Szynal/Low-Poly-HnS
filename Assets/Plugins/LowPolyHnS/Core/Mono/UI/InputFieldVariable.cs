@@ -1,17 +1,12 @@
-﻿namespace LowPolyHnS.Core
-{
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEngine.UI;
-    using UnityEngine.Events;
-    using UnityEngine.EventSystems;
-    using LowPolyHnS.Variables;
+﻿using LowPolyHnS.Variables;
+using UnityEngine;
+using UnityEngine.UI;
 
-    #if UNITY_EDITOR
-    using UnityEditor.Events;
-    #endif
+namespace LowPolyHnS.Core
+{
+#if UNITY_EDITOR
+
+#endif
 
     [AddComponentMenu("LowPolyHnS/UI/Input Field", 10)]
     public class InputFieldVariable : InputField
@@ -34,12 +29,12 @@
             base.Start();
             if (!Application.isPlaying) return;
 
-            object current = this.variable.Get(gameObject);
+            object current = variable.Get(gameObject);
 
             if (current != null)
             {
-                this.text = (string)current;
-                this.onValueChanged.AddListener(this.SyncVariable);
+                text = (string) current;
+                onValueChanged.AddListener(SyncVariable);
             }
         }
 
@@ -47,7 +42,7 @@
 
         private void SyncVariable(string value)
         {
-            this.variable.Set(value, gameObject);
+            variable.Set(value, gameObject);
         }
     }
 }

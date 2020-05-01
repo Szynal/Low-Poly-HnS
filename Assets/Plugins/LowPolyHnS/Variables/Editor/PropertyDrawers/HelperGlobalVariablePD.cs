@@ -1,30 +1,28 @@
-﻿namespace LowPolyHnS.Variables
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEditor;
+﻿using UnityEditor;
+using UnityEngine;
 
+namespace LowPolyHnS.Variables
+{
     [CustomPropertyDrawer(typeof(HelperGlobalVariable))]
     public class HelperGlobalVariablePD : HelperGenericVariablePD
     {
-		public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
-		{
-            this.spAllowTypesMask = property.FindPropertyRelative(PROP_ALLOW_TYPES_MASK);
+        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+        {
+            spAllowTypesMask = property.FindPropertyRelative(PROP_ALLOW_TYPES_MASK);
 
-            this.PaintVariables(
+            PaintVariables(
                 position,
                 property.FindPropertyRelative(PROP_NAME),
                 label
             );
-		}
+        }
 
-		protected override GenericVariableSelectWindow GetWindow(Rect ctaRect)
+        protected override GenericVariableSelectWindow GetWindow(Rect ctaRect)
         {
             return new GlobalVariableSelectWindow(
-                ctaRect, 
-                this.Callback,
-                (this.spAllowTypesMask == null ? 0 : spAllowTypesMask.intValue)
+                ctaRect,
+                Callback,
+                spAllowTypesMask == null ? 0 : spAllowTypesMask.intValue
             );
         }
 

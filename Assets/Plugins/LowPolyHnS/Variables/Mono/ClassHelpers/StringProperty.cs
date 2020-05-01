@@ -1,14 +1,16 @@
-﻿namespace LowPolyHnS.Variables
-{
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
+﻿using System;
 
+namespace LowPolyHnS.Variables
+{
     [Serializable]
     public class StringProperty : BaseProperty<string>
     {
-        public StringProperty() : base() { }
-        public StringProperty(string value) : base(value) { }
+        public StringProperty()
+        {
+        }
+
+        public StringProperty(string value) : base(value)
+        {
+        }
     }
 }

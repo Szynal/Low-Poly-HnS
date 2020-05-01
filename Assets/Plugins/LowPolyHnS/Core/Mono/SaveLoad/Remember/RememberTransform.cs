@@ -24,7 +24,7 @@ namespace LowPolyHnS.Core
 
         public override object GetSaveData()
         {
-            Memory memory = new Memory()
+            Memory memory = new Memory
             {
                 position = transform.position,
                 rotation = transform.rotation,
@@ -42,22 +42,23 @@ namespace LowPolyHnS.Core
 
         public override string GetUniqueName()
         {
-            return this.GetID();
+            return GetID();
         }
 
         public override void OnLoad(object generic)
         {
             Memory memory = generic as Memory;
-            if (memory == null || this.isDestroyed) return;
+            if (memory == null || isDestroyed) return;
 
             Debug.Log("On Load Memory Transform: " + memory.scale);
 
-            if (this.rememberPosition) transform.position = memory.position;
-            if (this.rememberRotation) transform.rotation = memory.rotation;
-            if (this.rememberScale) transform.localScale = memory.scale;
+            if (rememberPosition) transform.position = memory.position;
+            if (rememberRotation) transform.rotation = memory.rotation;
+            if (rememberScale) transform.localScale = memory.scale;
         }
 
         public override void ResetData()
-        { }
+        {
+        }
     }
 }

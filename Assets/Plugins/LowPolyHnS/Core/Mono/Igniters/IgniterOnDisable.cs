@@ -1,19 +1,17 @@
-﻿namespace LowPolyHnS.Core
+﻿using UnityEngine;
+
+namespace LowPolyHnS.Core
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
+    [AddComponentMenu("")]
+    public class IgniterOnDisable : Igniter
+    {
+#if UNITY_EDITOR
+        public new static string NAME = "General/On Disable";
+#endif
 
-	[AddComponentMenu("")]
-	public class IgniterOnDisable : Igniter 
-	{
-		#if UNITY_EDITOR
-		public new static string NAME = "General/On Disable";
-		#endif
-
-		private void OnDisable()
-		{
-            this.ExecuteTrigger(gameObject);
-		}
-	}
+        private void OnDisable()
+        {
+            ExecuteTrigger(gameObject);
+        }
+    }
 }

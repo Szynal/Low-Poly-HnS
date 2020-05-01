@@ -1,45 +1,40 @@
-﻿namespace LowPolyHnS.Inventory
+﻿using System;
+using LowPolyHnS.Core;
+using LowPolyHnS.Localization;
+using UnityEngine;
+using UnityEngine.Serialization;
+
+namespace LowPolyHnS.Inventory
 {
-	using System;
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-    using UnityEngine.Serialization;
-	using LowPolyHnS.Core;
-	using LowPolyHnS.Localization;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	using System.IO;
-	#endif
+#endif
 
-	[Serializable]
-	public class Item : ScriptableObject
-	{
-		// PROPERTIES: -------------------------------------------------------------------------------------------------
+    [Serializable]
+    public class Item : ScriptableObject
+    {
+        // PROPERTIES: -------------------------------------------------------------------------------------------------
 
-		public int uuid = -1;
+        public int uuid = -1;
         [LocStringNoPostProcess] public LocString itemName = new LocString();
         [LocStringNoPostProcess] public LocString itemDescription = new LocString();
         public Color itemColor = Color.grey;
 
-		public Sprite sprite;
-		public GameObject prefab;
+        public Sprite sprite;
+        public GameObject prefab;
 
-		public bool canBeSold = true;
-		public int price = 0;
-		public int maxStack = 99;
+        public bool canBeSold = true;
+        public int price;
+        public int maxStack = 99;
         public float weight = 0f;
 
-        [InventoryMultiItemType]
-        public int itemTypes = 0;
+        [InventoryMultiItemType] public int itemTypes = 0;
 
-        [FormerlySerializedAs("consumable")]
-		public bool onClick = true;
+        [FormerlySerializedAs("consumable")] public bool onClick = true;
         public bool consumeItem = true;
 
-        [FormerlySerializedAs("actionsList")]
-		public IActionsList actionsOnClick;
+        [FormerlySerializedAs("actionsList")] public IActionsList actionsOnClick;
 
         public bool equipable = false;
         public bool fillAllTypes = false;
@@ -47,37 +42,37 @@
         public IActionsList actionsOnEquip;
         public IActionsList actionsOnUnequip;
 
-		// CONSTRUCTOR: ------------------------------------------------------------------------------------------------
+        // CONSTRUCTOR: ------------------------------------------------------------------------------------------------
 
-		#if UNITY_EDITOR
-		
+#if UNITY_EDITOR
+
         public static Item CreateItemInstance()
-		{
-			Item item = ScriptableObject.CreateInstance<Item>();
-			Guid guid = Guid.NewGuid();
+        {
+            Item item = CreateInstance<Item>();
+            Guid guid = Guid.NewGuid();
 
-			item.name = "item." + Mathf.Abs(guid.GetHashCode());
-			item.uuid = Mathf.Abs(guid.GetHashCode());
+            item.name = "item." + Mathf.Abs(guid.GetHashCode());
+            item.uuid = Mathf.Abs(guid.GetHashCode());
 
-			item.itemName = new LocString();
-			item.itemDescription = new LocString();
-			item.price = 1;
-			item.maxStack = 99;
-			item.hideFlags = HideFlags.HideInHierarchy;
+            item.itemName = new LocString();
+            item.itemDescription = new LocString();
+            item.price = 1;
+            item.maxStack = 99;
+            item.hideFlags = HideFlags.HideInHierarchy;
 
-			DatabaseInventory databaseInventory = DatabaseInventory.Load();
-			AssetDatabase.AddObjectToAsset(item, databaseInventory);
-			AssetDatabase.ImportAsset(AssetDatabase.GetAssetPath(item));
-			return item;
-		}
+            DatabaseInventory databaseInventory = DatabaseInventory.Load();
+            AssetDatabase.AddObjectToAsset(item, databaseInventory);
+            AssetDatabase.ImportAsset(AssetDatabase.GetAssetPath(item));
+            return item;
+        }
 
-		private void OnDestroy()
-		{
-            this.DestroyAsset(this.actionsOnClick);
-            this.DestroyAsset(this.conditionsEquip);
-            this.DestroyAsset(this.actionsOnEquip);
-            this.DestroyAsset(this.actionsOnUnequip);
-		}
+        private void OnDestroy()
+        {
+            DestroyAsset(actionsOnClick);
+            DestroyAsset(conditionsEquip);
+            DestroyAsset(actionsOnEquip);
+            DestroyAsset(actionsOnUnequip);
+        }
 
         private void DestroyAsset(MonoBehaviour reference)
         {
@@ -86,6 +81,6 @@
             DestroyImmediate(reference.gameObject, true);
         }
 
-        #endif
-	}
+#endif
+    }
 }

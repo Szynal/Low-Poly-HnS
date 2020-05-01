@@ -1,7 +1,7 @@
-﻿namespace LowPolyHnS.Core.Math
-{
-    using System;
+﻿using System;
 
+namespace LowPolyHnS.Core.Math
+{
     public class NodeUnary : Node
     {
         private readonly Node rhs;
@@ -19,8 +19,8 @@
 
         public override float Evaluate()
         {
-            float rhsVal = this.rhs.Evaluate();
-            return this.op(rhsVal);
+            float rhsVal = rhs.Evaluate();
+            return op(rhsVal);
         }
     }
 }

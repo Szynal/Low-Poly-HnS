@@ -1,79 +1,75 @@
-﻿namespace LowPolyHnS.Core
+﻿using UnityEngine;
+
+namespace LowPolyHnS.Core
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-	using LowPolyHnS.Core;
-    using LowPolyHnS.Variables;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[AddComponentMenu("")]
-	public class ActionSetActive : IAction 
-	{
+    [AddComponentMenu("")]
+    public class ActionSetActive : IAction
+    {
         public TargetGameObject target = new TargetGameObject();
-		public bool active = true;
+        public bool active = true;
 
         // EXECUTABLE: ----------------------------------------------------------------------------
 
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
             GameObject targetValue = this.target.GetGameObject(target);
-            if (targetValue != null) targetValue.SetActive(this.active);
+            if (targetValue != null) targetValue.SetActive(active);
 
             return true;
         }
 
-		// +--------------------------------------------------------------------------------------+
-		// | EDITOR                                                                               |
-		// +--------------------------------------------------------------------------------------+
+        // +--------------------------------------------------------------------------------------+
+        // | EDITOR                                                                               |
+        // +--------------------------------------------------------------------------------------+
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 
-		public static new string NAME = "Object/Set Active";
-		private const string NODE_TITLE = "Set {0} object {1}";
+        public static new string NAME = "Object/Set Active";
+        private const string NODE_TITLE = "Set {0} object {1}";
 
-		// PROPERTIES: ----------------------------------------------------------------------------
+        // PROPERTIES: ----------------------------------------------------------------------------
 
-		private SerializedProperty spTarget;
-		private SerializedProperty spActive;
+        private SerializedProperty spTarget;
+        private SerializedProperty spActive;
 
-		// INSPECTOR METHODS: ---------------------------------------------------------------------
+        // INSPECTOR METHODS: ---------------------------------------------------------------------
 
-		public override string GetNodeTitle()
-		{
-			return string.Format(
-				NODE_TITLE, 
-				(this.active ? "active" : "inactive"),
-				this.target
-			);
-		}
+        public override string GetNodeTitle()
+        {
+            return string.Format(
+                NODE_TITLE,
+                active ? "active" : "inactive",
+                target
+            );
+        }
 
-		protected override void OnEnableEditorChild ()
-		{
-			this.spTarget = this.serializedObject.FindProperty("target");
-			this.spActive = this.serializedObject.FindProperty("active");
-		}
+        protected override void OnEnableEditorChild()
+        {
+            spTarget = serializedObject.FindProperty("target");
+            spActive = serializedObject.FindProperty("active");
+        }
 
-		protected override void OnDisableEditorChild ()
-		{
-			this.spTarget = null;
-			this.spActive = null;
-		}
+        protected override void OnDisableEditorChild()
+        {
+            spTarget = null;
+            spActive = null;
+        }
 
-		public override void OnInspectorGUI()
-		{
-			this.serializedObject.Update();
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
 
-			EditorGUILayout.PropertyField(this.spTarget);
-			EditorGUILayout.PropertyField(this.spActive);
+            EditorGUILayout.PropertyField(spTarget);
+            EditorGUILayout.PropertyField(spActive);
 
-			this.serializedObject.ApplyModifiedProperties();
-		}
+            serializedObject.ApplyModifiedProperties();
+        }
 
-		#endif
-	}
+#endif
+    }
 }

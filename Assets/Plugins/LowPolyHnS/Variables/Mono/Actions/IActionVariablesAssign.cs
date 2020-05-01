@@ -1,19 +1,16 @@
-﻿namespace LowPolyHnS.Core
+﻿using LowPolyHnS.Variables;
+using UnityEngine;
+
+namespace LowPolyHnS.Core
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-	using LowPolyHnS.Core;
-    using LowPolyHnS.Variables;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[AddComponentMenu("")]
+    [AddComponentMenu("")]
     public abstract class IActionVariablesAssign : IAction
-	{
+    {
         public enum ValueFrom
         {
             Player,
@@ -33,96 +30,96 @@
 
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
-            this.ExecuteAssignement(target);
+            ExecuteAssignement(target);
             return true;
         }
 
         public abstract void ExecuteAssignement(GameObject target);
 
-		// +--------------------------------------------------------------------------------------+
-		// | EDITOR                                                                               |
-		// +--------------------------------------------------------------------------------------+
+        // +--------------------------------------------------------------------------------------+
+        // | EDITOR                                                                               |
+        // +--------------------------------------------------------------------------------------+
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 
-		public static new string NAME = "Variables/Variable Assign";
+        public static new string NAME = "Variables/Variable Assign";
         protected const string NODE_TITLE = "Assign {0} to {1}";
 
-		// PROPERTIES: ----------------------------------------------------------------------------
+        // PROPERTIES: ----------------------------------------------------------------------------
 
-		private SerializedProperty spVariable;
+        private SerializedProperty spVariable;
         private SerializedProperty spValueFrom;
         private SerializedProperty spValue;
         private SerializedProperty spGlobal;
-        private SerializedProperty spLocal; 
+        private SerializedProperty spLocal;
         private SerializedProperty spList;
 
         // INSPECTOR METHODS: ---------------------------------------------------------------------
 
         public override string GetNodeTitle()
-		{
+        {
             return string.Format(NODE_TITLE, "(none)", "(none)");
-		}
-
-		protected override void OnEnableEditorChild ()
-		{
-            this.spVariable = this.serializedObject.FindProperty("variable");
-            this.spValueFrom = this.serializedObject.FindProperty("valueFrom");
-            this.spValue = this.serializedObject.FindProperty("value");
-            this.spGlobal = this.serializedObject.FindProperty("global");
-            this.spLocal = this.serializedObject.FindProperty("local");
-            this.spList = this.serializedObject.FindProperty("list");
         }
 
-		protected override void OnDisableEditorChild ()
-		{
-            this.spVariable = null;
-            this.spValueFrom = null;
-            this.spValue = null;
-            this.spGlobal = null;
-            this.spLocal = null;
-            this.spList = null;
-		}
+        protected override void OnEnableEditorChild()
+        {
+            spVariable = serializedObject.FindProperty("variable");
+            spValueFrom = serializedObject.FindProperty("valueFrom");
+            spValue = serializedObject.FindProperty("value");
+            spGlobal = serializedObject.FindProperty("global");
+            spLocal = serializedObject.FindProperty("local");
+            spList = serializedObject.FindProperty("list");
+        }
 
-		public override void OnInspectorGUI()
-		{
-			this.serializedObject.Update();
+        protected override void OnDisableEditorChild()
+        {
+            spVariable = null;
+            spValueFrom = null;
+            spValue = null;
+            spGlobal = null;
+            spLocal = null;
+            spList = null;
+        }
 
-            EditorGUILayout.PropertyField(this.spVariable);
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
+
+            EditorGUILayout.PropertyField(spVariable);
             EditorGUILayout.Space();
 
-            if (this.PaintInspectorTarget())
+            if (PaintInspectorTarget())
             {
-                EditorGUILayout.PropertyField(this.spValueFrom);
-                switch ((ValueFrom)this.spValueFrom.enumValueIndex)
+                EditorGUILayout.PropertyField(spValueFrom);
+                switch ((ValueFrom) spValueFrom.enumValueIndex)
                 {
                     case ValueFrom.Constant:
-                        EditorGUILayout.PropertyField(this.spValue);
+                        EditorGUILayout.PropertyField(spValue);
                         break;
 
                     case ValueFrom.GlobalVariable:
-                        EditorGUILayout.PropertyField(this.spGlobal);
+                        EditorGUILayout.PropertyField(spGlobal);
                         break;
 
                     case ValueFrom.LocalVariable:
-                        EditorGUILayout.PropertyField(this.spLocal);
+                        EditorGUILayout.PropertyField(spLocal);
                         break;
 
                     case ValueFrom.ListVariable:
-                        EditorGUILayout.PropertyField(this.spList);
+                        EditorGUILayout.PropertyField(spList);
                         break;
                 }
             }
             else
             {
-                EditorGUILayout.PropertyField(this.spValue);
+                EditorGUILayout.PropertyField(spValue);
             }
 
-			this.serializedObject.ApplyModifiedProperties();
-		}
+            serializedObject.ApplyModifiedProperties();
+        }
 
         public abstract bool PaintInspectorTarget();
 
-		#endif
-	}
+#endif
+    }
 }

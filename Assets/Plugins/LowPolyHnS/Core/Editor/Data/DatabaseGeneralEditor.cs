@@ -1,21 +1,12 @@
-﻿namespace LowPolyHnS.Localization
-{
-	using System;
-	using System.IO;
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEditor;
-	using UnityEditor.AnimatedValues;
-	using UnityEditor.SceneManagement;
-	using UnityEditorInternal;
-	using System.Linq;
-	using System.Reflection;
-	using LowPolyHnS.Core;
+﻿using LowPolyHnS.Core;
+using UnityEditor;
+using UnityEngine;
 
-	[CustomEditor(typeof(DatabaseGeneral))]
-	public class DatabaseGeneralEditor : IDatabaseEditor
-	{
+namespace LowPolyHnS.Localization
+{
+    [CustomEditor(typeof(DatabaseGeneral))]
+    public class DatabaseGeneralEditor : IDatabaseEditor
+    {
         private const string MSG_DP = "The default PlayerPrefs will be used if no Data Provider is selected";
 
         // PROPERTIES: ----------------------------------------------------------------------------
@@ -33,53 +24,52 @@
         private SerializedProperty spDefaultSoundAudioMixer;
         private SerializedProperty spDefaultVoiceAudioMixer;
 
-        private Editor editorDataProvider = null;
+        private Editor editorDataProvider;
 
         // INITIALIZE: ----------------------------------------------------------------------------
 
         private void OnEnable()
-		{
+        {
             if (target == null || serializedObject == null) return;
-            this.spGeneralRenderMode = serializedObject.FindProperty("generalRenderMode");
-            this.spPrefabFloatingMessage = serializedObject.FindProperty("prefabFloatingMessage");
-            this.spPrefabSimpleMessage = serializedObject.FindProperty("prefabSimpleMessage");
-            this.spPrefabTouchstick = serializedObject.FindProperty("prefabTouchstick");
-            this.spSaveScenes = serializedObject.FindProperty("saveScenes");
-            this.spProvider = serializedObject.FindProperty("provider");
-            this.spToolbarPositionX = serializedObject.FindProperty("toolbarPositionX");
-            this.spToolbarPositionY = serializedObject.FindProperty("toolbarPositionY");
+            spGeneralRenderMode = serializedObject.FindProperty("generalRenderMode");
+            spPrefabFloatingMessage = serializedObject.FindProperty("prefabFloatingMessage");
+            spPrefabSimpleMessage = serializedObject.FindProperty("prefabSimpleMessage");
+            spPrefabTouchstick = serializedObject.FindProperty("prefabTouchstick");
+            spSaveScenes = serializedObject.FindProperty("saveScenes");
+            spProvider = serializedObject.FindProperty("provider");
+            spToolbarPositionX = serializedObject.FindProperty("toolbarPositionX");
+            spToolbarPositionY = serializedObject.FindProperty("toolbarPositionY");
 
-            this.spDefaultMusicAudioMixer = serializedObject.FindProperty("musicAudioMixer");
-            this.spDefaultSoundAudioMixer = serializedObject.FindProperty("soundAudioMixer");
-            this.spDefaultVoiceAudioMixer = serializedObject.FindProperty("voiceAudioMixer");
+            spDefaultMusicAudioMixer = serializedObject.FindProperty("musicAudioMixer");
+            spDefaultSoundAudioMixer = serializedObject.FindProperty("soundAudioMixer");
+            spDefaultVoiceAudioMixer = serializedObject.FindProperty("voiceAudioMixer");
 
-            this.InitEditorDataProvider();
+            InitEditorDataProvider();
         }
 
         private void InitEditorDataProvider()
         {
-            UnityEngine.Object dataProvider = this.spProvider.objectReferenceValue;
+            Object dataProvider = spProvider.objectReferenceValue;
             if (dataProvider == null)
             {
-                this.editorDataProvider = null;
+                editorDataProvider = null;
                 return;
             }
 
-            this.editorDataProvider = Editor.CreateEditor(dataProvider);
-
+            editorDataProvider = CreateEditor(dataProvider);
         }
 
-		// OVERRIDE METHODS: ----------------------------------------------------------------------
+        // OVERRIDE METHODS: ----------------------------------------------------------------------
 
-		public override string GetDocumentationURL ()
-		{
-			return "https://docs.LowPolyHnS.io/";
-		}
+        public override string GetDocumentationURL()
+        {
+            return "https://docs.LowPolyHnS.io/";
+        }
 
-		public override string GetName ()
-		{
-			return "General";
-		}
+        public override string GetName()
+        {
+            return "General";
+        }
 
         public override int GetPanelWeight()
         {
@@ -94,48 +84,48 @@
         // GUI METHODS: ---------------------------------------------------------------------------
 
         public override void OnInspectorGUI()
-		{
-			this.serializedObject.Update();
+        {
+            serializedObject.Update();
 
-            EditorGUILayout.PropertyField(this.spGeneralRenderMode);
-            EditorGUILayout.PropertyField(this.spPrefabFloatingMessage);
-            EditorGUILayout.PropertyField(this.spPrefabSimpleMessage);
-            EditorGUILayout.PropertyField(this.spPrefabTouchstick);
+            EditorGUILayout.PropertyField(spGeneralRenderMode);
+            EditorGUILayout.PropertyField(spPrefabFloatingMessage);
+            EditorGUILayout.PropertyField(spPrefabSimpleMessage);
+            EditorGUILayout.PropertyField(spPrefabTouchstick);
 
-            this.PaintProvider();
+            PaintProvider();
 
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("Audio Management", EditorStyles.boldLabel);
             EditorGUI.indentLevel++;
-            EditorGUILayout.PropertyField(this.spDefaultMusicAudioMixer);
-            EditorGUILayout.PropertyField(this.spDefaultSoundAudioMixer);
-            EditorGUILayout.PropertyField(this.spDefaultVoiceAudioMixer);
+            EditorGUILayout.PropertyField(spDefaultMusicAudioMixer);
+            EditorGUILayout.PropertyField(spDefaultSoundAudioMixer);
+            EditorGUILayout.PropertyField(spDefaultVoiceAudioMixer);
             EditorGUI.indentLevel--;
 
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("Toolbar", EditorStyles.boldLabel);
             EditorGUI.indentLevel++;
-            EditorGUILayout.PropertyField(this.spToolbarPositionX);
-            EditorGUILayout.PropertyField(this.spToolbarPositionY);
+            EditorGUILayout.PropertyField(spToolbarPositionX);
+            EditorGUILayout.PropertyField(spToolbarPositionY);
             EditorGUI.indentLevel--;
 
-            this.serializedObject.ApplyModifiedProperties();
-		}
+            serializedObject.ApplyModifiedProperties();
+        }
 
         private void PaintProvider()
         {
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("Save/Load System:", EditorStyles.boldLabel);
-            EditorGUILayout.PropertyField(this.spSaveScenes);
+            EditorGUILayout.PropertyField(spSaveScenes);
 
             EditorGUI.BeginChangeCheck();
-            EditorGUILayout.PropertyField(this.spProvider, GUIContent.none);
-            if (EditorGUI.EndChangeCheck()) this.InitEditorDataProvider();
+            EditorGUILayout.PropertyField(spProvider, GUIContent.none);
+            if (EditorGUI.EndChangeCheck()) InitEditorDataProvider();
 
-            if (this.editorDataProvider != null)
+            if (editorDataProvider != null)
             {
                 EditorGUILayout.BeginVertical(EditorStyles.helpBox);
-                this.editorDataProvider.OnInspectorGUI();
+                editorDataProvider.OnInspectorGUI();
                 EditorGUILayout.EndVertical();
             }
             else
@@ -143,5 +133,5 @@
                 EditorGUILayout.HelpBox(MSG_DP, MessageType.Info);
             }
         }
-	}
+    }
 }

@@ -1,51 +1,49 @@
-﻿namespace LowPolyHnS.Localization
+﻿using LowPolyHnS.Core;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.UI;
+using TextEditor = UnityEditor.UI.TextEditor;
+
+namespace LowPolyHnS.Localization
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.UI;
-	using UnityEditor;
-	using UnityEditor.UI;
-	using LowPolyHnS.Core;
+    [CustomEditor(typeof(TextLocalized), true)]
+    [CanEditMultipleObjects]
+    public class TextLocalizedEditor : TextEditor
+    {
+        private SerializedProperty spText;
+        private SerializedProperty spLocString;
+        private SerializedProperty spLocStringContent;
 
-	[CustomEditor(typeof(TextLocalized), true)]
-	[CanEditMultipleObjects]
-	public class TextLocalizedEditor : UnityEditor.UI.TextEditor
-	{
-		private SerializedProperty spText;
-		private SerializedProperty spLocString;
-		private SerializedProperty spLocStringContent;
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            spLocString = serializedObject.FindProperty("locString");
+            spLocStringContent = spLocString.FindPropertyRelative("content");
 
-		protected override void OnEnable()
-		{
-			base.OnEnable();
-			this.spLocString = serializedObject.FindProperty("locString");
-			this.spLocStringContent = this.spLocString.FindPropertyRelative("content");
+            spText = serializedObject.FindProperty("m_Text");
 
-			this.spText = base.serializedObject.FindProperty("m_Text");
+            if (!Application.isPlaying)
+            {
+                spText.stringValue = spLocStringContent.stringValue;
+            }
+        }
 
-			if (!Application.isPlaying)
-			{
-				this.spText.stringValue = this.spLocStringContent.stringValue;
-			}
-		}
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
 
-		public override void OnInspectorGUI()
-		{
-			serializedObject.Update();
+            EditorGUILayout.PropertyField(spLocString);
+            base.OnInspectorGUI();
 
-			EditorGUILayout.PropertyField(this.spLocString);
-			base.OnInspectorGUI();
+            spLocStringContent.stringValue = spText.stringValue;
+            serializedObject.ApplyModifiedProperties();
+        }
 
-            this.spLocStringContent.stringValue = this.spText.stringValue;
-			serializedObject.ApplyModifiedProperties();
-		}
-
-		// STATIC METHODS: ------------------------------------------------------------------------
+        // STATIC METHODS: ------------------------------------------------------------------------
 
         [MenuItem("GameObject/LowPolyHnS/UI/Text (Localized)", false, 20)]
-		public static void CreateTextLocalized()
-		{
+        public static void CreateTextLocalized()
+        {
             GameObject canvas = CreateSceneObject.GetCanvasGameObject();
             GameObject textGO = DefaultControls.CreateText(CreateSceneObject.GetStandardResources());
             textGO.transform.SetParent(canvas.transform, false);
@@ -53,6 +51,6 @@
             DestroyImmediate(textGO.GetComponent<Text>());
             textGO.AddComponent<TextLocalized>();
             Selection.activeGameObject = textGO;
-		}
-	}
+        }
+    }
 }

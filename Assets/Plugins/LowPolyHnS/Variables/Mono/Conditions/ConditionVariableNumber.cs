@@ -1,15 +1,12 @@
-﻿namespace LowPolyHnS.Core
-{
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEngine.Events;
-    using LowPolyHnS.Variables;
+﻿using System;
+using LowPolyHnS.Variables;
+using UnityEngine;
 
-    #if UNITY_EDITOR
-    using UnityEditor;
-    #endif
+namespace LowPolyHnS.Core
+{
+#if UNITY_EDITOR
+
+#endif
 
     [AddComponentMenu("")]
     public class ConditionVariableNumber : ConditionVariable
@@ -17,17 +14,16 @@
         [VariableFilter(Variable.DataType.Number)]
         public VariableProperty variable = new VariableProperty();
 
-        [Space]
-        public NumberProperty compareTo = new NumberProperty();
+        [Space] public NumberProperty compareTo = new NumberProperty();
 
         // OVERRIDERS: ----------------------------------------------------------------------------
 
         protected override bool Compare(GameObject target)
-		{
-			float var1 = Convert.ToSingle(this.variable.Get(target));
-            float var2 = this.compareTo.GetValue(target);
+        {
+            float var1 = Convert.ToSingle(variable.Get(target));
+            float var2 = compareTo.GetValue(target);
 
-            switch (this.comparison)
+            switch (comparison)
             {
                 case Comparison.Equal: return Mathf.Approximately(var1, var2);
                 case Comparison.EqualInteger: return Mathf.RoundToInt(var1) == Mathf.RoundToInt(var2);
@@ -38,30 +34,30 @@
             }
 
             return false;
-		}
+        }
 
-		// +--------------------------------------------------------------------------------------+
-		// | EDITOR                                                                               |
-		// +--------------------------------------------------------------------------------------+
+        // +--------------------------------------------------------------------------------------+
+        // | EDITOR                                                                               |
+        // +--------------------------------------------------------------------------------------+
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
 
-		public static new string NAME = "Variables/Variable Number";
+        public static new string NAME = "Variables/Variable Number";
 
         public override string GetNodeTitle()
         {
             return string.Format(
                 NODE_TITLE,
-                this.variable,
-                this.compareTo
+                variable,
+                compareTo
             );
         }
 
-		protected override bool ShowComparison()
-		{
+        protected override bool ShowComparison()
+        {
             return true;
-		}
+        }
 
-        #endif
-	}
+#endif
+    }
 }

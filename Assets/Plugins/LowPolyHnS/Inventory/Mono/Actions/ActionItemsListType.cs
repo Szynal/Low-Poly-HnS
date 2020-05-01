@@ -1,31 +1,27 @@
-﻿namespace LowPolyHnS.Inventory
+﻿using LowPolyHnS.Core;
+using UnityEngine;
+
+namespace LowPolyHnS.Inventory
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-	using LowPolyHnS.Core;
-    using LowPolyHnS.Characters;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[AddComponentMenu("")]
+    [AddComponentMenu("")]
     public class ActionItemsListType : IAction
-	{
+    {
         public ItemsListUI itemsListUI;
 
-        [InventoryMultiItemType]
-        public int itemTypes = ~0;
+        [InventoryMultiItemType] public int itemTypes = ~0;
 
         // EXECUTABLE: ----------------------------------------------------------------------------
 
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
-            if (this.itemsListUI != null)
+            if (itemsListUI != null)
             {
-                this.itemsListUI.SetItemTypes(this.itemTypes);
+                itemsListUI.SetItemTypes(itemTypes);
             }
 
             return true;
@@ -35,47 +31,47 @@
         // | EDITOR                                                                               |
         // +--------------------------------------------------------------------------------------+
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
 
         public const string CUSTOM_ICON_PATH = "Assets/Plugins/LowPolyHnS/Inventory/Icons/Actions/";
 
         public static new string NAME = "Inventory/Items List UI";
         private const string NODE_TITLE = "Change ItemsListUI types";
 
-		// PROPERTIES: ----------------------------------------------------------------------------
+        // PROPERTIES: ----------------------------------------------------------------------------
 
-		private SerializedProperty spItemsListUI;
+        private SerializedProperty spItemsListUI;
         private SerializedProperty spItemTypes;
 
-		// INSPECTOR METHODS: ---------------------------------------------------------------------
+        // INSPECTOR METHODS: ---------------------------------------------------------------------
 
-		public override string GetNodeTitle()
-		{
+        public override string GetNodeTitle()
+        {
             return NODE_TITLE;
-		}
+        }
 
-		protected override void OnEnableEditorChild ()
-		{
-            this.spItemsListUI = this.serializedObject.FindProperty("itemsListUI");
-            this.spItemTypes = this.serializedObject.FindProperty("itemTypes");
-		}
+        protected override void OnEnableEditorChild()
+        {
+            spItemsListUI = serializedObject.FindProperty("itemsListUI");
+            spItemTypes = serializedObject.FindProperty("itemTypes");
+        }
 
-		protected override void OnDisableEditorChild ()
-		{
-            this.spItemsListUI = null;
-            this.spItemTypes = null;
-		}
+        protected override void OnDisableEditorChild()
+        {
+            spItemsListUI = null;
+            spItemTypes = null;
+        }
 
-		public override void OnInspectorGUI()
-		{
-			this.serializedObject.Update();
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
 
-            EditorGUILayout.PropertyField(this.spItemsListUI);
-            EditorGUILayout.PropertyField(this.spItemTypes);
+            EditorGUILayout.PropertyField(spItemsListUI);
+            EditorGUILayout.PropertyField(spItemTypes);
 
-			this.serializedObject.ApplyModifiedProperties();
-		}
+            serializedObject.ApplyModifiedProperties();
+        }
 
-		#endif
-	}
+#endif
+    }
 }

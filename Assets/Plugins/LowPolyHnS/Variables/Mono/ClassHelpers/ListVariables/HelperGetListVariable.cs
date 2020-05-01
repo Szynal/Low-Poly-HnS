@@ -1,10 +1,8 @@
-﻿namespace LowPolyHnS.Variables
-{
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
+﻿using System;
+using UnityEngine;
 
+namespace LowPolyHnS.Variables
+{
     [Serializable]
     public class HelperGetListVariable : HelperListVariable
     {
@@ -15,34 +13,34 @@
 
         public object Get(GameObject invoker)
         {
-            ListVariables list = this.GetListVariables(invoker);
-            Variable result = VariablesManager.GetListItem(list, this.select, this.index);
+            ListVariables list = GetListVariables(invoker);
+            Variable result = VariablesManager.GetListItem(list, select, index);
             return result != null ? result.Get() : null;
         }
 
         public void Set(object value, GameObject invoker = null)
         {
-            ListVariables list = this.GetListVariables(invoker);
-            list.Push(value, this.select, this.index);
+            ListVariables list = GetListVariables(invoker);
+            list.Push(value, select, index);
         }
 
         public GameObject GetGameObject(GameObject invoker)
         {
-            ListVariables list = this.GetListVariables(invoker);
-            return (list != null ? list.gameObject : null);
+            ListVariables list = GetListVariables(invoker);
+            return list != null ? list.gameObject : null;
         }
 
         // OVERRIDERS: ----------------------------------------------------------------------------
 
         public override string ToString()
         {
-            return string.Format("list[{0}]", this.select.ToString());
+            return string.Format("list[{0}]", select.ToString());
         }
 
         public string ToStringValue(GameObject invoker)
         {
-            object value = this.Get(invoker);
-            return (value != null ? value.ToString() : "null");
+            object value = Get(invoker);
+            return value != null ? value.ToString() : "null";
         }
     }
 }

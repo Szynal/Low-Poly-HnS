@@ -1,16 +1,13 @@
-﻿namespace LowPolyHnS.Inventory
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEngine.UI;
-    using LowPolyHnS.Core;
-    using LowPolyHnS.Variables;
+﻿using System;
+using LowPolyHnS.Variables;
+using UnityEngine;
 
+namespace LowPolyHnS.Inventory
+{
     [CreateAssetMenu(fileName = "New Merchant", menuName = "LowPolyHnS/Inventory/Merchant")]
     public class Merchant : ScriptableObject
     {
-        [System.Serializable]
+        [Serializable]
         public class Ware
         {
             public ItemHolder item = new ItemHolder();
@@ -18,7 +15,7 @@
             public int maxAmount = 10;
         }
 
-        [System.Serializable]
+        [Serializable]
         public class Warehouse
         {
             public Ware[] wares = new Ware[0];
@@ -30,12 +27,10 @@
         public string title = "";
         public string description = "";
 
-        [Space]
-        public GameObject merchantUI;
+        [Space] public GameObject merchantUI;
         public Warehouse warehouse;
 
-        [Space]
-        public NumberProperty purchasePercent = new NumberProperty(1.0f);
+        [Space] public NumberProperty purchasePercent = new NumberProperty(1.0f);
         public NumberProperty sellPercent = new NumberProperty(0.8f);
     }
 }

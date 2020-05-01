@@ -1,48 +1,44 @@
-﻿namespace LowPolyHnS.Core
-{
-	using System;
-	using System.IO;
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
+﻿using System;
+using System.IO;
+using UnityEngine;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	using System.Linq;
-	using System.Reflection;
-	#endif
+namespace LowPolyHnS.Core
+{
+#if UNITY_EDITOR
+    using UnityEditor;
+
+#endif
 
     public abstract class IDatabase : ScriptableObject
-	{
-		private const string DATABASE_RESOURCE_PATH = "LowPolyHnS/Databases";
+    {
+        private const string DATABASE_RESOURCE_PATH = "LowPolyHnS/Databases";
 
         // MAIN METHODS: --------------------------------------------------------------------------
 
         public static T LoadDatabaseCopy<T>() where T : IDatabase
-		{
-			T database = IDatabase.LoadDatabase<T>();
-			return Instantiate(database);
-		}
+        {
+            T database = LoadDatabase<T>();
+            return Instantiate(database);
+        }
 
         public static T LoadDatabase<T>(bool onlyLoad = false) where T : IDatabase
-		{
+        {
             string path = Path.Combine(
-                DATABASE_RESOURCE_PATH, 
-                IDatabase.GetAssetFilename(typeof(T), false)
+                DATABASE_RESOURCE_PATH,
+                GetAssetFilename(typeof(T), false)
             );
 
-			T database = Resources.Load<T>(path);
-            if (database == null && !onlyLoad) database = ScriptableObject.CreateInstance<T>();
+            T database = Resources.Load<T>(path);
+            if (database == null && !onlyLoad) database = CreateInstance<T>();
 
-			return database;
-		}
+            return database;
+        }
 
         // PRIVATE METHODS: -----------------------------------------------------------------------
 
         private static string GetAssetFilename(Type type, bool withExtension)
         {
-            string[] names = type.Name.Split(new char[] { '.' });
+            string[] names = type.Name.Split('.');
 
             string name = names[names.Length - 1];
             if (withExtension)
@@ -55,7 +51,7 @@
 
         // EDITOR METHODS: ------------------------------------------------------------------------
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
 
         protected static void Setup<T>() where T : IDatabase
         {
@@ -66,7 +62,7 @@
         {
             EditorApplication.update -= SetupDeferred<T>;
 
-            T database = ScriptableObject.CreateInstance<T>();
+            T database = CreateInstance<T>();
             string assetPath = database.GetAssetPath();
             IDatabase asset = AssetDatabase.LoadAssetAtPath<IDatabase>(assetPath);
 
@@ -75,7 +71,7 @@
                 LowPolyHnSUtilities.CreateFolderStructure(assetPath);
                 AssetDatabase.Refresh();
 
-                asset = ScriptableObject.CreateInstance<T>();
+                asset = CreateInstance<T>();
                 AssetDatabase.CreateAsset(asset, assetPath);
                 AssetDatabase.SaveAssets();
                 AssetDatabase.Refresh();
@@ -97,13 +93,13 @@
         protected virtual string GetAssetPath()
         {
             string assetPath = Path.Combine(
-                this.GetProjectPath(),
-                this.GetResourcePath()
+                GetProjectPath(),
+                GetResourcePath()
             );
 
             return Path.Combine(
-                assetPath, 
-                IDatabase.GetAssetFilename(this.GetType(), true)
+                assetPath,
+                GetAssetFilename(GetType(), true)
             );
         }
 
@@ -112,6 +108,6 @@
             return 50;
         }
 
-        #endif
+#endif
     }
 }

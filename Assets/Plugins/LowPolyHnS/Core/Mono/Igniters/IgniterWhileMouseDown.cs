@@ -1,12 +1,10 @@
-﻿namespace LowPolyHnS.Core
-{
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
+﻿using UnityEngine;
 
-	[AddComponentMenu("")]
-	public class IgniterWhileMouseDown : Igniter 
-	{
+namespace LowPolyHnS.Core
+{
+    [AddComponentMenu("")]
+    public class IgniterWhileMouseDown : Igniter
+    {
         public enum MouseButton
         {
             Left = KeyCode.Mouse0,
@@ -16,16 +14,16 @@
 
         public MouseButton mouseButton = MouseButton.Left;
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
         public new static string NAME = "Input/While Mouse Down";
-		#endif
+#endif
 
-		private void Update()
-		{
-			if (Input.GetKey((KeyCode)this.mouseButton))
-			{
-                this.ExecuteTrigger(gameObject);
-			}
-		}
-	}
+        private void Update()
+        {
+            if (Input.GetKey((KeyCode) mouseButton))
+            {
+                ExecuteTrigger(gameObject);
+            }
+        }
+    }
 }

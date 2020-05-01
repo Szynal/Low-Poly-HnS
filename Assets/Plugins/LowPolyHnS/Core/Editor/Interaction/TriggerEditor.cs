@@ -1,23 +1,24 @@
-﻿namespace LowPolyHnS.Core
+﻿using System;
+using System.IO;
+using System.Reflection;
+using UnityEditor;
+using UnityEditor.SceneManagement;
+using UnityEngine;
+using Object = UnityEngine.Object;
+
+namespace LowPolyHnS.Core
 {
-	using System;
-	using System.IO;
-	using System.Collections;
-	using System.Collections.Generic;
-	using System.Reflection;
-	using UnityEngine;
-	using UnityEditor;
-    using UnityEditor.SceneManagement;
-    using UnityEditorInternal;
+    [CustomEditor(typeof(Trigger))]
+    public class TriggerEditor : Editor
+    {
+        private const string MSG_REQUIRE_HAVE_COLLIDER =
+            "This type of Trigger requires a Collider. Select one from below";
 
-	[CustomEditor(typeof(Trigger))]
-	public class TriggerEditor : Editor
-	{
-        private const string MSG_REQUIRE_HAVE_COLLIDER = "This type of Trigger requires a Collider. Select one from below";
+        private const BindingFlags BINDING_FLAGS =
+            BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy;
 
-		private const BindingFlags BINDING_FLAGS = BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy;
-		private const float DOTTED_LINES_SIZE = 2.0f;
-		private const string KEY_IGNITER_INDEX_PREF = "LowPolyHnS-igniters-index";
+        private const float DOTTED_LINES_SIZE = 2.0f;
+        private const string KEY_IGNITER_INDEX_PREF = "LowPolyHnS-igniters-index";
 
         private const string ICONS_PATH = "Assets/Plugins/LowPolyHnS/Extra/Icons/Trigger/{0}";
         private const float ITEMS_TOOLBAR_WIDTH = 25f;
@@ -26,134 +27,137 @@
         private const string PROP_ACTIONS = "actions";
         private const string PROP_CONDITIONS = "conditions";
 
-		private static readonly Type[] COLLIDER_TYPES = new Type[]
-		{
-			typeof(SphereCollider),
-			typeof(BoxCollider),
-			typeof(CapsuleCollider),
-			typeof(MeshCollider)
-		};
+        private static readonly Type[] COLLIDER_TYPES =
+        {
+            typeof(SphereCollider),
+            typeof(BoxCollider),
+            typeof(CapsuleCollider),
+            typeof(MeshCollider)
+        };
 
-		private class IgniterCache
-		{
-			public GUIContent name;
-			public string comment;
-			public bool requiresCollider;
-			public SerializedObject serializedObject;
+        private class IgniterCache
+        {
+            public GUIContent name;
+            public string comment;
+            public bool requiresCollider;
+            public SerializedObject serializedObject;
 
-			public IgniterCache(UnityEngine.Object reference)
-			{
-				if (reference == null)
-				{
-					this.name = new GUIContent("Undefined");
-					this.requiresCollider = false;
-					this.serializedObject = null;
-					return;
-				}
+            public IgniterCache(Object reference)
+            {
+                if (reference == null)
+                {
+                    name = new GUIContent("Undefined");
+                    requiresCollider = false;
+                    serializedObject = null;
+                    return;
+                }
 
-				string igniterName = (string)reference.GetType().GetField("NAME", BINDING_FLAGS).GetValue(null);
-				string iconPath = (string)reference.GetType().GetField("ICON_PATH", BINDING_FLAGS).GetValue(null);
+                string igniterName = (string) reference.GetType().GetField("NAME", BINDING_FLAGS).GetValue(null);
+                string iconPath = (string) reference.GetType().GetField("ICON_PATH", BINDING_FLAGS).GetValue(null);
 
                 if (!string.IsNullOrEmpty(igniterName))
                 {
-                    string[] igniterNameSplit = igniterName.Split(new char[]{'/'});
+                    string[] igniterNameSplit = igniterName.Split('/');
                     igniterName = igniterNameSplit[igniterNameSplit.Length - 1];
                 }
 
-				Texture2D igniterIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(Path.Combine(iconPath, igniterName + ".png"));
-				if (igniterIcon == null) igniterIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(iconPath + "Default.png");
-				if (igniterIcon == null) igniterIcon = EditorGUIUtility.FindTexture("GameObject Icon");
+                Texture2D igniterIcon =
+                    AssetDatabase.LoadAssetAtPath<Texture2D>(Path.Combine(iconPath, igniterName + ".png"));
+                if (igniterIcon == null)
+                    igniterIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(iconPath + "Default.png");
+                if (igniterIcon == null) igniterIcon = EditorGUIUtility.FindTexture("GameObject Icon");
 
-				this.name = new GUIContent(" " + igniterName, igniterIcon);
-				this.comment = (string)reference.GetType().GetField("COMMENT", BINDING_FLAGS).GetValue(null);
-				this.requiresCollider = (bool)reference.GetType().GetField("REQUIRES_COLLIDER", BINDING_FLAGS).GetValue(null);
-				this.serializedObject = new SerializedObject(reference);
-			}
-		}
+                name = new GUIContent(" " + igniterName, igniterIcon);
+                comment = (string) reference.GetType().GetField("COMMENT", BINDING_FLAGS).GetValue(null);
+                requiresCollider =
+                    (bool) reference.GetType().GetField("REQUIRES_COLLIDER", BINDING_FLAGS).GetValue(null);
+                serializedObject = new SerializedObject(reference);
+            }
+        }
 
-		private static string[] IGNITERS_PLATFORM_NAMES = new string[0];
+        private static string[] IGNITERS_PLATFORM_NAMES = new string[0];
 
         private static GUIContent GC_ACTIONS;
         private static GUIContent GC_CONDITIONS;
         private static GUIContent GC_SETTINGS;
         private static GUIContent GC_HOTSPOT;
 
-		// PROPERTIES: ----------------------------------------------------------------------------
+        // PROPERTIES: ----------------------------------------------------------------------------
 
-		private Trigger trigger;
+        private Trigger trigger;
 
-		private int ignitersIndex = 0;
-		private SerializedProperty spIgnitersKeys;
-		private SerializedProperty spIgnitersValues;
-		private IgniterCache[] ignitersCache;
-		private bool updateIgnitersPlatforms = false;
-		private Rect selectIgniterButtonRect = Rect.zero;
+        private int ignitersIndex;
+        private SerializedProperty spIgnitersKeys;
+        private SerializedProperty spIgnitersValues;
+        private IgniterCache[] ignitersCache;
+        private bool updateIgnitersPlatforms;
+        private Rect selectIgniterButtonRect = Rect.zero;
 
-		private SerializedProperty spTrigger;
-		private SerializedProperty spTriggerKeyCode;
+        private SerializedProperty spTrigger;
+        private SerializedProperty spTriggerKeyCode;
 
         private SerializedProperty spItems;
         private EditorSortableList sortableList;
 
-		private bool foldoutAdvancedSettings = false;
-		private SerializedProperty spMinDistance;
-		private SerializedProperty spMinDistanceToPlayer;
+        private bool foldoutAdvancedSettings;
+        private SerializedProperty spMinDistance;
+        private SerializedProperty spMinDistanceToPlayer;
 
-		// INITIALIZERS: -----------------------------------------------------------------------------------------------
+        // INITIALIZERS: -----------------------------------------------------------------------------------------------
 
-		private void OnEnable()
-		{
+        private void OnEnable()
+        {
             if (target == null || serializedObject == null) return;
-			this.trigger = (Trigger)target;
+            trigger = (Trigger) target;
 
-			SerializedProperty spIgniters = serializedObject.FindProperty("igniters");
-			this.spIgnitersKeys = spIgniters.FindPropertyRelative("keys");
-			this.spIgnitersValues = spIgniters.FindPropertyRelative("values");
+            SerializedProperty spIgniters = serializedObject.FindProperty("igniters");
+            spIgnitersKeys = spIgniters.FindPropertyRelative("keys");
+            spIgnitersValues = spIgniters.FindPropertyRelative("values");
 
-			if (this.spIgnitersKeys.arraySize == 0)
-			{
-				Igniter igniter = this.trigger.gameObject.AddComponent<IgniterStart>();
-				igniter.Setup(this.trigger);
-				igniter.enabled = false;
+            if (spIgnitersKeys.arraySize == 0)
+            {
+                Igniter igniter = trigger.gameObject.AddComponent<IgniterStart>();
+                igniter.Setup(trigger);
+                igniter.enabled = false;
 
-				this.spIgnitersKeys.InsertArrayElementAtIndex(0);
-				this.spIgnitersValues.InsertArrayElementAtIndex(0);
+                spIgnitersKeys.InsertArrayElementAtIndex(0);
+                spIgnitersValues.InsertArrayElementAtIndex(0);
 
-				this.spIgnitersKeys.GetArrayElementAtIndex(0).intValue = Trigger.ALL_PLATFORMS_KEY;
-				this.spIgnitersValues.GetArrayElementAtIndex(0).objectReferenceValue = igniter;
+                spIgnitersKeys.GetArrayElementAtIndex(0).intValue = Trigger.ALL_PLATFORMS_KEY;
+                spIgnitersValues.GetArrayElementAtIndex(0).objectReferenceValue = igniter;
 
-				this.serializedObject.ApplyModifiedPropertiesWithoutUndo();
-				this.serializedObject.Update();
-			}
+                serializedObject.ApplyModifiedPropertiesWithoutUndo();
+                serializedObject.Update();
+            }
 
-			this.UpdateIgnitersPlatforms();
+            UpdateIgnitersPlatforms();
 
-			this.ignitersIndex = EditorPrefs.GetInt(KEY_IGNITER_INDEX_PREF, 0);
-			if (this.ignitersIndex >= this.spIgnitersKeys.arraySize)
-			{
-				this.ignitersIndex = this.spIgnitersKeys.arraySize - 1;
-				EditorPrefs.SetInt(KEY_IGNITER_INDEX_PREF, this.ignitersIndex);
-			}
+            ignitersIndex = EditorPrefs.GetInt(KEY_IGNITER_INDEX_PREF, 0);
+            if (ignitersIndex >= spIgnitersKeys.arraySize)
+            {
+                ignitersIndex = spIgnitersKeys.arraySize - 1;
+                EditorPrefs.SetInt(KEY_IGNITER_INDEX_PREF, ignitersIndex);
+            }
 
-            this.spItems = serializedObject.FindProperty("items");
-            this.sortableList = new EditorSortableList();
+            spItems = serializedObject.FindProperty("items");
+            sortableList = new EditorSortableList();
 
-			this.spMinDistance = serializedObject.FindProperty("minDistance");
-			this.spMinDistanceToPlayer = serializedObject.FindProperty("minDistanceToPlayer");
-		}
+            spMinDistance = serializedObject.FindProperty("minDistance");
+            spMinDistanceToPlayer = serializedObject.FindProperty("minDistanceToPlayer");
+        }
 
-		// INSPECTOR: --------------------------------------------------------------------------------------------------
+        // INSPECTOR: --------------------------------------------------------------------------------------------------
 
-		public override void OnInspectorGUI()
-		{
+        public override void OnInspectorGUI()
+        {
             if (target == null || serializedObject == null) return;
-			serializedObject.Update();
+            serializedObject.Update();
 
-			if (this.updateIgnitersPlatforms)
-			{
-				this.UpdateIgnitersPlatforms();
-				this.updateIgnitersPlatforms = false;
-			}
+            if (updateIgnitersPlatforms)
+            {
+                UpdateIgnitersPlatforms();
+                updateIgnitersPlatforms = false;
+            }
 
             if (GC_ACTIONS == null || GC_CONDITIONS == null || GC_HOTSPOT == null || GC_SETTINGS == null)
             {
@@ -175,168 +179,168 @@
                 );
             }
 
-			this.DoLayoutConfigurationOptions();
+            DoLayoutConfigurationOptions();
 
-            this.PaintItemsToolbar();
-            this.PaintItems();
+            PaintItemsToolbar();
+            PaintItems();
 
-			EditorGUILayout.Space();
-			serializedObject.ApplyModifiedProperties();
-		}
+            EditorGUILayout.Space();
+            serializedObject.ApplyModifiedProperties();
+        }
 
-		private void PaintAdvancedSettings()
-		{
+        private void PaintAdvancedSettings()
+        {
             EditorGUILayout.LabelField("Advanced Settings", EditorStyles.boldLabel);
             EditorGUI.indentLevel++;
 
-            EditorGUILayout.PropertyField(this.spMinDistance);
-            EditorGUI.BeginDisabledGroup(!this.spMinDistance.boolValue);
+            EditorGUILayout.PropertyField(spMinDistance);
+            EditorGUI.BeginDisabledGroup(!spMinDistance.boolValue);
             EditorGUI.indentLevel++;
-            EditorGUILayout.PropertyField(this.spMinDistanceToPlayer);
+            EditorGUILayout.PropertyField(spMinDistanceToPlayer);
             EditorGUI.indentLevel--;
             EditorGUI.EndDisabledGroup();
 
             EditorGUI.indentLevel--;
-		}
+        }
 
-		private void DoLayoutConfigurationOptions()
-		{
-			int removeIndex = -1;
+        private void DoLayoutConfigurationOptions()
+        {
+            int removeIndex = -1;
 
-			EditorGUILayout.BeginVertical(EditorStyles.helpBox);
-			EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.BeginVertical(EditorStyles.helpBox);
+            EditorGUILayout.BeginHorizontal();
 
-            int ignIndex = GUILayout.Toolbar(this.ignitersIndex, IGNITERS_PLATFORM_NAMES);
-			if (ignIndex != this.ignitersIndex)
-			{
-				this.ignitersIndex = ignIndex;
-				EditorPrefs.SetInt(KEY_IGNITER_INDEX_PREF, this.ignitersIndex);
-			}
+            int ignIndex = GUILayout.Toolbar(ignitersIndex, IGNITERS_PLATFORM_NAMES);
+            if (ignIndex != ignitersIndex)
+            {
+                ignitersIndex = ignIndex;
+                EditorPrefs.SetInt(KEY_IGNITER_INDEX_PREF, ignitersIndex);
+            }
 
-			if (GUILayout.Button("+", CoreGUIStyles.GetButtonLeft(), GUILayout.Width(25f)))
-			{
-				this.SelectPlatformMenu();
-			}
+            if (GUILayout.Button("+", CoreGUIStyles.GetButtonLeft(), GUILayout.Width(25f)))
+            {
+                SelectPlatformMenu();
+            }
 
-			EditorGUI.BeginDisabledGroup(this.ignitersIndex == 0);
+            EditorGUI.BeginDisabledGroup(ignitersIndex == 0);
             if (GUILayout.Button("-", CoreGUIStyles.GetButtonMid(), GUILayout.Width(25f)))
-			{
-				removeIndex = this.ignitersIndex;
-			}
-			EditorGUI.EndDisabledGroup();
+            {
+                removeIndex = ignitersIndex;
+            }
 
-            GUIStyle settingStyle = (this.foldoutAdvancedSettings
+            EditorGUI.EndDisabledGroup();
+
+            GUIStyle settingStyle = foldoutAdvancedSettings
                 ? CoreGUIStyles.GetToggleButtonRightOn()
-                : CoreGUIStyles.GetToggleButtonRightOff()
-            );
-            
+                : CoreGUIStyles.GetToggleButtonRightOff();
+
             if (GUILayout.Button(GC_SETTINGS, settingStyle, GUILayout.Width(25f), GUILayout.Height(18f)))
             {
-                this.foldoutAdvancedSettings = !this.foldoutAdvancedSettings;
+                foldoutAdvancedSettings = !foldoutAdvancedSettings;
             }
 
-			EditorGUILayout.EndHorizontal();
+            EditorGUILayout.EndHorizontal();
 
-			EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.BeginHorizontal();
 
-			EditorGUILayout.PrefixLabel(this.ignitersCache[this.ignitersIndex].name, EditorStyles.miniBoldLabel);
-			GUILayout.FlexibleSpace();
+            EditorGUILayout.PrefixLabel(ignitersCache[ignitersIndex].name, EditorStyles.miniBoldLabel);
+            GUILayout.FlexibleSpace();
 
             if (GUILayout.Button("Change Trigger", GUILayout.Width(SelectTypePanel.WINDOW_WIDTH)))
-			{
-				SelectTypePanel selectTypePanel = new SelectTypePanel(this.SelectNewIgniter, "Triggers", typeof(Igniter));
-				PopupWindow.Show(this.selectIgniterButtonRect, selectTypePanel);
-			}
-
-			if (UnityEngine.Event.current.type == EventType.Repaint)
-			{
-				this.selectIgniterButtonRect = GUILayoutUtility.GetLastRect();
-			}
-
-			EditorGUILayout.EndHorizontal();
-
-			if (this.ignitersCache[this.ignitersIndex].serializedObject != null)
-			{
-				string comment = this.ignitersCache[this.ignitersIndex].comment;
-				if (!string.IsNullOrEmpty(comment)) EditorGUILayout.HelpBox(comment, MessageType.Info);
-
-				Igniter.PaintEditor(this.ignitersCache[this.ignitersIndex].serializedObject);
-			}
-
-			if (this.ignitersCache[this.ignitersIndex].requiresCollider)
-			{
-				Collider collider = this.trigger.GetComponent<Collider>();
-				if (!collider) this.PaintNoCollider();
-			}
-
-            if (this.foldoutAdvancedSettings)
             {
-                EditorGUILayout.Space();
-                this.PaintAdvancedSettings();
+                SelectTypePanel selectTypePanel = new SelectTypePanel(SelectNewIgniter, "Triggers", typeof(Igniter));
+                PopupWindow.Show(selectIgniterButtonRect, selectTypePanel);
             }
 
-			EditorGUILayout.EndVertical();
+            if (Event.current.type == EventType.Repaint)
+            {
+                selectIgniterButtonRect = GUILayoutUtility.GetLastRect();
+            }
 
-			if (removeIndex > 0)
-			{
-				UnityEngine.Object obj = this.spIgnitersValues.GetArrayElementAtIndex(removeIndex).objectReferenceValue;
-				this.spIgnitersValues.GetArrayElementAtIndex(removeIndex).objectReferenceValue = null;
+            EditorGUILayout.EndHorizontal();
 
-				this.spIgnitersKeys.DeleteArrayElementAtIndex(removeIndex);
-				this.spIgnitersValues.DeleteArrayElementAtIndex(removeIndex);
+            if (ignitersCache[ignitersIndex].serializedObject != null)
+            {
+                string comment = ignitersCache[ignitersIndex].comment;
+                if (!string.IsNullOrEmpty(comment)) EditorGUILayout.HelpBox(comment, MessageType.Info);
 
-				if (obj != null) DestroyImmediate(obj, true);
+                Igniter.PaintEditor(ignitersCache[ignitersIndex].serializedObject);
+            }
 
-                if (!Application.isPlaying) EditorSceneManager.MarkSceneDirty(this.trigger.gameObject.scene);
-                this.serializedObject.ApplyModifiedPropertiesWithoutUndo();
-				this.serializedObject.Update();
+            if (ignitersCache[ignitersIndex].requiresCollider)
+            {
+                Collider collider = trigger.GetComponent<Collider>();
+                if (!collider) PaintNoCollider();
+            }
 
-				this.updateIgnitersPlatforms = true;
-				if (this.ignitersIndex >= this.spIgnitersKeys.arraySize)
+            if (foldoutAdvancedSettings)
+            {
+                EditorGUILayout.Space();
+                PaintAdvancedSettings();
+            }
+
+            EditorGUILayout.EndVertical();
+
+            if (removeIndex > 0)
+            {
+                Object obj = spIgnitersValues.GetArrayElementAtIndex(removeIndex).objectReferenceValue;
+                spIgnitersValues.GetArrayElementAtIndex(removeIndex).objectReferenceValue = null;
+
+                spIgnitersKeys.DeleteArrayElementAtIndex(removeIndex);
+                spIgnitersValues.DeleteArrayElementAtIndex(removeIndex);
+
+                if (obj != null) DestroyImmediate(obj, true);
+
+                if (!Application.isPlaying) EditorSceneManager.MarkSceneDirty(trigger.gameObject.scene);
+                serializedObject.ApplyModifiedPropertiesWithoutUndo();
+                serializedObject.Update();
+
+                updateIgnitersPlatforms = true;
+                if (ignitersIndex >= spIgnitersKeys.arraySize)
                 {
-                    this.ignitersIndex = this.spIgnitersKeys.arraySize - 1;
+                    ignitersIndex = spIgnitersKeys.arraySize - 1;
                 }
-			}
-		}
+            }
+        }
 
-		private void SelectPlatformCallback(object data)
-		{
-			if (this.trigger.igniters.ContainsKey((int)data)) return;
+        private void SelectPlatformCallback(object data)
+        {
+            if (trigger.igniters.ContainsKey((int) data)) return;
 
-			int index = this.spIgnitersKeys.arraySize;
-			this.spIgnitersKeys.InsertArrayElementAtIndex(index);
-			this.spIgnitersValues.InsertArrayElementAtIndex(index);
+            int index = spIgnitersKeys.arraySize;
+            spIgnitersKeys.InsertArrayElementAtIndex(index);
+            spIgnitersValues.InsertArrayElementAtIndex(index);
 
-			this.spIgnitersKeys.GetArrayElementAtIndex(index).intValue = (int)data;
+            spIgnitersKeys.GetArrayElementAtIndex(index).intValue = (int) data;
 
-			Igniter igniter = this.trigger.gameObject.AddComponent<IgniterStart>();
-			igniter.Setup(this.trigger);
-			igniter.enabled = false;
+            Igniter igniter = trigger.gameObject.AddComponent<IgniterStart>();
+            igniter.Setup(trigger);
+            igniter.enabled = false;
 
-			this.spIgnitersValues.GetArrayElementAtIndex(index).objectReferenceValue = igniter;
+            spIgnitersValues.GetArrayElementAtIndex(index).objectReferenceValue = igniter;
 
-			this.ignitersIndex = index;
-			EditorPrefs.SetInt(KEY_IGNITER_INDEX_PREF, this.ignitersIndex);
+            ignitersIndex = index;
+            EditorPrefs.SetInt(KEY_IGNITER_INDEX_PREF, ignitersIndex);
 
-            if (!Application.isPlaying) EditorSceneManager.MarkSceneDirty(this.trigger.gameObject.scene);
-            this.serializedObject.ApplyModifiedPropertiesWithoutUndo();
-			this.serializedObject.Update();
+            if (!Application.isPlaying) EditorSceneManager.MarkSceneDirty(trigger.gameObject.scene);
+            serializedObject.ApplyModifiedPropertiesWithoutUndo();
+            serializedObject.Update();
 
-			this.updateIgnitersPlatforms = true;
-		}
+            updateIgnitersPlatforms = true;
+        }
 
-		private void SelectPlatformMenu()
-		{
-			GenericMenu menu = new GenericMenu();
+        private void SelectPlatformMenu()
+        {
+            GenericMenu menu = new GenericMenu();
 
-			foreach(Trigger.Platforms platform in Enum.GetValues(typeof(Trigger.Platforms)))
-			{
-				bool disabled = this.trigger.igniters.ContainsKey((int)platform);
-				menu.AddItem(new GUIContent(platform.ToString()), disabled, this.SelectPlatformCallback, (int)platform);	
-			}
+            foreach (Trigger.Platforms platform in Enum.GetValues(typeof(Trigger.Platforms)))
+            {
+                bool disabled = trigger.igniters.ContainsKey((int) platform);
+                menu.AddItem(new GUIContent(platform.ToString()), disabled, SelectPlatformCallback, (int) platform);
+            }
 
-			menu.ShowAsContext();
-		}
+            menu.ShowAsContext();
+        }
 
         private void PaintItemsToolbar()
         {
@@ -372,48 +376,49 @@
 
             if (GUI.Button(rectItem1, GC_ACTIONS, CoreGUIStyles.GetButtonLeft()))
             {
-                int index = this.spItems.arraySize;
-                this.spItems.InsertArrayElementAtIndex(index);
+                int index = spItems.arraySize;
+                spItems.InsertArrayElementAtIndex(index);
 
-                SerializedProperty spItem = this.spItems.GetArrayElementAtIndex(index);
-                spItem.FindPropertyRelative(PROP_OPTION).intValue = (int)Trigger.ItemOpts.Actions;
-                spItem.FindPropertyRelative(PROP_ACTIONS).objectReferenceValue = this.CreateSubObject<Actions>();
+                SerializedProperty spItem = spItems.GetArrayElementAtIndex(index);
+                spItem.FindPropertyRelative(PROP_OPTION).intValue = (int) Trigger.ItemOpts.Actions;
+                spItem.FindPropertyRelative(PROP_ACTIONS).objectReferenceValue = CreateSubObject<Actions>();
                 spItem.FindPropertyRelative(PROP_CONDITIONS).objectReferenceValue = null;
             }
 
             if (GUI.Button(rectItem2, GC_CONDITIONS, CoreGUIStyles.GetButtonMid()))
             {
-                int index = this.spItems.arraySize;
-                this.spItems.InsertArrayElementAtIndex(index);
+                int index = spItems.arraySize;
+                spItems.InsertArrayElementAtIndex(index);
 
-                SerializedProperty spItem = this.spItems.GetArrayElementAtIndex(index);
-                spItem.FindPropertyRelative(PROP_OPTION).intValue = (int)Trigger.ItemOpts.Conditions;
+                SerializedProperty spItem = spItems.GetArrayElementAtIndex(index);
+                spItem.FindPropertyRelative(PROP_OPTION).intValue = (int) Trigger.ItemOpts.Conditions;
                 spItem.FindPropertyRelative(PROP_ACTIONS).objectReferenceValue = null;
-                spItem.FindPropertyRelative(PROP_CONDITIONS).objectReferenceValue = this.CreateSubObject<Conditions>();
+                spItem.FindPropertyRelative(PROP_CONDITIONS).objectReferenceValue = CreateSubObject<Conditions>();
             }
 
             if (GUI.Button(rectItem3, "+", CoreGUIStyles.GetButtonRight()))
             {
-                int index = this.spItems.arraySize;
-                this.spItems.InsertArrayElementAtIndex(index);
+                int index = spItems.arraySize;
+                spItems.InsertArrayElementAtIndex(index);
 
-                SerializedProperty spItem = this.spItems.GetArrayElementAtIndex(index);
-                spItem.FindPropertyRelative(PROP_OPTION).intValue = (int)Trigger.ItemOpts.Actions;
+                SerializedProperty spItem = spItems.GetArrayElementAtIndex(index);
+                spItem.FindPropertyRelative(PROP_OPTION).intValue = (int) Trigger.ItemOpts.Actions;
                 spItem.FindPropertyRelative(PROP_ACTIONS).objectReferenceValue = null;
                 spItem.FindPropertyRelative(PROP_CONDITIONS).objectReferenceValue = null;
             }
 
-            EditorGUI.BeginDisabledGroup(this.trigger.gameObject.GetComponent<Hotspot>() != null);
+            EditorGUI.BeginDisabledGroup(trigger.gameObject.GetComponent<Hotspot>() != null);
             if (GUI.Button(rectItemH, GC_HOTSPOT))
             {
-                Undo.AddComponent<Hotspot>(this.trigger.gameObject);
+                Undo.AddComponent<Hotspot>(trigger.gameObject);
             }
+
             EditorGUI.EndDisabledGroup();
         }
 
         private void PaintItems()
         {
-            int itemsCount = this.spItems.arraySize;
+            int itemsCount = spItems.arraySize;
             int removeIndex = -1;
             bool forceRepaint = false;
 
@@ -421,7 +426,7 @@
 
             for (int i = 0; i < itemsCount; ++i)
             {
-                SerializedProperty spItem = this.spItems.GetArrayElementAtIndex(i);
+                SerializedProperty spItem = spItems.GetArrayElementAtIndex(i);
                 SerializedProperty spIOption = spItem.FindPropertyRelative(PROP_OPTION);
                 SerializedProperty spIActions = spItem.FindPropertyRelative(PROP_ACTIONS);
                 SerializedProperty spIConditions = spItem.FindPropertyRelative(PROP_CONDITIONS);
@@ -457,25 +462,25 @@
                 );
 
                 GUI.Label(rectHandle, "=", CoreGUIStyles.GetButtonLeft());
-                bool forceSortRepaint = this.sortableList.CaptureSortEvents(rectHandle, i);
+                bool forceSortRepaint = sortableList.CaptureSortEvents(rectHandle, i);
                 forceRepaint = forceSortRepaint || forceRepaint;
 
                 EditorGUIUtility.AddCursorRect(rectHandle, MouseCursor.Pan);
 
                 GUIContent gcToggle = null;
-                if (spIOption.intValue == (int)Trigger.ItemOpts.Actions) gcToggle = GC_ACTIONS;
-                if (spIOption.intValue == (int)Trigger.ItemOpts.Conditions) gcToggle = GC_CONDITIONS;
+                if (spIOption.intValue == (int) Trigger.ItemOpts.Actions) gcToggle = GC_ACTIONS;
+                if (spIOption.intValue == (int) Trigger.ItemOpts.Conditions) gcToggle = GC_CONDITIONS;
 
                 if (GUI.Button(rectToggle, gcToggle, CoreGUIStyles.GetButtonMid()))
                 {
                     switch (spIOption.intValue)
                     {
-                        case (int)Trigger.ItemOpts.Actions:
-                            spIOption.intValue = (int)Trigger.ItemOpts.Conditions;
+                        case (int) Trigger.ItemOpts.Actions:
+                            spIOption.intValue = (int) Trigger.ItemOpts.Conditions;
                             break;
 
-                        case (int)Trigger.ItemOpts.Conditions:
-                            spIOption.intValue = (int)Trigger.ItemOpts.Actions;
+                        case (int) Trigger.ItemOpts.Conditions:
+                            spIOption.intValue = (int) Trigger.ItemOpts.Actions;
                             break;
                     }
                 }
@@ -483,18 +488,18 @@
                 GUI.Label(rectCont, string.Empty, CoreGUIStyles.GetButtonMid());
                 Rect rectField = new Rect(
                     rectCont.x + 2f,
-                    rectCont.y + (rectCont.height/2f - EditorGUIUtility.singleLineHeight/2f),
+                    rectCont.y + (rectCont.height / 2f - EditorGUIUtility.singleLineHeight / 2f),
                     rectCont.width - 7f,
                     EditorGUIUtility.singleLineHeight
                 );
 
                 switch (spIOption.intValue)
                 {
-                    case (int)Trigger.ItemOpts.Actions :
+                    case (int) Trigger.ItemOpts.Actions:
                         EditorGUI.PropertyField(rectField, spIActions, GUIContent.none, true);
                         break;
 
-                    case (int)Trigger.ItemOpts.Conditions:
+                    case (int) Trigger.ItemOpts.Conditions:
                         EditorGUI.PropertyField(rectField, spIConditions, GUIContent.none, true);
                         break;
                 }
@@ -505,40 +510,44 @@
                     removeIndex = i;
                 }
 
-                this.sortableList.PaintDropPoints(rectItem, i, itemsCount);
+                sortableList.PaintDropPoints(rectItem, i, itemsCount);
             }
 
-            if (removeIndex != -1 && removeIndex < this.spItems.arraySize)
+            if (removeIndex != -1 && removeIndex < spItems.arraySize)
             {
-                SerializedProperty spItem = this.spItems.GetArrayElementAtIndex(removeIndex);
+                SerializedProperty spItem = spItems.GetArrayElementAtIndex(removeIndex);
                 SerializedProperty spIOption = spItem.FindPropertyRelative(PROP_OPTION);
                 SerializedProperty spIActions = spItem.FindPropertyRelative(PROP_ACTIONS);
                 SerializedProperty spIConditions = spItem.FindPropertyRelative(PROP_CONDITIONS);
-                UnityEngine.Object @object = null;
+                Object @object = null;
                 switch (spIOption.intValue)
                 {
-                    case (int)Trigger.ItemOpts.Actions: @object = spIActions.objectReferenceValue; break;
-                    case (int)Trigger.ItemOpts.Conditions: @object = spIConditions.objectReferenceValue; break;
+                    case (int) Trigger.ItemOpts.Actions:
+                        @object = spIActions.objectReferenceValue;
+                        break;
+                    case (int) Trigger.ItemOpts.Conditions:
+                        @object = spIConditions.objectReferenceValue;
+                        break;
                 }
 
-                this.spItems.DeleteArrayElementAtIndex(removeIndex);
+                spItems.DeleteArrayElementAtIndex(removeIndex);
             }
 
-            EditorSortableList.SwapIndexes swapIndexes = this.sortableList.GetSortIndexes();
+            EditorSortableList.SwapIndexes swapIndexes = sortableList.GetSortIndexes();
             if (swapIndexes != null)
             {
-                this.spItems.MoveArrayElement(swapIndexes.src, swapIndexes.dst);
+                spItems.MoveArrayElement(swapIndexes.src, swapIndexes.dst);
             }
 
-            if (forceRepaint) this.Repaint();
+            if (forceRepaint) Repaint();
         }
 
         private T CreateSubObject<T>() where T : MonoBehaviour
         {
-            if (PrefabUtility.IsPartOfPrefabAsset(this.trigger.gameObject))
+            if (PrefabUtility.IsPartOfPrefabAsset(trigger.gameObject))
             {
                 return CreatePrefabObject.AddGameObjectToPrefab<T>(
-                    this.trigger.gameObject,
+                    trigger.gameObject,
                     typeof(T).Name
                 );
             }
@@ -547,126 +556,126 @@
             return asset.AddComponent<T>();
         }
 
-		private void PaintNoCollider()
-		{
-			EditorGUILayout.HelpBox(MSG_REQUIRE_HAVE_COLLIDER, MessageType.Error);
+        private void PaintNoCollider()
+        {
+            EditorGUILayout.HelpBox(MSG_REQUIRE_HAVE_COLLIDER, MessageType.Error);
 
-			EditorGUILayout.BeginHorizontal();
-			for (int i = 0; i < COLLIDER_TYPES.Length; ++i)
-			{
-				GUIStyle style = CoreGUIStyles.GetButtonMid();
-				if (i == 0) style = CoreGUIStyles.GetButtonLeft();
-				else if (i >= COLLIDER_TYPES.Length - 1) style = CoreGUIStyles.GetButtonRight();
-
-				if (GUILayout.Button(COLLIDER_TYPES[i].Name, style))
-				{
-					Undo.AddComponent(this.trigger.gameObject, COLLIDER_TYPES[i]);
-				}
-			}
-
-			EditorGUILayout.EndHorizontal();
-		}
-
-		// SCENE METHODS: -------------------------------------------------------------------------
-
-		private void OnSceneGUI()
-		{
-			for (int i = 0; i < this.trigger.items.Count; ++i)
+            EditorGUILayout.BeginHorizontal();
+            for (int i = 0; i < COLLIDER_TYPES.Length; ++i)
             {
-                if (this.trigger.items[i].option == Trigger.ItemOpts.Actions &&
-                    this.trigger.items[i].actions != null)
+                GUIStyle style = CoreGUIStyles.GetButtonMid();
+                if (i == 0) style = CoreGUIStyles.GetButtonLeft();
+                else if (i >= COLLIDER_TYPES.Length - 1) style = CoreGUIStyles.GetButtonRight();
+
+                if (GUILayout.Button(COLLIDER_TYPES[i].Name, style))
                 {
-                    this.PaintLine(
-                        this.trigger.transform, 
-                        this.trigger.items[i].actions.transform, 
+                    Undo.AddComponent(trigger.gameObject, COLLIDER_TYPES[i]);
+                }
+            }
+
+            EditorGUILayout.EndHorizontal();
+        }
+
+        // SCENE METHODS: -------------------------------------------------------------------------
+
+        private void OnSceneGUI()
+        {
+            for (int i = 0; i < trigger.items.Count; ++i)
+            {
+                if (trigger.items[i].option == Trigger.ItemOpts.Actions &&
+                    trigger.items[i].actions != null)
+                {
+                    PaintLine(
+                        trigger.transform,
+                        trigger.items[i].actions.transform,
                         Color.cyan
                     );
                 }
-                else if (this.trigger.items[i].option == Trigger.ItemOpts.Conditions &&
-                         this.trigger.items[i].conditions != null)
+                else if (trigger.items[i].option == Trigger.ItemOpts.Conditions &&
+                         trigger.items[i].conditions != null)
                 {
-                    this.PaintLine(
-                        this.trigger.transform,
-                        this.trigger.items[i].conditions.transform,
+                    PaintLine(
+                        trigger.transform,
+                        trigger.items[i].conditions.transform,
                         Color.green
                     );
                 }
             }
-		}
+        }
 
-		// PRIVATE METHODS: -----------------------------------------------------------------------
+        // PRIVATE METHODS: -----------------------------------------------------------------------
 
-		private Rect GetCenteredRect(Rect rect, float height)
-		{
-			return new Rect(
-				rect.x, 
-				rect.y + (rect.height - height)/2.0f, 
-				rect.width, 
-				height
-			);
-		}
+        private Rect GetCenteredRect(Rect rect, float height)
+        {
+            return new Rect(
+                rect.x,
+                rect.y + (rect.height - height) / 2.0f,
+                rect.width,
+                height
+            );
+        }
 
-		private void UpdateIgnitersPlatforms()
-		{
-			int numKeys = this.spIgnitersKeys.arraySize;
+        private void UpdateIgnitersPlatforms()
+        {
+            int numKeys = spIgnitersKeys.arraySize;
 
-			this.ignitersCache = new IgniterCache[numKeys];
-			IGNITERS_PLATFORM_NAMES = new string[numKeys];
+            ignitersCache = new IgniterCache[numKeys];
+            IGNITERS_PLATFORM_NAMES = new string[numKeys];
 
-			for (int i = 0; i < numKeys; ++i)
-			{
-				if (i == 0) IGNITERS_PLATFORM_NAMES[0] = "Any Platform";
-				else 
-				{
-					int key = this.spIgnitersKeys.GetArrayElementAtIndex(i).intValue;
-					IGNITERS_PLATFORM_NAMES[i] = ((Trigger.Platforms)key).ToString();
-				}
+            for (int i = 0; i < numKeys; ++i)
+            {
+                if (i == 0) IGNITERS_PLATFORM_NAMES[0] = "Any Platform";
+                else
+                {
+                    int key = spIgnitersKeys.GetArrayElementAtIndex(i).intValue;
+                    IGNITERS_PLATFORM_NAMES[i] = ((Trigger.Platforms) key).ToString();
+                }
 
-				UnityEngine.Object reference = this.spIgnitersValues.GetArrayElementAtIndex(i).objectReferenceValue;
-				this.ignitersCache[i] = new IgniterCache(reference);
-			}
-		}
+                Object reference = spIgnitersValues.GetArrayElementAtIndex(i).objectReferenceValue;
+                ignitersCache[i] = new IgniterCache(reference);
+            }
+        }
 
-		private void SelectNewIgniter(Type igniterType)
-		{
-			SerializedProperty property = this.spIgnitersValues.GetArrayElementAtIndex(this.ignitersIndex);
-			if (property.objectReferenceValue != null)
-			{
-				DestroyImmediate(property.objectReferenceValue, true);
-				property.objectReferenceValue = null;
-			}
+        private void SelectNewIgniter(Type igniterType)
+        {
+            SerializedProperty property = spIgnitersValues.GetArrayElementAtIndex(ignitersIndex);
+            if (property.objectReferenceValue != null)
+            {
+                DestroyImmediate(property.objectReferenceValue, true);
+                property.objectReferenceValue = null;
+            }
 
-			Igniter igniter = (Igniter)this.trigger.gameObject.AddComponent(igniterType);
-			igniter.Setup(this.trigger);
-			igniter.enabled = false;
+            Igniter igniter = (Igniter) trigger.gameObject.AddComponent(igniterType);
+            igniter.Setup(trigger);
+            igniter.enabled = false;
 
-			property.objectReferenceValue = igniter;
-			this.ignitersCache[this.ignitersIndex] = new IgniterCache(igniter);
+            property.objectReferenceValue = igniter;
+            ignitersCache[ignitersIndex] = new IgniterCache(igniter);
 
-            if (!Application.isPlaying) EditorSceneManager.MarkSceneDirty(this.trigger.gameObject.scene);
-			serializedObject.ApplyModifiedPropertiesWithoutUndo();
+            if (!Application.isPlaying) EditorSceneManager.MarkSceneDirty(trigger.gameObject.scene);
+            serializedObject.ApplyModifiedPropertiesWithoutUndo();
             serializedObject.Update();
-		}
+        }
 
-		private void PaintLine(Transform transform1, Transform transform2, Color color)
-		{
-			Handles.color = color;
-			Handles.DrawDottedLine(
-				transform1.position, 
-				transform2.position,
-				DOTTED_LINES_SIZE
-			);
-		}
+        private void PaintLine(Transform transform1, Transform transform2, Color color)
+        {
+            Handles.color = color;
+            Handles.DrawDottedLine(
+                transform1.position,
+                transform2.position,
+                DOTTED_LINES_SIZE
+            );
+        }
 
-		// HIERARCHY CONTEXT MENU: ----------------------------------------------------------------
+        // HIERARCHY CONTEXT MENU: ----------------------------------------------------------------
 
-		[MenuItem("GameObject/LowPolyHnS/Trigger", false, 0)]
-		public static void CreateTrigger()
-		{
-			GameObject trigger = CreateSceneObject.Create("Trigger");
-			SphereCollider collider = trigger.AddComponent<SphereCollider>();
-			collider.isTrigger = true;
-			trigger.AddComponent<Trigger>();
-		}
-	}
+        [MenuItem("GameObject/LowPolyHnS/Trigger", false, 0)]
+        public static void CreateTrigger()
+        {
+            GameObject trigger = CreateSceneObject.Create("Trigger");
+            SphereCollider collider = trigger.AddComponent<SphereCollider>();
+            collider.isTrigger = true;
+            trigger.AddComponent<Trigger>();
+        }
+    }
 }

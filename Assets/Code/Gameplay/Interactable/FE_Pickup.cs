@@ -1,25 +1,26 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using LowPolyHnS;
 using UnityEngine;
 
-[System.Serializable]
+[Serializable]
 public class FE_Pickup : FE_InteractableObject, ISaveable
 {
-    [Header("Properties for Pickup")]
-    [SerializeField] float rotationSpeed = 35f;
+    [Header("Properties for Pickup")] [SerializeField]
+    private float rotationSpeed = 35f;
+
     public int PickupItemID;
 
-    [Header("ID used for saving. Change only by using IDManager!")]
-    [SerializeField] public int SaveableID = -1;
+    [Header("ID used for saving. Change only by using IDManager!")] [SerializeField]
+    public int SaveableID = -1;
 
     protected override void Awake()
     {
         base.Awake();
 
-        if(SaveableID < 0)
+        if (SaveableID < 0)
         {
-            Debug.LogWarning("Saveable object " + gameObject.name + " has an invalid saveableID set up. It will cause erroneous behaviour when saving or loading the game!");
+            Debug.LogWarning("Saveable object " + gameObject.name +
+                             " has an invalid saveableID set up. It will cause erroneous behaviour when saving or loading the game!");
         }
     }
 
@@ -36,7 +37,7 @@ public class FE_Pickup : FE_InteractableObject, ISaveable
     private void OnPickup(FE_PlayerInventoryInteraction _playerInventory)
     {
         _playerInventory.AddItem(Instantiate(GetPickupItem()));
-  
+
         Destroy(gameObject);
     }
 
@@ -62,12 +63,12 @@ public class FE_Pickup : FE_InteractableObject, ISaveable
 
     public void OnLoad(PlayerSaveState _loadState)
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 
     public void OnLoad(EnemySaveState _loadState)
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 
     public void OnLoad(PickupState _loadState)
@@ -85,12 +86,12 @@ public class FE_Pickup : FE_InteractableObject, ISaveable
 
     public void OnLoad(MultipleStateObjectManagerState _loadState)
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 
     public void OnLoad(ActionTriggerState _loadState)
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 
     void ISaveable.OnDestroy()

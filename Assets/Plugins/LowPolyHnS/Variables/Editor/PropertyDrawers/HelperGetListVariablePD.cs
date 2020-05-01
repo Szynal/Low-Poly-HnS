@@ -1,11 +1,8 @@
-﻿namespace LowPolyHnS.Variables
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEditor;
-    using LowPolyHnS.Core;
+﻿using UnityEditor;
+using UnityEngine;
 
+namespace LowPolyHnS.Variables
+{
     [CustomPropertyDrawer(typeof(HelperGetListVariable))]
     public class HelperGetListVariablePD : PropertyDrawer
     {
@@ -43,12 +40,12 @@
             );
 
             EditorGUI.PropertyField(rectTargetType, spTargetType, gcLabel);
-            EditorGUI.BeginDisabledGroup(spTargetType.intValue != (int)HelperListVariable.Target.GameObject);
+            EditorGUI.BeginDisabledGroup(spTargetType.intValue != (int) HelperListVariable.Target.GameObject);
             EditorGUI.PropertyField(rectTargetObject, spTargetObject, GUIContent.none);
             EditorGUI.EndDisabledGroup();
 
             EditorGUI.PropertyField(rectSelector, spSelector);
-            if (spSelector.enumValueIndex == (int)ListVariables.Position.Index)
+            if (spSelector.enumValueIndex == (int) ListVariables.Position.Index)
             {
                 Rect rectIndex = new Rect(
                     rectSelector.x,
@@ -65,21 +62,19 @@
             EditorGUI.EndProperty();
         }
 
-		public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
-		{
+        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+        {
             SerializedProperty spTargetType = property.FindPropertyRelative("targetType");
             SerializedProperty spSelector = property.FindPropertyRelative("select");
             SerializedProperty spIndex = property.FindPropertyRelative("index");
 
-            return (
-                EditorGUI.GetPropertyHeight(spTargetType, true) +
-                EditorGUIUtility.standardVerticalSpacing +
-                EditorGUI.GetPropertyHeight(spSelector, true) +
-                (spSelector.enumValueIndex == (int)ListVariables.Position.Index
-                    ? EditorGUIUtility.standardVerticalSpacing + EditorGUI.GetPropertyHeight(spIndex, true)
-                    : 0f
-                )
-            );
-		}
-	}
+            return EditorGUI.GetPropertyHeight(spTargetType, true) +
+                   EditorGUIUtility.standardVerticalSpacing +
+                   EditorGUI.GetPropertyHeight(spSelector, true) +
+                   (spSelector.enumValueIndex == (int) ListVariables.Position.Index
+                       ? EditorGUIUtility.standardVerticalSpacing + EditorGUI.GetPropertyHeight(spIndex, true)
+                       : 0f
+                   );
+        }
+    }
 }

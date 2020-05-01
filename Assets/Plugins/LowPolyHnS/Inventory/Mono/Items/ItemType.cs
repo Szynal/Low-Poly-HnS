@@ -1,12 +1,10 @@
-﻿namespace LowPolyHnS.Inventory
-{
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using LowPolyHnS.Core;
-    using LowPolyHnS.Localization;
+﻿using System;
+using LowPolyHnS.Core;
+using LowPolyHnS.Localization;
+using UnityEngine;
 
+namespace LowPolyHnS.Inventory
+{
     [Serializable]
     public class ItemType
     {
@@ -16,15 +14,14 @@
 
         public string id;
 
-        [LocStringNoPostProcess]
-        public LocString name;
+        [LocStringNoPostProcess] public LocString name;
 
         // INITIALIZERS: --------------------------------------------------------------------------
 
         public ItemType()
         {
-            this.id = "";
-            this.name = new LocString();
+            id = "";
+            name = new LocString();
         }
     }
 
@@ -33,11 +30,9 @@
 
     public class InventoryMultiItemTypeAttribute : PropertyAttribute
     {
-        public InventoryMultiItemTypeAttribute() { }
     }
 
     public class InventorySingleItemTypeAttribute : PropertyAttribute
     {
-        public InventorySingleItemTypeAttribute() { }
     }
 }

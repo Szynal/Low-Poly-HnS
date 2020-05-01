@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class FE_StateChangeOnEnable : MonoBehaviour
 {
-    [SerializeField] float delayBeforeActivating = 0f;
+    [SerializeField] private float delayBeforeActivating = 0f;
 
     [Header("State changer properties")]
     public List<FE_ActionContainer> OnEnableStateChanges = new List<FE_ActionContainer>();

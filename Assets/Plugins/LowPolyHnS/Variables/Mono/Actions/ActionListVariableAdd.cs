@@ -1,15 +1,11 @@
-﻿namespace LowPolyHnS.Variables
-{
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-    using LowPolyHnS.Core;
-    using LowPolyHnS.Core.Hooks;
+﻿using LowPolyHnS.Core;
+using UnityEngine;
 
+namespace LowPolyHnS.Variables
+{
     [AddComponentMenu("")]
-	public class ActionListVariableAdd : IAction
-	{
+    public class ActionListVariableAdd : IAction
+    {
         public HelperGetListVariable listVariables = new HelperGetListVariable();
         [Space] public TargetGameObject item = new TargetGameObject();
 
@@ -17,17 +13,17 @@
 
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
-            ListVariables list = this.listVariables.GetListVariables(target);
+            ListVariables list = listVariables.GetListVariables(target);
             if (list == null) return true;
 
-            GameObject elementGo = this.item.GetGameObject(target);
+            GameObject elementGo = item.GetGameObject(target);
             if (elementGo == null) return true;
 
-            list.Push(elementGo, this.listVariables.select, this.listVariables.index);
+            list.Push(elementGo, listVariables.select, listVariables.index);
             return true;
         }
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
 
         private const string NODE_TITLE = "Add {0} to {1}";
         public static new string NAME = "Variables/Add to List Variables";
@@ -36,11 +32,11 @@
         {
             return string.Format(
                 NODE_TITLE,
-                this.item,
-                this.listVariables
+                item,
+                listVariables
             );
         }
 
-        #endif
+#endif
     }
 }

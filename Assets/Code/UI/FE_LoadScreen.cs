@@ -1,13 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using LowPolyHnS;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class FE_LoadScreen : MonoBehaviour
 {
-    [SerializeField] Button[] saveSlots = new Button[10];
-    [SerializeField] Button exitButton = null;
+    [SerializeField] private Button[] saveSlots = new Button[10];
+    [SerializeField] private Button exitButton = null;
 
     private MainMenuController mainMenuController;
 
@@ -18,7 +17,7 @@ public class FE_LoadScreen : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetButtonDown("UICancel") == true)
+        if (Input.GetButtonDown("UICancel"))
         {
             OnExit();
         }
@@ -26,7 +25,7 @@ public class FE_LoadScreen : MonoBehaviour
 
     public void HandleShowing(bool _shouldShow)
     {
-        if (_shouldShow == true)
+        if (_shouldShow)
         {
             prepareSlots();
             exitButton.Select();
@@ -39,7 +38,8 @@ public class FE_LoadScreen : MonoBehaviour
     {
         HandleShowing(false);
 
-        if (mainMenuController != null) //if we've found main menu controller, then we're in the main menu and we don't need to call UI controller
+        if (mainMenuController != null
+        ) //if we've found main menu controller, then we're in the main menu and we don't need to call UI controller
         {
             mainMenuController.OnMenuExited();
         }

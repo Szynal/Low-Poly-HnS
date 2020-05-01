@@ -1,48 +1,44 @@
-﻿namespace LowPolyHnS.Core
+﻿using UnityEngine;
+
+namespace LowPolyHnS.Core
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
+#if UNITY_EDITOR
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[AddComponentMenu("")]
-	public class ActionStopSound : IAction 
-	{
-		public AudioClip audioClip;
+    [AddComponentMenu("")]
+    public class ActionStopSound : IAction
+    {
+        public AudioClip audioClip;
 
-        [Range(0f, 5f)]
-        public float fadeOut;
+        [Range(0f, 5f)] public float fadeOut;
 
-		// EXECUTABLE: ----------------------------------------------------------------------------
+        // EXECUTABLE: ----------------------------------------------------------------------------
 
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
-            AudioManager.Instance.StopSound(this.audioClip, fadeOut);
+            AudioManager.Instance.StopSound(audioClip, fadeOut);
             return true;
         }
 
-		// +--------------------------------------------------------------------------------------+
-		// | EDITOR                                                                               |
-		// +--------------------------------------------------------------------------------------+
+        // +--------------------------------------------------------------------------------------+
+        // | EDITOR                                                                               |
+        // +--------------------------------------------------------------------------------------+
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 
-		public static new string NAME = "Audio/Stop Sound";
-		private const string NODE_TITLE = "Stop Sound {0} {1}";
+        public static new string NAME = "Audio/Stop Sound";
+        private const string NODE_TITLE = "Stop Sound {0} {1}";
 
         public override string GetNodeTitle()
-		{
-			return string.Format(
-				NODE_TITLE,
-				this.audioClip == null ? "unknown" : this.audioClip.name,
-				this.fadeOut > 0f ? "(" + this.fadeOut.ToString() + "s)" : ""
-			);
-		}
+        {
+            return string.Format(
+                NODE_TITLE,
+                audioClip == null ? "unknown" : audioClip.name,
+                fadeOut > 0f ? "(" + fadeOut + "s)" : ""
+            );
+        }
 
-		#endif
-	}
+#endif
+    }
 }

@@ -1,86 +1,84 @@
-﻿namespace LowPolyHnS.Inventory
+﻿using LowPolyHnS.Core;
+using UnityEngine;
+
+namespace LowPolyHnS.Inventory
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-	using LowPolyHnS.Core;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[AddComponentMenu("")]
-	public class ActionMerchantMenu : IAction 
-	{
-		public enum ACTION_TYPE
-		{
-			Open,
-			Close
-		}
+    [AddComponentMenu("")]
+    public class ActionMerchantMenu : IAction
+    {
+        public enum ACTION_TYPE
+        {
+            Open,
+            Close
+        }
 
-		public ACTION_TYPE actionType = ACTION_TYPE.Open;
+        public ACTION_TYPE actionType = ACTION_TYPE.Open;
         public Merchant merchant;
 
         // EXECUTABLE: -------------------------------------------------------------------------------------------------
 
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
-            if (this.actionType == ACTION_TYPE.Open) MerchantUIManager.OpenMerchant(this.merchant);
-            if (this.actionType == ACTION_TYPE.Close) MerchantUIManager.CloseMerchant();
+            if (actionType == ACTION_TYPE.Open) MerchantUIManager.OpenMerchant(merchant);
+            if (actionType == ACTION_TYPE.Close) MerchantUIManager.CloseMerchant();
 
             return true;
         }
 
-		// +-----------------------------------------------------------------------------------------------------------+
-		// | EDITOR                                                                                                    |
-		// +-----------------------------------------------------------------------------------------------------------+
+        // +-----------------------------------------------------------------------------------------------------------+
+        // | EDITOR                                                                                                    |
+        // +-----------------------------------------------------------------------------------------------------------+
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 
-		public const string CUSTOM_ICON_PATH = "Assets/Plugins/LowPolyHnS/Inventory/Icons/Actions/";
+        public const string CUSTOM_ICON_PATH = "Assets/Plugins/LowPolyHnS/Inventory/Icons/Actions/";
 
-		public static new string NAME = "Inventory/Merchant UI";
+        public static new string NAME = "Inventory/Merchant UI";
         private const string NODE_TITLE = "{0} merchant {1}";
 
-		// PROPERTIES: -------------------------------------------------------------------------------------------------
+        // PROPERTIES: -------------------------------------------------------------------------------------------------
 
-		private SerializedProperty spActionType;
+        private SerializedProperty spActionType;
         private SerializedProperty spMerchant;
 
-		// INSPECTOR METHODS: ------------------------------------------------------------------------------------------
+        // INSPECTOR METHODS: ------------------------------------------------------------------------------------------
 
-		public override string GetNodeTitle()
-		{
-			return string.Format(
-				NODE_TITLE, 
-				this.actionType.ToString(),
-                (this.merchant == null ? "(none)" : this.merchant.name)
-			);
-		}
+        public override string GetNodeTitle()
+        {
+            return string.Format(
+                NODE_TITLE,
+                actionType.ToString(),
+                merchant == null ? "(none)" : merchant.name
+            );
+        }
 
-		protected override void OnEnableEditorChild ()
-		{
-            this.spMerchant = this.serializedObject.FindProperty("merchant");
-			this.spActionType = this.serializedObject.FindProperty("actionType");
-		}
+        protected override void OnEnableEditorChild()
+        {
+            spMerchant = serializedObject.FindProperty("merchant");
+            spActionType = serializedObject.FindProperty("actionType");
+        }
 
-		protected override void OnDisableEditorChild ()
-		{
-            this.spMerchant = null;
-			this.spActionType = null;
-		}
+        protected override void OnDisableEditorChild()
+        {
+            spMerchant = null;
+            spActionType = null;
+        }
 
-		public override void OnInspectorGUI()
-		{
-			this.serializedObject.Update();
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
 
-			EditorGUILayout.PropertyField(this.spActionType);
-            EditorGUILayout.PropertyField(this.spMerchant);
+            EditorGUILayout.PropertyField(spActionType);
+            EditorGUILayout.PropertyField(spMerchant);
 
-			this.serializedObject.ApplyModifiedProperties();
-		}
+            serializedObject.ApplyModifiedProperties();
+        }
 
-		#endif
-	}
+#endif
+    }
 }

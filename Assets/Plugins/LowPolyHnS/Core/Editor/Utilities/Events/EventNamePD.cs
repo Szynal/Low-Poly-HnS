@@ -1,11 +1,9 @@
-﻿namespace LowPolyHnS.Core
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEditor;
-    using System.Runtime.InteropServices.WindowsRuntime;
+﻿using System.Collections.Generic;
+using UnityEditor;
+using UnityEngine;
 
+namespace LowPolyHnS.Core
+{
     [CustomPropertyDrawer(typeof(EventNameAttribute))]
     public class EventNamePD : PropertyDrawer
     {
@@ -78,7 +76,7 @@
                 EditorGUIUtility.singleLineHeight
             );
 
-            return new Rect[] { rect1, rect2, rect3, rect4 };
+            return new Rect[] {rect1, rect2, rect3, rect4};
         }
 
         private void RecordSuggestion(string suggestion)

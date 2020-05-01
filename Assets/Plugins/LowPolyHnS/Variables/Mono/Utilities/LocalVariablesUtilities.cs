@@ -1,13 +1,11 @@
-﻿namespace LowPolyHnS.Variables
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
+﻿using UnityEngine;
 
+namespace LowPolyHnS.Variables
+{
     public static class LocalVariablesUtilities
     {
         private const string SLASH = "/";
-        private static readonly char[] SLASH_CHAR = new char[1] { '/' };
+        private static readonly char[] SLASH_CHAR = new char[1] {'/'};
 
         // PUBLIC METHODS: ------------------------------------------------------------------------
 
@@ -61,7 +59,7 @@
         public static LocalVariables[] GatherLocals(GameObject target, bool inChildren)
         {
             if (!inChildren) return target.GetComponents<LocalVariables>();
-            else return target.GetComponentsInChildren<LocalVariables>();
+            return target.GetComponentsInChildren<LocalVariables>();
         }
     }
 }

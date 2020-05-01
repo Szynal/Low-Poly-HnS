@@ -1,79 +1,78 @@
-﻿namespace LowPolyHnS.Core
+﻿using System.Collections;
+using UnityEngine;
+
+namespace LowPolyHnS.Core
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[AddComponentMenu("")]
-	public class ActionWait : IAction 
-	{
-		public float waitTime = 0.0f;
-        private bool forceStop = false;
+    [AddComponentMenu("")]
+    public class ActionWait : IAction
+    {
+        public float waitTime = 0.0f;
+        private bool forceStop;
 
-		// EXECUTABLE: ----------------------------------------------------------------------------
-		
+        // EXECUTABLE: ----------------------------------------------------------------------------
+
         public override IEnumerator Execute(GameObject target, IAction[] actions, int index)
-		{
-            this.forceStop = false;
+        {
+            forceStop = false;
 
-            float stopTime = Time.time + this.waitTime;
-            WaitUntil waitUntil = new WaitUntil(() => Time.time > stopTime || this.forceStop);
+            float stopTime = Time.time + waitTime;
+            WaitUntil waitUntil = new WaitUntil(() => Time.time > stopTime || forceStop);
 
             yield return waitUntil;
-			yield return 0;
-		}
+            yield return 0;
+        }
 
         public override void Stop()
         {
-            this.forceStop = true;
+            forceStop = true;
         }
 
         // +--------------------------------------------------------------------------------------+
         // | EDITOR                                                                               |
         // +--------------------------------------------------------------------------------------+
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
 
         public static new string NAME = "General/Wait";
-		private const string NODE_TITLE = "Wait {0} second{1}";
+        private const string NODE_TITLE = "Wait {0} second{1}";
 
-		private static readonly GUIContent GUICONTENT_WAITTIME = new GUIContent("Time to wait (s)");
+        private static readonly GUIContent GUICONTENT_WAITTIME = new GUIContent("Time to wait (s)");
 
-		// PROPERTIES: ----------------------------------------------------------------------------
+        // PROPERTIES: ----------------------------------------------------------------------------
 
-		private SerializedProperty spWaitTime;
+        private SerializedProperty spWaitTime;
 
-		// INSPECTOR METHODS: ---------------------------------------------------------------------
+        // INSPECTOR METHODS: ---------------------------------------------------------------------
 
-		public override string GetNodeTitle()
-		{
-			return string.Format(NODE_TITLE, this.waitTime, (this.waitTime == 1f ? "" : "s"));
-		}
+        public override string GetNodeTitle()
+        {
+            return string.Format(NODE_TITLE, waitTime, waitTime == 1f ? "" : "s");
+        }
 
-		protected override void OnEnableEditorChild()
-		{
-			this.spWaitTime = this.serializedObject.FindProperty("waitTime");
-		}
+        protected override void OnEnableEditorChild()
+        {
+            spWaitTime = serializedObject.FindProperty("waitTime");
+        }
 
-		protected override void OnDisableEditorChild()
-		{
-			this.spWaitTime = null;
-		}
+        protected override void OnDisableEditorChild()
+        {
+            spWaitTime = null;
+        }
 
-		public override void OnInspectorGUI()
-		{
-			this.serializedObject.Update();
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
 
-			EditorGUILayout.PropertyField(this.spWaitTime, GUICONTENT_WAITTIME);
+            EditorGUILayout.PropertyField(spWaitTime, GUICONTENT_WAITTIME);
 
-			this.serializedObject.ApplyModifiedProperties();
-		}
+            serializedObject.ApplyModifiedProperties();
+        }
 
-		#endif
-	}
+#endif
+    }
 }

@@ -1,29 +1,25 @@
-﻿namespace LowPolyHnS.Variables
-{
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-    using LowPolyHnS.Core;
-    using LowPolyHnS.Core.Hooks;
+﻿using LowPolyHnS.Core;
+using UnityEngine;
 
+namespace LowPolyHnS.Variables
+{
     [AddComponentMenu("")]
-	public class ActionListVariableRemove : IAction
-	{
+    public class ActionListVariableRemove : IAction
+    {
         public HelperGetListVariable listVariables = new HelperGetListVariable();
 
         // EXECUTE METHOD: ------------------------------------------------------------------------
 
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
-            ListVariables list = this.listVariables.GetListVariables(target);
+            ListVariables list = listVariables.GetListVariables(target);
             if (list == null || list.variables.Count == 0) return true;
 
-            list.Remove(this.listVariables.select, this.listVariables.index);
+            list.Remove(listVariables.select, listVariables.index);
             return true;
         }
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
 
         private const string NODE_TITLE = "Remove {0}";
         public static new string NAME = "Variables/Remove from List Variables";
@@ -32,10 +28,10 @@
         {
             return string.Format(
                 NODE_TITLE,
-                this.listVariables
+                listVariables
             );
         }
 
-        #endif
+#endif
     }
 }

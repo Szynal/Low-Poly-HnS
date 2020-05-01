@@ -1,58 +1,55 @@
-﻿namespace LowPolyHnS.Core
+﻿using UnityEngine;
+
+namespace LowPolyHnS.Core
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-    using LowPolyHnS.Variables;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[AddComponentMenu("")]
-	public class ConditionEnabledComponent : ICondition
-	{
+    [AddComponentMenu("")]
+    public class ConditionEnabledComponent : ICondition
+    {
         public enum CheckStatus
         {
             IsEnabled,
             IsDisabled
         }
 
-		public Behaviour component;
-		public CheckStatus state = CheckStatus.IsEnabled;
+        public Behaviour component;
+        public CheckStatus state = CheckStatus.IsEnabled;
 
-		// EXECUTABLE: ----------------------------------------------------------------------------
+        // EXECUTABLE: ----------------------------------------------------------------------------
 
         public override bool Check(GameObject target)
-		{
-			if (!component) return false;
+        {
+            if (!component) return false;
 
-			if (component.isActiveAndEnabled && this.state == CheckStatus.IsEnabled) return true;
-            if (!component.isActiveAndEnabled && this.state == CheckStatus.IsDisabled) return true;
-			return false;
-		}
+            if (component.isActiveAndEnabled && state == CheckStatus.IsEnabled) return true;
+            if (!component.isActiveAndEnabled && state == CheckStatus.IsDisabled) return true;
+            return false;
+        }
 
-		// +--------------------------------------------------------------------------------------+
-		// | EDITOR                                                                               |
-		// +--------------------------------------------------------------------------------------+
+        // +--------------------------------------------------------------------------------------+
+        // | EDITOR                                                                               |
+        // +--------------------------------------------------------------------------------------+
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 
-		public static new string NAME = "Object/Component Enabled";
-		private const string NODE_TITLE = "Component {0} {1}";
+        public static new string NAME = "Object/Component Enabled";
+        private const string NODE_TITLE = "Component {0} {1}";
 
-		// INSPECTOR METHODS: ---------------------------------------------------------------------
+        // INSPECTOR METHODS: ---------------------------------------------------------------------
 
-		public override string GetNodeTitle()
-		{
-			return string.Format(
+        public override string GetNodeTitle()
+        {
+            return string.Format(
                 NODE_TITLE,
-                this.component ? this.component.name : "(none)",
-				ObjectNames.NicifyVariableName(this.state.ToString())
+                component ? component.name : "(none)",
+                ObjectNames.NicifyVariableName(state.ToString())
             );
-		}
+        }
 
-		#endif
-	}
+#endif
+    }
 }

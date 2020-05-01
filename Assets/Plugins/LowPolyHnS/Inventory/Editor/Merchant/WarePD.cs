@@ -1,11 +1,8 @@
-﻿namespace LowPolyHnS.Inventory
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEditor;
-    using LowPolyHnS.Core;
+﻿using UnityEditor;
+using UnityEngine;
 
+namespace LowPolyHnS.Inventory
+{
     [CustomPropertyDrawer(typeof(Merchant.Ware))]
     public class WarePD : PropertyDrawer
     {
@@ -20,7 +17,7 @@
 
             Rect rectItem = Rect.zero;
             Rect rectLimit = Rect.zero;
-            this.GetRects(position, spItem, spAmount, ref rectItem, ref rectLimit);
+            GetRects(position, spItem, spAmount, ref rectItem, ref rectLimit);
 
             EditorGUI.PropertyField(rectItem, spItem, true);
 
@@ -60,14 +57,15 @@
 
             Rect rectItem = Rect.zero;
             Rect rectLimit = Rect.zero;
-            this.GetRects(Rect.zero, spItem, spAmount, ref rectItem, ref rectLimit);
+            GetRects(Rect.zero, spItem, spAmount, ref rectItem, ref rectLimit);
 
             return rectLimit.y + rectLimit.height;
         }
 
         // PRIVATE METHODS: -----------------------------------------------------------------------
 
-        private void GetRects(Rect position, SerializedProperty spItem, SerializedProperty spLimit, ref Rect rectItem, ref Rect rectLimit)
+        private void GetRects(Rect position, SerializedProperty spItem, SerializedProperty spLimit, ref Rect rectItem,
+            ref Rect rectLimit)
         {
             rectItem = new Rect(
                 position.x,

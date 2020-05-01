@@ -1,9 +1,8 @@
-﻿namespace LowPolyHnS.ModuleManager
-{
-    using UnityEngine;
-    using UnityEditor;
+﻿using System;
 
-    [System.Serializable]
+namespace LowPolyHnS.ModuleManager
+{
+    [Serializable]
     public class ModuleManifest
     {
         // PROPERTIES: ----------------------------------------------------------------------------
@@ -14,7 +13,7 @@
 
         public ModuleManifest()
         {
-            this.module = new Module();
+            module = new Module();
         }
 
         public ModuleManifest(Module module)

@@ -1,19 +1,17 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Collections.Generic;
+using UnityEngine;
+
 namespace LowPolyHnS.Core
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-
-    #if UNITY_EDITOR
+#if UNITY_EDITOR
     using UnityEditor;
     using UnityEditorInternal;
-    #endif
+
+#endif
 
     [AddComponentMenu("")]
-	public class ConditionPattern : ICondition
-	{
+    public class ConditionPattern : ICondition
+    {
         public enum Value
         {
             True,
@@ -22,22 +20,22 @@ namespace LowPolyHnS.Core
 
         // PROPERTIES: ----------------------------------------------------------------------------
 
-        public List<Value> pattern = new List<Value>()
+        public List<Value> pattern = new List<Value>
         {
             Value.True,
             Value.False
         };
 
-        private int patternIndex = 0;
+        private int patternIndex;
 
         // EXECUTABLE: ----------------------------------------------------------------------------
 
         public override bool Check()
         {
-            if (this.pattern.Count == 0) return false;
-            bool result = this.pattern[this.patternIndex] == Value.True;
+            if (pattern.Count == 0) return false;
+            bool result = pattern[patternIndex] == Value.True;
 
-            this.patternIndex = ++this.patternIndex >= this.pattern.Count ? 0 : this.patternIndex;
+            patternIndex = ++patternIndex >= pattern.Count ? 0 : patternIndex;
             return result;
         }
 
@@ -45,7 +43,7 @@ namespace LowPolyHnS.Core
         // | EDITOR                                                                               |
         // +--------------------------------------------------------------------------------------+
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
 
         public static new string NAME = "General/Pattern";
         private const string NODE_TITLE = "Follow Pattern";
@@ -62,16 +60,16 @@ namespace LowPolyHnS.Core
             return NODE_TITLE;
         }
 
-        protected override void OnEnableEditorChild ()
+        protected override void OnEnableEditorChild()
         {
-            this.spPattern = this.serializedObject.FindProperty("pattern");
-            this.list = new ReorderableList(
-                this.serializedObject, this.spPattern, 
+            spPattern = serializedObject.FindProperty("pattern");
+            list = new ReorderableList(
+                serializedObject, spPattern,
                 true, true, true, true
             );
 
-            this.list.drawHeaderCallback += PaintHeader;
-            this.list.drawElementCallback += PaintElement;
+            list.drawHeaderCallback += PaintHeader;
+            list.drawElementCallback += PaintElement;
         }
 
         private void PaintHeader(Rect rect)
@@ -81,7 +79,7 @@ namespace LowPolyHnS.Core
 
         private void PaintElement(Rect rect, int index, bool isActive, bool isFocused)
         {
-            SerializedProperty property = this.spPattern.GetArrayElementAtIndex(index);
+            SerializedProperty property = spPattern.GetArrayElementAtIndex(index);
             Rect rectElement = new Rect(
                 rect.x,
                 rect.y + 1f,
@@ -98,13 +96,13 @@ namespace LowPolyHnS.Core
 
         public override void OnInspectorGUI()
         {
-            this.serializedObject.Update();
+            serializedObject.Update();
 
-            this.list.DoLayoutList();
+            list.DoLayoutList();
 
-            this.serializedObject.ApplyModifiedProperties();
+            serializedObject.ApplyModifiedProperties();
         }
 
-        #endif
+#endif
     }
 }

@@ -1,21 +1,24 @@
-﻿namespace LowPolyHnS.Variables
-{
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
+﻿using System;
+using UnityEngine;
 
+namespace LowPolyHnS.Variables
+{
     [Serializable]
     public class NumberProperty : BaseProperty<float>
     {
-        public NumberProperty() : base() { }
-        public NumberProperty(float value) : base(value) { }
+        public NumberProperty()
+        {
+        }
+
+        public NumberProperty(float value) : base(value)
+        {
+        }
 
         // PUBLIC METHODS: ------------------------------------------------------------------------
 
         public int GetInt(GameObject invoker)
         {
-            return Mathf.FloorToInt(this.GetValue(invoker));
+            return Mathf.FloorToInt(GetValue(invoker));
         }
     }
 }

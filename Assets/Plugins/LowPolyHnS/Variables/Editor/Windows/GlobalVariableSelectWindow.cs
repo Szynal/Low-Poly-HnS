@@ -1,29 +1,25 @@
-﻿namespace LowPolyHnS.Variables
-{
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEditor;
-    using UnityEditor.IMGUI.Controls;
-    using LowPolyHnS.Core;
+﻿using System;
+using System.Collections.Generic;
+using LowPolyHnS.Core;
+using UnityEngine;
 
+namespace LowPolyHnS.Variables
+{
     public class GlobalVariableSelectWindow : GenericVariableSelectWindow
     {
         private string TITLE_MANAGE_VARIABLES = "Manage Global Variables";
 
         // INITIALIZERS: --------------------------------------------------------------------------
 
-        public GlobalVariableSelectWindow(Rect ctaRect, Action<string> callback, int allowTypesMask) 
+        public GlobalVariableSelectWindow(Rect ctaRect, Action<string> callback, int allowTypesMask)
             : base(ctaRect, callback, allowTypesMask)
         {
-            
         }
 
-		// OVERRIDERS: ----------------------------------------------------------------------------
+        // OVERRIDERS: ----------------------------------------------------------------------------
 
-		protected override GUIContent[] GetVariables(int allowTypesMask)
-		{
+        protected override GUIContent[] GetVariables(int allowTypesMask)
+        {
             DatabaseVariables database = DatabaseVariables.Load();
             if (database == null || database.GetGlobalVariables() == null)
             {
@@ -35,8 +31,8 @@
             List<GUIContent> variables = new List<GUIContent>();
             for (int i = 0; i < globalVariables.references.Length; ++i)
             {
-                Variable.DataType type = (Variable.DataType)globalVariables.references[i].variable.type;
-                if ((allowTypesMask & 1 << (int)type) == 0) continue;
+                Variable.DataType type = (Variable.DataType) globalVariables.references[i].variable.type;
+                if ((allowTypesMask & (1 << (int) type)) == 0) continue;
 
                 variables.Add(new GUIContent(
                     " " + globalVariables.references[i].variable.name,
@@ -45,19 +41,19 @@
             }
 
             return variables.ToArray();
-		}
+        }
 
-		protected override void PaintFooter()
-		{
+        protected override void PaintFooter()
+        {
             GUILayout.BeginVertical(CoreGUIStyles.GetSearchBox());
 
             if (GUILayout.Button(TITLE_MANAGE_VARIABLES))
             {
                 PreferencesWindow.OpenWindowTab("Variables");
-                this.editorWindow.Close();
+                editorWindow.Close();
             }
 
             GUILayout.EndVertical();
-		}
-	}
+        }
+    }
 }

@@ -1,12 +1,9 @@
-﻿namespace LowPolyHnS.Variables
-{
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using LowPolyHnS.Core;
-    using LowPolyHnS.Core.Hooks;
+﻿using System;
+using LowPolyHnS.Core.Hooks;
+using UnityEngine;
 
+namespace LowPolyHnS.Variables
+{
     [Serializable]
     public class HelperLocalVariable : BaseHelperVariable
     {
@@ -27,8 +24,8 @@
         public override object Get(GameObject invoker = null)
         {
             return VariablesManager.GetLocal(
-                this.GetGameObject(invoker),
-                this.name,
+                GetGameObject(invoker),
+                name,
                 true
             );
         }
@@ -36,8 +33,8 @@
         public override void Set(object value, GameObject invoker = null)
         {
             VariablesManager.SetLocal(
-                this.GetGameObject(invoker),
-                this.name,
+                GetGameObject(invoker),
+                name,
                 value,
                 true
             );
@@ -45,15 +42,15 @@
 
         public GameObject GetGameObject(GameObject invoker)
         {
-            switch (this.targetType)
+            switch (targetType)
             {
                 case Target.Player:
                     if (HookPlayer.Instance == null) return null;
                     return HookPlayer.Instance.gameObject;
 
                 case Target.Invoker: return invoker;
-                case Target.GameObject: return this.targetObject;
-                case Target.GameObjectPath: return this.targetObject;
+                case Target.GameObject: return targetObject;
+                case Target.GameObjectPath: return targetObject;
             }
 
             return null;
@@ -63,23 +60,23 @@
 
         public override string ToString()
         {
-            return this.name;
+            return name;
         }
 
-		public override string ToStringValue(GameObject invoker = null)
-		{
+        public override string ToStringValue(GameObject invoker = null)
+        {
             object value = VariablesManager.GetLocal(
-                this.GetGameObject(invoker),
-                this.name,
+                GetGameObject(invoker),
+                name,
                 true
             );
 
-            return (value != null ? value.ToString() : "null");
-		}
+            return value != null ? value.ToString() : "null";
+        }
 
         public override Variable.DataType GetDataType(GameObject invoker = null)
         {
-            return VariablesManager.GetLocalType(invoker, this.name, true);
+            return VariablesManager.GetLocalType(invoker, name, true);
         }
     }
 }

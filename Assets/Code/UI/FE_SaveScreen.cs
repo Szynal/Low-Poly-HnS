@@ -5,11 +5,11 @@ using UnityEngine.UI;
 
 public class FE_SaveScreen : MonoBehaviour
 {
-    [SerializeField] Button[] saveSlots = new Button[10];
+    [SerializeField] private Button[] saveSlots = new Button[10];
 
     private void Update()
     {
-        if(Input.GetButtonDown("UICancel") == true)
+        if (Input.GetButtonDown("UICancel"))
         {
             OnCancel();
         }
@@ -17,7 +17,7 @@ public class FE_SaveScreen : MonoBehaviour
 
     public void HandleShowing(bool _shouldShow)
     {
-        if(_shouldShow == true)
+        if (_shouldShow)
         {
             prepareSlots();
             saveSlots[0].Select();
@@ -36,9 +36,9 @@ public class FE_SaveScreen : MonoBehaviour
     {
         //We need to find out which slot we selected
         int _selectedIndex = 0;
-        while(_selectedIndex < 10)
+        while (_selectedIndex < 10)
         {
-            if(_clickedButton == saveSlots[_selectedIndex])
+            if (_clickedButton == saveSlots[_selectedIndex])
             {
                 break;
             }
@@ -50,7 +50,7 @@ public class FE_SaveScreen : MonoBehaviour
         Save _usedSave = new Save();
         _usedSave.SaveScenes();
         GameManager.Instance.CurrentSave.Saves[_selectedIndex] = _usedSave;
-        
+
         SaveLoadSystem.SaveGame(GameManager.Instance.CurrentSave, "save.sav");
 
         OnCancel();
@@ -60,15 +60,15 @@ public class FE_SaveScreen : MonoBehaviour
     {
         List<Save> _savedGames = GameManager.Instance.CurrentSave.Saves;
 
-        for(int i = 0; i < 10; i++)
+        for (int i = 0; i < 10; i++)
         {
-            if(saveSlots[i] == null)
+            if (saveSlots[i] == null)
             {
                 continue;
             }
 
             Text _slotTitle = saveSlots[i].GetComponentInChildren<Text>(true);
-            if(_savedGames[i].MainSceneID != -1)
+            if (_savedGames[i].MainSceneID != -1)
             {
                 _slotTitle.text = $"SAVED SLOT {i + 1} : {_savedGames[i].Date}";
             }

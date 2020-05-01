@@ -1,20 +1,19 @@
-﻿namespace LowPolyHnS.Core
-{
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-    using UnityEngine.Events;
+﻿using UnityEngine;
+using UnityEngine.Events;
 
-    #if UNITY_EDITOR
+namespace LowPolyHnS.Core
+{
+#if UNITY_EDITOR
     using UnityEditor;
-    #endif
+
+#endif
 
     [AddComponentMenu("")]
-    public class Clause : MonoBehaviour 
-	{
-		public string description = "Clause";
+    public class Clause : MonoBehaviour
+    {
+        public string description = "Clause";
         public IConditionsList conditionsList;
-		public Actions actions;
+        public Actions actions;
 
         public bool isExpanded = false;
 
@@ -25,20 +24,20 @@
 
         // INITIALIZERS: --------------------------------------------------------------------------
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         private void Awake()
-		{
-			this.hideFlags = HideFlags.HideInInspector | HideFlags.HideInHierarchy;
-		}
+        {
+            hideFlags = HideFlags.HideInInspector | HideFlags.HideInHierarchy;
+        }
 
-		private void OnEnable()
-		{
-			this.hideFlags = HideFlags.HideInInspector | HideFlags.HideInHierarchy;
-            if (this.conditionsList != null &&
-                this.conditionsList.gameObject != this.gameObject)
+        private void OnEnable()
+        {
+            hideFlags = HideFlags.HideInInspector | HideFlags.HideInHierarchy;
+            if (conditionsList != null &&
+                conditionsList.gameObject != gameObject)
             {
                 IConditionsList newConditionsList = gameObject.AddComponent<IConditionsList>();
-                EditorUtility.CopySerialized(this.conditionsList, newConditionsList);
+                EditorUtility.CopySerialized(conditionsList, newConditionsList);
 
                 SerializedObject serializedObject = new SerializedObject(this);
                 serializedObject.FindProperty("conditionsList").objectReferenceValue = newConditionsList;
@@ -48,25 +47,25 @@
 
         private void OnValidate()
         {
-            this.hideFlags = HideFlags.HideInInspector | HideFlags.HideInHierarchy;
+            hideFlags = HideFlags.HideInInspector | HideFlags.HideInHierarchy;
         }
-        #endif
+#endif
 
         // PUBLIC METHODS: ------------------------------------------------------------------------
 
         public virtual bool CheckConditions(GameObject target = null, params object[] parameters)
-		{
-            if (this.onCheckConditions != null) this.onCheckConditions.Invoke();
-            return this.conditionsList.Check(target, parameters);
-		}
+        {
+            if (onCheckConditions != null) onCheckConditions.Invoke();
+            return conditionsList.Check(target, parameters);
+        }
 
         public virtual void ExecuteActions(GameObject target = null, params object[] parameters)
-		{
-			if (this.actions != null) 
-			{
-                if (this.onExecuteActions != null) this.onExecuteActions.Invoke();
-                this.actions.Execute(target, parameters);
-			}
-		}
-	}
+        {
+            if (actions != null)
+            {
+                if (onExecuteActions != null) onExecuteActions.Invoke();
+                actions.Execute(target, parameters);
+            }
+        }
+    }
 }

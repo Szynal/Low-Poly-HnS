@@ -1,15 +1,13 @@
-﻿namespace LowPolyHnS.Core
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEngine.Events;
-    using LowPolyHnS.Core.Hooks;
-    using LowPolyHnS.Variables;
+﻿using System.Collections;
+using LowPolyHnS.Variables;
+using UnityEngine;
 
-    #if UNITY_EDITOR
+namespace LowPolyHnS.Core
+{
+#if UNITY_EDITOR
     using UnityEditor;
-    #endif
+
+#endif
 
     [AddComponentMenu("")]
     public class ActionTransformMove : IAction
@@ -25,41 +23,40 @@
         public NumberProperty duration = new NumberProperty(1.0f);
         public Easing.EaseType easing = Easing.EaseType.QuadInOut;
 
-        private bool forceStop = false;
+        private bool forceStop;
 
         // EXECUTABLE: ----------------------------------------------------------------------------
 
         public override IEnumerator Execute(GameObject target, IAction[] actions, int index)
         {
-            this.forceStop = false;
+            forceStop = false;
             Transform targetTrans = this.target.GetTransform(target);
             if (targetTrans != null)
             {
                 Vector3 position1 = targetTrans.position;
-                Vector3 position2 = this.moveTo.GetPosition(target);
+                Vector3 position2 = moveTo.GetPosition(target);
 
-                if (this.moveTo.target == TargetPosition.Target.Position &&
-                    this.space == Space.Self)
+                if (moveTo.target == TargetPosition.Target.Position &&
+                    space == Space.Self)
                 {
                     position2 = targetTrans.TransformPoint(position2);
                 }
 
-                Vector3 targetRotation = (this.lookAt.target == TargetPosition.Target.Invoker
+                Vector3 targetRotation = lookAt.target == TargetPosition.Target.Invoker
                     ? position2
-                    : this.lookAt.GetPosition(target)
-                );
+                    : lookAt.GetPosition(target);
 
                 Quaternion rotation1 = targetTrans.rotation;
                 Quaternion rotation2 = Quaternion.LookRotation(targetRotation - targetTrans.position);
 
-                float vDuration = this.duration.GetValue(target);
+                float vDuration = duration.GetValue(target);
                 float initTime = Time.time;
 
-                while (Time.time - initTime < vDuration && !this.forceStop)
+                while (Time.time - initTime < vDuration && !forceStop)
                 {
                     if (targetTrans == null) break;
-                    float t = (Time.time - initTime)/vDuration;
-                    float easeValue = Easing.GetEase(this.easing, 0.0f, 1.0f, t);
+                    float t = (Time.time - initTime) / vDuration;
+                    float easeValue = Easing.GetEase(easing, 0.0f, 1.0f, t);
 
                     targetTrans.position = Vector3.LerpUnclamped(
                         position1,
@@ -67,7 +64,7 @@
                         easeValue
                     );
 
-                    if (this.rotate)
+                    if (rotate)
                     {
                         targetTrans.rotation = Quaternion.LerpUnclamped(
                             rotation1,
@@ -79,11 +76,10 @@
                     yield return null;
                 }
 
-                if (!this.forceStop && targetTrans != null)
+                if (!forceStop && targetTrans != null)
                 {
                     targetTrans.position = position2;
                 }
-
             }
 
             yield return 0;
@@ -91,14 +87,14 @@
 
         public override void Stop()
         {
-            this.forceStop = true;
+            forceStop = true;
         }
 
         // +--------------------------------------------------------------------------------------+
         // | EDITOR                                                                               |
         // +--------------------------------------------------------------------------------------+
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
 
         public static new string NAME = "Object/Transform Move";
         private const string NODE_TITLE = "Move {0}";
@@ -117,61 +113,61 @@
 
         public override string GetNodeTitle()
         {
-            return string.Format(NODE_TITLE, this.target);
+            return string.Format(NODE_TITLE, target);
         }
 
         protected override void OnEnableEditorChild()
         {
-            this.spTarget = serializedObject.FindProperty("target");
-            this.spMoveTo = serializedObject.FindProperty("moveTo");
-            this.spSpace = serializedObject.FindProperty("space");
-            this.spRotate = serializedObject.FindProperty("rotate");
-            this.spLookAt = serializedObject.FindProperty("lookAt");
-            this.spDuration = serializedObject.FindProperty("duration");
-            this.spEasing = serializedObject.FindProperty("easing");
+            spTarget = serializedObject.FindProperty("target");
+            spMoveTo = serializedObject.FindProperty("moveTo");
+            spSpace = serializedObject.FindProperty("space");
+            spRotate = serializedObject.FindProperty("rotate");
+            spLookAt = serializedObject.FindProperty("lookAt");
+            spDuration = serializedObject.FindProperty("duration");
+            spEasing = serializedObject.FindProperty("easing");
         }
 
         protected override void OnDisableEditorChild()
         {
-            this.spTarget = null;
-            this.spMoveTo = null;
-            this.spSpace = null;
-            this.spRotate = null;
-            this.spLookAt = null;
-            this.spDuration = null;
-            this.spEasing = null;
+            spTarget = null;
+            spMoveTo = null;
+            spSpace = null;
+            spRotate = null;
+            spLookAt = null;
+            spDuration = null;
+            spEasing = null;
         }
 
         public override void OnInspectorGUI()
         {
-            this.serializedObject.Update();
+            serializedObject.Update();
 
-            EditorGUILayout.PropertyField(this.spTarget);
+            EditorGUILayout.PropertyField(spTarget);
 
             EditorGUILayout.Space();
-            EditorGUILayout.PropertyField(this.spMoveTo);
+            EditorGUILayout.PropertyField(spMoveTo);
 
-            int targetIndex = this.spMoveTo.FindPropertyRelative("target").enumValueIndex;
-            if (targetIndex == (int)TargetPosition.Target.Position)
+            int targetIndex = spMoveTo.FindPropertyRelative("target").enumValueIndex;
+            if (targetIndex == (int) TargetPosition.Target.Position)
             {
                 EditorGUI.indentLevel++;
-                EditorGUILayout.PropertyField(this.spSpace);
+                EditorGUILayout.PropertyField(spSpace);
                 EditorGUI.indentLevel--;
             }
 
             EditorGUILayout.Space();
-            EditorGUILayout.PropertyField(this.spRotate);
-            EditorGUI.BeginDisabledGroup(!this.spRotate.boolValue);
-            EditorGUILayout.PropertyField(this.spLookAt);
+            EditorGUILayout.PropertyField(spRotate);
+            EditorGUI.BeginDisabledGroup(!spRotate.boolValue);
+            EditorGUILayout.PropertyField(spLookAt);
             EditorGUI.EndDisabledGroup();
 
             EditorGUILayout.Space();
-            EditorGUILayout.PropertyField(this.spDuration);
-            EditorGUILayout.PropertyField(this.spEasing);
+            EditorGUILayout.PropertyField(spDuration);
+            EditorGUILayout.PropertyField(spEasing);
 
-            this.serializedObject.ApplyModifiedProperties();
+            serializedObject.ApplyModifiedProperties();
         }
 
-        #endif
+#endif
     }
 }

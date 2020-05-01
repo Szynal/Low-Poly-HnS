@@ -1,13 +1,11 @@
-﻿namespace LowPolyHnS.Variables
-{
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEditor;
-    using UnityEditor.IMGUI.Controls;
-    using LowPolyHnS.Core;
+﻿using System;
+using LowPolyHnS.Core;
+using UnityEditor;
+using UnityEditor.IMGUI.Controls;
+using UnityEngine;
 
+namespace LowPolyHnS.Variables
+{
     public abstract class GenericVariableSelectWindow : PopupWindowContent
     {
         private const float SEARCH_HEIGHT = 28f;
@@ -18,18 +16,18 @@
         private string searchText = "";
         private bool searchFocus = true;
 
-        private float windowWidth = 0f;
+        private float windowWidth;
         private Vector2 scroll = Vector2.zero;
-        private bool keyPressedEnter = false;
-        private bool keyPressedUp = false;
-        private bool keyPressedDown = false;
+        private bool keyPressedEnter;
+        private bool keyPressedUp;
+        private bool keyPressedDown;
 
-        private int varIndex = 0;
+        private int varIndex;
         private Rect varRect = Rect.zero;
 
         private Action<string> callback;
         private GUIContent[] variables;
-        private int allowTypesMask = 0;
+        private int allowTypesMask;
 
         private GUIStyle styleItem;
         private GUIStyle styleBackground;
@@ -38,42 +36,42 @@
 
         public GenericVariableSelectWindow(Rect ctaRect, Action<string> callback, int allowTypesMask)
         {
-            this.windowWidth = ctaRect.width;
+            windowWidth = ctaRect.width;
             this.callback = callback;
             this.allowTypesMask = allowTypesMask;
         }
 
         public override void OnOpen()
         {
-            this.variables = this.GetVariables(this.allowTypesMask);
+            variables = GetVariables(allowTypesMask);
 
-            this.searchField = new SearchField();
-            this.searchFocus = true;
-            this.InitializeStyles();
+            searchField = new SearchField();
+            searchFocus = true;
+            InitializeStyles();
         }
 
         private void InitializeStyles()
         {
-            this.styleItem = new GUIStyle(GUI.skin.FindStyle("MenuItem"));
-            this.styleItem.fixedHeight = 20f;
-            this.styleItem.padding = new RectOffset(
+            styleItem = new GUIStyle(GUI.skin.FindStyle("MenuItem"));
+            styleItem.fixedHeight = 20f;
+            styleItem.padding = new RectOffset(
                 5,
                 5,
-                this.styleItem.padding.top,
-                this.styleItem.padding.bottom
+                styleItem.padding.top,
+                styleItem.padding.bottom
             );
 
-            this.styleItem.margin = new RectOffset(0, 0, 0, 0);
-            this.styleItem.imagePosition = ImagePosition.ImageLeft;
+            styleItem.margin = new RectOffset(0, 0, 0, 0);
+            styleItem.imagePosition = ImagePosition.ImageLeft;
 
-            this.styleBackground = new GUIStyle();
-            this.styleBackground.margin = new RectOffset(0, 0, 0, 0);
-            this.styleBackground.padding = new RectOffset(0, 0, 0, 0);
+            styleBackground = new GUIStyle();
+            styleBackground.margin = new RectOffset(0, 0, 0, 0);
+            styleBackground.padding = new RectOffset(0, 0, 0, 0);
         }
 
         public override Vector2 GetWindowSize()
         {
-            return new Vector2(Mathf.Max(150, this.windowWidth), 300);
+            return new Vector2(Mathf.Max(150, windowWidth), 300);
         }
 
         // VIRTUAL & ABSTRACT METHODS: ------------------------------------------------------------
@@ -85,20 +83,20 @@
 
         public override void OnGUI(Rect rect)
         {
-            this.HandleKeyboardInput();
-            this.PaintSearch(rect);
+            HandleKeyboardInput();
+            PaintSearch(rect);
 
-            this.scroll = GUILayout.BeginScrollView(
-                this.scroll,
+            scroll = GUILayout.BeginScrollView(
+                scroll,
                 GUIStyle.none,
                 GUI.skin.verticalScrollbar
             );
 
-            for (int i = 0; i < this.variables.Length; ++i)
+            for (int i = 0; i < variables.Length; ++i)
             {
-                if (this.variables[i].text.Contains(this.searchText))
+                if (variables[i].text.Contains(searchText))
                 {
-                    this.PaintVariable(i);
+                    PaintVariable(i);
                 }
             }
 
@@ -106,42 +104,42 @@
             GUILayout.EndScrollView();
             float scrollHeight = GUILayoutUtility.GetLastRect().height;
 
-            if (this.keyPressedDown && this.varIndex < this.variables.Length - 1)
+            if (keyPressedDown && varIndex < variables.Length - 1)
             {
-                this.varIndex++;
-                UnityEngine.Event.current.Use();
+                varIndex++;
+                Event.current.Use();
             }
-            else if (this.keyPressedUp && this.varIndex > 0)
+            else if (keyPressedUp && varIndex > 0)
             {
-                this.varIndex--;
-                UnityEngine.Event.current.Use();
+                varIndex--;
+                Event.current.Use();
             }
 
-            if (UnityEngine.Event.current.type == EventType.Repaint && 
-                (this.keyPressedUp || this.keyPressedDown))
+            if (Event.current.type == EventType.Repaint &&
+                (keyPressedUp || keyPressedDown))
             {
-                if (this.varRect != Rect.zero)
+                if (varRect != Rect.zero)
                 {
-                    if (this.scroll.y > this.varRect.y)
+                    if (scroll.y > varRect.y)
                     {
-                        this.scroll = Vector2.up * (this.varRect.position.y);
-                        this.editorWindow.Repaint();
+                        scroll = Vector2.up * varRect.position.y;
+                        editorWindow.Repaint();
                     }
-                    else if (this.scroll.y + scrollHeight < this.varRect.position.y + this.varRect.size.y)
+                    else if (scroll.y + scrollHeight < varRect.position.y + varRect.size.y)
                     {
-                        float positionY = this.varRect.y + this.varRect.height - scrollHeight;
-                        this.scroll = Vector2.up * positionY;
-                        this.editorWindow.Repaint();
+                        float positionY = varRect.y + varRect.height - scrollHeight;
+                        scroll = Vector2.up * positionY;
+                        editorWindow.Repaint();
                     }
                 }
             }
 
-            this.PaintFooter();
+            PaintFooter();
 
-            if (UnityEngine.Event.current.type == EventType.MouseMove ||
-                UnityEngine.Event.current.type == EventType.MouseDown)
+            if (Event.current.type == EventType.MouseMove ||
+                Event.current.type == EventType.MouseDown)
             {
-                this.editorWindow.Repaint();
+                editorWindow.Repaint();
             }
         }
 
@@ -158,12 +156,12 @@
             );
 
             GUI.BeginGroup(rectWrap, CoreGUIStyles.GetSearchBox());
-            this.searchText = this.searchField.OnGUI(rectSearch, this.searchText);
+            searchText = searchField.OnGUI(rectSearch, searchText);
 
-            if (this.searchFocus)
+            if (searchFocus)
             {
-                this.searchField.SetFocus();
-                this.searchFocus = false;
+                searchField.SetFocus();
+                searchFocus = false;
             }
 
             GUI.EndGroup();
@@ -171,17 +169,17 @@
 
         private void PaintVariable(int index)
         {
-            bool mouseEnter = this.varIndex == index && UnityEngine.Event.current.type == EventType.MouseDown;
+            bool mouseEnter = varIndex == index && Event.current.type == EventType.MouseDown;
             Rect buttonRect = GUILayoutUtility.GetRect(GUIContent.none, EditorStyles.label);
 
-            bool buttonHasFocus = this.varIndex == index;
-            if (UnityEngine.Event.current.type == EventType.Repaint)
+            bool buttonHasFocus = varIndex == index;
+            if (Event.current.type == EventType.Repaint)
             {
-                if (this.varIndex == index) this.varRect = buttonRect;
+                if (varIndex == index) varRect = buttonRect;
 
-                this.styleItem.Draw(
+                styleItem.Draw(
                     buttonRect,
-                    this.variables[index],
+                    variables[index],
                     buttonHasFocus,
                     buttonHasFocus,
                     false,
@@ -189,17 +187,17 @@
                 );
             }
 
-            if (buttonHasFocus && (mouseEnter || this.keyPressedEnter))
+            if (buttonHasFocus && (mouseEnter || keyPressedEnter))
             {
-                if (this.keyPressedEnter) UnityEngine.Event.current.Use();
-                this.Callback(this.variables[index].text);
-                this.editorWindow.Close();
+                if (keyPressedEnter) Event.current.Use();
+                Callback(variables[index].text);
+                editorWindow.Close();
             }
 
-            if (UnityEngine.Event.current.type == EventType.MouseMove &&
-                GUILayoutUtility.GetLastRect().Contains(UnityEngine.Event.current.mousePosition))
+            if (Event.current.type == EventType.MouseMove &&
+                GUILayoutUtility.GetLastRect().Contains(Event.current.mousePosition))
             {
-                this.varIndex = index;
+                varIndex = index;
             }
         }
 
@@ -207,25 +205,23 @@
 
         private void HandleKeyboardInput()
         {
-            this.keyPressedUp = false;
-            this.keyPressedDown = false;
-            this.keyPressedEnter = false;
+            keyPressedUp = false;
+            keyPressedDown = false;
+            keyPressedEnter = false;
 
-            if (UnityEngine.Event.current.type != EventType.KeyDown) return;
+            if (Event.current.type != EventType.KeyDown) return;
 
-            this.keyPressedUp = (UnityEngine.Event.current.keyCode == KeyCode.UpArrow);
-            this.keyPressedDown = (UnityEngine.Event.current.keyCode == KeyCode.DownArrow);
+            keyPressedUp = Event.current.keyCode == KeyCode.UpArrow;
+            keyPressedDown = Event.current.keyCode == KeyCode.DownArrow;
 
-            this.keyPressedEnter = (
-                UnityEngine.Event.current.keyCode == KeyCode.KeypadEnter ||
-                UnityEngine.Event.current.keyCode == KeyCode.Return
-            );
+            keyPressedEnter = Event.current.keyCode == KeyCode.KeypadEnter ||
+                              Event.current.keyCode == KeyCode.Return;
         }
 
         private void Callback(string name)
         {
             name = VariableEditor.ProcessName(name);
-            if (this.callback != null) this.callback(name);
+            if (callback != null) callback(name);
         }
     }
 }

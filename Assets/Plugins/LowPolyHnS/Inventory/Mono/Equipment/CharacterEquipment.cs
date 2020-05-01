@@ -1,13 +1,11 @@
-﻿namespace LowPolyHnS.Inventory
-{
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using LowPolyHnS.Core;
-    using LowPolyHnS.Characters;
-    using LowPolyHnS.Core.Hooks;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using LowPolyHnS.Core;
+using UnityEngine;
 
+namespace LowPolyHnS.Inventory
+{
     [DisallowMultipleComponent]
     [AddComponentMenu("LowPolyHnS/Characters/Equipment")]
     public class CharacterEquipment : GlobalID, IGameSave
@@ -20,13 +18,13 @@
 
             public Item()
             {
-                this.isEquipped = false;
-                this.itemID = 0;
+                isEquipped = false;
+                itemID = 0;
             }
 
             public Item(int itemID)
             {
-                this.isEquipped = true;
+                isEquipped = true;
                 this.itemID = itemID;
             }
         }
@@ -38,7 +36,7 @@
 
             public Equipment()
             {
-                this.items = new Item[ItemType.MAX]
+                items = new Item[ItemType.MAX]
                 {
                     new Item(), new Item(), new Item(), new Item(),
                     new Item(), new Item(), new Item(), new Item(),
@@ -47,7 +45,7 @@
                     new Item(), new Item(), new Item(), new Item(),
                     new Item(), new Item(), new Item(), new Item(),
                     new Item(), new Item(), new Item(), new Item(),
-                    new Item(), new Item(), new Item(), new Item(),
+                    new Item(), new Item(), new Item(), new Item()
                 };
             }
         }
@@ -67,10 +65,10 @@
 
         private void OnDestroy()
         {
-            base.OnDestroyGID();
+            OnDestroyGID();
 
             if (!Application.isPlaying) return;
-            if (this.exitingApplication) return;
+            if (exitingApplication) return;
             SaveLoadManager.Instance.OnDestroyIGameSave(this);
         }
 
@@ -84,10 +82,10 @@
         public int HasEquip(int itemID)
         {
             int counter = 0;
-            for (int i = 0; i < this.equipment.items.Length; ++i)
+            for (int i = 0; i < equipment.items.Length; ++i)
             {
-                if (this.equipment.items[i].isEquipped && 
-                    this.equipment.items[i].itemID == itemID)
+                if (equipment.items[i].isEquipped &&
+                    equipment.items[i].itemID == itemID)
                 {
                     counter += 1;
                 }
@@ -100,7 +98,7 @@
         {
             for (int i = 0; i < ItemType.MAX; ++i)
             {
-                if (((itemTypes >> i) & 1) > 0 && !this.equipment.items[i].isEquipped)
+                if (((itemTypes >> i) & 1) > 0 && !equipment.items[i].isEquipped)
                 {
                     return false;
                 }
@@ -111,10 +109,9 @@
 
         public int GetEquip(int itemType)
         {
-            return (this.equipment.items[itemType].isEquipped 
-                ? this.equipment.items[itemType].itemID
-                : 0
-            );
+            return equipment.items[itemType].isEquipped
+                ? equipment.items[itemType].itemID
+                : 0;
         }
 
         public bool EquipItem(int itemID, int itemType, Action onEquip = null)
@@ -146,24 +143,24 @@
 
             for (int i = 0; i < itemTypes.Count; ++i)
             {
-                if (this.equipment.items[itemTypes[i]].isEquipped)
+                if (equipment.items[itemTypes[i]].isEquipped)
                 {
                     numToUnequip += 1;
-                    this.UnequipItem(this.equipment.items[itemTypes[i]].itemID, () =>
+                    UnequipItem(equipment.items[itemTypes[i]].itemID, () =>
                     {
                         numUnequipped += 1;
                         if (numUnequipped >= numToUnequip)
                         {
-                            this.ExecuteActions(item.actionsOnEquip, onEquip);
+                            ExecuteActions(item.actionsOnEquip, onEquip);
                         }
                     });
                 }
 
-                this.equipment.items[itemTypes[i]].isEquipped = true;
-                this.equipment.items[itemTypes[i]].itemID = itemID;
+                equipment.items[itemTypes[i]].isEquipped = true;
+                equipment.items[itemTypes[i]].itemID = itemID;
             }
 
-            if (numToUnequip == 0) this.ExecuteActions(item.actionsOnEquip, onEquip);
+            if (numToUnequip == 0) ExecuteActions(item.actionsOnEquip, onEquip);
 
             return true;
         }
@@ -175,15 +172,15 @@
             int itemsToUnequip = 0;
             int itemsUnequipped = 0;
 
-            for (int i = 0; i < this.equipment.items.Length; ++i)
+            for (int i = 0; i < equipment.items.Length; ++i)
             {
-                if (this.equipment.items[i].isEquipped && this.equipment.items[i].itemID == itemID)
+                if (equipment.items[i].isEquipped && equipment.items[i].itemID == itemID)
                 {
                     Inventory.Item item = InventoryManager.Instance.itemsCatalogue[itemID];
 
-                    this.equipment.items[i].isEquipped = false;
+                    equipment.items[i].isEquipped = false;
 
-                    GameObject instance = Instantiate<GameObject>(
+                    GameObject instance = Instantiate(
                         item.actionsOnUnequip.gameObject,
                         transform.position,
                         transform.rotation
@@ -217,15 +214,15 @@
             {
                 if (((itemTypes >> i) & 1) > 0)
                 {
-                    if (this.equipment.items[i].isEquipped)
+                    if (equipment.items[i].isEquipped)
                     {
-                        unequipped.Add(this.equipment.items[i].itemID);
-                        this.equipment.items[i].isEquipped = false;
+                        unequipped.Add(equipment.items[i].itemID);
+                        equipment.items[i].isEquipped = false;
 
                         GameObject instance = Instantiate(
                             InventoryManager
                                 .Instance
-                                .itemsCatalogue[this.equipment.items[i].itemID]
+                                .itemsCatalogue[equipment.items[i].itemID]
                                 .actionsOnUnequip.gameObject,
                             transform.position,
                             transform.rotation
@@ -245,7 +242,7 @@
 
         private void ExecuteActions(IActionsList list, Action callback = null)
         {
-            GameObject instance = Instantiate<GameObject>(
+            GameObject instance = Instantiate(
                 list.gameObject,
                 transform.position,
                 transform.rotation
@@ -265,12 +262,12 @@
 
         public string GetUniqueName()
         {
-            return string.Format("equip:{0}", this.GetUniqueID());
+            return string.Format("equip:{0}", GetUniqueID());
         }
 
         protected virtual string GetUniqueID()
         {
-            return this.GetID();
+            return GetID();
         }
 
         public Type GetSaveDataType()
@@ -280,29 +277,29 @@
 
         public object GetSaveData()
         {
-            if (!this.saveEquipment) return null;
-            return this.equipment;
+            if (!saveEquipment) return null;
+            return equipment;
         }
 
         public void ResetData()
         {
-            for (int i = 0; i < this.equipment.items.Length; ++i)
+            for (int i = 0; i < equipment.items.Length; ++i)
             {
-                if (this.equipment.items[i].isEquipped)
+                if (equipment.items[i].isEquipped)
                 {
-                    this.UnequipItem(this.equipment.items[i].itemID);
+                    UnequipItem(equipment.items[i].itemID);
                 }
             }
 
-            this.equipment = new Equipment();
+            equipment = new Equipment();
         }
 
         public void OnLoad(object generic)
         {
             Equipment savedEquipment = generic as Equipment;
-            if (!this.saveEquipment || savedEquipment == null) return;
+            if (!saveEquipment || savedEquipment == null) return;
 
-            StartCoroutine(this.OnLoadNextFrame(savedEquipment));
+            StartCoroutine(OnLoadNextFrame(savedEquipment));
         }
 
         private IEnumerator OnLoadNextFrame(Equipment savedEquipment)
@@ -314,7 +311,7 @@
             {
                 if (savedEquipment.items[i].isEquipped)
                 {
-                    this.EquipItem(savedEquipment.items[i].itemID, i);
+                    EquipItem(savedEquipment.items[i].itemID, i);
                 }
             }
         }

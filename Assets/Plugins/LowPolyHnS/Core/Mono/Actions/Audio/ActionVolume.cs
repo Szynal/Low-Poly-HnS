@@ -1,54 +1,51 @@
-﻿namespace LowPolyHnS.Core
+﻿using LowPolyHnS.Variables;
+using UnityEngine;
+
+namespace LowPolyHnS.Core
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-    using LowPolyHnS.Variables;
+#if UNITY_EDITOR
 
-    #if UNITY_EDITOR
-    using UnityEditor;
-	#endif
+#endif
 
-	[AddComponentMenu("")]
-	public class ActionVolume : IAction 
-	{
+    [AddComponentMenu("")]
+    public class ActionVolume : IAction
+    {
         public enum VolumeType
         {
             Master = AudioManager.INDEX_VOLUME_MASTR,
             Music = AudioManager.INDEX_VOLUME_MUSIC,
             Sound = AudioManager.INDEX_VOLUME_SOUND,
-            Voice = AudioManager.INDEX_VOLUME_VOICE,
+            Voice = AudioManager.INDEX_VOLUME_VOICE
         }
 
         public VolumeType type = VolumeType.Music;
         public NumberProperty volume = new NumberProperty(1.0f);
 
-		// EXECUTABLE: ----------------------------------------------------------------------------
+        // EXECUTABLE: ----------------------------------------------------------------------------
 
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
-            float value = this.volume.GetValue(target);
-            AudioManager.Instance.SetGlobalVolume((int)this.type, value);
+            float value = volume.GetValue(target);
+            AudioManager.Instance.SetGlobalVolume((int) type, value);
             return true;
         }
 
-		// +--------------------------------------------------------------------------------------+
-		// | EDITOR                                                                               |
-		// +--------------------------------------------------------------------------------------+
+        // +--------------------------------------------------------------------------------------+
+        // | EDITOR                                                                               |
+        // +--------------------------------------------------------------------------------------+
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 
-		public static new string NAME = "Audio/Change Volume";
-		private const string NODE_TITLE = "Change {0} volume to {1}";
+        public static new string NAME = "Audio/Change Volume";
+        private const string NODE_TITLE = "Change {0} volume to {1}";
 
-		// INSPECTOR METHODS: ---------------------------------------------------------------------
+        // INSPECTOR METHODS: ---------------------------------------------------------------------
 
-		public override string GetNodeTitle()
-		{
-			return string.Format(NODE_TITLE, this.type, this.volume);
-		}
+        public override string GetNodeTitle()
+        {
+            return string.Format(NODE_TITLE, type, volume);
+        }
 
-		#endif
-	}
+#endif
+    }
 }

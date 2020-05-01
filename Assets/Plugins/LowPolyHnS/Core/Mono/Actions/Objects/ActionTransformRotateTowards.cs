@@ -1,15 +1,13 @@
-﻿namespace LowPolyHnS.Core
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEngine.Events;
-    using LowPolyHnS.Core.Hooks;
-    using LowPolyHnS.Variables;
+﻿using System.Collections;
+using LowPolyHnS.Variables;
+using UnityEngine;
 
-    #if UNITY_EDITOR
+namespace LowPolyHnS.Core
+{
+#if UNITY_EDITOR
     using UnityEditor;
-    #endif
+
+#endif
 
     [AddComponentMenu("")]
     public class ActionTransformRotateTowards : IAction
@@ -20,28 +18,28 @@
         public NumberProperty duration = new NumberProperty(1.0f);
         public Easing.EaseType easing = Easing.EaseType.QuadInOut;
 
-        private bool forceStop = false;
+        private bool forceStop;
 
         // EXECUTABLE: ----------------------------------------------------------------------------
 
         public override IEnumerator Execute(GameObject target, IAction[] actions, int index)
         {
-            this.forceStop = false;
+            forceStop = false;
             Transform targetTrans = this.target.GetTransform(target);
             if (targetTrans != null)
             {
-                Vector3 targetRotation = this.lookAt.GetPosition(target);
+                Vector3 targetRotation = lookAt.GetPosition(target);
                 Quaternion rotation1 = targetTrans.rotation;
                 Quaternion rotation2 = Quaternion.LookRotation(targetRotation - targetTrans.position);
 
-                float vDuration = this.duration.GetValue(target);
+                float vDuration = duration.GetValue(target);
                 float initTime = Time.time;
 
-                while (Time.time - initTime < vDuration && !this.forceStop)
+                while (Time.time - initTime < vDuration && !forceStop)
                 {
                     if (targetTrans == null) break;
-                    float t = (Time.time - initTime)/vDuration;
-                    float easeValue = Easing.GetEase(this.easing, 0.0f, 1.0f, t);
+                    float t = (Time.time - initTime) / vDuration;
+                    float easeValue = Easing.GetEase(easing, 0.0f, 1.0f, t);
 
                     targetTrans.rotation = Quaternion.LerpUnclamped(
                         rotation1,
@@ -52,7 +50,7 @@
                     yield return null;
                 }
 
-                if (!this.forceStop && targetTrans != null)
+                if (!forceStop && targetTrans != null)
                 {
                     targetTrans.rotation = rotation2;
                 }
@@ -63,14 +61,14 @@
 
         public override void Stop()
         {
-            this.forceStop = true;
+            forceStop = true;
         }
 
         // +--------------------------------------------------------------------------------------+
         // | EDITOR                                                                               |
         // +--------------------------------------------------------------------------------------+
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
 
         public static new string NAME = "Object/Transform Rotate Towards";
         private const string NODE_TITLE = "Rotate towards {0}";
@@ -86,41 +84,41 @@
 
         public override string GetNodeTitle()
         {
-            return string.Format(NODE_TITLE, this.target);
+            return string.Format(NODE_TITLE, target);
         }
 
         protected override void OnEnableEditorChild()
         {
-            this.spTarget = serializedObject.FindProperty("target");
-            this.spLookAt = serializedObject.FindProperty("lookAt");
-            this.spDuration = serializedObject.FindProperty("duration");
-            this.spEasing = serializedObject.FindProperty("easing");
+            spTarget = serializedObject.FindProperty("target");
+            spLookAt = serializedObject.FindProperty("lookAt");
+            spDuration = serializedObject.FindProperty("duration");
+            spEasing = serializedObject.FindProperty("easing");
         }
 
         protected override void OnDisableEditorChild()
         {
-            this.spTarget = null;
-            this.spLookAt = null;
-            this.spDuration = null;
-            this.spEasing = null;
+            spTarget = null;
+            spLookAt = null;
+            spDuration = null;
+            spEasing = null;
         }
 
         public override void OnInspectorGUI()
         {
-            this.serializedObject.Update();
+            serializedObject.Update();
 
-            EditorGUILayout.PropertyField(this.spTarget);
-
-            EditorGUILayout.Space();
-            EditorGUILayout.PropertyField(this.spLookAt);
+            EditorGUILayout.PropertyField(spTarget);
 
             EditorGUILayout.Space();
-            EditorGUILayout.PropertyField(this.spDuration);
-            EditorGUILayout.PropertyField(this.spEasing);
+            EditorGUILayout.PropertyField(spLookAt);
 
-            this.serializedObject.ApplyModifiedProperties();
+            EditorGUILayout.Space();
+            EditorGUILayout.PropertyField(spDuration);
+            EditorGUILayout.PropertyField(spEasing);
+
+            serializedObject.ApplyModifiedProperties();
         }
 
-        #endif
+#endif
     }
 }

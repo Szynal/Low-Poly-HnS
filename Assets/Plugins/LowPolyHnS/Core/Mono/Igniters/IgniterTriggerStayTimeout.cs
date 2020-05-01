@@ -1,72 +1,68 @@
-﻿namespace LowPolyHnS.Core
+﻿using LowPolyHnS.Variables;
+using UnityEngine;
+
+namespace LowPolyHnS.Core
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-    using LowPolyHnS.Variables;
+    [AddComponentMenu("")]
+    public class IgniterTriggerStayTimeout : Igniter
+    {
+        public Collider otherCollider;
 
-	[AddComponentMenu("")]
-	public class IgniterTriggerStayTimeout : Igniter 
-	{
-		public Collider otherCollider;
-
-		#if UNITY_EDITOR
-		public new static string NAME = "Object/On Trigger Stay Timeout";
-		public new static bool REQUIRES_COLLIDER = true;
-		#endif
+#if UNITY_EDITOR
+        public new static string NAME = "Object/On Trigger Stay Timeout";
+        public new static bool REQUIRES_COLLIDER = true;
+#endif
 
         public float duration = 2.0f;
-        private float startTime = 0.0f;
-        private bool hasBeenExecuted = false;
+        private float startTime;
+        private bool hasBeenExecuted;
 
-        [Space][VariableFilter(Variable.DataType.GameObject)]
+        [Space] [VariableFilter(Variable.DataType.GameObject)]
         public VariableProperty storeSelf = new VariableProperty(Variable.VarType.GlobalVariable);
 
-        [Space][VariableFilter(Variable.DataType.GameObject)]
+        [Space] [VariableFilter(Variable.DataType.GameObject)]
         public VariableProperty storeCollider = new VariableProperty(Variable.VarType.GlobalVariable);
 
         private void OnTriggerEnter(Collider c)
         {
-            if (this.otherCollider == null)
+            if (otherCollider == null)
             {
-                this.startTime = Time.time;
-                this.hasBeenExecuted = false;
+                startTime = Time.time;
+                hasBeenExecuted = false;
             }
-            else if (this.otherCollider.gameObject.GetInstanceID() == c.gameObject.GetInstanceID())
+            else if (otherCollider.gameObject.GetInstanceID() == c.gameObject.GetInstanceID())
             {
-                this.startTime = Time.time;
-                this.hasBeenExecuted = false;
+                startTime = Time.time;
+                hasBeenExecuted = false;
             }
         }
 
         private void OnTriggerExit(Collider c)
         {
-            if (this.otherCollider == null)
+            if (otherCollider == null)
             {
-                this.startTime = Time.time;
+                startTime = Time.time;
             }
-            else if (this.otherCollider.gameObject.GetInstanceID() == c.gameObject.GetInstanceID())
+            else if (otherCollider.gameObject.GetInstanceID() == c.gameObject.GetInstanceID())
             {
-                this.startTime = Time.time;
+                startTime = Time.time;
             }
         }
 
         private void OnTriggerStay(Collider c)
         {
-            bool timeout = this.startTime + this.duration < Time.time;
-            bool collided = (
-                this.otherCollider == null || 
-                this.otherCollider.gameObject.GetInstanceID() == c.gameObject.GetInstanceID()
-            );
-                
-            if (collided && timeout && !this.hasBeenExecuted)
-            {
-                this.storeSelf.Set(gameObject);
-                this.storeCollider.Set(c.gameObject);
+            bool timeout = startTime + duration < Time.time;
+            bool collided = otherCollider == null ||
+                            otherCollider.gameObject.GetInstanceID() == c.gameObject.GetInstanceID();
 
-                this.hasBeenExecuted = true;
-                this.ExecuteTrigger(c.gameObject);
+            if (collided && timeout && !hasBeenExecuted)
+            {
+                storeSelf.Set(gameObject);
+                storeCollider.Set(c.gameObject);
+
+                hasBeenExecuted = true;
+                ExecuteTrigger(c.gameObject);
             }
         }
-	}
+    }
 }

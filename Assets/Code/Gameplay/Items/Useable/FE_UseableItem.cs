@@ -1,20 +1,18 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 [CreateAssetMenu(fileName = "NewUseable", menuName = "FearEffect/Items/UseableItem", order = 2)]
 public class FE_UseableItem : FE_Item
 {
-    [Header("Specific for UseableItem")]
-    public bool IsStackable = false;
+    [Header("Specific for UseableItem")] public bool IsStackable = false;
     public int MaxStacks = 99;
 
     public override void Activate(FE_PlayerInventoryInteraction _instigator)
     {
         base.Activate(_instigator);
 
-        FE_PlayerInventoryInteraction _interactionController = _instigator.GetComponent<FE_PlayerInventoryInteraction>();
-        if(_interactionController.HasInteraction() == true && _interactionController.GetInteraction().RequireItem() == true)
+        FE_PlayerInventoryInteraction _interactionController =
+            _instigator.GetComponent<FE_PlayerInventoryInteraction>();
+        if (_interactionController.HasInteraction() && _interactionController.GetInteraction().RequireItem())
         {
             if (_interactionController.GetInteraction() is FE_TributeBurner)
             {
@@ -31,7 +29,7 @@ public class FE_UseableItem : FE_Item
     {
         ItemUses -= -_amt;
 
-        if(ItemUses <= 0)
+        if (ItemUses <= 0)
         {
             return true;
         }

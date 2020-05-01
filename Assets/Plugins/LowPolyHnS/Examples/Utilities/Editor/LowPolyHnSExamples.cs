@@ -1,19 +1,17 @@
-﻿namespace LowPolyHnS.Core
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEditor;
+﻿using System.Collections.Generic;
+using UnityEditor;
 
+namespace LowPolyHnS.Core
+{
     internal static class LowPolyHnSExamples
     {
-        private static readonly string[] SCENES = new string[]
+        private static readonly string[] SCENES =
         {
             "Assets/Plugins/LowPolyHnS/Examples/Scenes/Example-Intro.unity",
             "Assets/Plugins/LowPolyHnS/Examples/Scenes/Example-Hub.unity",
             "Assets/Plugins/LowPolyHnS/Examples/Scenes/Example-1.unity",
             "Assets/Plugins/LowPolyHnS/Examples/Scenes/Example-2.unity",
-            "Assets/Plugins/LowPolyHnS/Examples/Scenes/Example-3.unity",
+            "Assets/Plugins/LowPolyHnS/Examples/Scenes/Example-3.unity"
         };
 
         // SETUP METHODS: -------------------------------------------------------------------------

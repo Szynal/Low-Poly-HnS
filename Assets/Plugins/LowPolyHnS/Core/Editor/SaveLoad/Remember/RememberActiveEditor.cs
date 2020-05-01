@@ -1,10 +1,7 @@
-﻿namespace LowPolyHnS.Core
-{
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEditor;
+﻿using UnityEditor;
 
+namespace LowPolyHnS.Core
+{
     [CustomEditor(typeof(RememberActive))]
     public class RememberActiveEditor : RememberEditor
     {
@@ -14,6 +11,7 @@
         }
 
         protected override void OnPaint()
-        { }
+        {
+        }
     }
 }

@@ -1,18 +1,16 @@
-﻿namespace LowPolyHnS.Core
+﻿using UnityEngine;
+
+namespace LowPolyHnS.Core
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[AddComponentMenu("")]
-	public class ActionCurrentProfile : IAction 
-	{
-		public int profile = 0;
+    [AddComponentMenu("")]
+    public class ActionCurrentProfile : IAction
+    {
+        public int profile = 0;
 
         // EXECUTABLE: ----------------------------------------------------------------------------
 
@@ -22,47 +20,47 @@
             return true;
         }
 
-		// +--------------------------------------------------------------------------------------+
-		// | EDITOR                                                                               |
-		// +--------------------------------------------------------------------------------------+
+        // +--------------------------------------------------------------------------------------+
+        // | EDITOR                                                                               |
+        // +--------------------------------------------------------------------------------------+
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 
-		public static new string NAME = "Save & Load/Current Profile";
-		private const string NODE_TITLE = "Set Current profile to {0}";
+        public static new string NAME = "Save & Load/Current Profile";
+        private const string NODE_TITLE = "Set Current profile to {0}";
 
-		private static readonly GUIContent GUICONTENT_PROFILE = new GUIContent("Profile");
+        private static readonly GUIContent GUICONTENT_PROFILE = new GUIContent("Profile");
 
-		// PROPERTIES: ----------------------------------------------------------------------------
+        // PROPERTIES: ----------------------------------------------------------------------------
 
-		private SerializedProperty spProfile;
+        private SerializedProperty spProfile;
 
-		// INSPECTOR METHODS: ---------------------------------------------------------------------
+        // INSPECTOR METHODS: ---------------------------------------------------------------------
 
-		public override string GetNodeTitle()
-		{
-			return string.Format(NODE_TITLE, this.profile.ToString());
-		}
+        public override string GetNodeTitle()
+        {
+            return string.Format(NODE_TITLE, profile.ToString());
+        }
 
-		protected override void OnEnableEditorChild ()
-		{
-			this.spProfile = this.serializedObject.FindProperty("profile");
-		}
+        protected override void OnEnableEditorChild()
+        {
+            spProfile = serializedObject.FindProperty("profile");
+        }
 
-		protected override void OnDisableEditorChild ()
-		{
-			this.spProfile = null;
-		}
+        protected override void OnDisableEditorChild()
+        {
+            spProfile = null;
+        }
 
-		public override void OnInspectorGUI()
-		{
-			this.serializedObject.Update();
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
 
-			EditorGUILayout.PropertyField(this.spProfile, GUICONTENT_PROFILE);
+            EditorGUILayout.PropertyField(spProfile, GUICONTENT_PROFILE);
 
-			this.serializedObject.ApplyModifiedProperties();
-		}
+            serializedObject.ApplyModifiedProperties();
+        }
 
-		#endif
-	}
+#endif
+    }
 }

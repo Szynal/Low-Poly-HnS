@@ -1,13 +1,10 @@
-﻿namespace LowPolyHnS.Core
-{
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEditor;
-    using LowPolyHnS.Variables;
+﻿using LowPolyHnS.Variables;
+using UnityEditor;
 
+namespace LowPolyHnS.Core
+{
     [CustomPropertyDrawer(typeof(TargetDirection))]
-	public class TargetDirectionPD : TargetGenericPD
+    public class TargetDirectionPD : TargetGenericPD
     {
         private const string PROP_OFFSET = "offset";
         private const string PROP_TRANSFORM = "targetTransform";
@@ -17,7 +14,7 @@
 
         protected override SerializedProperty GetProperty(int option, SerializedProperty property)
         {
-            TargetDirection.Target optionTyped = (TargetDirection.Target)option;
+            TargetDirection.Target optionTyped = (TargetDirection.Target) option;
             switch (optionTyped)
             {
                 case TargetDirection.Target.Transform:
@@ -38,7 +35,7 @@
 
         protected override SerializedProperty GetExtraProperty(int option, SerializedProperty property)
         {
-            TargetDirection.Target optionTyped = (TargetDirection.Target)option;
+            TargetDirection.Target optionTyped = (TargetDirection.Target) option;
             switch (optionTyped)
             {
                 case TargetDirection.Target.Player:
@@ -52,11 +49,9 @@
 
         protected override void Initialize(SerializedProperty property)
         {
-            int allowTypesMask = (
-                (1 << (int)Variable.DataType.Vector2) |
-                (1 << (int)Variable.DataType.Vector3) |
-                (1 << (int)Variable.DataType.GameObject)
-            );
+            int allowTypesMask = (1 << (int) Variable.DataType.Vector2) |
+                                 (1 << (int) Variable.DataType.Vector3) |
+                                 (1 << (int) Variable.DataType.GameObject);
 
             property
                 .FindPropertyRelative(PROP_GLOBAL)

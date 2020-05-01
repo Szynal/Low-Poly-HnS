@@ -1,25 +1,21 @@
-﻿namespace LowPolyHnS.Variables
-{
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-    using LowPolyHnS.Core;
+﻿using LowPolyHnS.Core;
+using UnityEngine;
 
-	[AddComponentMenu("")]
-	public class ConditionGameObjectInList : ICondition
-	{
+namespace LowPolyHnS.Variables
+{
+    [AddComponentMenu("")]
+    public class ConditionGameObjectInList : ICondition
+    {
         public HelperListVariable listVariables = new HelperListVariable();
 
-        [Space]
-        public TargetGameObject containsObject = new TargetGameObject(TargetGameObject.Target.GameObject);
+        [Space] public TargetGameObject containsObject = new TargetGameObject(TargetGameObject.Target.GameObject);
 
-		public override bool Check(GameObject target)
-		{
-            GameObject go = this.containsObject.GetGameObject(target);
+        public override bool Check(GameObject target)
+        {
+            GameObject go = containsObject.GetGameObject(target);
             if (go == null) return false;
 
-            ListVariables list = this.listVariables.GetListVariables(target);
+            ListVariables list = listVariables.GetListVariables(target);
             if (list == null) return false;
             if (list.type != Variable.DataType.GameObject) return false;
 
@@ -32,8 +28,8 @@
 
             return false;
         }
-        
-		#if UNITY_EDITOR
+
+#if UNITY_EDITOR
 
         public static new string NAME = "Variables/List Variable contains Object";
 
@@ -43,11 +39,11 @@
         {
             return string.Format(
                 NODE_TITLE,
-                this.listVariables,
-                this.containsObject
+                listVariables,
+                containsObject
             );
         }
 
-        #endif
+#endif
     }
 }

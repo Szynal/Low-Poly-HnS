@@ -1,14 +1,11 @@
-﻿namespace LowPolyHnS.Core
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEngine.Events;
-    using LowPolyHnS.Variables;
+﻿using UnityEngine;
 
-    #if UNITY_EDITOR
+namespace LowPolyHnS.Core
+{
+#if UNITY_EDITOR
     using UnityEditor;
-    #endif
+
+#endif
 
     [AddComponentMenu("")]
     public abstract class ConditionVariable : ICondition
@@ -26,10 +23,10 @@
         public Comparison comparison = Comparison.Equal;
 
         // EXECUTABLE: ----------------------------------------------------------------------------
-        
+
         public override bool Check(GameObject target)
         {
-            return this.Compare(target);
+            return Compare(target);
         }
 
         protected abstract bool Compare(GameObject target);
@@ -38,7 +35,7 @@
         // | EDITOR                                                                               |
         // +--------------------------------------------------------------------------------------+
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
 
         public static new string NAME = "Variables/Variable";
         protected const string NODE_TITLE = "Compare {0} with {1}";
@@ -56,11 +53,11 @@
             return "unknown";
         }
 
-        protected override void OnEnableEditorChild ()
+        protected override void OnEnableEditorChild()
         {
-            this.spVariable = this.serializedObject.FindProperty("variable");
-            this.spCompareTo = this.serializedObject.FindProperty("compareTo");
-            this.spComparison = this.serializedObject.FindProperty("comparison");
+            spVariable = serializedObject.FindProperty("variable");
+            spCompareTo = serializedObject.FindProperty("compareTo");
+            spComparison = serializedObject.FindProperty("comparison");
         }
 
         protected virtual bool ShowComparison()
@@ -70,18 +67,18 @@
 
         public override void OnInspectorGUI()
         {
-            this.serializedObject.Update();
-            EditorGUILayout.PropertyField(this.spVariable);
+            serializedObject.Update();
+            EditorGUILayout.PropertyField(spVariable);
 
-            if (this.ShowComparison())
+            if (ShowComparison())
             {
-                EditorGUILayout.PropertyField(this.spComparison);
+                EditorGUILayout.PropertyField(spComparison);
             }
 
-            EditorGUILayout.PropertyField(this.spCompareTo);
-            this.serializedObject.ApplyModifiedProperties();
+            EditorGUILayout.PropertyField(spCompareTo);
+            serializedObject.ApplyModifiedProperties();
         }
 
-        #endif
+#endif
     }
 }

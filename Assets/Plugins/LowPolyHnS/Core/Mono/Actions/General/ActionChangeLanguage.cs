@@ -1,67 +1,65 @@
-﻿namespace LowPolyHnS.Core
+﻿using LowPolyHnS.Localization;
+using UnityEngine;
+
+namespace LowPolyHnS.Core
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-	using LowPolyHnS.Localization;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[AddComponentMenu("")]
-	public class ActionChangeLanguage : IAction
-	{
-		public SystemLanguage language;
+    [AddComponentMenu("")]
+    public class ActionChangeLanguage : IAction
+    {
+        public SystemLanguage language;
 
-		// EXECUTABLE: ----------------------------------------------------------------------------
+        // EXECUTABLE: ----------------------------------------------------------------------------
 
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
-            LocalizationManager.Instance.ChangeLanguage(this.language); 
+            LocalizationManager.Instance.ChangeLanguage(language);
             return true;
         }
 
-		// +--------------------------------------------------------------------------------------+
-		// | EDITOR                                                                               |
-		// +--------------------------------------------------------------------------------------+
+        // +--------------------------------------------------------------------------------------+
+        // | EDITOR                                                                               |
+        // +--------------------------------------------------------------------------------------+
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 
-		public static new string NAME = "General/Change Language";
-		private const string NODE_TITLE = "Set Language to {0}";
+        public static new string NAME = "General/Change Language";
+        private const string NODE_TITLE = "Set Language to {0}";
 
-		// PROPERTIES: ----------------------------------------------------------------------------
+        // PROPERTIES: ----------------------------------------------------------------------------
 
-		private SerializedProperty spLanguage;
+        private SerializedProperty spLanguage;
 
-		// INSPECTOR METHODS: ---------------------------------------------------------------------
+        // INSPECTOR METHODS: ---------------------------------------------------------------------
 
-		public override string GetNodeTitle()
-		{
-			return string.Format(NODE_TITLE, this.language);
-		}
+        public override string GetNodeTitle()
+        {
+            return string.Format(NODE_TITLE, language);
+        }
 
-		protected override void OnEnableEditorChild ()
-		{
-			this.spLanguage = this.serializedObject.FindProperty("language");
-		}
+        protected override void OnEnableEditorChild()
+        {
+            spLanguage = serializedObject.FindProperty("language");
+        }
 
-		protected override void OnDisableEditorChild ()
-		{
-			this.spLanguage = null;
-		}
+        protected override void OnDisableEditorChild()
+        {
+            spLanguage = null;
+        }
 
-		public override void OnInspectorGUI()
-		{
-			this.serializedObject.Update();
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
 
-			EditorGUILayout.PropertyField(this.spLanguage);
+            EditorGUILayout.PropertyField(spLanguage);
 
-			this.serializedObject.ApplyModifiedProperties();
-		}
+            serializedObject.ApplyModifiedProperties();
+        }
 
-		#endif
-	}
+#endif
+    }
 }

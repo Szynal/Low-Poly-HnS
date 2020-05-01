@@ -1,12 +1,9 @@
-﻿namespace LowPolyHnS.Variables
-{
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using LowPolyHnS.Core;
-    using LowPolyHnS.Core.Hooks;
+﻿using System;
+using LowPolyHnS.Core.Hooks;
+using UnityEngine;
 
+namespace LowPolyHnS.Variables
+{
     [Serializable]
     public class HelperListVariable
     {
@@ -27,7 +24,7 @@
 
         public ListVariables GetListVariables(GameObject invoker)
         {
-            switch (this.targetType)
+            switch (targetType)
             {
                 case Target.Player:
                     if (HookPlayer.Instance == null) return null;
@@ -43,9 +40,9 @@
                         : invoker.GetComponent<ListVariables>();
 
                 case Target.GameObject:
-                    return this.targetObject == null
+                    return targetObject == null
                         ? null
-                        : this.targetObject.GetComponent<ListVariables>();
+                        : targetObject.GetComponent<ListVariables>();
             }
 
             return null;
@@ -53,7 +50,7 @@
 
         public Variable.DataType GetDataType(GameObject invoker)
         {
-            ListVariables list = this.GetListVariables(invoker);
+            ListVariables list = GetListVariables(invoker);
             return list != null ? list.type : Variable.DataType.Null;
         }
 
@@ -61,15 +58,14 @@
 
         public override string ToString()
         {
-            if (this.targetType == Target.GameObject)
+            if (targetType == Target.GameObject)
             {
-                return (this.targetObject != null
-                    ? this.targetObject.name
-                    : "(null)"
-                );
+                return targetObject != null
+                    ? targetObject.name
+                    : "(null)";
             }
 
-            return this.targetType.ToString();
+            return targetType.ToString();
         }
     }
 }

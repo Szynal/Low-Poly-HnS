@@ -1,60 +1,58 @@
-﻿namespace LowPolyHnS.Core
+﻿using UnityEngine;
+
+namespace LowPolyHnS.Core
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[AddComponentMenu("")]
-	public class ConditionSimple : ICondition
-	{
-		public bool satisfied = true;
+    [AddComponentMenu("")]
+    public class ConditionSimple : ICondition
+    {
+        public bool satisfied = true;
 
-		// EXECUTABLE: ----------------------------------------------------------------------------
-		
-		public override bool Check()
-		{
-			return this.satisfied;
-		}
+        // EXECUTABLE: ----------------------------------------------------------------------------
 
-		// +--------------------------------------------------------------------------------------+
-		// | EDITOR                                                                               |
-		// +--------------------------------------------------------------------------------------+
+        public override bool Check()
+        {
+            return satisfied;
+        }
 
-		#if UNITY_EDITOR
+        // +--------------------------------------------------------------------------------------+
+        // | EDITOR                                                                               |
+        // +--------------------------------------------------------------------------------------+
 
-		public static new string NAME = "General/Simple Condition";
-		private const string NODE_TITLE = "Condition is always {0}";
+#if UNITY_EDITOR
 
-		// PROPERTIES: ----------------------------------------------------------------------------
+        public static new string NAME = "General/Simple Condition";
+        private const string NODE_TITLE = "Condition is always {0}";
 
-		private SerializedProperty spSatisfied;
+        // PROPERTIES: ----------------------------------------------------------------------------
 
-		// INSPECTOR METHODS: ---------------------------------------------------------------------
+        private SerializedProperty spSatisfied;
 
-		public override string GetNodeTitle()
-		{
-			return string.Format(NODE_TITLE, this.satisfied);
-		}
+        // INSPECTOR METHODS: ---------------------------------------------------------------------
 
-		protected override void OnEnableEditorChild ()
-		{
-			this.spSatisfied = this.serializedObject.FindProperty("satisfied");
-		}
+        public override string GetNodeTitle()
+        {
+            return string.Format(NODE_TITLE, satisfied);
+        }
 
-		public override void OnInspectorGUI()
-		{
-			this.serializedObject.Update();
+        protected override void OnEnableEditorChild()
+        {
+            spSatisfied = serializedObject.FindProperty("satisfied");
+        }
 
-			EditorGUILayout.PropertyField(this.spSatisfied, new GUIContent("Is Condition Satisfied?"));
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
 
-			this.serializedObject.ApplyModifiedProperties();
-		}
+            EditorGUILayout.PropertyField(spSatisfied, new GUIContent("Is Condition Satisfied?"));
 
-		#endif
-	}
+            serializedObject.ApplyModifiedProperties();
+        }
+
+#endif
+    }
 }

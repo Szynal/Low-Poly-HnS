@@ -1,34 +1,32 @@
-﻿namespace LowPolyHnS.Core
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEngine.Events;
-    using LowPolyHnS.Variables;
+﻿using LowPolyHnS.Variables;
+using UnityEngine;
 
-    #if UNITY_EDITOR
-    using UnityEditor;
-    #endif
+namespace LowPolyHnS.Core
+{
+#if UNITY_EDITOR
+
+#endif
 
     [AddComponentMenu("")]
     public class ConditionVariableVector2 : ConditionVariable
     {
         [VariableFilter(Variable.DataType.Vector2)]
         public VariableProperty variable = new VariableProperty();
+
         public Vector2Property compareTo = new Vector2Property();
 
         // OVERRIDERS: ----------------------------------------------------------------------------
 
         protected override bool Compare(GameObject target)
-		{
-			return (Vector2)this.variable.Get(target) == this.compareTo.GetValue(target);
-		}
+        {
+            return (Vector2) variable.Get(target) == compareTo.GetValue(target);
+        }
 
-		// +--------------------------------------------------------------------------------------+
-		// | EDITOR                                                                               |
-		// +--------------------------------------------------------------------------------------+
+        // +--------------------------------------------------------------------------------------+
+        // | EDITOR                                                                               |
+        // +--------------------------------------------------------------------------------------+
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
 
         public static new string NAME = "Variables/Variable Vector2";
 
@@ -36,11 +34,11 @@
         {
             return string.Format(
                 NODE_TITLE,
-                this.variable,
-                this.compareTo
+                variable,
+                compareTo
             );
         }
 
-        #endif
+#endif
     }
 }

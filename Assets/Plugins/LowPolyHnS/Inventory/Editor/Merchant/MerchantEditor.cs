@@ -1,14 +1,10 @@
-﻿namespace LowPolyHnS.Inventory
-{
-    using System.IO;
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEditor;
-    using UnityEditorInternal;
-    using UnityEditor.AnimatedValues;
-    using LowPolyHnS.Core;
+﻿using System;
+using UnityEditor;
+using UnityEditorInternal;
+using UnityEngine;
 
+namespace LowPolyHnS.Inventory
+{
     [CustomEditor(typeof(Merchant))]
     public class MerchantEditor : Editor
     {
@@ -29,57 +25,57 @@
 
         private void OnEnable()
         {
-            this.spUuid = serializedObject.FindProperty("uuid");
-            if (string.IsNullOrEmpty(this.spUuid.stringValue))
+            spUuid = serializedObject.FindProperty("uuid");
+            if (string.IsNullOrEmpty(spUuid.stringValue))
             {
-                this.spUuid.stringValue = System.Guid.NewGuid().ToString("N");
+                spUuid.stringValue = Guid.NewGuid().ToString("N");
                 serializedObject.ApplyModifiedPropertiesWithoutUndo();
                 serializedObject.Update();
             }
 
-            this.spTitle = serializedObject.FindProperty("title");
-            this.spDescription = serializedObject.FindProperty("description");
-            this.spMerchantUI = serializedObject.FindProperty("merchantUI");
+            spTitle = serializedObject.FindProperty("title");
+            spDescription = serializedObject.FindProperty("description");
+            spMerchantUI = serializedObject.FindProperty("merchantUI");
 
             SerializedProperty spWarehouse = serializedObject.FindProperty("warehouse");
-            this.spWares = spWarehouse.FindPropertyRelative("wares");
+            spWares = spWarehouse.FindPropertyRelative("wares");
 
-            this.waresList = new ReorderableList(
-                this.spWares.serializedObject,
-                this.spWares,
+            waresList = new ReorderableList(
+                spWares.serializedObject,
+                spWares,
                 true, true, true, true
             );
 
-            this.waresList.drawHeaderCallback = this.WaresList_Header;
-            this.waresList.drawElementCallback = this.WaresList_Paint;
-            this.waresList.elementHeightCallback = this.WaresList_Height;
+            waresList.drawHeaderCallback = WaresList_Header;
+            waresList.drawElementCallback = WaresList_Paint;
+            waresList.elementHeightCallback = WaresList_Height;
 
-            this.spPurchasePercent = serializedObject.FindProperty("purchasePercent");
-            this.spSellPercent = serializedObject.FindProperty("sellPercent");
+            spPurchasePercent = serializedObject.FindProperty("purchasePercent");
+            spSellPercent = serializedObject.FindProperty("sellPercent");
         }
 
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
 
-            EditorGUILayout.PropertyField(this.spTitle);
-            EditorGUILayout.PropertyField(this.spDescription);
+            EditorGUILayout.PropertyField(spTitle);
+            EditorGUILayout.PropertyField(spDescription);
 
             EditorGUILayout.Space();
-            this.waresList.DoLayoutList();
+            waresList.DoLayoutList();
             EditorGUILayout.Space();
 
-            EditorGUILayout.PropertyField(this.spMerchantUI);
+            EditorGUILayout.PropertyField(spMerchantUI);
 
             EditorGUI.BeginDisabledGroup(true);
-            EditorGUILayout.PropertyField(this.spUuid);
+            EditorGUILayout.PropertyField(spUuid);
             EditorGUI.EndDisabledGroup();
 
             EditorGUILayout.Space();
-            EditorGUILayout.PropertyField(this.spPurchasePercent);
+            EditorGUILayout.PropertyField(spPurchasePercent);
 
             EditorGUILayout.Space();
-            EditorGUILayout.PropertyField(this.spSellPercent);
+            EditorGUILayout.PropertyField(spSellPercent);
 
             serializedObject.ApplyModifiedProperties();
         }
@@ -93,23 +89,21 @@
 
         private void WaresList_Paint(Rect rect, int index, bool isActive, bool isFocused)
         {
-            SerializedProperty spProperty = this.spWares.GetArrayElementAtIndex(index);
+            SerializedProperty spProperty = spWares.GetArrayElementAtIndex(index);
             EditorGUI.PropertyField(rect, spProperty);
         }
 
         private float WaresList_Height(int index)
         {
-            return (
-                EditorGUI.GetPropertyHeight(this.spWares.GetArrayElementAtIndex(index)) +
-                EditorGUIUtility.standardVerticalSpacing
-            );
+            return EditorGUI.GetPropertyHeight(spWares.GetArrayElementAtIndex(index)) +
+                   EditorGUIUtility.standardVerticalSpacing;
         }
 
         // PRIVATE METHODS: -----------------------------------------------------------------------
 
         public string GetHeaderName()
         {
-            return this.spTitle.stringValue;
+            return spTitle.stringValue;
         }
     }
 }

@@ -1,42 +1,38 @@
-﻿namespace LowPolyHnS.Core
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEngine.EventSystems;
-    using LowPolyHnS.Variables;
-    using LowPolyHnS.Core.Hooks;
-    using UnityEditor;
+﻿using LowPolyHnS.Core.Hooks;
+using LowPolyHnS.Variables;
+using UnityEngine;
 
+namespace LowPolyHnS.Core
+{
     [AddComponentMenu("")]
     public class IgniterCursorRaycast : Igniter
     {
-        #if UNITY_EDITOR    
+#if UNITY_EDITOR
         public new static string NAME = "Input/On Cursor Raycast";
         public new static bool REQUIRES_COLLIDER = true;
-        #endif
+#endif
 
         public KeyCode key = KeyCode.Mouse0;
 
-        [Space][VariableFilter(Variable.DataType.GameObject)]
+        [Space] [VariableFilter(Variable.DataType.GameObject)]
         public VariableProperty storeCollider = new VariableProperty(Variable.VarType.GlobalVariable);
 
         private RaycastHit[] hitBuffer = new RaycastHit[1];
 
         private void Update()
         {
-            if (Input.GetKeyUp(this.key))
+            if (Input.GetKeyUp(key))
             {
                 Ray ray = HookCamera.Instance.Get<Camera>().ScreenPointToRay(Input.mousePosition);
 
-                int hitCount = Physics.RaycastNonAlloc(ray, this.hitBuffer);
+                int hitCount = Physics.RaycastNonAlloc(ray, hitBuffer);
                 if (hitCount == 0) return;
 
-                GameObject hitGO = this.hitBuffer[0].collider.gameObject;
+                GameObject hitGO = hitBuffer[0].collider.gameObject;
                 if (hitGO.GetInstanceID() == gameObject.GetInstanceID())
                 {
-                    this.storeCollider.Set(hitGO, gameObject);
-                    this.ExecuteTrigger(gameObject);
+                    storeCollider.Set(hitGO, gameObject);
+                    ExecuteTrigger(gameObject);
                 }
             }
         }

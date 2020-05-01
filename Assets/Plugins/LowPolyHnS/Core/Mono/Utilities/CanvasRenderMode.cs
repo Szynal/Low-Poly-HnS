@@ -1,10 +1,8 @@
-﻿namespace LowPolyHnS.Core
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using LowPolyHnS.Core.Hooks;
+﻿using LowPolyHnS.Core.Hooks;
+using UnityEngine;
 
+namespace LowPolyHnS.Core
+{
     [RequireComponent(typeof(Canvas))]
     [AddComponentMenu("")]
     public class CanvasRenderMode : MonoBehaviour
@@ -14,10 +12,9 @@
             Canvas canvas = GetComponent<Canvas>();
             DatabaseGeneral general = DatabaseGeneral.Load();
 
-            Camera mainCamera = (HookCamera.Instance != null 
-                ? HookCamera.Instance.Get<Camera>() 
-                : Camera.main
-            );
+            Camera mainCamera = HookCamera.Instance != null
+                ? HookCamera.Instance.Get<Camera>()
+                : Camera.main;
 
             if (canvas != null && general != null)
             {

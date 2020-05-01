@@ -1,11 +1,8 @@
-﻿namespace LowPolyHnS.Variables
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEditor;
-    using LowPolyHnS.Core;
+﻿using UnityEditor;
+using UnityEngine;
 
+namespace LowPolyHnS.Variables
+{
     [CustomPropertyDrawer(typeof(HelperListVariable))]
     public class HelperListVariablePD : PropertyDrawer
     {
@@ -34,17 +31,15 @@
             );
 
             EditorGUI.PropertyField(rectTargetType, spTargetType, gcLabel);
-            EditorGUI.BeginDisabledGroup(spTargetType.intValue != (int)HelperListVariable.Target.GameObject);
+            EditorGUI.BeginDisabledGroup(spTargetType.intValue != (int) HelperListVariable.Target.GameObject);
             EditorGUI.PropertyField(rectTargetObject, spTargetObject, GUIContent.none);
             EditorGUI.EndDisabledGroup();
         }
 
-		public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
-		{
+        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+        {
             SerializedProperty spTargetType = property.FindPropertyRelative("targetType");
-            return (
-                EditorGUI.GetPropertyHeight(spTargetType, true)
-            );
-		}
-	}
+            return EditorGUI.GetPropertyHeight(spTargetType, true);
+        }
+    }
 }

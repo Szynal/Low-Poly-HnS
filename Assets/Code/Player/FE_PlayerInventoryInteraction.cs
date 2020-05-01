@@ -1,50 +1,60 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using LowPolyHnS;
 using UnityEngine;
 
-[System.Serializable]
+[Serializable]
 public class FE_PlayerInventoryInteraction : MonoBehaviour
 {
     public static FE_PlayerInventoryInteraction Instance;
 
     //------------------------------------- Fields - inventory
-    [Header("Inventory screen visibility properties")]             
-    public List<FE_Item> Inventory = new List<FE_Item>();               
+    [Header("Inventory screen visibility properties")]
+    public List<FE_Item> Inventory = new List<FE_Item>();
+
     private const int AMMO_MAX = 999;
 
-    public int[] Ammunition = default;                        //Ammunition we posses. Index of given type is (int)EAmmoType
+    public int[] Ammunition = default; //Ammunition we posses. Index of given type is (int)EAmmoType
+
     public int GetCurrentAmmoCount(EAmmoType _ammoType)
     {
-        if (Ammunition.Length <= (int)_ammoType)
+        if (Ammunition.Length <= (int) _ammoType)
         {
-            Debug.LogError(_ammoType.ToString() + "  has higher index than ammunition table's length!");
+            Debug.LogError(_ammoType + "  has higher index than ammunition table's length!");
             return -1;
         }
-        return Ammunition[(int)_ammoType];
+
+        return Ammunition[(int) _ammoType];
     }
+
     public void SetCurrentAmmoCount(EAmmoType _ammoType, int _amount)
     {
-        if (Ammunition.Length <= (int)_ammoType)
+        if (Ammunition.Length <= (int) _ammoType)
         {
-            Debug.LogError(_ammoType.ToString() + "  has higher index than ammunition table's length!");
+            Debug.LogError(_ammoType + "  has higher index than ammunition table's length!");
             return;
         }
 
-        Ammunition[(int)_ammoType] = _amount;
-        Mathf.Clamp(Ammunition[(int)_ammoType], 0, AMMO_MAX);
+        Ammunition[(int) _ammoType] = _amount;
+        Mathf.Clamp(Ammunition[(int) _ammoType], 0, AMMO_MAX);
     }
 
     //---------------------------------- Fields - interaction
     private List<FE_InteractableObject> objectsToUse = new List<FE_InteractableObject>();
-    public List<FE_InteractableObject> GetObjectsToUse() { return objectsToUse; }
 
-     public FE_PlayerInputController InputController = null;
+    public List<FE_InteractableObject> GetObjectsToUse()
+    {
+        return objectsToUse;
+    }
+
+    public FE_PlayerInputController InputController;
 
     private FE_UIController uiController;
     private bool refreshingInteraction;
 
     #region Awake, Start, Initialization
+
     private void Awake()
     {
         if (Instance == null)
@@ -57,7 +67,6 @@ public class FE_PlayerInventoryInteraction : MonoBehaviour
 
     private void Start()
     {
-       
         uiController = FE_UIController.Instance;
         InputController = FE_PlayerInputController.Instance;
     }
@@ -82,7 +91,7 @@ public class FE_PlayerInventoryInteraction : MonoBehaviour
 
     public void UseItem(FE_Item _itemToUse)
     {
-        if(_itemToUse != null && inventoryContains(_itemToUse) == true)
+        if (_itemToUse != null && inventoryContains(_itemToUse))
         {
             uiController.CloseInventory();
             _itemToUse.Activate(this);
@@ -90,6 +99,7 @@ public class FE_PlayerInventoryInteraction : MonoBehaviour
     }
 
     #region Adding/removing things to inventory
+
     public void AddItem(FE_Item _newItem)
     {
         FE_UseableItem _useableToAdd = _newItem as FE_UseableItem;
@@ -98,22 +108,23 @@ public class FE_PlayerInventoryInteraction : MonoBehaviour
         {
             Inventory.Add(_newItem);
         }
-        else if(_useableToAdd != null && _useableToAdd.IsStackable == true)
+        else if (_useableToAdd != null && _useableToAdd.IsStackable)
         {
-            if(GetInventoryItemByID(_useableToAdd.itemID).ItemUses < _useableToAdd.MaxStacks - 1)
+            if (GetInventoryItemByID(_useableToAdd.itemID).ItemUses < _useableToAdd.MaxStacks - 1)
             {
                 GetInventoryItemByID(_useableToAdd.itemID).ItemUses += 1;
             }
         }
         else
         {
-            if(_newItem is FE_Weapon) //If we're picking up a weapon we already have, we take its' mag ammo and add to our max ammo
+            if (_newItem is FE_Weapon
+            ) //If we're picking up a weapon we already have, we take its' mag ammo and add to our max ammo
             {
-                FE_Weapon _wep = (FE_Weapon)_newItem;
+                FE_Weapon _wep = (FE_Weapon) _newItem;
                 AddAmmo(_wep.AmmoType, _wep.MagAmmoMax);
 
                 //Adding the dual wielded weapon if we have only 1 of them
-                if(_wep.DualWieldedVariant != null && inventoryContains(_wep.DualWieldedVariant) == false)
+                if (_wep.DualWieldedVariant != null && inventoryContains(_wep.DualWieldedVariant) == false)
                 {
                     AddItem(Instantiate(GameManager.Instance.ItemDatabase.GetItemByID(_wep.DualWieldedVariant.itemID)));
                 }
@@ -125,12 +136,12 @@ public class FE_PlayerInventoryInteraction : MonoBehaviour
 
     public void RemoveItem(FE_Item _itemToRemove)
     {
-        if(_itemToRemove == null)
+        if (_itemToRemove == null)
         {
             return;
         }
 
-        if (inventoryContains(_itemToRemove) == true)
+        if (inventoryContains(_itemToRemove))
         {
             Inventory.Remove(GetInventoryItemByID(_itemToRemove.itemID));
         }
@@ -140,14 +151,14 @@ public class FE_PlayerInventoryInteraction : MonoBehaviour
 
     public bool AddAmmo(EAmmoType _ammoType, int _amount)
     {
-        int _ammoTypeIndex = (int)_ammoType;
+        int _ammoTypeIndex = (int) _ammoType;
         if (Ammunition.Length <= _ammoTypeIndex)
         {
-            Debug.LogError(_ammoType.ToString() + "  has higher index than ammunition table's length!");
+            Debug.LogError(_ammoType + "  has higher index than ammunition table's length!");
             return false;
         }
 
-        if(AMMO_MAX > Ammunition[_ammoTypeIndex]) //We can only add more ammo if we're not at maximum
+        if (AMMO_MAX > Ammunition[_ammoTypeIndex]) //We can only add more ammo if we're not at maximum
         {
             Ammunition[_ammoTypeIndex] += _amount;
             Mathf.Clamp(Ammunition[_ammoTypeIndex], 0, AMMO_MAX);
@@ -157,9 +168,11 @@ public class FE_PlayerInventoryInteraction : MonoBehaviour
 
         return false;
     }
+
     #endregion
 
     #region Searching through inventory
+
     public List<FE_Item> GetUseableInventory()
     {
         List<FE_Item> _retList = new List<FE_Item>();
@@ -181,7 +194,7 @@ public class FE_PlayerInventoryInteraction : MonoBehaviour
 
         foreach (FE_Item _item in Inventory)
         {
-            if (_item is FE_Weapon == true)
+            if (_item is FE_Weapon)
             {
                 _retList.Add(_item);
             }
@@ -192,9 +205,9 @@ public class FE_PlayerInventoryInteraction : MonoBehaviour
 
     private bool inventoryContains(FE_Item _searchedItem)
     {
-        foreach(FE_Item _item in Inventory)
+        foreach (FE_Item _item in Inventory)
         {
-            if(_item.itemID == _searchedItem.itemID)
+            if (_item.itemID == _searchedItem.itemID)
             {
                 return true;
             }
@@ -205,9 +218,9 @@ public class FE_PlayerInventoryInteraction : MonoBehaviour
 
     public FE_Item GetInventoryItemByID(int _id)
     {
-        for(int i = 0; i < Inventory.Count; i++)
+        for (int i = 0; i < Inventory.Count; i++)
         {
-            if(Inventory[i].itemID == _id)
+            if (Inventory[i].itemID == _id)
             {
                 return Inventory[i];
             }
@@ -215,13 +228,16 @@ public class FE_PlayerInventoryInteraction : MonoBehaviour
 
         return null;
     }
+
     #endregion
 
     #region Interaction
+
     //Called when trying to interact with the enviorment
     public void Interact()
     {
-        if (objectsToUse.Count > 0 && FE_PlayerInputController.Instance.AllowInput == true) //We can't interact if we don't allow input
+        if (objectsToUse.Count > 0 && FE_PlayerInputController.Instance.AllowInput
+        ) //We can't interact if we don't allow input
         {
             GetInteraction().Activate(this);
         }
@@ -242,10 +258,11 @@ public class FE_PlayerInventoryInteraction : MonoBehaviour
             Debug.LogError(_obj.name + " wants to be added to objectsToUse, but it's already here!");
         }
     }
+
     //Removes interaction from the list
     public void RemoveInteraction(FE_InteractableObject _obj)
     {
-        if (objectsToUse.Contains(_obj) == true)
+        if (objectsToUse.Contains(_obj))
         {
             objectsToUse.Remove(_obj);
             if (objectsToUse.Count <= 0)
@@ -262,7 +279,7 @@ public class FE_PlayerInventoryInteraction : MonoBehaviour
 
     private IEnumerator refreshInteraction()
     {
-        while (refreshingInteraction == true)
+        while (refreshingInteraction)
         {
             uiController.ChangePanelVisibility(true, this);
 
@@ -312,5 +329,6 @@ public class FE_PlayerInventoryInteraction : MonoBehaviour
 
         return _ret;
     }
+
     #endregion
 }

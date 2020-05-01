@@ -1,10 +1,9 @@
-﻿namespace LowPolyHnS.Core
-{
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
 
+namespace LowPolyHnS.Core
+{
     public class KeysData
     {
         private const string STORE_KEYFMT = "gamedata:{0:D2}:key-references";
@@ -17,11 +16,12 @@
             public List<string> keys = new List<string>();
 
             public Data()
-            { }
+            {
+            }
 
             public Data(HashSet<string> hashset)
             {
-                this.keys = new List<string>(hashset);
+                keys = new List<string>(hashset);
             }
         }
 
@@ -29,24 +29,26 @@
 
         public void Update(int profile, List<string> keys)
         {
-            Data data = this.GetCurrentKeys(profile);
+            Data data = GetCurrentKeys(profile);
             HashSet<string> hash = new HashSet<string>(data.keys);
 
-            foreach (string key in keys) if (!hash.Contains(key)) hash.Add(key);
+            foreach (string key in keys)
+                if (!hash.Contains(key))
+                    hash.Add(key);
 
             DatabaseGeneral.Load().GetDataProvider().SetString(
-                this.GetKey(profile),
+                GetKey(profile),
                 JsonUtility.ToJson(new Data(hash))
             );
         }
 
         public void Delete(int profile)
         {
-            Data data = this.GetCurrentKeys(profile);
+            Data data = GetCurrentKeys(profile);
             IDataProvider provider = DatabaseGeneral.Load().GetDataProvider();
 
             foreach (string key in data.keys) provider.DeleteKey(key);
-            provider.DeleteKey(this.GetKey(profile));
+            provider.DeleteKey(GetKey(profile));
         }
 
         // PRIVATE METHODS: -----------------------------------------------------------------------
@@ -56,7 +58,7 @@
             IDataProvider provider = DatabaseGeneral.Load().GetDataProvider();
             if (provider == null) return new Data();
 
-            string strKeys = provider.GetString(this.GetKey(profile));
+            string strKeys = provider.GetString(GetKey(profile));
             return string.IsNullOrEmpty(strKeys)
                 ? new Data()
                 : JsonUtility.FromJson<Data>(strKeys);

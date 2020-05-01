@@ -1,21 +1,18 @@
 ﻿using LowPolyHnS.Characters;
+using LowPolyHnS.Variables;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
 namespace LowPolyHnS.Core
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-	using UnityEngine.SceneManagement;
-	using LowPolyHnS.Core;
-    using LowPolyHnS.Variables;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[AddComponentMenu("")]
-	public class ActionLoadScenePlayer : IAction 
-	{
+    [AddComponentMenu("")]
+    public class ActionLoadScenePlayer : IAction
+    {
         public StringProperty sceneName = new StringProperty();
 
         public Vector3 playerPosition = Vector3.zero;
@@ -26,62 +23,62 @@ namespace LowPolyHnS.Core
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
             PlayerCharacter.ON_LOAD_SCENE_DATA = new Character.OnLoadSceneData(
-                this.playerPosition,
-                this.playerRotation
+                playerPosition,
+                playerRotation
             );
 
-            SceneManager.LoadScene(this.sceneName.GetValue(target), LoadSceneMode.Single);
+            SceneManager.LoadScene(sceneName.GetValue(target), LoadSceneMode.Single);
             return true;
         }
 
-		// +--------------------------------------------------------------------------------------+
-		// | EDITOR                                                                               |
-		// +--------------------------------------------------------------------------------------+
+        // +--------------------------------------------------------------------------------------+
+        // | EDITOR                                                                               |
+        // +--------------------------------------------------------------------------------------+
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 
-		public static new string NAME = "Scene/Load Scene with Player";
-		private const string NODE_TITLE = "Load scene {0}";
+        public static new string NAME = "Scene/Load Scene with Player";
+        private const string NODE_TITLE = "Load scene {0}";
 
-		// PROPERTIES: ----------------------------------------------------------------------------
+        // PROPERTIES: ----------------------------------------------------------------------------
 
-		private SerializedProperty spSceneName;
+        private SerializedProperty spSceneName;
         private SerializedProperty spPosition;
         private SerializedProperty spRotation;
 
         // INSPECTOR METHODS: ---------------------------------------------------------------------
 
         public override string GetNodeTitle()
-		{
-			return string.Format(NODE_TITLE, this.sceneName);
-		}
-
-		protected override void OnEnableEditorChild ()
-		{
-			this.spSceneName = this.serializedObject.FindProperty("sceneName");
-            this.spPosition = this.serializedObject.FindProperty("playerPosition");
-            this.spRotation = this.serializedObject.FindProperty("playerRotation");
+        {
+            return string.Format(NODE_TITLE, sceneName);
         }
 
-		public override void OnInspectorGUI()
-		{
-			this.serializedObject.Update();
+        protected override void OnEnableEditorChild()
+        {
+            spSceneName = serializedObject.FindProperty("sceneName");
+            spPosition = serializedObject.FindProperty("playerPosition");
+            spRotation = serializedObject.FindProperty("playerRotation");
+        }
 
-			EditorGUILayout.PropertyField(this.spSceneName);
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
+
+            EditorGUILayout.PropertyField(spSceneName);
 
             EditorGUILayout.Space();
-            EditorGUILayout.PropertyField(this.spPosition);
+            EditorGUILayout.PropertyField(spPosition);
 
             Vector3 rotation = EditorGUILayout.Vector3Field(
-                this.spRotation.displayName,
-                this.spRotation.quaternionValue.eulerAngles
+                spRotation.displayName,
+                spRotation.quaternionValue.eulerAngles
             );
 
-            this.spRotation.quaternionValue = Quaternion.Euler(rotation);
+            spRotation.quaternionValue = Quaternion.Euler(rotation);
 
-            this.serializedObject.ApplyModifiedProperties();
-		}
+            serializedObject.ApplyModifiedProperties();
+        }
 
-		#endif
-	}
+#endif
+    }
 }

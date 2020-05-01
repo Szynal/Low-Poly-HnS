@@ -1,8 +1,9 @@
-﻿namespace LowPolyHnS.Core
-{
-    using UnityEngine;
+﻿using System;
+using UnityEngine;
 
-    [System.Serializable]
+namespace LowPolyHnS.Core
+{
+    [Serializable]
     public abstract class IDataProvider : ScriptableObject
     {
         public string title = "";
@@ -22,7 +23,7 @@
         public virtual float GetFloat(string key, float defaultValue = 0.0f)
         {
             float result = defaultValue;
-            float.TryParse(this.GetString(key), out result);
+            float.TryParse(GetString(key), out result);
 
             return result;
         }
@@ -30,19 +31,19 @@
         public virtual int GetInt(string key, int defaultValue = 0)
         {
             int result = defaultValue;
-            int.TryParse(this.GetString(key), out result);
+            int.TryParse(GetString(key), out result);
 
             return result;
         }
 
         public virtual void SetFloat(string key, float value)
         {
-            this.SetString(key, value.ToString());
+            SetString(key, value.ToString());
         }
 
         public virtual void SetInt(string key, int value)
         {
-            this.SetString(key, value.ToString());
+            SetString(key, value.ToString());
         }
     }
 }

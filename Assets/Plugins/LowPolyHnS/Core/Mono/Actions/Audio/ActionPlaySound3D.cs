@@ -1,19 +1,17 @@
-﻿namespace LowPolyHnS.Core
+﻿using LowPolyHnS.Variables;
+using UnityEngine;
+using UnityEngine.Audio;
+
+namespace LowPolyHnS.Core
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-    using UnityEngine.Audio;
-    using LowPolyHnS.Variables;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[AddComponentMenu("")]
-	public class ActionPlaySound3D : IAction 
-	{
+    [AddComponentMenu("")]
+    public class ActionPlaySound3D : IAction
+    {
         public enum AudioMixerType
         {
             None,
@@ -25,54 +23,51 @@
         public AudioMixerType audioMixer = AudioMixerType.DefaultSoundMixer;
         [Indent] public AudioMixerGroup mixerGroup;
 
-        [Range(0f, 10f)]
-        public float fadeIn;
+        [Range(0f, 10f)] public float fadeIn;
 
-        [Range(0.0f, 1.0f)]
-        public float volume = 1f;
+        [Range(0.0f, 1.0f)] public float volume = 1f;
 
-        [Range(0.0f, 1.0f)]
-        public float spatialBlend = 0.85f;
+        [Range(0.0f, 1.0f)] public float spatialBlend = 0.85f;
         public NumberProperty pitch = new NumberProperty(1.0f);
         public TargetPosition position = new TargetPosition(TargetPosition.Target.Player);
 
-		// EXECUTABLE: ----------------------------------------------------------------------------
+        // EXECUTABLE: ----------------------------------------------------------------------------
 
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
             AudioMixerGroup mixer = null;
-            switch (this.audioMixer)
+            switch (audioMixer)
             {
                 case AudioMixerType.DefaultSoundMixer:
                     mixer = DatabaseGeneral.Load().soundAudioMixer;
                     break;
 
                 case AudioMixerType.Custom:
-                    mixer = this.mixerGroup;
+                    mixer = mixerGroup;
                     break;
             }
 
             AudioManager.Instance.PlaySound3D(
-                this.audioClip, 
-                this.fadeIn, 
-                this.position.GetPosition(target),
-                this.spatialBlend,
-                this.pitch.GetValue(target),
-                this.volume,
+                audioClip,
+                fadeIn,
+                position.GetPosition(target),
+                spatialBlend,
+                pitch.GetValue(target),
+                volume,
                 mixer
             );
 
             return true;
         }
 
-		// +--------------------------------------------------------------------------------------+
-		// | EDITOR                                                                               |
-		// +--------------------------------------------------------------------------------------+
+        // +--------------------------------------------------------------------------------------+
+        // | EDITOR                                                                               |
+        // +--------------------------------------------------------------------------------------+
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 
-		public static new string NAME = "Audio/Play Sound 3D";
-		private const string NODE_TITLE = "Play 3D Sound {0} {1}";
+        public static new string NAME = "Audio/Play Sound 3D";
+        private const string NODE_TITLE = "Play 3D Sound {0} {1}";
 
         // INSPECTOR METHODS: ---------------------------------------------------------------------
 
@@ -80,8 +75,8 @@
         {
             return string.Format(
                 NODE_TITLE,
-                this.audioClip == null ? "(none)" : this.audioClip.name,
-                this.fadeIn > 0f ? "(" + this.fadeIn.ToString() + "s)" : ""
+                audioClip == null ? "(none)" : audioClip.name,
+                fadeIn > 0f ? "(" + fadeIn + "s)" : ""
             );
         }
 
@@ -97,41 +92,41 @@
 
         protected override void OnEnableEditorChild()
         {
-            this.spAudioClip = this.serializedObject.FindProperty("audioClip");
-            this.spAudioMixer = this.serializedObject.FindProperty("audioMixer");
-            this.spMixerGroup = this.serializedObject.FindProperty("mixerGroup");
-            this.spFadeIn = this.serializedObject.FindProperty("fadeIn");
-            this.spVolume = this.serializedObject.FindProperty("volume");
-            this.spSpatialBlend = this.serializedObject.FindProperty("spatialBlend");
-            this.spPitch = this.serializedObject.FindProperty("pitch");
-            this.spPosition = this.serializedObject.FindProperty("position");
+            spAudioClip = serializedObject.FindProperty("audioClip");
+            spAudioMixer = serializedObject.FindProperty("audioMixer");
+            spMixerGroup = serializedObject.FindProperty("mixerGroup");
+            spFadeIn = serializedObject.FindProperty("fadeIn");
+            spVolume = serializedObject.FindProperty("volume");
+            spSpatialBlend = serializedObject.FindProperty("spatialBlend");
+            spPitch = serializedObject.FindProperty("pitch");
+            spPosition = serializedObject.FindProperty("position");
         }
 
         public override void OnInspectorGUI()
         {
-            this.serializedObject.Update();
+            serializedObject.Update();
 
-            EditorGUILayout.PropertyField(this.spAudioClip);
-            EditorGUILayout.PropertyField(this.spAudioMixer);
-            if (this.spAudioMixer.enumValueIndex == (int)AudioMixerType.Custom)
+            EditorGUILayout.PropertyField(spAudioClip);
+            EditorGUILayout.PropertyField(spAudioMixer);
+            if (spAudioMixer.enumValueIndex == (int) AudioMixerType.Custom)
             {
-                EditorGUILayout.PropertyField(this.spMixerGroup);
+                EditorGUILayout.PropertyField(spMixerGroup);
             }
 
             EditorGUILayout.Space();
-            EditorGUILayout.PropertyField(this.spFadeIn);
-            EditorGUILayout.PropertyField(this.spVolume);
+            EditorGUILayout.PropertyField(spFadeIn);
+            EditorGUILayout.PropertyField(spVolume);
 
             EditorGUILayout.Space();
-            EditorGUILayout.PropertyField(this.spSpatialBlend);
+            EditorGUILayout.PropertyField(spSpatialBlend);
             EditorGUILayout.Space();
-            EditorGUILayout.PropertyField(this.spPitch);
+            EditorGUILayout.PropertyField(spPitch);
             EditorGUILayout.Space();
-            EditorGUILayout.PropertyField(this.spPosition);
+            EditorGUILayout.PropertyField(spPosition);
 
-            this.serializedObject.ApplyModifiedProperties();
+            serializedObject.ApplyModifiedProperties();
         }
 
-        #endif
+#endif
     }
 }

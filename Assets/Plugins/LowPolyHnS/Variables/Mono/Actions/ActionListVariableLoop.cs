@@ -1,18 +1,17 @@
-﻿namespace LowPolyHnS.Variables
-{
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-    using LowPolyHnS.Core;
+﻿using System.Collections;
+using LowPolyHnS.Core;
+using UnityEngine;
 
-    #if UNITY_EDITOR
+namespace LowPolyHnS.Variables
+{
+#if UNITY_EDITOR
     using UnityEditor;
-    #endif
+
+#endif
 
     [AddComponentMenu("")]
-	public class ActionListVariableLoop : IAction
-	{
+    public class ActionListVariableLoop : IAction
+    {
         public enum Source
         {
             Actions,
@@ -32,41 +31,41 @@
         [VariableFilter(Variable.DataType.GameObject)]
         public VariableProperty variable = new VariableProperty(Variable.VarType.LocalVariable);
 
-        private bool executionComplete = false;
-        private bool forceStop = false;
+        private bool executionComplete;
+        private bool forceStop;
 
         // EXECUTABLE: ----------------------------------------------------------------------------
 
         public override IEnumerator Execute(GameObject target, IAction[] actions, int index)
         {
-            ListVariables list = this.listVariables.GetListVariables(target);
+            ListVariables list = listVariables.GetListVariables(target);
             if (list == null) yield break;
 
             Actions actionsToExecute = null;
             Conditions conditionsToExecute = null;
 
-            switch (this.source)
+            switch (source)
             {
                 case Source.Actions:
                     actionsToExecute = this.actions;
                     break;
 
                 case Source.Conditions:
-                    conditionsToExecute = this.conditions;
+                    conditionsToExecute = conditions;
                     break;
 
                 case Source.VariableWithActions:
-                    GameObject valueActions = this.variable.Get(target) as GameObject;
+                    GameObject valueActions = variable.Get(target) as GameObject;
                     if (valueActions != null) actionsToExecute = valueActions.GetComponent<Actions>();
                     break;
 
                 case Source.VariableWithConditions:
-                    GameObject valueConditions = this.variable.Get(target) as GameObject;
+                    GameObject valueConditions = variable.Get(target) as GameObject;
                     if (valueConditions != null) conditionsToExecute = valueConditions.GetComponent<Conditions>();
                     break;
             }
 
-            for (int i = 0; i < list.variables.Count && !this.forceStop; ++i)
+            for (int i = 0; i < list.variables.Count && !forceStop; ++i)
             {
                 Variable itemVariable = list.Get(i);
                 if (itemVariable == null) continue;
@@ -74,20 +73,20 @@
                 GameObject itemGo = itemVariable.Get() as GameObject;
                 if (itemGo == null) continue;
 
-                this.executionComplete = false;
+                executionComplete = false;
                 if (actionsToExecute != null)
                 {
-                    actionsToExecute.actionsList.Execute(itemGo, this.OnCompleteActions);
+                    actionsToExecute.actionsList.Execute(itemGo, OnCompleteActions);
                     WaitUntil wait = new WaitUntil(() =>
                     {
                         if (actionsToExecute == null) return true;
-                        if (this.forceStop)
+                        if (forceStop)
                         {
                             actionsToExecute.actionsList.Stop();
                             return true;
                         }
 
-                        return this.executionComplete;
+                        return executionComplete;
                     });
 
                     yield return wait;
@@ -103,20 +102,20 @@
 
         private void OnCompleteActions()
         {
-            this.executionComplete = true;
+            executionComplete = true;
         }
 
         public override void Stop()
         {
             base.Stop();
-            this.forceStop = true;
+            forceStop = true;
         }
 
         // +--------------------------------------------------------------------------------------+
         // | EDITOR                                                                               |
         // +--------------------------------------------------------------------------------------+
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
 
         public static new string NAME = "Variables/List Variables Loop";
         private const string NODE_TITLE = "Loop List Variables {0}";
@@ -135,59 +134,59 @@
         {
             return string.Format(
                 NODE_TITLE,
-                this.listVariables
+                listVariables
             );
         }
 
         protected override void OnEnableEditorChild()
         {
-            this.spListVariables = this.serializedObject.FindProperty("listVariables");
-            this.spSource = this.serializedObject.FindProperty("source");
-            this.spVariable = this.serializedObject.FindProperty("variable");
-            this.spActions = this.serializedObject.FindProperty("actions");
-            this.spConditions = this.serializedObject.FindProperty("conditions");
+            spListVariables = serializedObject.FindProperty("listVariables");
+            spSource = serializedObject.FindProperty("source");
+            spVariable = serializedObject.FindProperty("variable");
+            spActions = serializedObject.FindProperty("actions");
+            spConditions = serializedObject.FindProperty("conditions");
         }
 
         protected override void OnDisableEditorChild()
         {
-            this.spListVariables = null;
-            this.spSource = null;
-            this.spVariable = null;
-            this.spActions = null;
-            this.spConditions = null;
+            spListVariables = null;
+            spSource = null;
+            spVariable = null;
+            spActions = null;
+            spConditions = null;
         }
 
         public override void OnInspectorGUI()
         {
-            this.serializedObject.Update();
+            serializedObject.Update();
 
-            EditorGUILayout.PropertyField(this.spListVariables);
+            EditorGUILayout.PropertyField(spListVariables);
 
             EditorGUILayout.Space();
-            EditorGUILayout.PropertyField(this.spSource);
+            EditorGUILayout.PropertyField(spSource);
 
-            switch (this.spSource.enumValueIndex)
+            switch (spSource.enumValueIndex)
             {
-                case (int)Source.Actions:
-                    EditorGUILayout.PropertyField(this.spActions);
+                case (int) Source.Actions:
+                    EditorGUILayout.PropertyField(spActions);
                     break;
 
-                case (int)Source.Conditions:
-                    EditorGUILayout.PropertyField(this.spConditions);
+                case (int) Source.Conditions:
+                    EditorGUILayout.PropertyField(spConditions);
                     break;
 
-                case (int)Source.VariableWithActions:
-                    EditorGUILayout.PropertyField(this.spVariable);
+                case (int) Source.VariableWithActions:
+                    EditorGUILayout.PropertyField(spVariable);
                     break;
 
-                case (int)Source.VariableWithConditions:
-                    EditorGUILayout.PropertyField(this.spVariable);
+                case (int) Source.VariableWithConditions:
+                    EditorGUILayout.PropertyField(spVariable);
                     break;
             }
 
-            this.serializedObject.ApplyModifiedProperties();
+            serializedObject.ApplyModifiedProperties();
         }
 
-        #endif
+#endif
     }
 }

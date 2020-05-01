@@ -1,11 +1,8 @@
-﻿namespace LowPolyHnS.ModuleManager
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEditor;
-    using LowPolyHnS.Core;
+﻿using UnityEditor;
+using UnityEngine;
 
+namespace LowPolyHnS.ModuleManager
+{
     public abstract class ModuleManagerSidebar
     {
         private const string HEADER_PATH_L = "Assets/Plugins/LowPolyHnS/Modules/Icons/UI/HeaderLight.png";
@@ -26,7 +23,7 @@
 
         public static bool PaintButton(GUIContent content, bool isActive)
         {
-            GUIStyle style = (isActive ? GetButtonStyleActive() : GetButtonStyleNormal());
+            GUIStyle style = isActive ? GetButtonStyleActive() : GetButtonStyleNormal();
             bool click = GUILayout.Button(content, style);
 
             if (content.image != null)
@@ -51,7 +48,7 @@
             Texture2D texture = GetTextureHeader();
             Rect headerRect = GUILayoutUtility.GetRect(ModuleManagerWindow.WINDOW_SIDE_WIDTH, 25f);
 
-            if (UnityEngine.Event.current.type == EventType.Repaint)
+            if (Event.current.type == EventType.Repaint)
             {
                 GUI.DrawTexture(headerRect, texture);
             }
@@ -69,7 +66,7 @@
                     ModuleManager.GetModuleIcon(manifests[i].module.moduleID)
                 );
 
-                if (ModuleManagerSidebar.PaintButton(text, ModuleManagerWindow.WINDOW.sidebarIndex == i))
+                if (PaintButton(text, ModuleManagerWindow.WINDOW.sidebarIndex == i))
                 {
                     ModuleManagerWindow.WINDOW.sidebarIndex = i;
                     ModuleManagerWindow.WINDOW.Repaint();
@@ -111,7 +108,7 @@
         {
             if (TEXTURE_HEADER == null)
             {
-                string path = (EditorGUIUtility.isProSkin ? HEADER_PATH_D : HEADER_PATH_L);
+                string path = EditorGUIUtility.isProSkin ? HEADER_PATH_D : HEADER_PATH_L;
                 TEXTURE_HEADER = AssetDatabase.LoadAssetAtPath<Texture2D>(path);
                 if (TEXTURE_HEADER == null) TEXTURE_HEADER = Texture2D.blackTexture;
             }
@@ -143,6 +140,7 @@
                 BUTTON_TRYAGAIN.alignment = TextAnchor.MiddleCenter;
                 BUTTON_TRYAGAIN.richText = true;
             }
+
             return BUTTON_TRYAGAIN;
         }
     }

@@ -1,34 +1,32 @@
-﻿namespace LowPolyHnS.Core
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEngine.Events;
-    using LowPolyHnS.Variables;
+﻿using LowPolyHnS.Variables;
+using UnityEngine;
 
-    #if UNITY_EDITOR
-    using UnityEditor;
-    #endif
+namespace LowPolyHnS.Core
+{
+#if UNITY_EDITOR
+
+#endif
 
     [AddComponentMenu("")]
     public class ConditionVariableSprite : ConditionVariable
     {
         [VariableFilter(Variable.DataType.Sprite)]
         public VariableProperty variable = new VariableProperty();
+
         public SpriteProperty compareTo = new SpriteProperty();
 
         // OVERRIDERS: ----------------------------------------------------------------------------
 
         protected override bool Compare(GameObject target)
-		{
-			return (Sprite)this.variable.Get(target) == this.compareTo.GetValue(target);
-		}
+        {
+            return (Sprite) variable.Get(target) == compareTo.GetValue(target);
+        }
 
-		// +--------------------------------------------------------------------------------------+
-		// | EDITOR                                                                               |
-		// +--------------------------------------------------------------------------------------+
+        // +--------------------------------------------------------------------------------------+
+        // | EDITOR                                                                               |
+        // +--------------------------------------------------------------------------------------+
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
 
         public static new string NAME = "Variables/Variable Sprite";
 
@@ -36,11 +34,11 @@
         {
             return string.Format(
                 NODE_TITLE,
-                this.variable,
-                this.compareTo
+                variable,
+                compareTo
             );
         }
 
-        #endif
+#endif
     }
 }

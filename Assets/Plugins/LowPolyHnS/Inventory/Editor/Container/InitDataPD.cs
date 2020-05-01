@@ -1,11 +1,8 @@
-﻿namespace LowPolyHnS.Inventory
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEditor;
-    using LowPolyHnS.Core;
+﻿using UnityEditor;
+using UnityEngine;
 
+namespace LowPolyHnS.Inventory
+{
     [CustomPropertyDrawer(typeof(Container.InitData))]
     public class InitDataPD : PropertyDrawer
     {
@@ -17,8 +14,8 @@
             Rect rectItem = Rect.zero;
             Rect rectAmount = Rect.zero;
 
-            this.GetRects(
-                position, spItem, spAmount, 
+            GetRects(
+                position, spItem, spAmount,
                 ref rectItem, ref rectAmount
             );
 
@@ -35,24 +32,22 @@
 
             Rect rectItem = Rect.zero;
             Rect rectAmount = Rect.zero;
-            
-            this.GetRects(
-                Rect.zero, 
-                spItem, spAmount, 
+
+            GetRects(
+                Rect.zero,
+                spItem, spAmount,
                 ref rectItem, ref rectAmount
             );
 
-            return (
-                rectItem.height +
-                rectAmount.height +
-                (3 * EditorGUIUtility.standardVerticalSpacing)
-            );
+            return rectItem.height +
+                   rectAmount.height +
+                   3 * EditorGUIUtility.standardVerticalSpacing;
         }
 
         // PRIVATE METHODS: -----------------------------------------------------------------------
 
-        private void GetRects(Rect position, 
-            SerializedProperty spItem, SerializedProperty spAmount, 
+        private void GetRects(Rect position,
+            SerializedProperty spItem, SerializedProperty spAmount,
             ref Rect rectItem, ref Rect rectAmount)
         {
             rectItem = new Rect(

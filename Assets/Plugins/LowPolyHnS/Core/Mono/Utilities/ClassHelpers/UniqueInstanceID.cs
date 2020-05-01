@@ -1,10 +1,7 @@
-﻿namespace LowPolyHnS.Core
-{
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
+﻿using System;
 
+namespace LowPolyHnS.Core
+{
     [Serializable]
     public class UniqueInstanceID
     {

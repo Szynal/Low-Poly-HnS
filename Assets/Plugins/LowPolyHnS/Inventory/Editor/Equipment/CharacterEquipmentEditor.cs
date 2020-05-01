@@ -1,11 +1,9 @@
-﻿namespace LowPolyHnS.Inventory
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEditor;
-    using LowPolyHnS.Core;
+﻿using LowPolyHnS.Core;
+using UnityEditor;
+using UnityEngine;
 
+namespace LowPolyHnS.Inventory
+{
     [CustomEditor(typeof(CharacterEquipment))]
     public class CharacterEquipmentEditor : Editor
     {
@@ -20,9 +18,9 @@
         {
             if (target == null || serializedObject == null) return;
             if (DATABASE_INVENTORY == null) DATABASE_INVENTORY = DatabaseInventory.Load();
-            this.equipment = (CharacterEquipment)this.target;
+            equipment = (CharacterEquipment) target;
 
-            this.spSaveEquipment = serializedObject.FindProperty("saveEquipment");
+            spSaveEquipment = serializedObject.FindProperty("saveEquipment");
         }
 
         public override bool RequiresConstantRepaint()
@@ -42,27 +40,27 @@
             else
             {
                 string[] typeNames = DATABASE_INVENTORY.GetItemTypesNames();
-                for (int i = 0; i < this.equipment.equipment.items.Length; ++i)
+                for (int i = 0; i < equipment.equipment.items.Length; ++i)
                 {
-                    if (this.equipment.equipment.items[i].isEquipped)
+                    if (equipment.equipment.items[i].isEquipped)
                     {
-                        int uuid = this.equipment.equipment.items[i].itemID;
+                        int uuid = equipment.equipment.items[i].itemID;
                         string item = InventoryManager.Instance.itemsCatalogue[uuid].itemName.content;
                         EditorGUILayout.LabelField(typeNames[i], item);
                     }
                 }
             }
 
-            this.serializedObject.Update();
+            serializedObject.Update();
 
-            EditorGUILayout.PropertyField(this.spSaveEquipment);
+            EditorGUILayout.PropertyField(spSaveEquipment);
 
-            this.serializedObject.ApplyModifiedProperties();
+            serializedObject.ApplyModifiedProperties();
 
-            if (this.PaintGlobalID())
+            if (PaintGlobalID())
             {
                 EditorGUILayout.Space();
-                GlobalEditorID.Paint(this.equipment);
+                GlobalEditorID.Paint(equipment);
             }
         }
 

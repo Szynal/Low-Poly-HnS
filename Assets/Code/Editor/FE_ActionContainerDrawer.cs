@@ -4,17 +4,17 @@ using UnityEngine;
 [CustomPropertyDrawer(typeof(FE_ActionContainer))]
 public class FE_ActionContainerDrawer : PropertyDrawer
 {
-    private SerializedProperty  stateTypeProperty,
-                                targetObjectProperty,
-                                positionProperty,
-                                msoNameProperty,
-                                msoNewIDProperty,
-                                itemToGiveProperty,
-                                bossToStartProperty,
-                                sceneTeleporterProperty,
-                                msgRecieverProperty,
-                                msgStringProperty,
-                                cutsceneProperty;
+    private SerializedProperty stateTypeProperty,
+        targetObjectProperty,
+        positionProperty,
+        msoNameProperty,
+        msoNewIDProperty,
+        itemToGiveProperty,
+        bossToStartProperty,
+        sceneTeleporterProperty,
+        msgRecieverProperty,
+        msgStringProperty,
+        cutsceneProperty;
 
     private SerializedProperty rotationProperty;
 
@@ -118,7 +118,7 @@ public class FE_ActionContainerDrawer : PropertyDrawer
                 EditorGUI.LabelField(_baseRect, "Assign a transform to copy its' rotation");
             }
         }
-        else if(_stateType == EActionType.RemoveItemFromPlayer)
+        else if (_stateType == EActionType.RemoveItemFromPlayer)
         {
             _baseRect.y += EditorGUIUtility.singleLineHeight;
             EditorGUI.PropertyField(_baseRect, itemToGiveProperty, new GUIContent("Item ID To Remove"));
@@ -145,7 +145,8 @@ public class FE_ActionContainerDrawer : PropertyDrawer
 
         int _numberOfFieldsToShow = 0;
 
-        if ((EActionType) stateTypeProperty.enumValueIndex == EActionType.ChangeMSOStateByName || (EActionType) stateTypeProperty.enumValueIndex == EActionType.SendMessage)
+        if ((EActionType) stateTypeProperty.enumValueIndex == EActionType.ChangeMSOStateByName ||
+            (EActionType) stateTypeProperty.enumValueIndex == EActionType.SendMessage)
         {
             _numberOfFieldsToShow = 4;
         }
@@ -154,11 +155,12 @@ public class FE_ActionContainerDrawer : PropertyDrawer
                  || (EActionType) stateTypeProperty.enumValueIndex == EActionType.GivePlayerItem
                  || (EActionType) stateTypeProperty.enumValueIndex == EActionType.UseSceneTeleporter
                  || (EActionType) stateTypeProperty.enumValueIndex == EActionType.StartInsceneCutscene
-                 || (EActionType)stateTypeProperty.enumValueIndex == EActionType.RemoveItemFromPlayer)
+                 || (EActionType) stateTypeProperty.enumValueIndex == EActionType.RemoveItemFromPlayer)
         {
             _numberOfFieldsToShow = 3;
         }
-        else if ((EActionType) stateTypeProperty.enumValueIndex == EActionType.MoveObjectToPos || (EActionType) stateTypeProperty.enumValueIndex == EActionType.RotateObjectToAngle)
+        else if ((EActionType) stateTypeProperty.enumValueIndex == EActionType.MoveObjectToPos ||
+                 (EActionType) stateTypeProperty.enumValueIndex == EActionType.RotateObjectToAngle)
         {
             _numberOfFieldsToShow = 7;
         }

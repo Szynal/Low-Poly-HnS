@@ -1,53 +1,48 @@
-﻿namespace LowPolyHnS.Core
-{
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-    using UnityEngine.Audio;
-    using LowPolyHnS.Core;
-    using LowPolyHnS.Variables;
+﻿using UnityEngine;
+using UnityEngine.Audio;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-    #endif
+namespace LowPolyHnS.Core
+{
+#if UNITY_EDITOR
+
+#endif
 
     [AddComponentMenu("")]
-	public class ActionAudioSnapshot : IAction 
-	{
+    public class ActionAudioSnapshot : IAction
+    {
         public AudioMixerSnapshot snapshot;
         public float duration = 0.5f;
 
-		// EXECUTABLE: ----------------------------------------------------------------------------
+        // EXECUTABLE: ----------------------------------------------------------------------------
 
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
-            if (this.snapshot != null)
+            if (snapshot != null)
             {
-                this.snapshot.TransitionTo(this.duration);
+                snapshot.TransitionTo(duration);
             }
 
             return true;
         }
 
-		// +--------------------------------------------------------------------------------------+
-		// | EDITOR                                                                               |
-		// +--------------------------------------------------------------------------------------+
+        // +--------------------------------------------------------------------------------------+
+        // | EDITOR                                                                               |
+        // +--------------------------------------------------------------------------------------+
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 
-		public static new string NAME = "Audio/Audio Snapshot";
-		private const string NODE_TITLE = "Transition to {0} in {1}";
+        public static new string NAME = "Audio/Audio Snapshot";
+        private const string NODE_TITLE = "Transition to {0} in {1}";
 
-		public override string GetNodeTitle()
-		{
+        public override string GetNodeTitle()
+        {
             return string.Format(
                 NODE_TITLE,
-                this.snapshot != null ? this.snapshot.name : "(none)",
-                this.duration
+                snapshot != null ? snapshot.name : "(none)",
+                duration
             );
-		}
+        }
 
-		#endif
-	}
+#endif
+    }
 }

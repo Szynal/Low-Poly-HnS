@@ -1,10 +1,9 @@
-﻿namespace LowPolyHnS.Variables
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
+﻿using System;
+using UnityEngine;
 
-    [System.Serializable]
+namespace LowPolyHnS.Variables
+{
+    [Serializable]
     public class VariableObj : VariableGeneric<GameObject>
     {
         public new const string NAME = "Game Object";
@@ -12,16 +11,18 @@
         // INITIALIZERS: --------------------------------------------------------------------------
 
         public VariableObj()
-        { }
+        {
+        }
 
         public VariableObj(GameObject value) : base(value)
-        { }
+        {
+        }
 
         // OVERRIDE METHODS: ----------------------------------------------------------------------
 
         public override bool CanSave()
         {
-            return VariableBase.CanSaveType(Variable.DataType.GameObject);
+            return CanSaveType(Variable.DataType.GameObject);
         }
 
         // PUBLIC STATIC METHODS: -----------------------------------------------------------------

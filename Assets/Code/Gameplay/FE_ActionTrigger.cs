@@ -1,12 +1,13 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class FE_ActionTrigger : MonoBehaviour, ISaveable
 {
-    [Header("Step trigger properties")]
-    [SerializeField] protected bool oneShotOnly = true;
-    [SerializeField] protected bool hasParent = false;
+    [Header("Step trigger properties")] [SerializeField]
+    protected bool oneShotOnly = true;
+
+    [SerializeField] protected bool hasParent;
     [SerializeField] protected bool triggeredByAnEnemy = false;
     protected FE_MultipleStateObject parentScript;
 
@@ -15,20 +16,20 @@ public class FE_ActionTrigger : MonoBehaviour, ISaveable
     [Header("State changer properties")]
     public List<FE_ActionContainer> AfterUseObjectChanges = new List<FE_ActionContainer>();
 
-    [Header("Saveable properties")]
-    public int SaveableID = -1; 
+    [Header("Saveable properties")] public int SaveableID = -1;
 
-    public bool BeenUsedAlready = false;
+    public bool BeenUsedAlready;
 
     protected void Awake()
     {
-        if(hasParent == true)
+        if (hasParent)
         {
             parentScript = GetComponentInParent<FE_MultipleStateObject>();
 
-            if(parentScript == null)
+            if (parentScript == null)
             {
-                Debug.LogError("StepInTrigger " + gameObject.name + " has 'hasParent' set to true, but it couldn't find the parent script!");
+                Debug.LogError("StepInTrigger " + gameObject.name +
+                               " has 'hasParent' set to true, but it couldn't find the parent script!");
                 hasParent = false;
             }
         }
@@ -36,13 +37,14 @@ public class FE_ActionTrigger : MonoBehaviour, ISaveable
 
     protected virtual void OnTriggerEnter(Collider _other)
     {
-        if(canBeTriggered() == true)
+        if (canBeTriggered())
         {
-            if(triggeredByAnEnemy == false && _other.tag != "Player")
+            if (triggeredByAnEnemy == false && _other.tag != "Player")
             {
                 return;
             }
-            else if(triggeredByAnEnemy == true && _other.tag == "Player")
+
+            if (triggeredByAnEnemy && _other.tag == "Player")
             {
                 return;
             }
@@ -54,7 +56,7 @@ public class FE_ActionTrigger : MonoBehaviour, ISaveable
                 FE_StateChanger.HandleObjectChange(_state);
             }
 
-            if (hasParent == true)
+            if (hasParent)
             {
                 parentScript.ChangeState(messageToSendOnTrigger, true);
             }
@@ -63,7 +65,7 @@ public class FE_ActionTrigger : MonoBehaviour, ISaveable
 
     protected bool canBeTriggered()
     {
-        if(oneShotOnly == true && BeenUsedAlready == true)
+        if (oneShotOnly && BeenUsedAlready)
         {
             return false;
         }
@@ -83,22 +85,22 @@ public class FE_ActionTrigger : MonoBehaviour, ISaveable
 
     public void OnLoad(PlayerSaveState _loadState)
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 
     public void OnLoad(EnemySaveState _loadState)
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 
     public void OnLoad(PickupState _loadState)
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 
     public void OnLoad(MultipleStateObjectManagerState _loadState)
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 
     public void OnLoad(ActionTriggerState _loadState)

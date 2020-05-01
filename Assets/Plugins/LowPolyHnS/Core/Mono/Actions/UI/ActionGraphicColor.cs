@@ -1,24 +1,21 @@
-﻿namespace LowPolyHnS.Core
+﻿using System.Collections;
+using LowPolyHnS.Variables;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace LowPolyHnS.Core
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-    using UnityEngine.UI;
-	using UnityEngine.Events;
-	using LowPolyHnS.Core;
-    using LowPolyHnS.Variables;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[AddComponentMenu("")]
-	public class ActionGraphicColor : IAction
-	{
+    [AddComponentMenu("")]
+    public class ActionGraphicColor : IAction
+    {
         public Graphic graphic;
 
-        [Range(0.0f, 10.0f)]
-        public float duration = 0.0f;
+        [Range(0.0f, 10.0f)] public float duration = 0.0f;
 
         public ColorProperty color = new ColorProperty(Color.white);
 
@@ -26,9 +23,9 @@
 
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
-            if (this.duration <= 0.0f)
+            if (duration <= 0.0f)
             {
-                if (this.graphic != null) this.graphic.color = this.color.GetValue(target);
+                if (graphic != null) graphic.color = color.GetValue(target);
                 return true;
             }
 
@@ -36,75 +33,75 @@
         }
 
         public override IEnumerator Execute(GameObject target, IAction[] actions, int index)
-		{
-            if (this.graphic != null)
+        {
+            if (graphic != null)
             {
-                Color currentColor = this.graphic.color;
-                Color targetColor = this.color.GetValue(target);
+                Color currentColor = graphic.color;
+                Color targetColor = color.GetValue(target);
 
                 float startTime = Time.unscaledTime;
                 WaitUntil waitUntil = new WaitUntil(() =>
                 {
-                    float t = (Time.unscaledTime - startTime) / this.duration;
-                    this.graphic.color = Color.Lerp(currentColor, targetColor, t);
+                    float t = (Time.unscaledTime - startTime) / duration;
+                    graphic.color = Color.Lerp(currentColor, targetColor, t);
 
                     return t > 1.0f;
                 });
 
                 yield return waitUntil;
-                this.graphic.color = targetColor;
+                graphic.color = targetColor;
             }
 
-			yield return 0;
-		}
+            yield return 0;
+        }
 
-		// +--------------------------------------------------------------------------------------+
-		// | EDITOR                                                                               |
-		// +--------------------------------------------------------------------------------------+
+        // +--------------------------------------------------------------------------------------+
+        // | EDITOR                                                                               |
+        // +--------------------------------------------------------------------------------------+
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 
-	    public static new string NAME = "UI/Graphic Color";
-		private const string NODE_TITLE = "Change Graphic Color";
+        public static new string NAME = "UI/Graphic Color";
+        private const string NODE_TITLE = "Change Graphic Color";
 
-		// PROPERTIES: ----------------------------------------------------------------------------
+        // PROPERTIES: ----------------------------------------------------------------------------
 
-		private SerializedProperty spGraphic;
+        private SerializedProperty spGraphic;
         private SerializedProperty spDuration;
         private SerializedProperty spColor;
 
-		// INSPECTOR METHODS: ---------------------------------------------------------------------
+        // INSPECTOR METHODS: ---------------------------------------------------------------------
 
-		public override string GetNodeTitle()
-		{
+        public override string GetNodeTitle()
+        {
             return NODE_TITLE;
-		}
+        }
 
-		protected override void OnEnableEditorChild ()
-		{
-            this.spGraphic = this.serializedObject.FindProperty("graphic");
-            this.spDuration = this.serializedObject.FindProperty("duration");
-            this.spColor = this.serializedObject.FindProperty("color");
-		}
+        protected override void OnEnableEditorChild()
+        {
+            spGraphic = serializedObject.FindProperty("graphic");
+            spDuration = serializedObject.FindProperty("duration");
+            spColor = serializedObject.FindProperty("color");
+        }
 
-		protected override void OnDisableEditorChild ()
-		{
-            this.spGraphic = null;
-            this.spDuration = null;
-            this.spColor = null;
-		}
+        protected override void OnDisableEditorChild()
+        {
+            spGraphic = null;
+            spDuration = null;
+            spColor = null;
+        }
 
-		public override void OnInspectorGUI()
-		{
-			this.serializedObject.Update();
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
 
-            EditorGUILayout.PropertyField(this.spGraphic);
-            EditorGUILayout.PropertyField(this.spDuration);
-            EditorGUILayout.PropertyField(this.spColor);
+            EditorGUILayout.PropertyField(spGraphic);
+            EditorGUILayout.PropertyField(spDuration);
+            EditorGUILayout.PropertyField(spColor);
 
-			this.serializedObject.ApplyModifiedProperties();
-		}
+            serializedObject.ApplyModifiedProperties();
+        }
 
-		#endif
-	}
+#endif
+    }
 }

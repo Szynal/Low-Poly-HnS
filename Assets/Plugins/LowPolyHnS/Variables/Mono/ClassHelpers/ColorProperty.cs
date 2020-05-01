@@ -1,14 +1,17 @@
-﻿namespace LowPolyHnS.Variables
-{
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
+﻿using System;
+using UnityEngine;
 
+namespace LowPolyHnS.Variables
+{
     [Serializable]
     public class ColorProperty : BaseProperty<Color>
     {
-        public ColorProperty() : base() { }
-        public ColorProperty(Color value) : base(value) { }
+        public ColorProperty()
+        {
+        }
+
+        public ColorProperty(Color value) : base(value)
+        {
+        }
     }
 }

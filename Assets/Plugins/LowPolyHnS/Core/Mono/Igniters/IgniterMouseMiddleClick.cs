@@ -1,45 +1,45 @@
-﻿namespace LowPolyHnS.Core
+﻿using UnityEngine;
+using UnityEngine.EventSystems;
+
+namespace LowPolyHnS.Core
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.EventSystems;
+    [AddComponentMenu("")]
+    public class IgniterMouseMiddleClick : Igniter, IPointerClickHandler
+    {
+        public enum ClickType
+        {
+            SingleClick,
+            DoubleClick
+        }
 
-	[AddComponentMenu("")]
-	public class IgniterMouseMiddleClick : Igniter, IPointerClickHandler
-	{
-		public enum ClickType
-		{
-			SingleClick,
-			DoubleClick
-		}
+#if UNITY_EDITOR
+        public new static string NAME = "Input/On Mouse Middle Click";
+        public new static bool REQUIRES_COLLIDER = true;
+#endif
 
-        #if UNITY_EDITOR
-		public new static string NAME = "Input/On Mouse Middle Click";
-		public new static bool REQUIRES_COLLIDER = true;
-        #endif
+        public ClickType clickType = ClickType.SingleClick;
+        private float lastClickTime = -100f;
 
-		public ClickType clickType = ClickType.SingleClick;
-		private float lastClickTime = -100f;
-
-		private void Start()
+        private void Start()
         {
             EventSystemManager.Instance.Wakeup();
         }
 
         public void OnPointerClick(PointerEventData eventData)
-		{
-			if (eventData.button == PointerEventData.InputButton.Middle)
-			{
-				switch (this.clickType)
-				{
-					case ClickType.SingleClick: this.ExecuteTrigger(gameObject); break;
-					case ClickType.DoubleClick:
-						if (Time.time - this.lastClickTime < 0.5f) this.ExecuteTrigger(gameObject);
-						else this.lastClickTime = Time.time;
-						break;
-				}
-			}
-		}
-	}
+        {
+            if (eventData.button == PointerEventData.InputButton.Middle)
+            {
+                switch (clickType)
+                {
+                    case ClickType.SingleClick:
+                        ExecuteTrigger(gameObject);
+                        break;
+                    case ClickType.DoubleClick:
+                        if (Time.time - lastClickTime < 0.5f) ExecuteTrigger(gameObject);
+                        else lastClickTime = Time.time;
+                        break;
+                }
+            }
+        }
+    }
 }

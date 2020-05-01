@@ -1,23 +1,16 @@
-﻿namespace LowPolyHnS.Inventory
-{
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.UI;
-	using UnityEngine.Events;
-	using UnityEngine.EventSystems;
-	using LowPolyHnS.Core;
-    using LowPolyHnS.Core.Hooks;
+﻿using LowPolyHnS.Core.Hooks;
+using UnityEngine;
+using UnityEngine.UI;
 
-    public class MerchantUIItemSeller : IMerchantUIItem 
-	{
+namespace LowPolyHnS.Inventory
+{
+    public class MerchantUIItemSeller : IMerchantUIItem
+    {
         private Merchant.Ware ware;
 
-        [Space]
-        public CanvasGroup canvasGroup;
+        [Space] public CanvasGroup canvasGroup;
 
-        [Space]
-        public GameObject wrapAmount;
+        [Space] public GameObject wrapAmount;
         public Text textCurrentAmount;
         public Text textMaxAmount;
 
@@ -26,70 +19,68 @@
         public override void Setup(MerchantUIManager merchantUIManager, params object[] parameters)
         {
             base.Setup(merchantUIManager, parameters);
-            this.ware = parameters[0] as Merchant.Ware;
+            ware = parameters[0] as Merchant.Ware;
 
-            this.UpdateUI();
+            UpdateUI();
         }
 
         // PUBLIC METHODS: ------------------------------------------------------------------------
 
         public override void UpdateUI()
-		{
-            if (this.ware == null) return;
-            Item item = this.ware.item.item;
-            Merchant merchant = this.merchantUIManager.currentMerchant;
+        {
+            if (ware == null) return;
+            Item item = ware.item.item;
+            Merchant merchant = merchantUIManager.currentMerchant;
 
             int curAmount = MerchantManager.Instance.GetMerchantAmount(
                 merchant,
-                this.ware.item.item
+                ware.item.item
             );
 
-			if (this.image != null && item.sprite != null) this.image.sprite = item.sprite;
-            if (this.textName != null) this.textName.text = item.itemName.GetText();
-            if (this.textDescription != null) this.textDescription.text = item.itemDescription.GetText();
+            if (image != null && item.sprite != null) image.sprite = item.sprite;
+            if (textName != null) textName.text = item.itemName.GetText();
+            if (textDescription != null) textDescription.text = item.itemDescription.GetText();
 
             GameObject player = HookPlayer.Instance != null ? HookPlayer.Instance.gameObject : null;
             float percent = merchant.purchasePercent.GetValue(player);
             int price = Mathf.FloorToInt(item.price * percent);
 
-            if (this.textPrice != null) this.textPrice.text = price.ToString();
+            if (textPrice != null) textPrice.text = price.ToString();
 
-            this.wrapAmount.SetActive(this.ware.limitAmount);
+            wrapAmount.SetActive(ware.limitAmount);
 
-            if (this.textCurrentAmount != null)
+            if (textCurrentAmount != null)
             {
-                this.textCurrentAmount.text = curAmount.ToString();
+                textCurrentAmount.text = curAmount.ToString();
             }
 
-            if (this.textMaxAmount != null)
+            if (textMaxAmount != null)
             {
-                this.textMaxAmount.text = this.ware.maxAmount.ToString();
+                textMaxAmount.text = ware.maxAmount.ToString();
             }
 
-            this.canvasGroup.interactable = (
-                InventoryManager.Instance.GetCurrency() >= item.price && 
-                (!this.ware.limitAmount || curAmount > 0)
-            );
-		}
+            canvasGroup.interactable = InventoryManager.Instance.GetCurrency() >= item.price &&
+                                       (!ware.limitAmount || curAmount > 0);
+        }
 
-		public override void OnClickButton()
-		{
-            Merchant merchant = this.merchantUIManager.currentMerchant;
-            if (MerchantManager.Instance.BuyFromMerchant(merchant, this.ware.item.item, 1))
+        public override void OnClickButton()
+        {
+            Merchant merchant = merchantUIManager.currentMerchant;
+            if (MerchantManager.Instance.BuyFromMerchant(merchant, ware.item.item, 1))
             {
-                this.UpdateUI();
-                if (this.merchantUIManager.onBuy != null)
+                UpdateUI();
+                if (merchantUIManager.onBuy != null)
                 {
-                    this.merchantUIManager.onBuy.Invoke(this.ware.item.item.uuid);
+                    merchantUIManager.onBuy.Invoke(ware.item.item.uuid);
                 }
             }
             else
             {
-                if (this.merchantUIManager.onCantBuy != null)
+                if (merchantUIManager.onCantBuy != null)
                 {
-                    this.merchantUIManager.onCantBuy.Invoke(this.ware.item.item.uuid);
+                    merchantUIManager.onCantBuy.Invoke(ware.item.item.uuid);
                 }
             }
-		}
-	}
+        }
+    }
 }

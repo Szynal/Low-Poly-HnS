@@ -1,11 +1,9 @@
-﻿namespace LowPolyHnS.Core.Rate
-{
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEditor;
+﻿using System;
+using UnityEditor;
+using UnityEngine;
 
+namespace LowPolyHnS.Core.Rate
+{
     public class LowPolyHnSRateRequest : EditorWindow
     {
         private const string KEY_PLAY_TIMES = "gc-unity-editor-open-count";
@@ -16,9 +14,10 @@
         private const string PATH_REVIEW = "Assets/Plugins/LowPolyHnS/Extra/Icons/Rate/IconReview.png";
 
         private const string MSG_TITLE = "Thank you for using LowPolyHnS!";
+
         private const string MSG_TEXT1 = "We hate to disturb you like this, but consider " +
-            "leaving a review in the Asset Store.\n\nSpreading the word allow us to " +
-            "keep developing LowPolyHnS and adding exciting new features.";
+                                         "leaving a review in the Asset Store.\n\nSpreading the word allow us to " +
+                                         "keep developing LowPolyHnS and adding exciting new features.";
 
         private static readonly GUIContent MSG_TEXT2 = new GUIContent(
             "This will only appear once and we will not bother you again. Happy game making!"
@@ -34,8 +33,8 @@
 
         // PROPERTIES: ----------------------------------------------------------------------------
 
-        private bool showFooter = false;
-        private bool stylesInitialized = false;
+        private bool showFooter;
+        private bool stylesInitialized;
 
         private GUIStyle styleTitle;
         private GUIStyle styleText;
@@ -77,7 +76,7 @@
 
         private void InitializeStyles()
         {
-            this.styleTitle = new GUIStyle(EditorStyles.centeredGreyMiniLabel)
+            styleTitle = new GUIStyle(EditorStyles.centeredGreyMiniLabel)
             {
                 fontSize = 12,
                 fontStyle = FontStyle.Bold,
@@ -85,41 +84,41 @@
                 wordWrap = true
             };
 
-            this.styleText = new GUIStyle(EditorStyles.label)
+            styleText = new GUIStyle(EditorStyles.label)
             {
                 padding = new RectOffset(SPACE, SPACE, 0, 0),
                 fontStyle = FontStyle.Normal,
                 alignment = TextAnchor.MiddleCenter,
                 richText = true,
-                wordWrap = true,
+                wordWrap = true
             };
 
-            this.styleFooter = new GUIStyle(this.styleText)
+            styleFooter = new GUIStyle(styleText)
             {
-                margin = new RectOffset(0,0,0,0),
-                padding = new RectOffset(8,8,8,8),
+                margin = new RectOffset(0, 0, 0, 0),
+                padding = new RectOffset(8, 8, 8, 8),
                 alignment = TextAnchor.MiddleLeft,
-                fontSize = EditorStyles.centeredGreyMiniLabel.fontSize,
+                fontSize = EditorStyles.centeredGreyMiniLabel.fontSize
             };
 
-            this.styleReview = new GUIStyle(GUI.skin.button)
+            styleReview = new GUIStyle(GUI.skin.button)
             {
-                padding = new RectOffset(0, 0, SPACE/2, SPACE/2),
+                padding = new RectOffset(0, 0, SPACE / 2, SPACE / 2),
                 alignment = TextAnchor.MiddleCenter,
                 fontStyle = FontStyle.Normal,
-                richText = true,
+                richText = true
             };
 
-            this.textureLogo = AssetDatabase.LoadAssetAtPath<Texture2D>(
-                string.Format(PATH_LOGO, (EditorGUIUtility.pixelsPerPoint > 1f ? 2 : 1)
-            ));
+            textureLogo = AssetDatabase.LoadAssetAtPath<Texture2D>(
+                string.Format(PATH_LOGO, EditorGUIUtility.pixelsPerPoint > 1f ? 2 : 1
+                ));
 
-            this.gcReview = new GUIContent(
+            gcReview = new GUIContent(
                 " Review in the <b>Unity Asset Store</b>",
                 AssetDatabase.LoadAssetAtPath<Texture2D>(PATH_REVIEW)
             );
 
-            this.stylesInitialized = true;
+            stylesInitialized = true;
         }
 
         // PAINT METHODS: -------------------------------------------------------------------------
@@ -132,7 +131,7 @@
 
         public static void OpenWindow(bool showFooter)
         {
-            Instance = EditorWindow.GetWindow<LowPolyHnSRateRequest>(true, string.Empty, true);
+            Instance = GetWindow<LowPolyHnSRateRequest>(true, string.Empty, true);
 
             Instance.showFooter = showFooter;
             Instance.maxSize = WIN_SIZE;
@@ -142,44 +141,44 @@
 
         private void OnGUI()
         {
-            if (!this.stylesInitialized)
+            if (!stylesInitialized)
             {
-                this.InitializeStyles();
+                InitializeStyles();
             }
 
             GUILayout.Space(SPACE);
 
             Rect rectLogoTotal = GUILayoutUtility.GetRect(WIN_SIZE.x, LOGO_SIZE);
             Rect rectLogo = new Rect(
-                rectLogoTotal.x + (rectLogoTotal.width/2f - LOGO_SIZE/2f),
+                rectLogoTotal.x + (rectLogoTotal.width / 2f - LOGO_SIZE / 2f),
                 rectLogoTotal.y,
                 LOGO_SIZE,
                 LOGO_SIZE
             );
 
-            GUI.DrawTexture(rectLogo, this.textureLogo);
+            GUI.DrawTexture(rectLogo, textureLogo);
             GUILayout.Space(SPACE);
 
             Rect rectTitle = GUILayoutUtility.GetRect(WIN_SIZE.x, 20);
-            EditorGUI.LabelField(rectTitle, MSG_TITLE, this.styleTitle);
+            EditorGUI.LabelField(rectTitle, MSG_TITLE, styleTitle);
 
             GUILayout.Space(SPACE);
-            EditorGUILayout.LabelField(MSG_TEXT1, this.styleText);
+            EditorGUILayout.LabelField(MSG_TEXT1, styleText);
 
             GUILayout.Space(SPACE);
-            if (GUILayout.Button(this.gcReview, this.styleReview, GUILayout.Height(40)))
+            if (GUILayout.Button(gcReview, styleReview, GUILayout.Height(40)))
             {
                 Application.OpenURL("https://LowPolyHnS.page.link/review");
-                this.Close();
+                Close();
             }
 
-            if (!this.showFooter) return;
+            if (!showFooter) return;
             GUILayout.FlexibleSpace();
 
-            Rect rectFooter = GUILayoutUtility.GetRect(MSG_TEXT2, this.styleFooter);
+            Rect rectFooter = GUILayoutUtility.GetRect(MSG_TEXT2, styleFooter);
 
             EditorGUI.DrawRect(rectFooter, COLOR_FOOTER);
-            EditorGUI.LabelField(rectFooter, MSG_TEXT2, this.styleFooter);
+            EditorGUI.LabelField(rectFooter, MSG_TEXT2, styleFooter);
         }
 
         // PRIVATE METHODS: -----------------------------------------------------------------------

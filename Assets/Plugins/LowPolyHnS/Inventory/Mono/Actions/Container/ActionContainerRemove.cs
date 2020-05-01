@@ -1,31 +1,27 @@
-﻿namespace LowPolyHnS.Inventory
-{
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-    using LowPolyHnS.Core;
-    using LowPolyHnS.Variables;
+﻿using LowPolyHnS.Core;
+using LowPolyHnS.Variables;
+using UnityEngine;
 
+namespace LowPolyHnS.Inventory
+{
     [AddComponentMenu("")]
-	public class ActionContainerRemove : IActionContainer
-	{
-        [Space]
-        public ItemHolder item = new ItemHolder();
+    public class ActionContainerRemove : IActionContainer
+    {
+        [Space] public ItemHolder item = new ItemHolder();
         public NumberProperty amount = new NumberProperty(1f);
 
-		public override bool InstantExecute(GameObject target, IAction[] actions, int index)
+        public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
-            Container cont = this.GetContainer(target);
+            Container cont = GetContainer(target);
             if (cont == null) return true;
 
-            if (this.item.item == null) return true;
-            cont.RemoveItem(this.item.item.uuid, this.amount.GetInt(target));
+            if (item.item == null) return true;
+            cont.RemoveItem(item.item.uuid, amount.GetInt(target));
 
             return true;
         }
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         public const string CUSTOM_ICON_PATH = "Assets/Plugins/LowPolyHnS/Inventory/Icons/Actions/";
         public static new string NAME = "Inventory/Container/Remove Item Container";
 
@@ -33,9 +29,9 @@
 
         public override string GetNodeTitle()
         {
-            return string.Format(NODE_TITLE, this.item, this.container);
+            return string.Format(NODE_TITLE, item, container);
         }
 
-        #endif
+#endif
     }
 }

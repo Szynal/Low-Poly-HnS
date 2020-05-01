@@ -1,13 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using LowPolyHnS;
+﻿using LowPolyHnS;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class OptionsMenuController : SubMenuController
 {
-    [Header("Properties for options menu controller")]
-    [SerializeField] Toggle characterBasedMovementToggle = null;
+    [Header("Properties for options menu controller")] [SerializeField]
+    private Toggle characterBasedMovementToggle = null;
 
     public override void Show(SubMenuController _parent)
     {

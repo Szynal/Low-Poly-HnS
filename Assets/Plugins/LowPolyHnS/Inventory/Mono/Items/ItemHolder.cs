@@ -1,21 +1,18 @@
-﻿namespace LowPolyHnS.Inventory
-{
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using LowPolyHnS.Core;
+﻿using System;
 
-	[System.Serializable]
-	public class ItemHolder
-	{
-		public Item item;
+namespace LowPolyHnS.Inventory
+{
+    [Serializable]
+    public class ItemHolder
+    {
+        public Item item;
 
         // PUBLIC METHODS: ------------------------------------------------------------------------
 
         public override string ToString()
         {
-            if (this.item == null) return "(none)";
-            return this.item.itemName.content;
+            if (item == null) return "(none)";
+            return item.itemName.content;
         }
     }
 }

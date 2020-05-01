@@ -1,13 +1,10 @@
-﻿namespace LowPolyHnS.Variables
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using LowPolyHnS.Core;
+﻿using UnityEngine;
 
+namespace LowPolyHnS.Variables
+{
     public class VariableFilterAttribute : PropertyAttribute
     {
-        public Variable.DataType[] types = new Variable.DataType[]
+        public Variable.DataType[] types =
         {
             Variable.DataType.Number
         };

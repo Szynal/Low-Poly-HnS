@@ -1,18 +1,17 @@
-﻿namespace LowPolyHnS.Core
+﻿using System.Collections;
+using LowPolyHnS.Variables;
+using UnityEngine;
+
+namespace LowPolyHnS.Core
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-    using LowPolyHnS.Variables;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[AddComponentMenu("")]
-	public class ActionActions : IAction 
-	{
+    [AddComponentMenu("")]
+    public class ActionActions : IAction
+    {
         public enum Source
         {
             Actions,
@@ -25,73 +24,73 @@
         [VariableFilter(Variable.DataType.GameObject)]
         public VariableProperty variable = new VariableProperty(Variable.VarType.LocalVariable);
 
-		public bool waitToFinish = false;
+        public bool waitToFinish = false;
 
-        private bool actionsComplete = false;
-        private bool forceStop = false;
+        private bool actionsComplete;
+        private bool forceStop;
 
-		// EXECUTABLE: ----------------------------------------------------------------------------
-		
+        // EXECUTABLE: ----------------------------------------------------------------------------
+
         public override IEnumerator Execute(GameObject target, IAction[] actions, int index)
-		{
+        {
             Actions actionsToExecute = null;
 
-            switch (this.source)
+            switch (source)
             {
                 case Source.Actions:
                     actionsToExecute = this.actions;
                     break;
 
                 case Source.Variable:
-                    GameObject value = this.variable.Get(target) as GameObject;
+                    GameObject value = variable.Get(target) as GameObject;
                     if (value != null) actionsToExecute = value.GetComponent<Actions>();
                     break;
             }
 
             if (actionsToExecute != null)
-			{
-                this.actionsComplete = false;
-                actionsToExecute.actionsList.Execute(target, this.OnCompleteActions);
+            {
+                actionsComplete = false;
+                actionsToExecute.actionsList.Execute(target, OnCompleteActions);
 
-                if (this.waitToFinish)
+                if (waitToFinish)
                 {
                     WaitUntil wait = new WaitUntil(() =>
                     {
                         if (actionsToExecute == null) return true;
-                        if (this.forceStop)
+                        if (forceStop)
                         {
                             actionsToExecute.actionsList.Stop();
                             return true;
                         }
 
-                        return this.actionsComplete;
+                        return actionsComplete;
                     });
 
                     yield return wait;
                 }
-			}
+            }
 
-			yield return 0;
-		}
+            yield return 0;
+        }
 
         private void OnCompleteActions()
         {
-            this.actionsComplete = true;
+            actionsComplete = true;
         }
 
         public override void Stop()
         {
-            this.forceStop = true;
+            forceStop = true;
         }
 
         // +--------------------------------------------------------------------------------------+
         // | EDITOR                                                                               |
         // +--------------------------------------------------------------------------------------+
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
 
         public static new string NAME = "General/Execute Actions";
-		private const string NODE_TITLE = "Execute actions {0} {1}";
+        private const string NODE_TITLE = "Execute actions {0} {1}";
 
         // PROPERTIES: ----------------------------------------------------------------------------
 
@@ -99,61 +98,60 @@
         private SerializedProperty spActions;
         private SerializedProperty spVariable;
 
-		private SerializedProperty spWaitToFinish;
+        private SerializedProperty spWaitToFinish;
 
-		// INSPECTOR METHODS: ---------------------------------------------------------------------
+        // INSPECTOR METHODS: ---------------------------------------------------------------------
 
-		public override string GetNodeTitle()
-		{
-            string actionsName = (this.source == Source.Actions
-                ? (this.actions == null ? "none" : this.actions.name)
-                : this.variable.ToString()
-            );
+        public override string GetNodeTitle()
+        {
+            string actionsName = source == Source.Actions
+                ? actions == null ? "none" : actions.name
+                : variable.ToString();
 
             return string.Format(
-				NODE_TITLE,
+                NODE_TITLE,
                 actionsName,
-				(this.waitToFinish ? "and wait" : "")
-			);
-		}
+                waitToFinish ? "and wait" : ""
+            );
+        }
 
-		protected override void OnEnableEditorChild ()
-		{
-            this.spSource = this.serializedObject.FindProperty("source");
-            this.spVariable = this.serializedObject.FindProperty("variable");
-            this.spActions = this.serializedObject.FindProperty("actions");
-			this.spWaitToFinish = this.serializedObject.FindProperty("waitToFinish");
-		}
+        protected override void OnEnableEditorChild()
+        {
+            spSource = serializedObject.FindProperty("source");
+            spVariable = serializedObject.FindProperty("variable");
+            spActions = serializedObject.FindProperty("actions");
+            spWaitToFinish = serializedObject.FindProperty("waitToFinish");
+        }
 
-		protected override void OnDisableEditorChild ()
-		{
-            this.spSource = null;
-            this.spVariable = null;
-			this.spActions = null;
-			this.spWaitToFinish = null;
-		}
+        protected override void OnDisableEditorChild()
+        {
+            spSource = null;
+            spVariable = null;
+            spActions = null;
+            spWaitToFinish = null;
+        }
 
-		public override void OnInspectorGUI()
-		{
-			this.serializedObject.Update();
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
 
-            EditorGUILayout.PropertyField(this.spSource);
-            switch (this.spSource.enumValueIndex)
+            EditorGUILayout.PropertyField(spSource);
+            switch (spSource.enumValueIndex)
             {
-                case (int)Source.Actions:
-                    EditorGUILayout.PropertyField(this.spActions);
+                case (int) Source.Actions:
+                    EditorGUILayout.PropertyField(spActions);
                     break;
 
-                case (int)Source.Variable:
-                    EditorGUILayout.PropertyField(this.spVariable);
+                case (int) Source.Variable:
+                    EditorGUILayout.PropertyField(spVariable);
                     break;
             }
 
-			EditorGUILayout.PropertyField(this.spWaitToFinish);
+            EditorGUILayout.PropertyField(spWaitToFinish);
 
-			this.serializedObject.ApplyModifiedProperties();
-		}
+            serializedObject.ApplyModifiedProperties();
+        }
 
-		#endif
-	}
+#endif
+    }
 }

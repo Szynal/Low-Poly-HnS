@@ -1,14 +1,11 @@
-﻿namespace LowPolyHnS.Inventory
-{
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-	using LowPolyHnS.Core;
+﻿using LowPolyHnS.Core;
+using UnityEngine;
 
-	[AddComponentMenu("")]
-	public class ActionHotbarBind : IAction
-	{
+namespace LowPolyHnS.Inventory
+{
+    [AddComponentMenu("")]
+    public class ActionHotbarBind : IAction
+    {
         public TargetGameObject hotbar = new TargetGameObject(TargetGameObject.Target.GameObject);
         public ItemHolder item = new ItemHolder();
 
@@ -16,15 +13,15 @@
 
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
-            if (this.item.item == null) return true;
+            if (item.item == null) return true;
 
-            GameObject targetHotbar = this.hotbar.GetGameObject(target);
+            GameObject targetHotbar = hotbar.GetGameObject(target);
             if (target == null) return true;
 
             HotbarUI hotbarUI = targetHotbar.GetComponent<HotbarUI>();
             if (hotbarUI == null) return true;
 
-            hotbarUI.BindItem(this.item.item);
+            hotbarUI.BindItem(item.item);
             return true;
         }
 
@@ -32,22 +29,22 @@
         // | EDITOR                                                                               |
         // +--------------------------------------------------------------------------------------+
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
 
         public const string CUSTOM_ICON_PATH = "Assets/Plugins/LowPolyHnS/Inventory/Icons/Actions/";
 
         public static new string NAME = "Inventory/Bind Item to Hotbar";
         private const string NODE_TITLE = "Bind {0} on {1}";
 
-		public override string GetNodeTitle()
-		{
-			return string.Format(
-                NODE_TITLE, 
-                this.item.item == null ? "(none)" : this.item.item.itemName.content,
-                this.hotbar
+        public override string GetNodeTitle()
+        {
+            return string.Format(
+                NODE_TITLE,
+                item.item == null ? "(none)" : item.item.itemName.content,
+                hotbar
             );
-		}
+        }
 
-		#endif
-	}
+#endif
+    }
 }

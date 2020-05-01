@@ -1,27 +1,26 @@
+using System;
+using LowPolyHnS.Core;
+using UnityEditor;
+using UnityEngine;
+
 namespace LowPolyHnS.Localization
 {
-	using System;
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEditor;
-	using LowPolyHnS.Core;
+    [CustomPropertyDrawer(typeof(LocStringBigTextAttribute))]
+    public class LocStringBigTextPropertyDrawer : PropertyDrawer
+    {
+        private const float TRANSLATION_BUTTON_WIDTH = 25f;
+        private const float HORIZONTAL_SEPARATION = -1f;
 
-	[CustomPropertyDrawer (typeof (LocStringBigTextAttribute))]
-	public class LocStringBigTextPropertyDrawer : PropertyDrawer
-	{
-		private const float TRANSLATION_BUTTON_WIDTH = 25f;
-		private const float HORIZONTAL_SEPARATION = -1f;
-		private static readonly GUIContent GUICONTENT_TRANSLATION = new GUIContent(
-			"Enable Translation",
-			"Enable to add a translation slot"
-		);
+        private static readonly GUIContent GUICONTENT_TRANSLATION = new GUIContent(
+            "Enable Translation",
+            "Enable to add a translation slot"
+        );
 
-		private SerializedProperty spDatabasePlaceholder;
+        private SerializedProperty spDatabasePlaceholder;
         private GUIStyle textAreaStyle;
 
-		public override void OnGUI (Rect position, SerializedProperty property, GUIContent label)
-		{
+        public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
+        {
             property.serializedObject.ApplyModifiedProperties();
             property.serializedObject.Update();
 
@@ -36,13 +35,13 @@ namespace LowPolyHnS.Localization
 
             bool translationOn = spTranslationID.intValue != 0;
             bool nextTranslationOn = EditorGUI.Toggle(spTranslationIDRect, GUICONTENT_TRANSLATION, translationOn);
-            if (this.PaintPostProcess()) EditorGUILayout.PropertyField(spPostProcess);
+            if (PaintPostProcess()) EditorGUILayout.PropertyField(spPostProcess);
 
-            if (this.textAreaStyle == null)
+            if (textAreaStyle == null)
             {
-                this.textAreaStyle = new GUIStyle();
-                this.textAreaStyle.margin = new RectOffset(5, 5, 0, 0);
-                this.textAreaStyle.wordWrap = true;
+                textAreaStyle = new GUIStyle();
+                textAreaStyle.margin = new RectOffset(5, 5, 0, 0);
+                textAreaStyle.wordWrap = true;
             }
 
             Rect textAreaRect = GUILayoutUtility.GetRect(
@@ -63,15 +62,16 @@ namespace LowPolyHnS.Localization
                 {
                     spTranslationID.intValue = LocStringPropertyDrawer.GenerateID();
 
-                    Editor editorLocalization = DatabaseLocalizationEditor.CreateEditor(DatabaseLocalization.Load());
-                    ((DatabaseLocalizationEditor)editorLocalization).AddTranslation(spTranslationID.intValue, spContent.stringValue);
+                    Editor editorLocalization = Editor.CreateEditor(DatabaseLocalization.Load());
+                    ((DatabaseLocalizationEditor) editorLocalization).AddTranslation(spTranslationID.intValue,
+                        spContent.stringValue);
                 }
                 else
                 {
                     if (spTranslationID.intValue != 0)
                     {
-                        Editor editorLocalization = DatabaseLocalizationEditor.CreateEditor(DatabaseLocalization.Load());
-                        ((DatabaseLocalizationEditor)editorLocalization).RemoveTranslation(spTranslationID.intValue);
+                        Editor editorLocalization = Editor.CreateEditor(DatabaseLocalization.Load());
+                        ((DatabaseLocalizationEditor) editorLocalization).RemoveTranslation(spTranslationID.intValue);
                     }
 
                     spTranslationID.intValue = 0;
@@ -80,35 +80,35 @@ namespace LowPolyHnS.Localization
 
             if (spTranslationID.intValue != 0)
             {
-                if (this.spDatabasePlaceholder == null)
+                if (spDatabasePlaceholder == null)
                 {
-                    Editor editorLocalization = DatabaseLocalizationEditor.CreateEditor(DatabaseLocalization.Load());
-                    this.spDatabasePlaceholder = ((DatabaseLocalizationEditor)editorLocalization).GetPlaceholder(
+                    Editor editorLocalization = Editor.CreateEditor(DatabaseLocalization.Load());
+                    spDatabasePlaceholder = ((DatabaseLocalizationEditor) editorLocalization).GetPlaceholder(
                         spTranslationID.intValue
                     );
                 }
 
-                if (this.spDatabasePlaceholder != null)
+                if (spDatabasePlaceholder != null)
                 {
-                    this.spDatabasePlaceholder.stringValue = spContent.stringValue;
-                    this.spDatabasePlaceholder.serializedObject.ApplyModifiedProperties();
+                    spDatabasePlaceholder.stringValue = spContent.stringValue;
+                    spDatabasePlaceholder.serializedObject.ApplyModifiedProperties();
                 }
             }
 
             property.serializedObject.ApplyModifiedProperties();
             property.serializedObject.Update();
-		}
+        }
 
         protected virtual bool PaintPostProcess()
         {
             return true;
         }
 
-		// STATIC METHODS: ---------------------------------------------------------------------------------------------
+        // STATIC METHODS: ---------------------------------------------------------------------------------------------
 
-		public static string GenerateID()
-		{
-			return Guid.NewGuid().ToString("N");
-		}
-	}
+        public static string GenerateID()
+        {
+            return Guid.NewGuid().ToString("N");
+        }
+    }
 }

@@ -1,10 +1,8 @@
-﻿namespace LowPolyHnS.Variables
-{
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
+﻿using System;
+using UnityEngine;
 
+namespace LowPolyHnS.Variables
+{
     [Serializable]
     public abstract class VariableGeneric<T> : VariableBase
     {
@@ -14,7 +12,7 @@
 
         // INITIALIZERS: --------------------------------------------------------------------------
 
-        protected VariableGeneric(T value = default(T))
+        protected VariableGeneric(T value = default)
         {
             this.value = value;
         }
@@ -23,7 +21,7 @@
 
         public T Get()
         {
-            return this.value;
+            return value;
         }
 
         public void Set(T value)

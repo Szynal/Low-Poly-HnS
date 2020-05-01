@@ -1,18 +1,16 @@
-﻿namespace LowPolyHnS.Variables
+﻿using LowPolyHnS.Core;
+using UnityEngine;
+
+namespace LowPolyHnS.Variables
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-	using LowPolyHnS.Core;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[AddComponentMenu("")]
-	public class ActionVariableDebug : IAction
-	{
+    [AddComponentMenu("")]
+    public class ActionVariableDebug : IAction
+    {
         private const string LOG_FMT = "{0}: {1}";
 
         // PROPERTIES: ----------------------------------------------------------------------------
@@ -25,50 +23,50 @@
         {
             Debug.LogFormat(
                 LOG_FMT,
-                this.variable.ToString(),
-                this.variable.ToStringValue(target)
+                variable.ToString(),
+                variable.ToStringValue(target)
             );
 
             return true;
         }
 
-		// +--------------------------------------------------------------------------------------+
-		// | EDITOR                                                                               |
-		// +--------------------------------------------------------------------------------------+
+        // +--------------------------------------------------------------------------------------+
+        // | EDITOR                                                                               |
+        // +--------------------------------------------------------------------------------------+
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 
-		public static new string NAME = "Debug/Debug Variable";
+        public static new string NAME = "Debug/Debug Variable";
         private const string NODE_TITLE = "Log variable {0}";
 
         // PROPERTIES: ----------------------------------------------------------------------------
 
         private SerializedProperty spVariable;
 
-		// INSPECTOR METHODS: ---------------------------------------------------------------------
+        // INSPECTOR METHODS: ---------------------------------------------------------------------
 
-		public override string GetNodeTitle()
-		{
-            return string.Format(NODE_TITLE, this.variable.ToString());
-		}
+        public override string GetNodeTitle()
+        {
+            return string.Format(NODE_TITLE, variable);
+        }
 
-		protected override void OnEnableEditorChild ()
-		{
-            this.spVariable = this.serializedObject.FindProperty("variable");
-		}
+        protected override void OnEnableEditorChild()
+        {
+            spVariable = serializedObject.FindProperty("variable");
+        }
 
-		protected override void OnDisableEditorChild ()
-		{
-            this.spVariable = null;
-		}
+        protected override void OnDisableEditorChild()
+        {
+            spVariable = null;
+        }
 
-		public override void OnInspectorGUI()
-		{
-			this.serializedObject.Update();
-            EditorGUILayout.PropertyField(this.spVariable);
-			this.serializedObject.ApplyModifiedProperties();
-		}
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
+            EditorGUILayout.PropertyField(spVariable);
+            serializedObject.ApplyModifiedProperties();
+        }
 
-		#endif
-	}
+#endif
+    }
 }

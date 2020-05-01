@@ -1,37 +1,34 @@
-﻿namespace LowPolyHnS.Core
-{
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-    using LowPolyHnS.Variables;
+﻿using LowPolyHnS.Variables;
+using UnityEngine;
 
+namespace LowPolyHnS.Core
+{
     [AddComponentMenu("")]
-    public class IgniterEventReceive : Igniter 
-	{
-		#if UNITY_EDITOR
+    public class IgniterEventReceive : Igniter
+    {
+#if UNITY_EDITOR
         public new static string NAME = "General/On Event Receive";
-        #endif
+#endif
 
         [EventName] public string eventName = "my-event";
 
-        [Space] 
-        public VariableProperty storeInvoker = new VariableProperty();
+        [Space] public VariableProperty storeInvoker = new VariableProperty();
 
         private void Start()
         {
-            EventDispatchManager.Instance.Subscribe(this.eventName, this.OnReceiveEvent);
+            EventDispatchManager.Instance.Subscribe(eventName, OnReceiveEvent);
         }
 
         private void OnDestroy()
         {
             if (EventDispatchManager.IS_EXITING) return;
-            EventDispatchManager.Instance.Unsubscribe(this.eventName, this.OnReceiveEvent);
+            EventDispatchManager.Instance.Unsubscribe(eventName, OnReceiveEvent);
         }
 
         private void OnReceiveEvent(GameObject invoker)
         {
-            this.storeInvoker.Set(invoker, invoker);
-            this.ExecuteTrigger(invoker);
+            storeInvoker.Set(invoker, invoker);
+            ExecuteTrigger(invoker);
         }
     }
 }

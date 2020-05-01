@@ -1,19 +1,16 @@
-﻿namespace LowPolyHnS.Variables
-{
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-    using LowPolyHnS.Core;
-    using LowPolyHnS.Core.Hooks;
+﻿using LowPolyHnS.Core;
+using UnityEngine;
 
-    #if UNITY_EDITOR
+namespace LowPolyHnS.Variables
+{
+#if UNITY_EDITOR
     using UnityEditor;
-    #endif
+
+#endif
 
     [AddComponentMenu("")]
-	public class ActionListVariableClear : IAction
-	{
+    public class ActionListVariableClear : IAction
+    {
         public enum ClearType
         {
             ClearAll,
@@ -27,12 +24,12 @@
 
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
-            ListVariables list = this.listVariables.GetListVariables(target);
+            ListVariables list = listVariables.GetListVariables(target);
             if (list == null || list.variables.Count == 0) return true;
 
             for (int i = list.variables.Count - 1; i >= 0; --i)
             {
-                switch (this.clear)
+                switch (clear)
                 {
                     case ClearType.ClearAll:
                         list.Remove(i);
@@ -44,6 +41,7 @@
                         {
                             list.Remove(i);
                         }
+
                         break;
                 }
             }
@@ -51,7 +49,7 @@
             return true;
         }
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
 
         private const string NODE_TITLE = "{0} from {1}";
         public static new string NAME = "Variables/Clear List Variables";
@@ -60,11 +58,11 @@
         {
             return string.Format(
                 NODE_TITLE,
-                ObjectNames.NicifyVariableName(this.clear.ToString()),
-                this.listVariables
+                ObjectNames.NicifyVariableName(clear.ToString()),
+                listVariables
             );
         }
 
-        #endif
+#endif
     }
 }

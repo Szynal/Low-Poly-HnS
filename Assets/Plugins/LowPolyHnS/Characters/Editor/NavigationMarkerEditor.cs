@@ -1,15 +1,12 @@
-﻿namespace LowPolyHnS.Characters
-{
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEditor;
-    using UnityEditorInternal;
-    using LowPolyHnS.Core;
+﻿using LowPolyHnS.Core;
+using UnityEditor;
+using UnityEngine;
 
-	[CustomEditor(typeof(NavigationMarker))]
-	public class NavigationMarkerEditor : Editor 
-	{
+namespace LowPolyHnS.Characters
+{
+    [CustomEditor(typeof(NavigationMarker))]
+    public class NavigationMarkerEditor : Editor
+    {
         private const string BTN_NAME = "Marker Labels {0}";
         private const string PROP_MARKER_COLOR = "color";
         private const string PROP_MARKER_LABEL = "label";
@@ -25,9 +22,9 @@
 
         private void OnEnable()
         {
-            this.spMarkerColor = serializedObject.FindProperty(PROP_MARKER_COLOR);
-            this.spMarkerLabel = serializedObject.FindProperty(PROP_MARKER_LABEL);
-            this.spStopThreshold = serializedObject.FindProperty(PROP_MARKER_STOP);
+            spMarkerColor = serializedObject.FindProperty(PROP_MARKER_COLOR);
+            spMarkerLabel = serializedObject.FindProperty(PROP_MARKER_LABEL);
+            spStopThreshold = serializedObject.FindProperty(PROP_MARKER_STOP);
         }
 
         // PAINT METHODS: -------------------------------------------------------------------------
@@ -37,7 +34,7 @@
             serializedObject.Update();
             EditorGUILayout.Space();
 
-            this.PaintLabel();
+            PaintLabel();
 
             EditorGUILayout.Space();
             serializedObject.ApplyModifiedProperties();
@@ -59,7 +56,7 @@
                 rectLabel.height
             );
 
-            EditorGUI.PropertyField(rectLabel, this.spMarkerLabel);
+            EditorGUI.PropertyField(rectLabel, spMarkerLabel);
 
             string buttonName = NavigationMarker.LABEL_SHOW ? "Hide" : "Show";
             if (GUI.Button(rectButton, buttonName, CoreGUIStyles.GetButtonRight()))
@@ -67,18 +64,18 @@
                 NavigationMarker.LABEL_SHOW = !NavigationMarker.LABEL_SHOW;
                 EditorPrefs.SetBool(NavigationMarker.LABEL_KEY, NavigationMarker.LABEL_SHOW);
 
-                this.Repaint();
+                Repaint();
                 SceneView.RepaintAll();
             }
 
             EditorGUI.BeginChangeCheck();
 
-            EditorGUILayout.PropertyField(this.spMarkerColor);
-            EditorGUILayout.PropertyField(this.spStopThreshold);
+            EditorGUILayout.PropertyField(spMarkerColor);
+            EditorGUILayout.PropertyField(spStopThreshold);
 
             if (EditorGUI.EndChangeCheck())
             {
-                this.Repaint();
+                Repaint();
                 SceneView.RepaintAll();
             }
         }
@@ -87,10 +84,10 @@
 
         [MenuItem("GameObject/LowPolyHnS/Other/Marker", false, 0)]
         public static void CreateMarker()
-		{
+        {
             GameObject marker = CreateSceneObject.Create("Marker");
-			marker.AddComponent<NavigationMarker>();
-			Selection.activeGameObject = marker;
-		}
-	}
+            marker.AddComponent<NavigationMarker>();
+            Selection.activeGameObject = marker;
+        }
+    }
 }

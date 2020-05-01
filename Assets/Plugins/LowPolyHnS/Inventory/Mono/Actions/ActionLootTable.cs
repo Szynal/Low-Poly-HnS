@@ -1,18 +1,16 @@
-﻿namespace LowPolyHnS.Inventory
-{
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-    using LowPolyHnS.Core;
+﻿using LowPolyHnS.Core;
+using UnityEngine;
 
-    #if UNITY_EDITOR
+namespace LowPolyHnS.Inventory
+{
+#if UNITY_EDITOR
     using UnityEditor;
-    #endif
+
+#endif
 
     [AddComponentMenu("")]
-	public class ActionLootTable : IAction
-	{
+    public class ActionLootTable : IAction
+    {
         public enum Target
         {
             PlayerInventory,
@@ -26,8 +24,8 @@
 
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
-            if (this.lootTable == null) return true;
-            LootTable.LootResult loot = this.lootTable.Get();
+            if (lootTable == null) return true;
+            LootTable.LootResult loot = lootTable.Get();
 
             if (loot.item != null && loot.amount > 0)
             {
@@ -41,7 +39,7 @@
                         break;
 
                     case Target.Container:
-                        Container containerInstance = this.container.GetComponent<Container>(target);
+                        Container containerInstance = container.GetComponent<Container>(target);
                         if (containerInstance != null)
                         {
                             containerInstance.AddItem(
@@ -49,6 +47,7 @@
                                 loot.amount
                             );
                         }
+
                         break;
                 }
             }
@@ -56,7 +55,7 @@
             return true;
         }
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
 
         public static new string NAME = "Inventory/Use Loot Table";
         public const string CUSTOM_ICON_PATH = "Assets/Plugins/LowPolyHnS/Inventory/Icons/Actions/";
@@ -70,42 +69,42 @@
         public override string GetNodeTitle()
         {
             return string.Format(
-                NODE_TITLE, 
-                (this.lootTable == null ? "(none)" : this.lootTable.name)
+                NODE_TITLE,
+                lootTable == null ? "(none)" : lootTable.name
             );
         }
 
         protected override void OnEnableEditorChild()
         {
-            this.spLootTable = serializedObject.FindProperty("lootTable");
-            this.spTarget = serializedObject.FindProperty("target");
-            this.spContainer = serializedObject.FindProperty("container");
+            spLootTable = serializedObject.FindProperty("lootTable");
+            spTarget = serializedObject.FindProperty("target");
+            spContainer = serializedObject.FindProperty("container");
         }
 
         protected override void OnDisableEditorChild()
         {
-            this.spLootTable = null;
-            this.spTarget = null;
-            this.spContainer = null;
+            spLootTable = null;
+            spTarget = null;
+            spContainer = null;
         }
 
         public override void OnInspectorGUI()
         {
-            this.serializedObject.Update();
+            serializedObject.Update();
 
-            EditorGUILayout.PropertyField(this.spLootTable);
-            EditorGUILayout.PropertyField(this.spTarget);
+            EditorGUILayout.PropertyField(spLootTable);
+            EditorGUILayout.PropertyField(spTarget);
 
-            if (this.spTarget.enumValueIndex == (int)Target.Container)
+            if (spTarget.enumValueIndex == (int) Target.Container)
             {
                 EditorGUI.indentLevel++;
-                EditorGUILayout.PropertyField(this.spContainer);
+                EditorGUILayout.PropertyField(spContainer);
                 EditorGUI.indentLevel--;
             }
 
-            this.serializedObject.ApplyModifiedProperties();
+            serializedObject.ApplyModifiedProperties();
         }
 
-        #endif
+#endif
     }
 }

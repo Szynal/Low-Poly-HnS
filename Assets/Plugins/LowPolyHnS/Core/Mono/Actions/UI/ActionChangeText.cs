@@ -1,20 +1,17 @@
-﻿namespace LowPolyHnS.Core
+﻿using LowPolyHnS.Variables;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace LowPolyHnS.Core
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-    using UnityEngine.UI;
-	using UnityEngine.Events;
-	using LowPolyHnS.Core;
-    using LowPolyHnS.Variables;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[AddComponentMenu("")]
-	public class ActionChangeText : IAction
-	{
+    [AddComponentMenu("")]
+    public class ActionChangeText : IAction
+    {
         public Text text;
         public string content = "{0}";
         public VariableProperty variable = new VariableProperty();
@@ -23,11 +20,11 @@
 
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
-            if (this.text != null)
+            if (text != null)
             {
-                this.text.text = string.Format(
-                    this.content,
-                    new string[] { this.variable.ToStringValue(target) }
+                text.text = string.Format(
+                    content,
+                    new[] {variable.ToStringValue(target)}
                 );
             }
 
@@ -38,51 +35,51 @@
         // | EDITOR                                                                               |
         // +--------------------------------------------------------------------------------------+
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
 
         private static readonly GUIContent GUICONTENT_VARIABLE = new GUIContent("{0} Variable");
 
-		public static new string NAME = "UI/Change Text";
+        public static new string NAME = "UI/Change Text";
         private const string NODE_TITLE = "Change text to {0}";
 
-		// PROPERTIES: ----------------------------------------------------------------------------
+        // PROPERTIES: ----------------------------------------------------------------------------
 
-		private SerializedProperty spText;
+        private SerializedProperty spText;
         private SerializedProperty spContent;
         private SerializedProperty spVariable;
 
-		// INSPECTOR METHODS: ---------------------------------------------------------------------
+        // INSPECTOR METHODS: ---------------------------------------------------------------------
 
-		public override string GetNodeTitle()
-		{
-            return string.Format(NODE_TITLE, this.content);
-		}
+        public override string GetNodeTitle()
+        {
+            return string.Format(NODE_TITLE, content);
+        }
 
-		protected override void OnEnableEditorChild ()
-		{
-            this.spText = this.serializedObject.FindProperty("text");
-            this.spContent = this.serializedObject.FindProperty("content");
-            this.spVariable = this.serializedObject.FindProperty("variable");
-		}
+        protected override void OnEnableEditorChild()
+        {
+            spText = serializedObject.FindProperty("text");
+            spContent = serializedObject.FindProperty("content");
+            spVariable = serializedObject.FindProperty("variable");
+        }
 
-		protected override void OnDisableEditorChild ()
-		{
-            this.spText = null;
-            this.spContent = null;
-            this.spVariable = null;
-		}
+        protected override void OnDisableEditorChild()
+        {
+            spText = null;
+            spContent = null;
+            spVariable = null;
+        }
 
-		public override void OnInspectorGUI()
-		{
-			this.serializedObject.Update();
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
 
-            EditorGUILayout.PropertyField(this.spText);
-            EditorGUILayout.PropertyField(this.spContent);
-            EditorGUILayout.PropertyField(this.spVariable, GUICONTENT_VARIABLE);
+            EditorGUILayout.PropertyField(spText);
+            EditorGUILayout.PropertyField(spContent);
+            EditorGUILayout.PropertyField(spVariable, GUICONTENT_VARIABLE);
 
-			this.serializedObject.ApplyModifiedProperties();
-		}
+            serializedObject.ApplyModifiedProperties();
+        }
 
-		#endif
-	}
+#endif
+    }
 }

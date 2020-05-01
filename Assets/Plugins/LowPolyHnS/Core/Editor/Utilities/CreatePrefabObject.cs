@@ -1,14 +1,12 @@
-﻿namespace LowPolyHnS.Core
-{
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEditor;
+﻿using UnityEditor;
+using UnityEngine;
 
-	public abstract class CreatePrefabObject
-	{
-		public static T AddGameObjectToPrefab<T>(GameObject prefabRoot, string name) where T : MonoBehaviour
-		{
+namespace LowPolyHnS.Core
+{
+    public abstract class CreatePrefabObject
+    {
+        public static T AddGameObjectToPrefab<T>(GameObject prefabRoot, string name) where T : MonoBehaviour
+        {
             GameObject instanceChild = new GameObject(name);
             T componentChild = instanceChild.AddComponent<T>();
 
@@ -17,10 +15,10 @@
             return componentChild;
         }
 
-		public static void RemoveGameObjectFromPrefab(GameObject prefabRoot, GameObject prefabChild)
-		{
+        public static void RemoveGameObjectFromPrefab(GameObject prefabRoot, GameObject prefabChild)
+        {
             Object.DestroyImmediate(prefabChild);
             PrefabUtility.SavePrefabAsset(prefabRoot);
-		}
-	}
+        }
+    }
 }

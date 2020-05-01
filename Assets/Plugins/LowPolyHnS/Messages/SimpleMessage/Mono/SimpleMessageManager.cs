@@ -1,45 +1,44 @@
-﻿namespace LowPolyHnS.Messages
+﻿using System.Collections;
+using LowPolyHnS.Core;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace LowPolyHnS.Messages
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.UI;
-	using LowPolyHnS.Core;
+    [AddComponentMenu("LowPolyHnS/Managers/SimpleMessageManager", 100)]
+    public class SimpleMessageManager : Singleton<SimpleMessageManager>
+    {
+        private const string CANVAS_ASSET_PATH = "LowPolyHnS/Messages/SimpleMessage";
 
-	[AddComponentMenu("LowPolyHnS/Managers/SimpleMessageManager", 100)]
-	public class SimpleMessageManager : Singleton<SimpleMessageManager> 
-	{
-		private const string CANVAS_ASSET_PATH = "LowPolyHnS/Messages/SimpleMessage";
+        private static int ANIMATOR_HASH_SHOW = -1;
+        private static int ANIMATOR_HASH_HIDE = -1;
+        private static int ANIMATOR_HASH_OPEN = -1;
 
-		private static int ANIMATOR_HASH_SHOW = -1;
-		private static int ANIMATOR_HASH_HIDE = -1;
-		private static int ANIMATOR_HASH_OPEN = -1;
+        private static bool MESSAGE_STATE_OPEN;
 
-		private static bool MESSAGE_STATE_OPEN = false;
+        // PROPERTIES: -------------------------------------------------------------------------------------------------
 
-		// PROPERTIES: -------------------------------------------------------------------------------------------------
+        private Animator messageAnimator;
+        private Text text;
 
-		private Animator messageAnimator;
-		private Text text;
+        // INITIALIZE: -------------------------------------------------------------------------------------------------
 
-		// INITIALIZE: -------------------------------------------------------------------------------------------------
+        protected override void OnCreate()
+        {
+            EventSystemManager.Instance.Wakeup();
 
-		protected override void OnCreate ()
-		{
-			EventSystemManager.Instance.Wakeup();
-
-			ANIMATOR_HASH_SHOW = Animator.StringToHash("Show");
-			ANIMATOR_HASH_HIDE = Animator.StringToHash("Hide");
-			ANIMATOR_HASH_OPEN = Animator.StringToHash("IsOpen");
+            ANIMATOR_HASH_SHOW = Animator.StringToHash("Show");
+            ANIMATOR_HASH_HIDE = Animator.StringToHash("Hide");
+            ANIMATOR_HASH_OPEN = Animator.StringToHash("IsOpen");
 
             DatabaseGeneral general = DatabaseGeneral.Load();
             GameObject prefab = general.prefabSimpleMessage;
             if (prefab == null) prefab = Resources.Load<GameObject>(CANVAS_ASSET_PATH);
 
-            GameObject instance = Instantiate<GameObject>(prefab, transform);
-			this.messageAnimator = instance.GetComponentInChildren<Animator>();
-			this.text = instance.GetComponentInChildren<Text>();
-		}
+            GameObject instance = Instantiate(prefab, transform);
+            messageAnimator = instance.GetComponentInChildren<Animator>();
+            text = instance.GetComponentInChildren<Text>();
+        }
 
         protected override bool ShouldNotDestroyOnLoad()
         {
@@ -49,32 +48,32 @@
         // PUBLIC METHODS: ---------------------------------------------------------------------------------------------
 
         public void ShowText(string text, Color color)
-		{
-			this.text.text = text;
-			this.text.color = color;
-			SimpleMessageManager.MESSAGE_STATE_OPEN = true;
-			this.messageAnimator.SetTrigger(ANIMATOR_HASH_SHOW);
-			this.messageAnimator.SetBool(ANIMATOR_HASH_OPEN, true);
-		}
+        {
+            this.text.text = text;
+            this.text.color = color;
+            MESSAGE_STATE_OPEN = true;
+            messageAnimator.SetTrigger(ANIMATOR_HASH_SHOW);
+            messageAnimator.SetBool(ANIMATOR_HASH_OPEN, true);
+        }
 
-		public void HideText()
-		{
-			MESSAGE_STATE_OPEN = false;
-			StartCoroutine(this.HideTextDelayed());
-		}
+        public void HideText()
+        {
+            MESSAGE_STATE_OPEN = false;
+            StartCoroutine(HideTextDelayed());
+        }
 
-		// PRIVATE METHODS: --------------------------------------------------------------------------------------------
+        // PRIVATE METHODS: --------------------------------------------------------------------------------------------
 
-		private IEnumerator HideTextDelayed()
-		{
-			YieldInstruction waitForSeconds = new WaitForSeconds(0.1f);
-			yield return waitForSeconds;
+        private IEnumerator HideTextDelayed()
+        {
+            YieldInstruction waitForSeconds = new WaitForSeconds(0.1f);
+            yield return waitForSeconds;
 
-			if (!SimpleMessageManager.MESSAGE_STATE_OPEN)
-			{
-				this.messageAnimator.SetTrigger(ANIMATOR_HASH_HIDE);
-				this.messageAnimator.SetBool(ANIMATOR_HASH_OPEN, false);
-			}
-		}
-	}
+            if (!MESSAGE_STATE_OPEN)
+            {
+                messageAnimator.SetTrigger(ANIMATOR_HASH_HIDE);
+                messageAnimator.SetBool(ANIMATOR_HASH_OPEN, false);
+            }
+        }
+    }
 }

@@ -1,25 +1,24 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class FE_FollowCameraCollision : MonoBehaviour
 {
-    [SerializeField] float minDistance = 0.3f;
-    [SerializeField] float desiredDistance = 1.5f;
-    [SerializeField] LayerMask losMask = 0;
-    [SerializeField] Collider playerCollision = null;
+    [SerializeField] private float minDistance = 0.3f;
+    [SerializeField] private float desiredDistance = 1.5f;
+    [SerializeField] private LayerMask losMask = 0;
+    [SerializeField] private Collider playerCollision = null;
 
     private void Update()
     {
         RaycastHit _hit = new RaycastHit();
-        if(Physics.Raycast(transform.position, playerCollision.ClosestPoint(transform.position) - transform.position, out _hit, 3f, losMask) == true)
+        if (Physics.Raycast(transform.position, playerCollision.ClosestPoint(transform.position) - transform.position,
+            out _hit, 3f, losMask))
         {
             Debug.Log(_hit.collider.name);
-            if(_hit.collider != playerCollision && distFromPlayer() > minDistance)
+            if (_hit.collider != playerCollision && distFromPlayer() > minDistance)
             {
                 transform.position += transform.forward * 0.1f;
             }
-            else if(_hit.collider == playerCollision && distFromPlayer() < desiredDistance)
+            else if (_hit.collider == playerCollision && distFromPlayer() < desiredDistance)
             {
                 if (Physics.OverlapSphere(transform.position, 0.2f, losMask).Length <= 0)
                 {

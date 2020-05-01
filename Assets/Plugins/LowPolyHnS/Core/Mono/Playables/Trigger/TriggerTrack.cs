@@ -1,16 +1,12 @@
-﻿namespace LowPolyHnS.Playables
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEngine.Timeline;
-    using UnityEngine.Playables;
-    using LowPolyHnS.Core;
+﻿using LowPolyHnS.Core;
+using UnityEngine.Timeline;
 
+namespace LowPolyHnS.Playables
+{
     [TrackColor(0.76f, 0.76f, 0.76f)]
     [TrackClipType(typeof(TriggerAsset))]
     [TrackBindingType(typeof(Trigger))]
-    public class TriggerTrack : TrackAsset 
+    public class TriggerTrack : TrackAsset
     {
         protected override void OnCreateClip(TimelineClip clip)
         {

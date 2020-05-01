@@ -1,68 +1,65 @@
-﻿namespace LowPolyHnS.Core
+﻿using LowPolyHnS.Variables;
+using UnityEngine;
+
+namespace LowPolyHnS.Core
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-	using LowPolyHnS.Core;
-    using LowPolyHnS.Variables;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[AddComponentMenu("")]
-	public class ActionOpenURL : IAction 
-	{
+    [AddComponentMenu("")]
+    public class ActionOpenURL : IAction
+    {
         public StringProperty link = new StringProperty("http://...");
 
-		// EXECUTABLE: ----------------------------------------------------------------------------
-		
+        // EXECUTABLE: ----------------------------------------------------------------------------
+
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
-		{
-            Application.OpenURL (this.link.GetValue(target));
-			return true;
-		}
+        {
+            Application.OpenURL(link.GetValue(target));
+            return true;
+        }
 
-		// +--------------------------------------------------------------------------------------+
-		// | EDITOR                                                                               |
-		// +--------------------------------------------------------------------------------------+
+        // +--------------------------------------------------------------------------------------+
+        // | EDITOR                                                                               |
+        // +--------------------------------------------------------------------------------------+
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 
-		public static new string NAME = "Application/Open URL";
-		private const string NODE_TITLE = "Open URL: {0}";
+        public static new string NAME = "Application/Open URL";
+        private const string NODE_TITLE = "Open URL: {0}";
 
-		// PROPERTIES: ----------------------------------------------------------------------------
+        // PROPERTIES: ----------------------------------------------------------------------------
 
-		private SerializedProperty spLink;
+        private SerializedProperty spLink;
 
-		// INSPECTOR METHODS: ---------------------------------------------------------------------
+        // INSPECTOR METHODS: ---------------------------------------------------------------------
 
-		public override string GetNodeTitle()
-		{
-			return string.Format(NODE_TITLE, this.link);
-		}
+        public override string GetNodeTitle()
+        {
+            return string.Format(NODE_TITLE, link);
+        }
 
-		protected override void OnEnableEditorChild ()
-		{
-			this.spLink = this.serializedObject.FindProperty("link");
-		}
+        protected override void OnEnableEditorChild()
+        {
+            spLink = serializedObject.FindProperty("link");
+        }
 
-		protected override void OnDisableEditorChild ()
-		{
-			this.spLink = null;
-		}
+        protected override void OnDisableEditorChild()
+        {
+            spLink = null;
+        }
 
-		public override void OnInspectorGUI()
-		{
-			this.serializedObject.Update();
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
 
-			EditorGUILayout.PropertyField(this.spLink);
+            EditorGUILayout.PropertyField(spLink);
 
-			this.serializedObject.ApplyModifiedProperties();
-		}
+            serializedObject.ApplyModifiedProperties();
+        }
 
-		#endif
-	}
+#endif
+    }
 }

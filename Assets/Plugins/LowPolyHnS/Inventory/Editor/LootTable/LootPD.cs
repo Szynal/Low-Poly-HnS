@@ -1,11 +1,8 @@
-﻿namespace LowPolyHnS.Inventory
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEditor;
-    using LowPolyHnS.Core;
+﻿using UnityEditor;
+using UnityEngine;
 
+namespace LowPolyHnS.Inventory
+{
     [CustomPropertyDrawer(typeof(LootTable.Loot))]
     public class LootPD : PropertyDrawer
     {
@@ -18,8 +15,8 @@
             Rect rectItem = Rect.zero;
             Rect rectAmount = Rect.zero;
             Rect rectWeight = Rect.zero;
-            this.GetRects(
-                position, spItem, spAmount, spWeight, 
+            GetRects(
+                position, spItem, spAmount, spWeight,
                 ref rectItem, ref rectAmount, ref rectWeight
             );
 
@@ -41,24 +38,22 @@
             Rect rectItem = Rect.zero;
             Rect rectAmount = Rect.zero;
             Rect rectWeight = Rect.zero;
-            this.GetRects(
-                Rect.zero, 
-                spItem, spAmount, spWeight, 
+            GetRects(
+                Rect.zero,
+                spItem, spAmount, spWeight,
                 ref rectItem, ref rectAmount, ref rectWeight
             );
 
-            return (
-                rectItem.height +
-                rectAmount.height +
-                rectWeight.height +
-                (4 * EditorGUIUtility.standardVerticalSpacing)
-            );
+            return rectItem.height +
+                   rectAmount.height +
+                   rectWeight.height +
+                   4 * EditorGUIUtility.standardVerticalSpacing;
         }
 
         // PRIVATE METHODS: -----------------------------------------------------------------------
 
-        private void GetRects(Rect position, 
-            SerializedProperty spItem, SerializedProperty spAmount, SerializedProperty spLimit, 
+        private void GetRects(Rect position,
+            SerializedProperty spItem, SerializedProperty spAmount, SerializedProperty spLimit,
             ref Rect rectItem, ref Rect rectAmount, ref Rect rectWeight)
         {
             rectItem = new Rect(

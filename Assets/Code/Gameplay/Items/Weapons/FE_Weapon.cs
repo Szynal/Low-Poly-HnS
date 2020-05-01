@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public enum EAmmoType
 {
@@ -8,17 +6,16 @@ public enum EAmmoType
     MachinePistol,
     Rifle,
     Shot
-};
+}
 
 [CreateAssetMenu(fileName = "NewWeapon", menuName = "FearEffect/Items/Weapon", order = 1)]
 public class FE_Weapon : FE_Item
 {
-    [Header("Properties for Weapon")]
-    public EAmmoType AmmoType = default;
+    [Header("Properties for Weapon")] public EAmmoType AmmoType = default;
     public bool IsDualWielded = false;
     public FE_Weapon DualWieldedVariant = null;
 
-    public int MagAmmoLeft = 0;
+    public int MagAmmoLeft;
     public int MagAmmoMax = 0;
 
     public int Damage = 0;
@@ -39,4 +36,3 @@ public class FE_Weapon : FE_Item
         MagAmmoLeft -= 1;
     }
 }
-

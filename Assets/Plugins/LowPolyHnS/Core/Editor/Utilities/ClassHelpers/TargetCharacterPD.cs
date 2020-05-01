@@ -1,14 +1,11 @@
-﻿namespace LowPolyHnS.Core
-{
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEditor;
-    using LowPolyHnS.Variables;
+﻿using LowPolyHnS.Variables;
+using UnityEditor;
 
+namespace LowPolyHnS.Core
+{
     [CustomPropertyDrawer(typeof(TargetCharacter))]
     public class TargetCharacterPD : TargetGenericPD
-	{
+    {
         public const string PROP_CHARACTER = "character";
         public const string PROP_GLOBAL = "global";
         public const string PROP_LOCAL = "local";
@@ -16,7 +13,7 @@
 
         protected override SerializedProperty GetProperty(int option, SerializedProperty property)
         {
-            TargetCharacter.Target optionTyped = (TargetCharacter.Target)option;
+            TargetCharacter.Target optionTyped = (TargetCharacter.Target) option;
             switch (optionTyped)
             {
                 case TargetCharacter.Target.Character:
@@ -37,7 +34,7 @@
 
         protected override void Initialize(SerializedProperty property)
         {
-            int allowTypesMask = (1 << (int)Variable.DataType.GameObject);
+            int allowTypesMask = 1 << (int) Variable.DataType.GameObject;
 
             property
                 .FindPropertyRelative(PROP_GLOBAL)

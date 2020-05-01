@@ -1,14 +1,18 @@
-﻿namespace LowPolyHnS.Variables
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEngine.Events;
+﻿using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Events;
 
+namespace LowPolyHnS.Variables
+{
     public class VariablesEvents
     {
-        public class VarEvent : UnityEvent<string> { }
-        public class ListEvent : UnityEvent<int, object, object> { }
+        public class VarEvent : UnityEvent<string>
+        {
+        }
+
+        public class ListEvent : UnityEvent<int, object, object>
+        {
+        }
 
         // PROPERTIES: ----------------------------------------------------------------------------
 
@@ -23,20 +27,20 @@
 
         public VariablesEvents()
         {
-            this.onVariableChange = new Dictionary<string, VarEvent>();
+            onVariableChange = new Dictionary<string, VarEvent>();
 
-            this.onListAny = new Dictionary<string, ListEvent>();
-            this.onListChg = new Dictionary<string, ListEvent>();
-            this.onListAdd = new Dictionary<string, ListEvent>();
-            this.onListRmv = new Dictionary<string, ListEvent>();
+            onListAny = new Dictionary<string, ListEvent>();
+            onListChg = new Dictionary<string, ListEvent>();
+            onListAdd = new Dictionary<string, ListEvent>();
+            onListRmv = new Dictionary<string, ListEvent>();
         }
 
         // PUBLIC METHODS: ------------------------------------------------------------------------
 
         public void OnChangeGlobal(string variableID)
         {
-            if (!this.onVariableChange.ContainsKey(variableID)) return;
-            VarEvent varEvent = this.onVariableChange[variableID];
+            if (!onVariableChange.ContainsKey(variableID)) return;
+            VarEvent varEvent = onVariableChange[variableID];
             if (varEvent != null) varEvent.Invoke(variableID);
         }
 
@@ -44,10 +48,10 @@
         {
             if (gameObject == null) return;
 
-            string localID = this.GetLocalID(gameObject, variableID);
-            if (!this.onVariableChange.ContainsKey(localID)) return;
+            string localID = GetLocalID(gameObject, variableID);
+            if (!onVariableChange.ContainsKey(localID)) return;
 
-            VarEvent varEvent = this.onVariableChange[localID];
+            VarEvent varEvent = onVariableChange[localID];
             if (varEvent != null) varEvent.Invoke(variableID);
         }
 
@@ -55,15 +59,15 @@
         {
             if (gameObject == null) return;
 
-            string listID = this.GetListID(gameObject);
+            string listID = GetListID(gameObject);
             ListEvent listEvent = null;
 
-            if (this.onListChg.TryGetValue(listID, out listEvent) && listEvent != null)
+            if (onListChg.TryGetValue(listID, out listEvent) && listEvent != null)
             {
                 listEvent.Invoke(index, prevElem, newElem);
             }
 
-            if (this.onListAny.TryGetValue(listID, out listEvent) && listEvent != null)
+            if (onListAny.TryGetValue(listID, out listEvent) && listEvent != null)
             {
                 listEvent.Invoke(index, prevElem, newElem);
             }
@@ -73,15 +77,15 @@
         {
             if (gameObject == null) return;
 
-            string listID = this.GetListID(gameObject);
+            string listID = GetListID(gameObject);
             ListEvent listEvent = null;
 
-            if (this.onListAdd.TryGetValue(listID, out listEvent) && listEvent != null)
+            if (onListAdd.TryGetValue(listID, out listEvent) && listEvent != null)
             {
                 listEvent.Invoke(index, null, newElem);
             }
 
-            if (this.onListAny.TryGetValue(listID, out listEvent) && listEvent != null)
+            if (onListAny.TryGetValue(listID, out listEvent) && listEvent != null)
             {
                 listEvent.Invoke(index, null, newElem);
             }
@@ -91,15 +95,15 @@
         {
             if (gameObject == null) return;
 
-            string listID = this.GetListID(gameObject);
+            string listID = GetListID(gameObject);
             ListEvent listEvent = null;
 
-            if (this.onListRmv.TryGetValue(listID, out listEvent) && listEvent != null)
+            if (onListRmv.TryGetValue(listID, out listEvent) && listEvent != null)
             {
                 listEvent.Invoke(index, prevElem, null);
             }
 
-            if (this.onListAny.TryGetValue(listID, out listEvent) && listEvent != null)
+            if (onListAny.TryGetValue(listID, out listEvent) && listEvent != null)
             {
                 listEvent.Invoke(index, prevElem, null);
             }
@@ -109,12 +113,12 @@
 
         public void SetOnChangeGlobal(UnityAction<string> action, string variableID)
         {
-            if (!this.onVariableChange.ContainsKey(variableID))
+            if (!onVariableChange.ContainsKey(variableID))
             {
-                this.onVariableChange.Add(variableID, new VarEvent());
+                onVariableChange.Add(variableID, new VarEvent());
             }
 
-            this.onVariableChange[variableID].AddListener(action);
+            onVariableChange[variableID].AddListener(action);
         }
 
         public void SetOnChangeLocal(UnityAction<string> action, GameObject gameObject, string variableID)
@@ -122,16 +126,16 @@
             if (gameObject == null) return;
 
             string localID = GetLocalID(gameObject, variableID);
-            if (!this.onVariableChange.ContainsKey(localID))
+            if (!onVariableChange.ContainsKey(localID))
             {
-                this.onVariableChange.Add(localID, new VarEvent());
+                onVariableChange.Add(localID, new VarEvent());
             }
 
-            this.onVariableChange[localID].AddListener(action);
+            onVariableChange[localID].AddListener(action);
         }
 
         /// <summary>
-        /// Start listening for any List Variable change: Adding, Removing and Changing an element
+        ///     Start listening for any List Variable change: Adding, Removing and Changing an element
         /// </summary>
         /// <param name="action">Action.</param>
         /// <param name="gameObject">Game object.</param>
@@ -140,16 +144,16 @@
             if (gameObject == null) return;
 
             string listID = GetListID(gameObject);
-            if (!this.onListAny.ContainsKey(listID))
+            if (!onListAny.ContainsKey(listID))
             {
-                this.onListAny.Add(listID, new ListEvent());
+                onListAny.Add(listID, new ListEvent());
             }
 
-            this.onListAny[listID].AddListener(action);
+            onListAny[listID].AddListener(action);
         }
 
         /// <summary>
-        /// Start listening for a change in a List Variable element
+        ///     Start listening for a change in a List Variable element
         /// </summary>
         /// <param name="action">Action.</param>
         /// <param name="gameObject">List Variable.</param>
@@ -158,16 +162,16 @@
             if (gameObject == null) return;
 
             string listID = GetListID(gameObject);
-            if (!this.onListChg.ContainsKey(listID))
+            if (!onListChg.ContainsKey(listID))
             {
-                this.onListChg.Add(listID, new ListEvent());
+                onListChg.Add(listID, new ListEvent());
             }
 
-            this.onListChg[listID].AddListener(action);
+            onListChg[listID].AddListener(action);
         }
 
         /// <summary>
-        /// Start listening for elements being added to the List Variables
+        ///     Start listening for elements being added to the List Variables
         /// </summary>
         /// <param name="action">Action.</param>
         /// <param name="gameObject">Game object.</param>
@@ -176,16 +180,16 @@
             if (gameObject == null) return;
 
             string listID = GetListID(gameObject);
-            if (!this.onListAdd.ContainsKey(listID))
+            if (!onListAdd.ContainsKey(listID))
             {
-                this.onListAdd.Add(listID, new ListEvent());
+                onListAdd.Add(listID, new ListEvent());
             }
 
-            this.onListAdd[listID].AddListener(action);
+            onListAdd[listID].AddListener(action);
         }
 
         /// <summary>
-        /// Start listening for elements being removed from the List Variables
+        ///     Start listening for elements being removed from the List Variables
         /// </summary>
         /// <param name="action">Action.</param>
         /// <param name="gameObject">Game object.</param>
@@ -194,29 +198,29 @@
             if (gameObject == null) return;
 
             string listID = GetListID(gameObject);
-            if (!this.onListRmv.ContainsKey(listID))
+            if (!onListRmv.ContainsKey(listID))
             {
-                this.onListRmv.Add(listID, new ListEvent());
+                onListRmv.Add(listID, new ListEvent());
             }
 
-            this.onListRmv[listID].AddListener(action);
+            onListRmv[listID].AddListener(action);
         }
 
         // REMOVERS: ------------------------------------------------------------------------------
 
         public void RemoveChangeGlobal(UnityAction<string> action, string variableID)
         {
-            if (!this.onVariableChange.ContainsKey(variableID)) return;
-            this.onVariableChange[variableID].RemoveListener(action);
+            if (!onVariableChange.ContainsKey(variableID)) return;
+            onVariableChange[variableID].RemoveListener(action);
         }
 
         public void RemoveChangeLocal(UnityAction<string> action, GameObject gameObject, string variableID)
         {
             if (gameObject == null) return;
 
-            string localID = this.GetLocalID(gameObject, variableID);
-            if (!this.onVariableChange.ContainsKey(localID)) return;
-            this.onVariableChange[localID].RemoveListener(action);
+            string localID = GetLocalID(gameObject, variableID);
+            if (!onVariableChange.ContainsKey(localID)) return;
+            onVariableChange[localID].RemoveListener(action);
         }
 
         public void StopListenListAny(UnityAction<int, object, object> action, GameObject gameObject)
@@ -224,8 +228,8 @@
             if (gameObject == null) return;
             string listID = GetListID(gameObject);
 
-            if (!this.onListAny.ContainsKey(listID)) return;
-            this.onListAny[listID].RemoveListener(action);
+            if (!onListAny.ContainsKey(listID)) return;
+            onListAny[listID].RemoveListener(action);
         }
 
         public void StopListenListChg(UnityAction<int, object, object> action, GameObject gameObject)
@@ -233,8 +237,8 @@
             if (gameObject == null) return;
             string listID = GetListID(gameObject);
 
-            if (!this.onListChg.ContainsKey(listID)) return;
-            this.onListChg[listID].RemoveListener(action);
+            if (!onListChg.ContainsKey(listID)) return;
+            onListChg[listID].RemoveListener(action);
         }
 
         public void StopListenListAdd(UnityAction<int, object, object> action, GameObject gameObject)
@@ -242,8 +246,8 @@
             if (gameObject == null) return;
             string listID = GetListID(gameObject);
 
-            if (!this.onListAdd.ContainsKey(listID)) return;
-            this.onListAdd[listID].RemoveListener(action);
+            if (!onListAdd.ContainsKey(listID)) return;
+            onListAdd[listID].RemoveListener(action);
         }
 
         public void StopListenListRmv(UnityAction<int, object, object> action, GameObject gameObject)
@@ -251,8 +255,8 @@
             if (gameObject == null) return;
             string listID = GetListID(gameObject);
 
-            if (!this.onListRmv.ContainsKey(listID)) return;
-            this.onListRmv[listID].RemoveListener(action);
+            if (!onListRmv.ContainsKey(listID)) return;
+            onListRmv[listID].RemoveListener(action);
         }
 
         // PRIVATE METHODS: -----------------------------------------------------------------------

@@ -1,10 +1,8 @@
-﻿namespace LowPolyHnS.Inventory
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEngine.UI;
+﻿using UnityEngine;
+using UnityEngine.UI;
 
+namespace LowPolyHnS.Inventory
+{
     public abstract class IContainerUIItem : MonoBehaviour
     {
         protected static DatabaseInventory DATABASE_INVENTORY;
@@ -18,8 +16,7 @@
         public Text textName;
         public Text textDescription;
 
-        [Space]
-        public GameObject wrapAmount;
+        [Space] public GameObject wrapAmount;
         public Text textAmount;
 
         // CONSTRUCTOR & UPDATER: -----------------------------------------------------------------
@@ -33,17 +30,17 @@
 
         public void UpdateUI()
         {
-            if (this.item == null) return;
+            if (item == null) return;
 
-            if (this.image != null && this.item.sprite != null) this.image.sprite = this.item.sprite;
-            if (this.textName != null) this.textName.text = this.item.itemName.GetText();
-            if (this.textDescription != null) this.textDescription.text = this.item.itemDescription.GetText();
+            if (image != null && item.sprite != null) image.sprite = item.sprite;
+            if (textName != null) textName.text = item.itemName.GetText();
+            if (textDescription != null) textDescription.text = item.itemDescription.GetText();
 
-            int amount = this.GetAmount();
-            if (this.wrapAmount != null)
+            int amount = GetAmount();
+            if (wrapAmount != null)
             {
-                this.wrapAmount.SetActive(amount != 1);
-                if (this.textAmount != null) this.textAmount.text = amount.ToString();
+                wrapAmount.SetActive(amount != 1);
+                if (textAmount != null) textAmount.text = amount.ToString();
             }
         }
 

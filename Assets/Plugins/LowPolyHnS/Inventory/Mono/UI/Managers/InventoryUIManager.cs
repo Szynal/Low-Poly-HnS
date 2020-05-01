@@ -1,166 +1,164 @@
-﻿namespace LowPolyHnS.Inventory
-{
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.UI;
-	using LowPolyHnS.Core;
+﻿using LowPolyHnS.Core;
+using UnityEngine;
+using UnityEngine.UI;
 
-	public class InventoryUIManager : MonoBehaviour
-	{
+namespace LowPolyHnS.Inventory
+{
+    public class InventoryUIManager : MonoBehaviour
+    {
         private const int TIME_LAYER = 200;
 
-		private static InventoryUIManager Instance;
-		private static DatabaseInventory DATABASE_INVENTORY;
+        private static InventoryUIManager Instance;
+        private static DatabaseInventory DATABASE_INVENTORY;
 
         private const string DEFAULT_UI_PATH = "LowPolyHnS/Inventory/InventoryRPG";
 
-		// PROPERTIES: ----------------------------------------------------------------------------
+        // PROPERTIES: ----------------------------------------------------------------------------
 
-		[Space] public Image floatingItem;
+        [Space] public Image floatingItem;
 
         private CanvasScaler canvasScaler;
-		private RectTransform floatingItemRT;
-		private Animator inventoryAnimator;
-		private GameObject inventoryRoot;
-        private bool isOpen = false;
+        private RectTransform floatingItemRT;
+        private Animator inventoryAnimator;
+        private GameObject inventoryRoot;
+        private bool isOpen;
 
         // INITIALIZERS: --------------------------------------------------------------------------
 
         private void Awake()
-		{
-			InventoryUIManager.Instance = this;
-			if (transform.childCount >= 1) 
-			{
-				this.inventoryRoot = transform.GetChild(0).gameObject;
-				this.inventoryAnimator = this.inventoryRoot.GetComponent<Animator>();
-			}
+        {
+            Instance = this;
+            if (transform.childCount >= 1)
+            {
+                inventoryRoot = transform.GetChild(0).gameObject;
+                inventoryAnimator = inventoryRoot.GetComponent<Animator>();
+            }
 
-			if (this.floatingItem != null) this.floatingItemRT = this.floatingItem.GetComponent<RectTransform>();
-			InventoryUIManager.OnDragItem(null, false);
-		}
+            if (floatingItem != null) floatingItemRT = floatingItem.GetComponent<RectTransform>();
+            OnDragItem(null, false);
+        }
 
-		// PUBLIC METHODS: ------------------------------------------------------------------------
+        // PUBLIC METHODS: ------------------------------------------------------------------------
 
-		public void Open()
-		{
-			if (this.isOpen) return;
+        public void Open()
+        {
+            if (isOpen) return;
 
-			this.ChangeState(true);
-			if (DATABASE_INVENTORY.inventorySettings.pauseTimeOnUI)
-			{
+            ChangeState(true);
+            if (DATABASE_INVENTORY.inventorySettings.pauseTimeOnUI)
+            {
                 TimeManager.Instance.SetTimeScale(0f, TIME_LAYER);
-			}
-		}
+            }
+        }
 
-		public void Close()
-		{
-			if (!this.isOpen) return;
+        public void Close()
+        {
+            if (!isOpen) return;
 
-			if (DATABASE_INVENTORY.inventorySettings.pauseTimeOnUI)
-			{
+            if (DATABASE_INVENTORY.inventorySettings.pauseTimeOnUI)
+            {
                 TimeManager.Instance.SetTimeScale(1f, TIME_LAYER);
             }
 
-			this.ChangeState(false);
-		}
+            ChangeState(false);
+        }
 
         public bool IsOpen()
         {
-            return this.isOpen;
+            return isOpen;
         }
 
-		// STATIC METHODS: ------------------------------------------------------------------------
+        // STATIC METHODS: ------------------------------------------------------------------------
 
-		public static void OpenInventory()
-		{
-			if (IsInventoryOpen()) return;
+        public static void OpenInventory()
+        {
+            if (IsInventoryOpen()) return;
 
-            InventoryUIManager.RequireInstance();
-			InventoryUIManager.Instance.Open();
-		}
+            RequireInstance();
+            Instance.Open();
+        }
 
-		public static void CloseInventory()
-		{
+        public static void CloseInventory()
+        {
             if (!IsInventoryOpen()) return;
 
-			InventoryUIManager.RequireInstance();
-			InventoryUIManager.Instance.Close();
-		}
+            RequireInstance();
+            Instance.Close();
+        }
 
         public static bool IsInventoryOpen()
         {
-            if (InventoryUIManager.Instance == null) return false;
-            return InventoryUIManager.Instance.IsOpen();
+            if (Instance == null) return false;
+            return Instance.IsOpen();
         }
 
-		private static void RequireInstance()
-		{
+        private static void RequireInstance()
+        {
             if (DATABASE_INVENTORY == null) DATABASE_INVENTORY = DatabaseInventory.Load();
-			if (InventoryUIManager.Instance == null)
-			{
-				EventSystemManager.Instance.Wakeup();
-				if (DATABASE_INVENTORY.inventorySettings == null)
-				{
+            if (Instance == null)
+            {
+                EventSystemManager.Instance.Wakeup();
+                if (DATABASE_INVENTORY.inventorySettings == null)
+                {
                     Debug.LogError("No inventory database found");
-					return;
+                    return;
                 }
 
                 GameObject prefab = DATABASE_INVENTORY.inventorySettings.inventoryUIPrefab;
                 if (prefab == null) prefab = Resources.Load<GameObject>(DEFAULT_UI_PATH);
 
-				Instantiate(prefab, Vector3.zero, Quaternion.identity);
-			}
-		}
+                Instantiate(prefab, Vector3.zero, Quaternion.identity);
+            }
+        }
 
-		public static void OnDragItem(Sprite sprite, bool dragging)
-		{
-            if (!InventoryUIManager.Instance.floatingItem) return;
+        public static void OnDragItem(Sprite sprite, bool dragging)
+        {
+            if (!Instance.floatingItem) return;
 
-			InventoryUIManager.Instance.floatingItem.gameObject.SetActive(dragging);
-			if (!dragging) return;
+            Instance.floatingItem.gameObject.SetActive(dragging);
+            if (!dragging) return;
 
-			InventoryUIManager.Instance.floatingItem.sprite = sprite;
+            Instance.floatingItem.sprite = sprite;
 
-            Vector2 position = InventoryUIManager.Instance.GetPointerPositionUnscaled(Input.mousePosition);
-			InventoryUIManager.Instance.floatingItemRT.anchoredPosition = position;
-		}
+            Vector2 position = Instance.GetPointerPositionUnscaled(Input.mousePosition);
+            Instance.floatingItemRT.anchoredPosition = position;
+        }
 
-		// PRIVATE METHODS: -----------------------------------------------------------------------
+        // PRIVATE METHODS: -----------------------------------------------------------------------
 
-		private void ChangeState(bool toOpen)
-		{
-			if (this.inventoryRoot == null) 
-			{
-				Debug.LogError("Unable to find inventoryRoot");
-				return;
-			}
+        private void ChangeState(bool toOpen)
+        {
+            if (inventoryRoot == null)
+            {
+                Debug.LogError("Unable to find inventoryRoot");
+                return;
+            }
 
-			this.isOpen = toOpen;
+            isOpen = toOpen;
 
-			if (this.inventoryAnimator == null)
-			{
-				this.inventoryRoot.SetActive(toOpen);
-				return;
-			}
+            if (inventoryAnimator == null)
+            {
+                inventoryRoot.SetActive(toOpen);
+                return;
+            }
 
-            this.inventoryAnimator.SetBool("State", toOpen);
-			InventoryManager.Instance.eventInventoryUI.Invoke(toOpen);
-		}
+            inventoryAnimator.SetBool("State", toOpen);
+            InventoryManager.Instance.eventInventoryUI.Invoke(toOpen);
+        }
 
-		private Vector2 GetPointerPositionUnscaled(Vector2 mousePosition)
-		{
-			if (this.canvasScaler == null) this.canvasScaler = transform.GetComponentInParent<CanvasScaler>();
-			if (this.canvasScaler == null) return mousePosition;
+        private Vector2 GetPointerPositionUnscaled(Vector2 mousePosition)
+        {
+            if (canvasScaler == null) canvasScaler = transform.GetComponentInParent<CanvasScaler>();
+            if (canvasScaler == null) return mousePosition;
 
-			Vector2 referenceResolution = this.canvasScaler.referenceResolution;
-			Vector2 currentResolution = new Vector2(Screen.width, Screen.height);
+            Vector2 referenceResolution = canvasScaler.referenceResolution;
+            Vector2 currentResolution = new Vector2(Screen.width, Screen.height);
 
-			float widthRatio = currentResolution.x / referenceResolution.x;
-			float heightRatio = currentResolution.y / referenceResolution.y;
-			float ratio = Mathf.Lerp(widthRatio, heightRatio, this.canvasScaler.matchWidthOrHeight);
+            float widthRatio = currentResolution.x / referenceResolution.x;
+            float heightRatio = currentResolution.y / referenceResolution.y;
+            float ratio = Mathf.Lerp(widthRatio, heightRatio, canvasScaler.matchWidthOrHeight);
 
-			return mousePosition/ratio;
-		}
-	}
+            return mousePosition / ratio;
+        }
+    }
 }

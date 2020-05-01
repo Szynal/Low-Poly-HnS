@@ -1,110 +1,126 @@
-﻿namespace LowPolyHnS.Core
+﻿using UnityEngine;
+
+namespace LowPolyHnS.Core
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[AddComponentMenu("")]
-	public class ConditionInputMouse : ICondition
-	{
-		public enum MOUSE_BUTTON
-		{
-			LeftButton   = 0,
-			RightButton  = 1,
-			MiddleButton = 2
-		}
+    [AddComponentMenu("")]
+    public class ConditionInputMouse : ICondition
+    {
+        public enum MOUSE_BUTTON
+        {
+            LeftButton = 0,
+            RightButton = 1,
+            MiddleButton = 2
+        }
 
-		public enum STATE 
-		{
-			BeingPressed,
-			JustPressed,
-			JustReleased
-		}
+        public enum STATE
+        {
+            BeingPressed,
+            JustPressed,
+            JustReleased
+        }
 
-		// PROPERTIES: -------------------------------------------------------------------------------------------------
+        // PROPERTIES: -------------------------------------------------------------------------------------------------
 
-		public MOUSE_BUTTON button = MOUSE_BUTTON.LeftButton;
-		public STATE state = STATE.BeingPressed;
+        public MOUSE_BUTTON button = MOUSE_BUTTON.LeftButton;
+        public STATE state = STATE.BeingPressed;
 
-		// EXECUTABLE: -------------------------------------------------------------------------------------------------
-		
-		public override bool Check()
-		{
-			bool result = false;
+        // EXECUTABLE: -------------------------------------------------------------------------------------------------
 
-			switch (this.state)
-			{
-			case STATE.BeingPressed : result = Input.GetMouseButton((int)this.button); break;
-			case STATE.JustPressed  : result = Input.GetMouseButtonDown((int)this.button); break;
-			case STATE.JustReleased : result = Input.GetMouseButtonUp((int)this.button); break;
-			}
+        public override bool Check()
+        {
+            bool result = false;
 
-			return result;
-		}
+            switch (state)
+            {
+                case STATE.BeingPressed:
+                    result = Input.GetMouseButton((int) button);
+                    break;
+                case STATE.JustPressed:
+                    result = Input.GetMouseButtonDown((int) button);
+                    break;
+                case STATE.JustReleased:
+                    result = Input.GetMouseButtonUp((int) button);
+                    break;
+            }
 
-		// +-----------------------------------------------------------------------------------------------------------+
-		// | EDITOR                                                                                                    |
-		// +-----------------------------------------------------------------------------------------------------------+
+            return result;
+        }
 
-		#if UNITY_EDITOR
+        // +-----------------------------------------------------------------------------------------------------------+
+        // | EDITOR                                                                                                    |
+        // +-----------------------------------------------------------------------------------------------------------+
 
-		public static new string NAME = "Input/Mouse Button";
-		private const string NODE_TITLE = "Is Mouse {0} {1}";
+#if UNITY_EDITOR
 
-		// PROPERTIES: -------------------------------------------------------------------------------------------------
+        public static new string NAME = "Input/Mouse Button";
+        private const string NODE_TITLE = "Is Mouse {0} {1}";
 
-		private SerializedProperty spButton;
-		private SerializedProperty spState;
+        // PROPERTIES: -------------------------------------------------------------------------------------------------
 
-		// INSPECTOR METHODS: ------------------------------------------------------------------------------------------
+        private SerializedProperty spButton;
+        private SerializedProperty spState;
 
-		public override string GetNodeTitle()
-		{
-			string buttonName = "";
-			string buttonState = "";
+        // INSPECTOR METHODS: ------------------------------------------------------------------------------------------
 
-			switch (this.button)
-			{
-			case MOUSE_BUTTON.LeftButton   : buttonName = "Left Button"; break;
-			case MOUSE_BUTTON.RightButton  : buttonName = "Right Button"; break;
-			case MOUSE_BUTTON.MiddleButton : buttonName = "Middle Button"; break;
-			}
+        public override string GetNodeTitle()
+        {
+            string buttonName = "";
+            string buttonState = "";
 
-			switch (this.state)
-			{
-			case STATE.BeingPressed : buttonState = "Being Pressed"; break;
-			case STATE.JustPressed  : buttonState = "Just Pressed";  break;
-			case STATE.JustReleased : buttonState = "Just Released"; break;
-			}
+            switch (button)
+            {
+                case MOUSE_BUTTON.LeftButton:
+                    buttonName = "Left Button";
+                    break;
+                case MOUSE_BUTTON.RightButton:
+                    buttonName = "Right Button";
+                    break;
+                case MOUSE_BUTTON.MiddleButton:
+                    buttonName = "Middle Button";
+                    break;
+            }
 
-			return string.Format(
-				NODE_TITLE, 
-				buttonName,
-				buttonState
-			);
-		}
+            switch (state)
+            {
+                case STATE.BeingPressed:
+                    buttonState = "Being Pressed";
+                    break;
+                case STATE.JustPressed:
+                    buttonState = "Just Pressed";
+                    break;
+                case STATE.JustReleased:
+                    buttonState = "Just Released";
+                    break;
+            }
 
-		protected override void OnEnableEditorChild ()
-		{
-			this.spButton = this.serializedObject.FindProperty("button");
-			this.spState = this.serializedObject.FindProperty("state");
-		}
+            return string.Format(
+                NODE_TITLE,
+                buttonName,
+                buttonState
+            );
+        }
 
-		public override void OnInspectorGUI()
-		{
-			this.serializedObject.Update();
+        protected override void OnEnableEditorChild()
+        {
+            spButton = serializedObject.FindProperty("button");
+            spState = serializedObject.FindProperty("state");
+        }
 
-			EditorGUILayout.PropertyField(this.spButton);
-			EditorGUILayout.PropertyField(this.spState);
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
 
-			this.serializedObject.ApplyModifiedProperties();
-		}
+            EditorGUILayout.PropertyField(spButton);
+            EditorGUILayout.PropertyField(spState);
 
-		#endif
-	}
+            serializedObject.ApplyModifiedProperties();
+        }
+
+#endif
+    }
 }

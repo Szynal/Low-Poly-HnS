@@ -1,11 +1,8 @@
-﻿namespace LowPolyHnS.Variables
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEditor;
-    using LowPolyHnS.Core;
+﻿using UnityEditor;
+using UnityEngine;
 
+namespace LowPolyHnS.Variables
+{
     [CustomPropertyDrawer(typeof(HelperLocalVariable))]
     public class HelperLocalVariablePD : HelperGenericVariablePD
     {
@@ -26,21 +23,21 @@
         {
             EditorGUI.BeginProperty(position, label, property);
 
-            this.spTargetType = property.FindPropertyRelative(PROP_TARGET_TYP);
-            this.spTargetObject = property.FindPropertyRelative(PROP_TARGET_OBJ);
-            this.spAllowTypesMask = property.FindPropertyRelative(PROP_ALLOW_TYPES_MASK);
+            spTargetType = property.FindPropertyRelative(PROP_TARGET_TYP);
+            spTargetObject = property.FindPropertyRelative(PROP_TARGET_OBJ);
+            spAllowTypesMask = property.FindPropertyRelative(PROP_ALLOW_TYPES_MASK);
 
             Rect rectTargetType = new Rect(
                 position.x,
                 position.y,
                 EditorGUIUtility.labelWidth + TARGET_WIDTH,
-                EditorGUI.GetPropertyHeight(this.spTargetType, true)
+                EditorGUI.GetPropertyHeight(spTargetType, true)
             );
             Rect rectTargetObject = new Rect(
                 rectTargetType.x + rectTargetType.width + EditorGUIUtility.standardVerticalSpacing,
                 rectTargetType.y,
                 position.width - (rectTargetType.width + EditorGUIUtility.standardVerticalSpacing),
-                EditorGUI.GetPropertyHeight(this.spTargetObject, true)
+                EditorGUI.GetPropertyHeight(spTargetObject, true)
             );
 
             Rect rectVariable = new Rect(
@@ -50,26 +47,26 @@
                 EditorGUIUtility.singleLineHeight
             );
 
-            EditorGUI.PropertyField(rectTargetType, this.spTargetType, GUICONTENT_EMPTY);
+            EditorGUI.PropertyField(rectTargetType, spTargetType, GUICONTENT_EMPTY);
             EditorGUI.BeginDisabledGroup(
-                this.spTargetType.intValue != (int)HelperLocalVariable.Target.GameObject &&
-                this.spTargetType.intValue != (int)HelperLocalVariable.Target.GameObjectPath
+                spTargetType.intValue != (int) HelperLocalVariable.Target.GameObject &&
+                spTargetType.intValue != (int) HelperLocalVariable.Target.GameObjectPath
             );
-            EditorGUI.PropertyField(rectTargetObject, this.spTargetObject, GUIContent.none);
+            EditorGUI.PropertyField(rectTargetObject, spTargetObject, GUIContent.none);
             EditorGUI.EndDisabledGroup();
 
             SerializedProperty spName = property.FindPropertyRelative(PROP_NAME);
-            this.PaintLocalVariable(spName, rectVariable, label);
-            
+            PaintLocalVariable(spName, rectVariable, label);
+
             EditorGUI.EndProperty();
         }
 
         private void PaintLocalVariable(SerializedProperty spName, Rect rect, GUIContent label)
         {
-            if (this.spTargetType.intValue == (int)HelperLocalVariable.Target.GameObject)
+            if (spTargetType.intValue == (int) HelperLocalVariable.Target.GameObject)
             {
-                EditorGUI.BeginDisabledGroup(this.spTargetObject.objectReferenceValue == null);
-                this.PaintVariables(rect, spName, label);
+                EditorGUI.BeginDisabledGroup(spTargetObject.objectReferenceValue == null);
+                PaintVariables(rect, spName, label);
                 EditorGUI.EndDisabledGroup();
             }
             else
@@ -83,26 +80,24 @@
             }
         }
 
-		protected override GenericVariableSelectWindow GetWindow(Rect ctaRect)
-		{
-            if (this.spTargetObject.objectReferenceValue == null) return null;
+        protected override GenericVariableSelectWindow GetWindow(Rect ctaRect)
+        {
+            if (spTargetObject.objectReferenceValue == null) return null;
 
             return new LocalVariableSelectWindow(
                 ctaRect,
-                (GameObject)this.spTargetObject.objectReferenceValue,
+                (GameObject) spTargetObject.objectReferenceValue,
                 true,
-                this.Callback,
-                (this.spAllowTypesMask == null ? 0 : spAllowTypesMask.intValue)
+                Callback,
+                spAllowTypesMask == null ? 0 : spAllowTypesMask.intValue
             );
-		}
+        }
 
-		public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
-		{
-            return (
-                EditorGUI.GetPropertyHeight(property.FindPropertyRelative(PROP_NAME), true) + 
-                EditorGUI.GetPropertyHeight(property.FindPropertyRelative(PROP_TARGET_TYP), true) +
-                (EditorGUIUtility.standardVerticalSpacing * 2)
-            );
-		}
-	}
+        public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+        {
+            return EditorGUI.GetPropertyHeight(property.FindPropertyRelative(PROP_NAME), true) +
+                   EditorGUI.GetPropertyHeight(property.FindPropertyRelative(PROP_TARGET_TYP), true) +
+                   EditorGUIUtility.standardVerticalSpacing * 2;
+        }
+    }
 }

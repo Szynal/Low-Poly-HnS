@@ -1,12 +1,11 @@
-﻿namespace LowPolyHnS.Core
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using LowPolyHnS.Core.Hooks;
-    using LowPolyHnS.Variables;
+﻿using System;
+using LowPolyHnS.Core.Hooks;
+using LowPolyHnS.Variables;
+using UnityEngine;
 
-    [System.Serializable]
+namespace LowPolyHnS.Core
+{
+    [Serializable]
     public class TargetDirection
     {
         public enum Target
@@ -36,9 +35,10 @@
         // INITIALIZERS: --------------------------------------------------------------------------
 
         public TargetDirection()
-        { }
+        {
+        }
 
-        public TargetDirection(TargetDirection.Target target)
+        public TargetDirection(Target target)
         {
             this.target = target;
         }
@@ -49,7 +49,7 @@
         {
             Vector3 direction = Vector3.zero;
 
-            switch (this.target)
+            switch (target)
             {
                 case Target.Player:
                     if (HookPlayer.Instance != null)
@@ -58,16 +58,17 @@
                         switch (offsetSpace)
                         {
                             case Space.World:
-                                playerPosition += this.offset;
+                                playerPosition += offset;
                                 break;
 
                             case Space.Self:
-                                playerPosition += HookPlayer.Instance.transform.TransformDirection(this.offset);
+                                playerPosition += HookPlayer.Instance.transform.TransformDirection(offset);
                                 break;
                         }
 
                         direction = playerPosition - invoker.transform.position;
                     }
+
                     break;
 
                 case Target.Camera:
@@ -77,15 +78,17 @@
                         switch (offsetSpace)
                         {
                             case Space.World:
-                                cameraPosition += this.offset;
+                                cameraPosition += offset;
                                 break;
 
                             case Space.Self:
-                                cameraPosition += HookCamera.Instance.transform.TransformDirection(this.offset);
+                                cameraPosition += HookCamera.Instance.transform.TransformDirection(offset);
                                 break;
                         }
+
                         direction = cameraPosition - invoker.transform.position;
                     }
+
                     break;
 
                 case Target.CurrentDirection:
@@ -93,85 +96,93 @@
                     break;
 
                 case Target.Transform:
-                    if (this.targetTransform != null)
+                    if (targetTransform != null)
                     {
-                        Vector3 transformPosition = this.targetTransform.position;
+                        Vector3 transformPosition = targetTransform.position;
                         switch (offsetSpace)
                         {
                             case Space.World:
-                                transformPosition += this.offset;
+                                transformPosition += offset;
                                 break;
 
                             case Space.Self:
-                                transformPosition += this.targetTransform.TransformDirection(this.offset);
+                                transformPosition += targetTransform.TransformDirection(offset);
                                 break;
                         }
+
                         direction = transformPosition - invoker.transform.position;
                     }
+
                     break;
 
                 case Target.Point:
-                    direction = this.targetPoint - invoker.transform.position;
+                    direction = targetPoint - invoker.transform.position;
                     break;
 
                 case Target.LocalVariable:
                     Vector3 localPosition = Vector3.zero;
 
-                    switch (this.local.GetDataType(invoker))
+                    switch (local.GetDataType(invoker))
                     {
                         case Variable.DataType.Vector2:
                         case Variable.DataType.Vector3:
-                            localPosition = (Vector3)this.local.Get(invoker);
+                            localPosition = (Vector3) local.Get(invoker);
                             break;
 
                         case Variable.DataType.GameObject:
-                            GameObject @object = this.local.Get(invoker) as GameObject;
+                            GameObject @object = local.Get(invoker) as GameObject;
                             if (@object != null)
                             {
                                 localPosition = @object.transform.position;
                             }
+
                             break;
                     }
+
                     direction = localPosition - invoker.transform.position;
                     break;
 
                 case Target.GlobalVariable:
                     Vector3 globalPosition = Vector3.zero;
-                    switch (this.global.GetDataType())
+                    switch (global.GetDataType())
                     {
                         case Variable.DataType.Vector2:
                         case Variable.DataType.Vector3:
-                            globalPosition = (Vector3)this.global.Get();
+                            globalPosition = (Vector3) global.Get();
                             break;
 
                         case Variable.DataType.GameObject:
-                            GameObject @object = this.global.Get() as GameObject;
+                            GameObject @object = global.Get() as GameObject;
                             if (@object != null)
                             {
                                 globalPosition = @object.transform.position;
                             }
+
                             break;
                     }
+
                     direction = globalPosition - invoker.transform.position;
                     break;
 
                 case Target.ListVariable:
                     Vector3 listPosition = Vector3.zero;
-                    switch (this.list.GetDataType(invoker))
+                    switch (list.GetDataType(invoker))
                     {
                         case Variable.DataType.Vector2:
                         case Variable.DataType.Vector3:
-                            listPosition = (Vector3)this.list.Get(invoker);
+                            listPosition = (Vector3) list.Get(invoker);
                             break;
 
                         case Variable.DataType.GameObject:
-                            GameObject @object = this.list.Get(invoker) as GameObject;
+                            GameObject @object = list.Get(invoker) as GameObject;
                             if (@object != null)
                             {
                                 listPosition = @object.transform.position;
                             }
+
                             break;
                     }
+
                     direction = listPosition - invoker.transform.position;
                     break;
             }
@@ -182,7 +193,7 @@
         public override string ToString()
         {
             string result = "(unknown)";
-            switch (this.target)
+            switch (target)
             {
                 case Target.Player:
                     result = "Player";
@@ -197,26 +208,25 @@
                     break;
 
                 case Target.Transform:
-                    result = (this.targetTransform == null
+                    result = targetTransform == null
                         ? "(none)"
-                        : this.targetTransform.gameObject.name
-                    );
+                        : targetTransform.gameObject.name;
                     break;
 
                 case Target.Point:
-                    result = this.targetPoint.ToString();
+                    result = targetPoint.ToString();
                     break;
 
                 case Target.LocalVariable:
-                    result = this.local.ToString();
+                    result = local.ToString();
                     break;
 
                 case Target.GlobalVariable:
-                    result = this.global.ToString();
+                    result = global.ToString();
                     break;
 
                 case Target.ListVariable:
-                    result = this.list.ToString();
+                    result = list.ToString();
                     break;
             }
 

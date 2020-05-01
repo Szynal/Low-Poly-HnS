@@ -1,40 +1,52 @@
-﻿namespace LowPolyHnS.Variables
-{
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Reflection;
-    using UnityEngine;
-    using UnityEditor;
-    using LowPolyHnS.Core;
-    using System.Text.RegularExpressions;
+﻿using System;
+using System.Reflection;
+using System.Text.RegularExpressions;
+using LowPolyHnS.Core;
+using UnityEditor;
+using UnityEngine;
 
+namespace LowPolyHnS.Variables
+{
     [CustomEditor(typeof(MBVariable))]
-    public class MBVariableEditor : VariableEditor 
+    public class MBVariableEditor : VariableEditor
     {
-        protected override bool UseTags() { return false; }
-        protected override bool CanSave() { return ((MBVariable)this.target).CanSave(); }
+        protected override bool UseTags()
+        {
+            return false;
+        }
+
+        protected override bool CanSave()
+        {
+            return ((MBVariable) target).CanSave();
+        }
 
         public override Variable GetRuntimeVariable()
         {
             return LocalVariablesUtilities.Get(
-                ((MBVariable)this.target).gameObject,
-                this.spVariableName.stringValue,
+                ((MBVariable) target).gameObject,
+                spVariableName.stringValue,
                 false
             );
         }
     }
 
     [CustomEditor(typeof(SOVariable))]
-    public class SOVariableEditor : VariableEditor 
-    { 
-        protected override bool UseTags() { return true; }
-        protected override bool CanSave() { return ((SOVariable)this.target).CanSave(); }
+    public class SOVariableEditor : VariableEditor
+    {
+        protected override bool UseTags()
+        {
+            return true;
+        }
+
+        protected override bool CanSave()
+        {
+            return ((SOVariable) target).CanSave();
+        }
 
         public override Variable GetRuntimeVariable()
         {
             return GlobalVariablesUtilities.Get(
-                this.spVariableName.stringValue
+                spVariableName.stringValue
             );
         }
     }
@@ -83,45 +95,45 @@
 
         private SerializedProperty spRuntimeValue;
 
-		// INITIALIZERS: --------------------------------------------------------------------------
+        // INITIALIZERS: --------------------------------------------------------------------------
 
-		private void OnEnable()
-		{
-            this.target.hideFlags = HideFlags.HideInInspector | HideFlags.HideInHierarchy;
+        private void OnEnable()
+        {
+            target.hideFlags = HideFlags.HideInInspector | HideFlags.HideInHierarchy;
 
-            this.spVariable = serializedObject.FindProperty(PROP_VARIABLE);
+            spVariable = serializedObject.FindProperty(PROP_VARIABLE);
 
-            this.spVariableName = this.spVariable.FindPropertyRelative(PROP_NAME);
-            this.spVariableSave = this.spVariable.FindPropertyRelative(PROP_SAVE);
-            this.spVariableType = this.spVariable.FindPropertyRelative(PROP_TYPE);
-            this.spVariableTags = this.spVariable.FindPropertyRelative(PROP_TAGS);
+            spVariableName = spVariable.FindPropertyRelative(PROP_NAME);
+            spVariableSave = spVariable.FindPropertyRelative(PROP_SAVE);
+            spVariableType = spVariable.FindPropertyRelative(PROP_TYPE);
+            spVariableTags = spVariable.FindPropertyRelative(PROP_TAGS);
 
-            this.spVariableStr = this.spVariable.FindPropertyRelative("varStr");
-            this.spVariableInt = this.spVariable.FindPropertyRelative("varInt");
-            this.spVariableNum = this.spVariable.FindPropertyRelative("varNum");
-            this.spVariableBol = this.spVariable.FindPropertyRelative("varBol");
-            this.spVariableCol = this.spVariable.FindPropertyRelative("varCol");
-            this.spVariableVc2 = this.spVariable.FindPropertyRelative("varVc2");
-            this.spVariableVc3 = this.spVariable.FindPropertyRelative("varVc3");
-            this.spVariableTxt = this.spVariable.FindPropertyRelative("varTxt");
-            this.spVariableSpr = this.spVariable.FindPropertyRelative("varSpr");
-            this.spVariableObj = this.spVariable.FindPropertyRelative("varObj");
-            this.spVariableTrn = this.spVariable.FindPropertyRelative("varTrn");
-            this.spVariableRbd = this.spVariable.FindPropertyRelative("varRbd");
-		}
+            spVariableStr = spVariable.FindPropertyRelative("varStr");
+            spVariableInt = spVariable.FindPropertyRelative("varInt");
+            spVariableNum = spVariable.FindPropertyRelative("varNum");
+            spVariableBol = spVariable.FindPropertyRelative("varBol");
+            spVariableCol = spVariable.FindPropertyRelative("varCol");
+            spVariableVc2 = spVariable.FindPropertyRelative("varVc2");
+            spVariableVc3 = spVariable.FindPropertyRelative("varVc3");
+            spVariableTxt = spVariable.FindPropertyRelative("varTxt");
+            spVariableSpr = spVariable.FindPropertyRelative("varSpr");
+            spVariableObj = spVariable.FindPropertyRelative("varObj");
+            spVariableTrn = spVariable.FindPropertyRelative("varTrn");
+            spVariableRbd = spVariable.FindPropertyRelative("varRbd");
+        }
 
         // PUBLIC METHODDS: -----------------------------------------------------------------------
 
         public string GetName()
         {
-            if (this.spVariableSave.boolValue) return this.spVariableName.stringValue + " (save)";
-            return this.spVariableName.stringValue;
+            if (spVariableSave.boolValue) return spVariableName.stringValue + " (save)";
+            return spVariableName.stringValue;
         }
 
         public bool MatchSearch(string search, int tagsMask)
         {
-            bool matchSearch = this.spVariableName.stringValue.Contains(search);
-            bool matchTags = (tagsMask & this.spVariableTags.intValue) != 0;
+            bool matchSearch = spVariableName.stringValue.Contains(search);
+            bool matchTags = (tagsMask & spVariableTags.intValue) != 0;
             return matchSearch && matchTags;
         }
 
@@ -130,8 +142,12 @@
             string processed = name.Trim();
             switch (isPath)
             {
-                case true:  processed = REGEX_VARPATH.Replace(processed, "-"); break;
-                case false: processed = REGEX_VARNAME.Replace(processed, "-"); break;
+                case true:
+                    processed = REGEX_VARPATH.Replace(processed, "-");
+                    break;
+                case false:
+                    processed = REGEX_VARNAME.Replace(processed, "-");
+                    break;
             }
 
             return processed;
@@ -146,7 +162,7 @@
         // PAINT METHODS: -------------------------------------------------------------------------
 
         public override void OnInspectorGUI()
-		{
+        {
             serializedObject.Update();
 
             GUILayout.Space(2f);
@@ -154,23 +170,23 @@
             GUILayout.Space(2f);
             EditorGUILayout.BeginVertical();
 
-            this.PaintCommon();
-            this.PaintType();
+            PaintCommon();
+            PaintType();
 
-            if (EditorApplication.isPlaying) this.PaintRuntimeValue();
-            else this.PaintValue();
+            if (EditorApplication.isPlaying) PaintRuntimeValue();
+            else PaintValue();
 
-            this.PaintTags();
+            PaintTags();
 
             EditorGUILayout.EndVertical();
             GUILayout.Space(2f);
             EditorGUILayout.EndHorizontal();
             serializedObject.ApplyModifiedProperties();
-		}
+        }
 
         private void PaintCommon()
         {
-            if (!this.editableCommon) return;
+            if (!editableCommon) return;
 
             float saveWidth = 18f;
             float saveOffset = 5f;
@@ -199,31 +215,31 @@
             );
 
             EditorGUI.PrefixLabel(rectLabel, GUICONTENT_NAME);
-            string previousName = this.spVariableName.stringValue;
+            string previousName = spVariableName.stringValue;
 
-            EditorGUI.PropertyField(rectName, this.spVariableName, GUIContent.none);
+            EditorGUI.PropertyField(rectName, spVariableName, GUIContent.none);
 
-            if (!this.CanSave() && this.spVariableSave.boolValue)
+            if (!CanSave() && spVariableSave.boolValue)
             {
-                this.spVariableSave.boolValue = false;
+                spVariableSave.boolValue = false;
             }
 
-            EditorGUI.BeginDisabledGroup(!this.CanSave());
-            EditorGUI.PropertyField(rectSave, this.spVariableSave, GUIContent.none);
+            EditorGUI.BeginDisabledGroup(!CanSave());
+            EditorGUI.PropertyField(rectSave, spVariableSave, GUIContent.none);
             EditorGUI.EndDisabledGroup();
             GUILayout.Space(2f);
 
-            if (previousName != this.spVariableName.stringValue)
+            if (previousName != spVariableName.stringValue)
             {
-                string varName = ProcessName(this.spVariableName.stringValue);
-                this.spVariableName.stringValue = varName;
+                string varName = ProcessName(spVariableName.stringValue);
+                spVariableName.stringValue = varName;
             }
         }
 
 
         private void PaintType()
         {
-            if (!this.editableType) return;
+            if (!editableType) return;
 
             Rect rect = GUILayoutUtility.GetRect(
                 EditorGUIUtility.fieldWidth + EditorGUIUtility.fieldWidth,
@@ -231,25 +247,25 @@
             );
 
             Rect rectLabel = new Rect(
-                rect.x, 
-                rect.y, 
-                EditorGUIUtility.labelWidth, 
+                rect.x,
+                rect.y,
+                EditorGUIUtility.labelWidth,
                 rect.height
             );
             Rect rectDropdown = new Rect(
-                rect.x + rectLabel.width, 
-                rect.y, 
+                rect.x + rectLabel.width,
+                rect.y,
                 rect.width - rectLabel.width,
                 rect.height
             );
 
             EditorGUI.PrefixLabel(rectLabel, GUICONTENT_TYPE);
 
-            string typeName = ((Variable.DataType)this.spVariableType.intValue).ToString();
+            string typeName = ((Variable.DataType) spVariableType.intValue).ToString();
             if (EditorGUI.DropdownButton(rectDropdown, new GUIContent(typeName), FocusType.Keyboard))
             {
                 SelectTypePanel selectTypePanel = new SelectTypePanel(
-                    this.ChangeTypeCallback, 
+                    ChangeTypeCallback,
                     "Variables",
                     typeof(VariableBase),
                     rectDropdown.width
@@ -263,23 +279,41 @@
 
         private void PaintValue()
         {
-            switch ((Variable.DataType)this.spVariableType.intValue)
+            switch ((Variable.DataType) spVariableType.intValue)
             {
-                case Variable.DataType.String : this.PaintProperty(this.spVariableStr); break;
-                case Variable.DataType.Number: this.PaintProperty(this.spVariableNum); break;
-                case Variable.DataType.Bool: this.PaintProperty(this.spVariableBol); break;
-                case Variable.DataType.Color: this.PaintProperty(this.spVariableCol); break;
-                case Variable.DataType.Vector2: this.PaintProperty(this.spVariableVc2); break;
-                case Variable.DataType.Vector3: this.PaintProperty(this.spVariableVc3); break;
-                case Variable.DataType.Texture2D: this.PaintProperty(this.spVariableTxt); break;
-                case Variable.DataType.Sprite: this.PaintProperty(this.spVariableSpr); break;
-                case Variable.DataType.GameObject: this.PaintProperty(this.spVariableObj); break;
+                case Variable.DataType.String:
+                    PaintProperty(spVariableStr);
+                    break;
+                case Variable.DataType.Number:
+                    PaintProperty(spVariableNum);
+                    break;
+                case Variable.DataType.Bool:
+                    PaintProperty(spVariableBol);
+                    break;
+                case Variable.DataType.Color:
+                    PaintProperty(spVariableCol);
+                    break;
+                case Variable.DataType.Vector2:
+                    PaintProperty(spVariableVc2);
+                    break;
+                case Variable.DataType.Vector3:
+                    PaintProperty(spVariableVc3);
+                    break;
+                case Variable.DataType.Texture2D:
+                    PaintProperty(spVariableTxt);
+                    break;
+                case Variable.DataType.Sprite:
+                    PaintProperty(spVariableSpr);
+                    break;
+                case Variable.DataType.GameObject:
+                    PaintProperty(spVariableObj);
+                    break;
             }
         }
 
         private void PaintTags()
         {
-            if (!this.UseTags()) return;
+            if (!UseTags()) return;
             Rect rect = GUILayoutUtility.GetRect(
                 EditorGUIUtility.fieldWidth + EditorGUIUtility.fieldWidth,
                 EditorGUIUtility.singleLineHeight
@@ -300,16 +334,16 @@
 
 
             EditorGUI.PrefixLabel(rectLabel, GUICONTENT_TAGS);
-            this.spVariableTags.intValue = EditorGUI.MaskField(
+            spVariableTags.intValue = EditorGUI.MaskField(
                 rectMask,
-                this.spVariableTags.intValue,
+                spVariableTags.intValue,
                 GlobalTagsEditor.GetTagNames()
             );
         }
 
         public void PaintRuntimeValue()
         {
-            Variable runtime = this.GetRuntimeVariable();
+            Variable runtime = GetRuntimeVariable();
             object variable = runtime == null ? null : runtime.Get();
 
             Rect rect = GUILayoutUtility.GetRect(
@@ -319,7 +353,7 @@
 
             EditorGUI.LabelField(
                 rect,
-                "Runtime Value", 
+                "Runtime Value",
                 variable == null ? "(null)" : variable.ToString(),
                 EditorStyles.boldLabel
             );
@@ -332,7 +366,7 @@
             MethodInfo methodInfo = variableType.GetMethod("GetDataType");
             if (methodInfo != null)
             {
-                this.spVariableType.intValue = (int)methodInfo.Invoke(null, null);
+                spVariableType.intValue = (int) methodInfo.Invoke(null, null);
             }
 
             serializedObject.ApplyModifiedProperties();
@@ -362,5 +396,5 @@
             EditorGUI.PropertyField(rectField, property, GUIContent.none);
             GUILayout.Space(2f);
         }
-	}
+    }
 }

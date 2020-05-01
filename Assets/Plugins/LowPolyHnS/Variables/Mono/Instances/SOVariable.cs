@@ -1,24 +1,22 @@
-﻿namespace LowPolyHnS.Variables
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
+﻿using UnityEngine;
 
+namespace LowPolyHnS.Variables
+{
     public class SOVariable : ScriptableObject
     {
         public Variable variable = new Variable();
 
         // EDITOR METHODS: ------------------------------------------------------------------------
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
 
         public bool isExpanded = false;
 
         public bool CanSave()
         {
-            return this.variable.CanSave();
+            return variable.CanSave();
         }
 
-        #endif
+#endif
     }
 }

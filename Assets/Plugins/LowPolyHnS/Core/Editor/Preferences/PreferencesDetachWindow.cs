@@ -1,10 +1,9 @@
-﻿namespace LowPolyHnS.Core
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEditor;
+﻿using System.Collections.Generic;
+using UnityEditor;
+using UnityEngine;
 
+namespace LowPolyHnS.Core
+{
     public class PreferencesDetachWindow : EditorWindow
     {
         private static Dictionary<string, PreferencesDetachWindow> WINDOWS;
@@ -43,19 +42,19 @@
 
         private void OnGUI()
         {
-            if (this.editor == null)
+            if (editor == null)
             {
-                this.Close();
+                Close();
                 return;
             }
 
-            this.scroll = EditorGUILayout.BeginScrollView(this.scroll);
+            scroll = EditorGUILayout.BeginScrollView(scroll);
 
             EditorGUILayout.Space();
-            this.editor.OnInspectorGUI();
+            editor.OnInspectorGUI();
 
             EditorGUILayout.EndScrollView();
-            this.Repaint();
+            Repaint();
         }
     }
 }

@@ -1,25 +1,22 @@
-﻿namespace LowPolyHnS.Core
+﻿using UnityEngine;
+
+namespace LowPolyHnS.Core
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-	using LowPolyHnS.Core;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[AddComponentMenu("")]
-	public class ActionDebugBreak : IAction
-	{
-		public bool isEnabled = true;
+    [AddComponentMenu("")]
+    public class ActionDebugBreak : IAction
+    {
+        public bool isEnabled = true;
 
         // EXECUTABLE: ----------------------------------------------------------------------------
 
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
-            if (Application.isEditor && this.isEnabled) Debug.Break();
+            if (Application.isEditor && isEnabled) Debug.Break();
             return true;
         }
 
@@ -27,43 +24,43 @@
         // | EDITOR                                                                               |
         // +--------------------------------------------------------------------------------------+
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
 
         public static new string NAME = "Debug/Debug Break";
-		private const string NODE_TITLE = "Debug.Break ({0})";
+        private const string NODE_TITLE = "Debug.Break ({0})";
 
-		// PROPERTIES: ----------------------------------------------------------------------------
+        // PROPERTIES: ----------------------------------------------------------------------------
 
-		private SerializedProperty spIsEnabled;
+        private SerializedProperty spIsEnabled;
 
-		// INSPECTOR METHODS: ---------------------------------------------------------------------
+        // INSPECTOR METHODS: ---------------------------------------------------------------------
 
-		public override string GetNodeTitle()
-		{
-			return string.Format(NODE_TITLE, this.isEnabled ? "On" : "Off");
-		}
+        public override string GetNodeTitle()
+        {
+            return string.Format(NODE_TITLE, isEnabled ? "On" : "Off");
+        }
 
-		protected override void OnEnableEditorChild ()
-		{
-			this.spIsEnabled = this.serializedObject.FindProperty("isEnabled");
-		}
+        protected override void OnEnableEditorChild()
+        {
+            spIsEnabled = serializedObject.FindProperty("isEnabled");
+        }
 
-		protected override void OnDisableEditorChild ()
-		{
-			this.spIsEnabled = null;
-		}
+        protected override void OnDisableEditorChild()
+        {
+            spIsEnabled = null;
+        }
 
-		public override void OnInspectorGUI()
-		{
-            if (this.serializedObject == null) return;
+        public override void OnInspectorGUI()
+        {
+            if (serializedObject == null) return;
 
-			this.serializedObject.Update();
+            serializedObject.Update();
 
-			EditorGUILayout.PropertyField(this.spIsEnabled);
+            EditorGUILayout.PropertyField(spIsEnabled);
 
-			this.serializedObject.ApplyModifiedProperties();
-		}
+            serializedObject.ApplyModifiedProperties();
+        }
 
-		#endif
-	}
+#endif
+    }
 }

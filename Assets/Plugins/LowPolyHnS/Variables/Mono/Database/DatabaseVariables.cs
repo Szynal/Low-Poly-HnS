@@ -1,14 +1,14 @@
-﻿namespace LowPolyHnS.Variables
-{
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using LowPolyHnS.Core;
+﻿using System;
+using System.Collections.Generic;
+using LowPolyHnS.Core;
+using UnityEngine;
 
-    #if UNITY_EDITOR
+namespace LowPolyHnS.Variables
+{
+#if UNITY_EDITOR
     using UnityEditor;
-    #endif
+
+#endif
 
     public class DatabaseVariables : IDatabase
     {
@@ -27,24 +27,24 @@
 
         public GlobalVariables GetGlobalVariables()
         {
-            return this.variables;
+            return variables;
         }
 
         // PUBLIC STATIC METHODS: -----------------------------------------------------------------
 
         public static DatabaseVariables Load()
         {
-            return IDatabase.LoadDatabase<DatabaseVariables>();
+            return LoadDatabase<DatabaseVariables>();
         }
 
         // OVERRIDE METHODS: ----------------------------------------------------------------------
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
 
         [InitializeOnLoadMethod]
         private static void InitializeOnLoad()
         {
-            IDatabase.Setup<DatabaseVariables>();
+            Setup<DatabaseVariables>();
         }
 
         public override int GetSidebarPriority()
@@ -52,6 +52,6 @@
             return 3;
         }
 
-        #endif
+#endif
     }
 }

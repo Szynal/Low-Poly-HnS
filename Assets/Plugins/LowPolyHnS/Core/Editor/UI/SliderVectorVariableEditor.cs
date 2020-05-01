@@ -1,12 +1,10 @@
-﻿namespace LowPolyHnS.Core
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEngine.UI;
-    using UnityEditor;
-    using UnityEditor.UI;
+﻿using UnityEditor;
+using UnityEditor.UI;
+using UnityEngine;
+using UnityEngine.UI;
 
+namespace LowPolyHnS.Core
+{
     [CustomEditor(typeof(SliderVectorVariable))]
     public class SliderVectorVariableEditor : SliderEditor
     {
@@ -16,8 +14,8 @@
         private new void OnEnable()
         {
             base.OnEnable();
-            this.spVariable = serializedObject.FindProperty("variable");
-            this.spComponent = serializedObject.FindProperty("component");
+            spVariable = serializedObject.FindProperty("variable");
+            spComponent = serializedObject.FindProperty("component");
         }
 
         public override void OnInspectorGUI()
@@ -27,8 +25,8 @@
 
             serializedObject.Update();
 
-            EditorGUILayout.PropertyField(this.spVariable);
-            EditorGUILayout.PropertyField(this.spComponent);
+            EditorGUILayout.PropertyField(spVariable);
+            EditorGUILayout.PropertyField(spComponent);
 
             serializedObject.ApplyModifiedProperties();
         }

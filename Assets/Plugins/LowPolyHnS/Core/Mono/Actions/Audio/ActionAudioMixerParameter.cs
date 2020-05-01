@@ -1,56 +1,51 @@
-﻿namespace LowPolyHnS.Core
-{
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-    using UnityEngine.Audio;
-    using LowPolyHnS.Core;
-    using LowPolyHnS.Variables;
+﻿using LowPolyHnS.Variables;
+using UnityEngine;
+using UnityEngine.Audio;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
+namespace LowPolyHnS.Core
+{
+#if UNITY_EDITOR
+
 #endif
 
     [AddComponentMenu("")]
-	public class ActionAudioMixerParameter : IAction 
-	{
+    public class ActionAudioMixerParameter : IAction
+    {
         public AudioMixer audioMixer;
 
-        [Space]
-        public string parameter = "MyParameter";
+        [Space] public string parameter = "MyParameter";
         public NumberProperty value = new NumberProperty(1.0f);
 
-		// EXECUTABLE: ----------------------------------------------------------------------------
+        // EXECUTABLE: ----------------------------------------------------------------------------
 
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
-            if (this.audioMixer)
+            if (audioMixer)
             {
-                this.audioMixer.SetFloat(this.parameter, this.value.GetValue(target));
+                audioMixer.SetFloat(parameter, value.GetValue(target));
             }
 
             return true;
         }
 
-		// +--------------------------------------------------------------------------------------+
-		// | EDITOR                                                                               |
-		// +--------------------------------------------------------------------------------------+
+        // +--------------------------------------------------------------------------------------+
+        // | EDITOR                                                                               |
+        // +--------------------------------------------------------------------------------------+
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 
-		public static new string NAME = "Audio/Audio Mixer Parameter";
-		private const string NODE_TITLE = "Change {0} mixer {1} parameter";
+        public static new string NAME = "Audio/Audio Mixer Parameter";
+        private const string NODE_TITLE = "Change {0} mixer {1} parameter";
 
-		public override string GetNodeTitle()
-		{
+        public override string GetNodeTitle()
+        {
             return string.Format(
                 NODE_TITLE,
-                this.audioMixer != null ? this.audioMixer.name : "(none)",
-                this.parameter
+                audioMixer != null ? audioMixer.name : "(none)",
+                parameter
             );
-		}
+        }
 
-		#endif
-	}
+#endif
+    }
 }

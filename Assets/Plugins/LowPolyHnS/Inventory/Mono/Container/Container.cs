@@ -1,13 +1,11 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Collections.Generic;
+using LowPolyHnS.Core;
+using UnityEngine;
+using UnityEngine.Events;
+
 namespace LowPolyHnS.Inventory
 {
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using LowPolyHnS.Core;
-    using System;
-    using UnityEngine.Events;
-
     [ExecuteAlways]
     [AddComponentMenu("LowPolyHnS/Inventory/Container")]
     public class Container : GlobalID, IGameSave
@@ -19,14 +17,15 @@ namespace LowPolyHnS.Inventory
         }
 
         [Serializable]
-        public class ItemsContainer : SerializableDictionaryBase<int, ItemData> 
-        { }
+        public class ItemsContainer : SerializableDictionaryBase<int, ItemData>
+        {
+        }
 
         [Serializable]
         public class ItemData
         {
-            public int uuid = 0;
-            public int amount = 0;
+            public int uuid;
+            public int amount;
 
             public ItemData(int uuid, int amount)
             {
@@ -42,8 +41,13 @@ namespace LowPolyHnS.Inventory
             public int amount = 0;
         }
 
-        public class EventAdd : UnityEvent<int, int> {}
-        public class EventRmv : UnityEvent<int, int> { }
+        public class EventAdd : UnityEvent<int, int>
+        {
+        }
+
+        public class EventRmv : UnityEvent<int, int>
+        {
+        }
 
         // PROPERTIES: ----------------------------------------------------------------------------
 
@@ -63,39 +67,39 @@ namespace LowPolyHnS.Inventory
         {
             if (!Application.isPlaying) return;
 
-            this.Initialize();
+            Initialize();
             SaveLoadManager.Instance.Initialize(this);
         }
 
         private void Initialize()
         {
-            this.data = new Data();
-            for (int i = 0; i < this.initItems.Count; ++i)
+            data = new Data();
+            for (int i = 0; i < initItems.Count; ++i)
             {
-                Item item = this.initItems[i].item.item;
+                Item item = initItems[i].item.item;
                 if (item == null || item.uuid == 0) continue;
 
                 int uuid = item.uuid;
-                int amount = this.initItems[i].amount;
+                int amount = initItems[i].amount;
                 if (amount < 1) continue;
 
-                if (this.data.items.ContainsKey(uuid))
+                if (data.items.ContainsKey(uuid))
                 {
-                    this.data.items[uuid].amount += amount;
+                    data.items[uuid].amount += amount;
                 }
                 else
                 {
-                    this.data.items.Add(uuid, new ItemData(uuid, amount));
+                    data.items.Add(uuid, new ItemData(uuid, amount));
                 }
             }
         }
 
         protected virtual void OnDestroy()
         {
-            this.OnDestroyGID();
+            OnDestroyGID();
 
             if (!Application.isPlaying) return;
-            if (this.exitingApplication) return;
+            if (exitingApplication) return;
 
             SaveLoadManager.Instance.OnDestroyIGameSave(this);
         }
@@ -105,7 +109,7 @@ namespace LowPolyHnS.Inventory
         public List<ItemData> GetItems()
         {
             List<ItemData> items = new List<ItemData>();
-            foreach (KeyValuePair<int, ItemData> element in this.data.items)
+            foreach (KeyValuePair<int, ItemData> element in data.items)
             {
                 items.Add(element.Value);
             }
@@ -115,8 +119,8 @@ namespace LowPolyHnS.Inventory
 
         public int GetAmount(int uuid)
         {
-            if (!this.data.items.ContainsKey(uuid)) return 0;
-            return this.data.items[uuid].amount;
+            if (!data.items.ContainsKey(uuid)) return 0;
+            return data.items[uuid].amount;
         }
 
         // SETTER METHODS: ------------------------------------------------------------------------
@@ -125,15 +129,15 @@ namespace LowPolyHnS.Inventory
         {
             if (amount < 1) return;
 
-            if (this.data.items.ContainsKey(uuid))
+            if (data.items.ContainsKey(uuid))
             {
-                this.data.items[uuid].amount += amount;
-                this.eventAdd.Invoke(uuid, amount);
+                data.items[uuid].amount += amount;
+                eventAdd.Invoke(uuid, amount);
             }
             else
             {
-                this.data.items.Add(uuid, new ItemData(uuid, amount));
-                this.eventAdd.Invoke(uuid, amount);
+                data.items.Add(uuid, new ItemData(uuid, amount));
+                eventAdd.Invoke(uuid, amount);
             }
         }
 
@@ -141,18 +145,18 @@ namespace LowPolyHnS.Inventory
         {
             if (amount < 1) return;
 
-            if (this.data.items.ContainsKey(uuid))
+            if (data.items.ContainsKey(uuid))
             {
-                int remaining = this.data.items[uuid].amount - amount;
-                if (remaining < 0) amount = this.data.items[uuid].amount;
+                int remaining = data.items[uuid].amount - amount;
+                if (remaining < 0) amount = data.items[uuid].amount;
 
-                this.data.items[uuid].amount -= amount;
-                if (this.data.items[uuid].amount < 1)
+                data.items[uuid].amount -= amount;
+                if (data.items[uuid].amount < 1)
                 {
-                    this.data.items.Remove(uuid);
+                    data.items.Remove(uuid);
                 }
 
-                this.eventRmv.Invoke(uuid, amount);
+                eventRmv.Invoke(uuid, amount);
             }
         }
 
@@ -160,42 +164,42 @@ namespace LowPolyHnS.Inventory
 
         public void AddOnAddListener(UnityAction<int, int> callback)
         {
-            this.eventAdd.AddListener(callback);
+            eventAdd.AddListener(callback);
         }
 
         public void RemoveOnAddListener(UnityAction<int, int> callback)
         {
-            this.eventAdd.RemoveListener(callback);
+            eventAdd.RemoveListener(callback);
         }
 
         public void AddOnRemoveListener(UnityAction<int, int> callback)
         {
-            this.eventRmv.AddListener(callback);
+            eventRmv.AddListener(callback);
         }
 
         public void RemoveOnRemoveListener(UnityAction<int, int> callback)
         {
-            this.eventRmv.RemoveListener(callback);
+            eventRmv.RemoveListener(callback);
         }
 
         // IGAMESAVE: -----------------------------------------------------------------------------
 
         public object GetSaveData()
         {
-            if (!this.saveContainer) return null;
-            return this.data;
+            if (!saveContainer) return null;
+            return data;
         }
 
         public Type GetSaveDataType()
         {
-            return typeof(Container.Data);
+            return typeof(Data);
         }
 
         public string GetUniqueName()
         {
             string uniqueName = string.Format(
                 "container:{0}",
-                this.GetID()
+                GetID()
             );
 
             return uniqueName;
@@ -203,30 +207,30 @@ namespace LowPolyHnS.Inventory
 
         public void OnLoad(object generic)
         {
-            Container.Data newData = generic as Container.Data;
-            this.data = new Data();
+            Data newData = generic as Data;
+            data = new Data();
 
-            if (newData == null || !this.saveContainer) return;
+            if (newData == null || !saveContainer) return;
 
             foreach (KeyValuePair<int, ItemData> item in newData.items)
             {
                 int uuid = item.Value.uuid;
                 int amount = item.Value.amount;
 
-                if (this.data.items.ContainsKey(uuid))
+                if (data.items.ContainsKey(uuid))
                 {
-                    this.data.items[uuid].amount = amount;
+                    data.items[uuid].amount = amount;
                 }
                 else
                 {
-                    this.data.items.Add(uuid, new ItemData(uuid, amount));
+                    data.items.Add(uuid, new ItemData(uuid, amount));
                 }
             }
         }
 
         public void ResetData()
         {
-            this.Initialize();
+            Initialize();
         }
     }
 }

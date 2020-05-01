@@ -1,12 +1,10 @@
-﻿namespace LowPolyHnS.Variables
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEditor;
-    using UnityEditor.SceneManagement;
-    using LowPolyHnS.Core;
+﻿using LowPolyHnS.Core;
+using UnityEditor;
+using UnityEditor.SceneManagement;
+using UnityEngine;
 
+namespace LowPolyHnS.Variables
+{
     [CustomEditor(typeof(LocalVariables))]
     public class LocalVariablesEditor : GenericVariablesEditor<MBVariableEditor, MBVariable>
     {
@@ -14,11 +12,11 @@
 
         private LocalVariables instance;
 
-		// INITIALIZERS: --------------------------------------------------------------------------
+        // INITIALIZERS: --------------------------------------------------------------------------
 
         protected override void OnEnable()
         {
-            this.instance = (LocalVariables)this.target;
+            instance = (LocalVariables) target;
             base.OnEnable();
         }
 
@@ -27,90 +25,90 @@
             base.OnDisable();
         }
 
-		// OVERRIDE METHODS: ----------------------------------------------------------------------
+        // OVERRIDE METHODS: ----------------------------------------------------------------------
 
-		public override void OnInspectorGUI()
-		{
+        public override void OnInspectorGUI()
+        {
             base.OnInspectorGUI();
 
             serializedObject.Update();
 
             EditorGUILayout.Space();
-            GlobalEditorID.Paint(this.instance);
+            GlobalEditorID.Paint(instance);
 
             serializedObject.ApplyModifiedProperties();
-		}
-
-		protected override MBVariable[] GetReferences()
-        {
-            return this.instance.references;
         }
-   
+
+        protected override MBVariable[] GetReferences()
+        {
+            return instance.references;
+        }
+
         protected override string GetReferenceName(int index)
         {
-            if (index < 0 || index >= this.instance.references.Length)
+            if (index < 0 || index >= instance.references.Length)
             {
                 return "<i>Unbound Variable</i>";
             }
 
-            if (this.instance.references[index] == null)
+            if (instance.references[index] == null)
             {
                 return "<i>Undefined Variable</i>";
             }
 
-            return this.subEditors[index].GetName();
+            return subEditors[index].GetName();
         }
 
         protected override Variable.DataType GetReferenceType(int index)
         {
-            if (index >= this.instance.references.Length) return Variable.DataType.Null;
+            if (index >= instance.references.Length) return Variable.DataType.Null;
 
-            MBVariable reference = this.instance.references[index];
+            MBVariable reference = instance.references[index];
             if (reference == null) return Variable.DataType.Null;
 
             Variable variable = reference.variable;
-            return (Variable.DataType)variable.type;
+            return (Variable.DataType) variable.type;
         }
 
         protected override bool MatchSearch(int index, string search, int tagsMask)
         {
-            if (index >= this.subEditors.Length) return false;
-            if (this.subEditors[index] == null) return false;
+            if (index >= subEditors.Length) return false;
+            if (subEditors[index] == null) return false;
 
-            return this.subEditors[index].MatchSearch(search, tagsMask);
+            return subEditors[index].MatchSearch(search, tagsMask);
         }
 
         protected override MBVariable CreateReferenceInstance(string name)
         {
-            MBVariable variable = this.instance.gameObject.AddComponent<MBVariable>();
+            MBVariable variable = instance.gameObject.AddComponent<MBVariable>();
             variable.variable.name = name;
             if (!Application.isPlaying) EditorSceneManager.MarkSceneDirty(variable.gameObject.scene);
             return variable;
         }
 
-		protected override void DeleteReferenceInstance(int index)
-		{
-            this.serializedObject.ApplyModifiedProperties();
-            this.serializedObject.Update();
+        protected override void DeleteReferenceInstance(int index)
+        {
+            serializedObject.ApplyModifiedProperties();
+            serializedObject.Update();
 
-            MBVariable source = (MBVariable)this.spReferences
+            MBVariable source = (MBVariable) spReferences
                 .GetArrayElementAtIndex(index)
                 .objectReferenceValue;
 
-            this.spReferences.RemoveFromObjectArrayAt(index);
-            this.RemoveSubEditorsElement(index);
+            spReferences.RemoveFromObjectArrayAt(index);
+            RemoveSubEditorsElement(index);
             DestroyImmediate(source, true);
 
-            this.serializedObject.ApplyModifiedPropertiesWithoutUndo();
-            this.serializedObject.Update();
+            serializedObject.ApplyModifiedPropertiesWithoutUndo();
+            serializedObject.Update();
 
-            if (!Application.isPlaying) EditorSceneManager.MarkSceneDirty(this.instance.gameObject.scene);
+            if (!Application.isPlaying) EditorSceneManager.MarkSceneDirty(instance.gameObject.scene);
         }
 
-		protected override Tag[] GetReferenceTags(int index)
-		{
+        protected override Tag[] GetReferenceTags(int index)
+        {
             return new Tag[0];
-		}
+        }
 
         // HIERARCHY CONTEXT MENU: ----------------------------------------------------------------
 
@@ -120,5 +118,5 @@
             GameObject instance = CreateSceneObject.Create("Local Variables");
             instance.AddComponent<LocalVariables>();
         }
-	}
+    }
 }

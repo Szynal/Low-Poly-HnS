@@ -1,25 +1,21 @@
-﻿namespace LowPolyHnS.Core
+﻿using UnityEngine;
+
+namespace LowPolyHnS.Core
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-	using LowPolyHnS.Core.Hooks;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[AddComponentMenu("")]
-	public class ActionLookAt : IAction 
-	{
+    [AddComponentMenu("")]
+    public class ActionLookAt : IAction
+    {
         // PROPERTIES: ----------------------------------------------------------------------------
 
         public TargetGameObject target = new TargetGameObject(TargetGameObject.Target.GameObject);
         public TargetPosition lookAtPosition = new TargetPosition();
-		
-		[RotationConstraint] 
-		public Vector3 freezeRotation = new Vector3(1,0,1);
+
+        [RotationConstraint] public Vector3 freezeRotation = new Vector3(1, 0, 1);
 
         // EXECUTABLE: ----------------------------------------------------------------------------
 
@@ -31,11 +27,11 @@
                 targetTrans.LookAt(lookAtPosition.GetPosition(target), Vector3.up);
 
                 Vector3 scalar = new Vector3(
-                    (Mathf.Approximately(this.freezeRotation.x, 0f) ? 1 : 0),
-                    (Mathf.Approximately(this.freezeRotation.y, 0f) ? 1 : 0),
-                    (Mathf.Approximately(this.freezeRotation.z, 0f) ? 1 : 0)
+                    Mathf.Approximately(freezeRotation.x, 0f) ? 1 : 0,
+                    Mathf.Approximately(freezeRotation.y, 0f) ? 1 : 0,
+                    Mathf.Approximately(freezeRotation.z, 0f) ? 1 : 0
                 );
-                    
+
                 targetTrans.localRotation = Quaternion.Euler(Vector3.Scale(
                     targetTrans.localEulerAngles, scalar
                 ));
@@ -44,59 +40,59 @@
             return true;
         }
 
-		// +--------------------------------------------------------------------------------------+
-		// | EDITOR                                                                               |
-		// +--------------------------------------------------------------------------------------+
+        // +--------------------------------------------------------------------------------------+
+        // | EDITOR                                                                               |
+        // +--------------------------------------------------------------------------------------+
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 
-		public static new string NAME = "Object/Look At";
-		private const string NODE_TITLE = "{0} look at {1}";
+        public static new string NAME = "Object/Look At";
+        private const string NODE_TITLE = "{0} look at {1}";
 
-		// PROPERTIES: ----------------------------------------------------------------------------
+        // PROPERTIES: ----------------------------------------------------------------------------
 
-		private SerializedProperty spTarget;
-		private SerializedProperty spLookAtPosition;
-		private SerializedProperty spConstraints;
+        private SerializedProperty spTarget;
+        private SerializedProperty spLookAtPosition;
+        private SerializedProperty spConstraints;
 
-		// INSPECTOR METHODS: ---------------------------------------------------------------------
+        // INSPECTOR METHODS: ---------------------------------------------------------------------
 
-		public override string GetNodeTitle()
-		{
-			return string.Format(
-				NODE_TITLE, 
-				target.ToString(),
-				this.lookAtPosition.ToString()
-			);
-		}
+        public override string GetNodeTitle()
+        {
+            return string.Format(
+                NODE_TITLE,
+                target,
+                lookAtPosition
+            );
+        }
 
-		protected override void OnEnableEditorChild ()
-		{
-			this.spTarget = this.serializedObject.FindProperty("target");
-			this.spLookAtPosition = this.serializedObject.FindProperty("lookAtPosition");
-			this.spConstraints = this.serializedObject.FindProperty("freezeRotation");
-		}
+        protected override void OnEnableEditorChild()
+        {
+            spTarget = serializedObject.FindProperty("target");
+            spLookAtPosition = serializedObject.FindProperty("lookAtPosition");
+            spConstraints = serializedObject.FindProperty("freezeRotation");
+        }
 
-		protected override void OnDisableEditorChild ()
-		{
-			this.spTarget = null;
-			this.spLookAtPosition = null;
-			this.spConstraints = null;
-		}
+        protected override void OnDisableEditorChild()
+        {
+            spTarget = null;
+            spLookAtPosition = null;
+            spConstraints = null;
+        }
 
-		public override void OnInspectorGUI()
-		{
-			this.serializedObject.Update();
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
 
-			EditorGUILayout.PropertyField(this.spTarget);
-			EditorGUILayout.Space();
-			EditorGUILayout.PropertyField(this.spLookAtPosition);
-			EditorGUILayout.Space();
-			EditorGUILayout.PropertyField(this.spConstraints);
+            EditorGUILayout.PropertyField(spTarget);
+            EditorGUILayout.Space();
+            EditorGUILayout.PropertyField(spLookAtPosition);
+            EditorGUILayout.Space();
+            EditorGUILayout.PropertyField(spConstraints);
 
-			this.serializedObject.ApplyModifiedProperties();
-		}
+            serializedObject.ApplyModifiedProperties();
+        }
 
-		#endif
-	}
+#endif
+    }
 }

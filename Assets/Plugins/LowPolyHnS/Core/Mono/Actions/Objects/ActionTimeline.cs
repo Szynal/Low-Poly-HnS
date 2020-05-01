@@ -1,18 +1,16 @@
-﻿namespace LowPolyHnS.Core
+﻿using UnityEngine;
+using UnityEngine.Playables;
+
+namespace LowPolyHnS.Core
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-    using UnityEngine.Playables;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[AddComponentMenu("")]
-	public class ActionTimeline : IAction
-	{
+    [AddComponentMenu("")]
+    public class ActionTimeline : IAction
+    {
         public enum Operation
         {
             Play,
@@ -27,66 +25,72 @@
 
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
-            if (this.director != null)
+            if (director != null)
             {
-                switch (this.operation)
+                switch (operation)
                 {
-                    case Operation.Play: this.director.Play(); break;
-                    case Operation.Pause: this.director.Pause(); break;
-                    case Operation.Stop: this.director.Stop(); break;
+                    case Operation.Play:
+                        director.Play();
+                        break;
+                    case Operation.Pause:
+                        director.Pause();
+                        break;
+                    case Operation.Stop:
+                        director.Stop();
+                        break;
                 }
             }
 
             return true;
         }
 
-		// +--------------------------------------------------------------------------------------+
-		// | EDITOR                                                                               |
-		// +--------------------------------------------------------------------------------------+
+        // +--------------------------------------------------------------------------------------+
+        // | EDITOR                                                                               |
+        // +--------------------------------------------------------------------------------------+
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 
-		public static new string NAME = "Object/Timeline";
+        public static new string NAME = "Object/Timeline";
         private const string NODE_TITLE = "{0} Timeline {0}";
 
-		// PROPERTIES: ----------------------------------------------------------------------------
+        // PROPERTIES: ----------------------------------------------------------------------------
 
         private SerializedProperty spDirector;
         private SerializedProperty spOperation;
 
-		// INSPECTOR METHODS: ---------------------------------------------------------------------
+        // INSPECTOR METHODS: ---------------------------------------------------------------------
 
-		public override string GetNodeTitle()
-		{
+        public override string GetNodeTitle()
+        {
             return string.Format(
-                NODE_TITLE, 
-                this.operation.ToString(),
-                (this.director == null ? "none" : this.director.gameObject.name)
+                NODE_TITLE,
+                operation.ToString(),
+                director == null ? "none" : director.gameObject.name
             );
-		}
+        }
 
-		protected override void OnEnableEditorChild ()
-		{
-            this.spDirector = this.serializedObject.FindProperty("director");
-            this.spOperation = this.serializedObject.FindProperty("operation");
-		}
+        protected override void OnEnableEditorChild()
+        {
+            spDirector = serializedObject.FindProperty("director");
+            spOperation = serializedObject.FindProperty("operation");
+        }
 
-		protected override void OnDisableEditorChild ()
-		{
-			this.spDirector = null;
-            this.spOperation = null;
-		}
+        protected override void OnDisableEditorChild()
+        {
+            spDirector = null;
+            spOperation = null;
+        }
 
-		public override void OnInspectorGUI()
-		{
-			this.serializedObject.Update();
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
 
-			EditorGUILayout.PropertyField(this.spDirector);
-            EditorGUILayout.PropertyField(this.spOperation);
+            EditorGUILayout.PropertyField(spDirector);
+            EditorGUILayout.PropertyField(spOperation);
 
-			this.serializedObject.ApplyModifiedProperties();
-		}
+            serializedObject.ApplyModifiedProperties();
+        }
 
-		#endif
-	}
+#endif
+    }
 }

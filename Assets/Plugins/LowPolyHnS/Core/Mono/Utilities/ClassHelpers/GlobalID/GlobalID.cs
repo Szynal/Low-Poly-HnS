@@ -1,12 +1,11 @@
-﻿namespace LowPolyHnS.Core
+﻿using System;
+using UnityEngine;
+
+namespace LowPolyHnS.Core
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    #if UNITY_EDITOR
-    using UnityEditor;
-    #endif
+#if UNITY_EDITOR
+
+#endif
 
     [ExecuteInEditMode, Serializable]
     public abstract class GlobalID : MonoBehaviour
@@ -16,45 +15,45 @@
         // PROPERTIES: ----------------------------------------------------------------------------
 
         [SerializeField] private string gid;
-        protected bool exitingApplication = false;
+        protected bool exitingApplication;
 
         // PUBLIC METHODS: ------------------------------------------------------------------------
 
         public string GetID()
         {
-            return this.gid;
+            return gid;
         }
 
         // PROTECTED METHODS: ---------------------------------------------------------------------
 
         protected void OnDestroyGID()
         {
-            if (this.exitingApplication) return;
+            if (exitingApplication) return;
         }
 
         protected virtual void OnApplicationQuit()
         {
-            this.exitingApplication = true;
+            exitingApplication = true;
         }
 
         // PRIVATE METHODS: -----------------------------------------------------------------------
 
         private void CreateGuid()
         {
-            if (!string.IsNullOrEmpty(this.gid)) return;
-            this.gid = Guid.NewGuid().ToString("D");
+            if (!string.IsNullOrEmpty(gid)) return;
+            gid = Guid.NewGuid().ToString("D");
         }
 
         // INITIALIZE METHODS: --------------------------------------------------------------------
 
         protected virtual void Awake()
         {
-            this.CreateGuid();
+            CreateGuid();
         }
 
         protected virtual void OnValidate()
         {
-            this.CreateGuid();
+            CreateGuid();
         }
     }
 }

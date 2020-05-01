@@ -27,3 +27,4 @@ namespace LowPolyHnS.Core
 	}
 }
 ##FOOTER## */
+

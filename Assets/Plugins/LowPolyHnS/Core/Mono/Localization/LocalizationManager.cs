@@ -1,79 +1,78 @@
-﻿namespace LowPolyHnS.Localization
+﻿using System;
+using LowPolyHnS.Core;
+using UnityEngine;
+using UnityEngine.Events;
+
+namespace LowPolyHnS.Localization
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-	using LowPolyHnS.Core;
+    [AddComponentMenu("LowPolyHnS/Managers/LocalizationManager", 100)]
+    public class LocalizationManager : Singleton<LocalizationManager>, IGameSave
+    {
+        // PROPERTIES: -------------------------------------------------------------------------------------------------
 
-	[AddComponentMenu("LowPolyHnS/Managers/LocalizationManager", 100)]
-	public class LocalizationManager : Singleton<LocalizationManager>, IGameSave
-	{
-		// PROPERTIES: -------------------------------------------------------------------------------------------------
+        private DatabaseLocalization databaseLocalization;
+        private SystemLanguage currentLanguage;
 
-		private DatabaseLocalization databaseLocalization;
-		private SystemLanguage currentLanguage;
+        public UnityAction onChangeLanguage;
 
-		public UnityAction onChangeLanguage;
+        // INITIALIZER: ------------------------------------------------------------------------------------------------
 
-		// INITIALIZER: ------------------------------------------------------------------------------------------------
+        protected override void OnCreate()
+        {
+            databaseLocalization = IDatabase.LoadDatabaseCopy<DatabaseLocalization>();
+            currentLanguage = databaseLocalization.GetMainLanguage();
 
-		protected override void OnCreate ()
-		{
-			this.databaseLocalization = DatabaseLocalization.LoadDatabaseCopy<DatabaseLocalization>();
-			this.currentLanguage = databaseLocalization.GetMainLanguage();
+            SaveLoadManager.Instance.Initialize(this);
+        }
 
-			SaveLoadManager.Instance.Initialize(this);
-		}
+        public SystemLanguage GetCurrentLanguage()
+        {
+            return currentLanguage;
+        }
 
-		public SystemLanguage GetCurrentLanguage()
-		{
-			return this.currentLanguage;
-		}
+        public void ChangeLanguage(SystemLanguage language)
+        {
+            int languagesCount = databaseLocalization.languages.Count;
+            for (int i = 0; i < languagesCount; ++i)
+            {
+                if (databaseLocalization.languages[i].language == language)
+                {
+                    currentLanguage = language;
+                    if (onChangeLanguage != null) onChangeLanguage.Invoke();
 
-		public void ChangeLanguage(SystemLanguage language)
-		{
-			int languagesCount = this.databaseLocalization.languages.Count;
-			for (int i = 0; i < languagesCount; ++i)
-			{
-				if (this.databaseLocalization.languages[i].language == language)
-				{
-					this.currentLanguage = language;
-					if (this.onChangeLanguage != null) this.onChangeLanguage.Invoke();
+                    return;
+                }
+            }
 
-					return;
-				}
-			}
+            Debug.LogWarningFormat("Language {0} not available", language);
+        }
 
-			Debug.LogWarningFormat("Language {0} not available", language);
-		}
+        // INTERFACE ISAVELOAD: ----------------------------------------------------------------------------------------
 
-		// INTERFACE ISAVELOAD: ----------------------------------------------------------------------------------------
+        public string GetUniqueName()
+        {
+            return "localization";
+        }
 
-		public string GetUniqueName()
-		{
-			return "localization";
-		}
+        public Type GetSaveDataType()
+        {
+            return typeof(SystemLanguage);
+        }
 
-		public System.Type GetSaveDataType()
-		{
-			return typeof(SystemLanguage);
-		}
+        public object GetSaveData()
+        {
+            return currentLanguage;
+        }
 
-		public System.Object GetSaveData()
-		{
-			return currentLanguage;
-		}
+        public void ResetData()
+        {
+            currentLanguage = databaseLocalization.GetMainLanguage();
+        }
 
-		public void ResetData()
-		{
-			this.currentLanguage = this.databaseLocalization.GetMainLanguage();
-		}
-
-		public void OnLoad(System.Object generic)
-		{
-			SystemLanguage language = (SystemLanguage)generic;
-			this.currentLanguage = language;
-		}
-	}
+        public void OnLoad(object generic)
+        {
+            SystemLanguage language = (SystemLanguage) generic;
+            currentLanguage = language;
+        }
+    }
 }
