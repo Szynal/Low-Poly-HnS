@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+// TO JEST OKROPNIE NAPISANE ... JPRDL
 public interface ISaveable
 {
     void OnSave(SceneSave _saveTo);
@@ -25,24 +26,29 @@ public class SceneSave
     private List<PickupState> pickupStates = new List<PickupState>();
     private List<ActionTriggerState> triggerStates = new List<ActionTriggerState>();
 
-    public void SaveScene(Scene _scene)
+    public void SaveScene(Scene scene)
     {
-        SceneID = _scene.buildIndex;
+        SceneID = scene.buildIndex;
 
-        foreach (MonoBehaviour _mb in Resources.FindObjectsOfTypeAll<MonoBehaviour>())
+        foreach (MonoBehaviour monoBehaviour in Resources.FindObjectsOfTypeAll<MonoBehaviour>())
         {
-            if (_mb.gameObject.scene.isLoaded && _mb.gameObject.scene == _scene)
+            if (monoBehaviour == null || !monoBehaviour.gameObject.scene.isLoaded ||
+                monoBehaviour.gameObject.scene != scene) continue;
+
+            switch (monoBehaviour)
             {
-                if (_mb is ISaveable)
+                case ISaveable mb:
                 {
-                    // Debug.Log("Scene " + _scene.name + " is saving object: " + _mb.name);
-                    ISaveable _saveable = (ISaveable) _mb;
-                    _saveable.OnSave(this);
+                    Debug.Log("Scene " + scene.name + " is saving object: " + monoBehaviour.name);
+                    ISaveable saveable = mb;
+                    saveable.OnSave(this);
+                    break;
                 }
-                else if (_mb is MultipleStateObjectManager)
+                case MultipleStateObjectManager mb:
                 {
-                    MultipleStateObjectManager _msoManager = (MultipleStateObjectManager) _mb;
-                    _msoManager.SaveState(this);
+                    MultipleStateObjectManager msoManager = mb;
+                    msoManager.SaveState(this);
+                    break;
                 }
             }
         }
