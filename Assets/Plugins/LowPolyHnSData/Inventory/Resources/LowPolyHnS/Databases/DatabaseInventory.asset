@@ -19,10 +19,6 @@ MonoBehaviour:
     - {fileID: 114177772742640968}
     - {fileID: 114973290084467346}
     - {fileID: 114202326578594358}
-    - {fileID: 114826305866355372}
-    - {fileID: 114961875310084520}
-    - {fileID: 114212023077505736}
-    - {fileID: 114670950127064220}
     recipes:
     - {fileID: 114798038658200360}
     itemTypes:
@@ -376,47 +372,6 @@ MonoBehaviour:
     type: 3}
   actionsOnUnequip: {fileID: 114862963190555666, guid: a83d97d34a1494808814958dc7b7be7e,
     type: 3}
---- !u!114 &114212023077505736
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d6c3b42562c09470ea31efe19c9d3dd9, type: 3}
-  m_Name: item.1703117380
-  m_EditorClassIdentifier: 
-  uuid: 1703117380
-  itemName:
-    content: Hat
-    postProcess: 0
-    translationID: 0
-  itemDescription:
-    content: Protects your head from the rain
-    postProcess: 0
-    translationID: 0
-  itemColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-  sprite: {fileID: 21300000, guid: 23de4d75b7c2645f18974205d5ee7158, type: 3}
-  prefab: {fileID: 0}
-  canBeSold: 1
-  price: 50
-  maxStack: 1
-  weight: 5
-  itemTypes: 10
-  onClick: 1
-  consumeItem: 0
-  actionsOnClick: {fileID: 114304329568707516, guid: 3664d0efba40844f0989b1e934ebee0b,
-    type: 3}
-  equipable: 1
-  fillAllTypes: 0
-  conditionsEquip: {fileID: 114751885000909132, guid: 13e70ea735f93440ba2eddf6d8762130,
-    type: 3}
-  actionsOnEquip: {fileID: 114508125594269486, guid: f57fc0caa035a496189d4c21fa68b57e,
-    type: 3}
-  actionsOnUnequip: {fileID: 114493396764035258, guid: 45b6a6d28a6854953a28264a26421438,
-    type: 3}
 --- !u!114 &114273004538180096
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -495,47 +450,6 @@ MonoBehaviour:
   conditionsEquip: {fileID: 0}
   actionsOnEquip: {fileID: 0}
   actionsOnUnequip: {fileID: 0}
---- !u!114 &114670950127064220
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d6c3b42562c09470ea31efe19c9d3dd9, type: 3}
-  m_Name: item.1703117380
-  m_EditorClassIdentifier: 
-  uuid: 1929890352
-  itemName:
-    content: Armor
-    postProcess: 0
-    translationID: 0
-  itemDescription:
-    content: Red armor that will prevent enemies from seeing you bleed
-    postProcess: 0
-    translationID: 0
-  itemColor: {r: 0.9150943, g: 0.3496351, b: 0.3496351, a: 1}
-  sprite: {fileID: 21300000, guid: 00dfef9721b7b47bd8d11c253353104d, type: 3}
-  prefab: {fileID: 0}
-  canBeSold: 1
-  price: 50
-  maxStack: 1
-  weight: 5
-  itemTypes: 10
-  onClick: 1
-  consumeItem: 0
-  actionsOnClick: {fileID: 114304329568707516, guid: f7c5ad8e59302427ebdb4f9b6a4fddd9,
-    type: 3}
-  equipable: 1
-  fillAllTypes: 0
-  conditionsEquip: {fileID: 114751885000909132, guid: 07fda723bd5b14b8ba1db77bee29db0f,
-    type: 3}
-  actionsOnEquip: {fileID: 114508125594269486, guid: 0e958b5f7b8eb4e95a4a6fd71366cda1,
-    type: 3}
-  actionsOnUnequip: {fileID: 114493396764035258, guid: 1788ecd5dd1af43869c97d7f422e3797,
-    type: 3}
 --- !u!114 &114755425383334400
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -668,47 +582,6 @@ MonoBehaviour:
   removeItemsOnCraft: 1
   actionsList: {fileID: 114940443500244628, guid: b4341ef21780b4c8a9dd9e8ec54d9686,
     type: 3}
---- !u!114 &114826305866355372
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d6c3b42562c09470ea31efe19c9d3dd9, type: 3}
-  m_Name: item.1347656443
-  m_EditorClassIdentifier: 
-  uuid: 1347656444
-  itemName:
-    content: Shield
-    postProcess: 0
-    translationID: 0
-  itemDescription:
-    content: A shield made of wood
-    postProcess: 0
-    translationID: 0
-  itemColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-  sprite: {fileID: 21300000, guid: 02444a0f41556479c94540df649ff52c, type: 3}
-  prefab: {fileID: 0}
-  canBeSold: 1
-  price: 100
-  maxStack: 1
-  weight: 5
-  itemTypes: 18
-  onClick: 1
-  consumeItem: 0
-  actionsOnClick: {fileID: 114376854373756430, guid: ccb56e205e02b4ee5bf36591e214583d,
-    type: 3}
-  equipable: 1
-  fillAllTypes: 0
-  conditionsEquip: {fileID: 114711394317633460, guid: f3b19620028e34a688211eaa0c852580,
-    type: 3}
-  actionsOnEquip: {fileID: 114579303995260872, guid: 9afef09e41a0c4f038e65555d3a640e4,
-    type: 3}
-  actionsOnUnequip: {fileID: 114862963190555666, guid: a78a32417cc9e41ceb15fc88f711d5cf,
-    type: 3}
 --- !u!114 &114876379292609582
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -787,47 +660,6 @@ MonoBehaviour:
   conditionsEquip: {fileID: 0}
   actionsOnEquip: {fileID: 0}
   actionsOnUnequip: {fileID: 0}
---- !u!114 &114961875310084520
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d6c3b42562c09470ea31efe19c9d3dd9, type: 3}
-  m_Name: item.1150090570
-  m_EditorClassIdentifier: 
-  uuid: 1150090570
-  itemName:
-    content: Hammer
-    postProcess: 0
-    translationID: 0
-  itemDescription:
-    content: A weapon to crush skulls
-    postProcess: 0
-    translationID: 0
-  itemColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-  sprite: {fileID: 21300000, guid: 62b77465a0a1c424ab5821210457a860, type: 3}
-  prefab: {fileID: 0}
-  canBeSold: 1
-  price: 3000
-  maxStack: 1
-  weight: 5
-  itemTypes: 22
-  onClick: 1
-  consumeItem: 0
-  actionsOnClick: {fileID: 114481369062043594, guid: c8a8ed2e2817a4237a127b2c95721daf,
-    type: 3}
-  equipable: 1
-  fillAllTypes: 1
-  conditionsEquip: {fileID: 114433509760340908, guid: e4bc4da8051f34411a6295c095d026d1,
-    type: 3}
-  actionsOnEquip: {fileID: 114397559460990426, guid: 6759bffa91bf8437a89cb3b64da119f4,
-    type: 3}
-  actionsOnUnequip: {fileID: 114873956412295212, guid: 99ea921a4177c40b681fbeea1b223173,
-    type: 3}
 --- !u!114 &114973290084467346
 MonoBehaviour:
   m_ObjectHideFlags: 1
