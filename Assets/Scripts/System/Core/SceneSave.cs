@@ -45,16 +45,8 @@ public class SceneSave
                     saveable.OnSave(this);
                     break;
                 }
-                case MultipleStateObjectManager mb:
-                {
-                    var msoManager = mb;
-                    msoManager.SaveState(this);
-                    break;
-                }
             }
         }
-
-        MultipleStateObjectManager.Instance.SaveState(this);
     }
 
     public void RecordSaveableState(SaveableState newState)

@@ -44,8 +44,6 @@ public class CutsceneController : MonoBehaviour
     [Header("Properties related to teleporting to another scene")]
     public bool TeleportsToDifferentScene;
 
-    [Header("After cutscene changes")] [SerializeField]
-    private List<FE_ActionContainer> afterCutsceneChanges = null;
 
     protected PlayableDirector director;
     protected Coroutine transitionCoroutine;
@@ -341,12 +339,7 @@ public class CutsceneController : MonoBehaviour
         {
             sceneTeleporter.HandleTeleport();
         }
-
-        foreach (FE_ActionContainer _action in afterCutsceneChanges)
-        {
-            FE_StateChanger.HandleObjectChange(_action);
-        }
-
+        
         GameManager.Instance.OnCutsceneEnd(EndTransitionTime / 2f);
 
         if (hasItsOwnScene)

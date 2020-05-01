@@ -56,8 +56,7 @@ namespace LowPolyHnS
                 DontDestroyOnLoad(gameObject);
 
                 GetComponent<SceneLoader>().AssignAsInstance();
-                GetComponent<MultipleStateObjectManager>().AssignAsInstance();
-                PrepareSaveFile();
+              PrepareSaveFile();
             }
             else
             {

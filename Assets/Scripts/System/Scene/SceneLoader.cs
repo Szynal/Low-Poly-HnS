@@ -369,7 +369,6 @@ namespace LowPolyHnS
             //First, we need to load MSO manager, so it can give values to MSOs. BUT only if we're loading the game from a file!
             if (loadedFromFile)
             {
-                MultipleStateObjectManager.Instance.LoadFromState(loadedFrom.GetMSOManagerState());
                 loadedFromFile = false;
             }
 
@@ -389,35 +388,6 @@ namespace LowPolyHnS
                         if (playerLoadParams == null && loadedFrom.GetPlayerState() != null)
                         {
                             saveable.OnLoad(loadedFrom.GetPlayerState());
-                        }
-
-                        break;
-                    }
-                    case FE_MultipleStateObject multiStateObject:
-                    {
-                        if (MultipleStateObjectManager.Instance.GetStateByID(multiStateObject.SaveableID) != -1)
-                        {
-                            multiStateObject.OnLoad(
-                                MultipleStateObjectManager.Instance.GetStateByID(multiStateObject.SaveableID));
-                        }
-
-                        break;
-                    }
-                    case FE_ActionTrigger trigger:
-                    {
-                        if (loadedFrom.GetTriggerStateByID(trigger.SaveableID) != null)
-                        {
-                            saveable.OnLoad(loadedFrom.GetTriggerStateByID(trigger.SaveableID));
-                        }
-
-                        break;
-                    }
-                    default:
-                    {
-                        if (monoBehaviour is MultipleStateObjectManager == false
-                        ) //So we don't destroy MSOManager, but still destroy anything unknown
-                        {
-                            Destroy(monoBehaviour.gameObject);
                         }
 
                         break;
