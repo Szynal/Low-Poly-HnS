@@ -1648,7 +1648,7 @@ GameObject:
   - component: {fileID: 271057858}
   - component: {fileID: 271057857}
   m_Layer: 5
-  m_Name: Canvas2
+  m_Name: Gate
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6227,7 +6227,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Step 3
+  m_Text: HELP
 --- !u!222 &1216546708
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8169,7 +8169,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Step 2
+  m_Text: HELP
 --- !u!222 &1640112424
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8294,7 +8294,7 @@ GameObject:
   - component: {fileID: 1662955375}
   - component: {fileID: 1662955374}
   m_Layer: 5
-  m_Name: Canvas8
+  m_Name: Chest
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9979,7 +9979,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Store items in Containers
+  m_Text: Store items in chest
 --- !u!222 &1842602094
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -11627,7 +11627,7 @@ GameObject:
   - component: {fileID: 2070149823}
   - component: {fileID: 2070149822}
   m_Layer: 5
-  m_Name: Canvas3
+  m_Name: Items
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
