@@ -6021,6 +6021,11 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5104592483601878867, guid: fece4e6c51722ed49b325c7a83bdbe3a,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 7078214931956618583, guid: fece4e6c51722ed49b325c7a83bdbe3a,
         type: 3}
       propertyPath: cameraPosition

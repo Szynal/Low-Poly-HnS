@@ -191,6 +191,9 @@ GameObject:
   - component: {fileID: 7593341490199559833}
   - component: {fileID: 9133239568973208029}
   - component: {fileID: 1071196391}
+  - component: {fileID: 619734468}
+  - component: {fileID: 619734469}
+  - component: {fileID: 619734470}
   m_Layer: 8
   m_Name: Character
   m_TagString: Player
@@ -395,6 +398,112 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   goalPoint: {fileID: 0}
+--- !u!114 &619734468
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 677829378768984962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba5474eccad914a1386493683f58a1e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &619734469
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 677829378768984962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d1a1bad10d7340b28594393bc102fe3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gid: 80e1c521-0115-4acd-be33-579ff38c716d
+  equipment:
+    items:
+    - isEquipped: 0
+      itemID: 0
+    - isEquipped: 0
+      itemID: 0
+    - isEquipped: 0
+      itemID: 0
+    - isEquipped: 0
+      itemID: 0
+    - isEquipped: 0
+      itemID: 0
+    - isEquipped: 0
+      itemID: 0
+    - isEquipped: 0
+      itemID: 0
+    - isEquipped: 0
+      itemID: 0
+    - isEquipped: 0
+      itemID: 0
+    - isEquipped: 0
+      itemID: 0
+    - isEquipped: 0
+      itemID: 0
+    - isEquipped: 0
+      itemID: 0
+    - isEquipped: 0
+      itemID: 0
+    - isEquipped: 0
+      itemID: 0
+    - isEquipped: 0
+      itemID: 0
+    - isEquipped: 0
+      itemID: 0
+    - isEquipped: 0
+      itemID: 0
+    - isEquipped: 0
+      itemID: 0
+    - isEquipped: 0
+      itemID: 0
+    - isEquipped: 0
+      itemID: 0
+    - isEquipped: 0
+      itemID: 0
+    - isEquipped: 0
+      itemID: 0
+    - isEquipped: 0
+      itemID: 0
+    - isEquipped: 0
+      itemID: 0
+    - isEquipped: 0
+      itemID: 0
+    - isEquipped: 0
+      itemID: 0
+    - isEquipped: 0
+      itemID: 0
+    - isEquipped: 0
+      itemID: 0
+    - isEquipped: 0
+      itemID: 0
+    - isEquipped: 0
+      itemID: 0
+    - isEquipped: 0
+      itemID: 0
+    - isEquipped: 0
+      itemID: 0
+  saveEquipment: 1
+--- !u!114 &619734470
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 677829378768984962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd0195a266c1d47549a59d0871e075de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gid: 1f55cbd3-ca8a-4233-8a32-c504999fbc87
+  Save: 0
 --- !u!1 &677833717701352800
 GameObject:
   m_ObjectHideFlags: 0
