@@ -3,9 +3,9 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class FE_UIController : MonoBehaviour
+public class UIController : MonoBehaviour
 {
-    public static FE_UIController Instance;
+    public static UIController Instance;
 
     [Header("Player UI references")] [SerializeField]
     private Image playerHealthImage = null;

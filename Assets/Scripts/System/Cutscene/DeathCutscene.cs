@@ -27,6 +27,6 @@ public class DeathCutscene : CutsceneController
             }
         }
 
-        FE_UIController.Instance.ShowGameOverScreen();
+        UIController.Instance.ShowGameOverScreen();
     }
 }

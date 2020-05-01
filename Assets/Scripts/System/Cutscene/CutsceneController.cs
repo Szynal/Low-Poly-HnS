@@ -170,7 +170,7 @@ public class CutsceneController : MonoBehaviour
 
     private void OnStartPlayback()
     {
-        FE_UIController.Instance.HandleCutscene(true);
+        UIController.Instance.HandleCutscene(true);
 
         if (hasDirector)
         {

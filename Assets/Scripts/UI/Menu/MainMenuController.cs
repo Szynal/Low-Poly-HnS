@@ -8,7 +8,7 @@ namespace LowPolyHnS
     public class MainMenuController : SubMenuController
     {
         [Header("MainMenu Properties")] [SerializeField]
-        private FE_LoadScreen loadScreenPanel = null;
+        private LoadScreen loadScreenPanel = null;
 
         public void StartNewGame()
         {

@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class FE_LoadingCircleRotater : MonoBehaviour
+
+//JPRDL po co ... od tego są animacje
+public class LoadingCircleRotater : MonoBehaviour
 {
     [SerializeField] private Transform transformToRotate = null;
     [SerializeField] private float rotationSpeed = 30f;

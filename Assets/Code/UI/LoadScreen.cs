@@ -3,7 +3,7 @@ using LowPolyHnS;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class FE_LoadScreen : MonoBehaviour
+public class LoadScreen : MonoBehaviour
 {
     [SerializeField] private Button[] saveSlots = new Button[10];
     [SerializeField] private Button exitButton = null;
@@ -45,7 +45,7 @@ public class FE_LoadScreen : MonoBehaviour
         }
         else
         {
-            FE_UIController.Instance?.OnExitedMenu();
+            UIController.Instance?.OnExitedMenu();
         }
     }
 

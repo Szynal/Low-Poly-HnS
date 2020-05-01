@@ -3,7 +3,7 @@ using LowPolyHnS;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class FE_SaveScreen : MonoBehaviour
+public class SaveScreen : MonoBehaviour
 {
     [SerializeField] private Button[] saveSlots = new Button[10];
 
@@ -29,7 +29,7 @@ public class FE_SaveScreen : MonoBehaviour
     public void OnCancel()
     {
         HandleShowing(false);
-        FE_UIController.Instance.OnExitedMenu();
+        UIController.Instance.OnExitedMenu();
     }
 
     public void OnSlotSelected(Button _clickedButton)

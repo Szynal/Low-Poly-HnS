@@ -107,9 +107,9 @@ public class SubMenuController : MonoBehaviour
         parent = null;
         Hide();
 
-        if (FE_UIController.Instance != null)
+        if (UIController.Instance != null)
         {
-            FE_UIController.Instance.OnExitedMenu();
+            UIController.Instance.OnExitedMenu();
         }
     }
 

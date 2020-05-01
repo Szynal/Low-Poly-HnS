@@ -94,7 +94,7 @@ namespace LowPolyHnS
             }
             else if (isDeathCutscene == false)
             {
-                FE_UIController.Instance.HandleCutscene(false);
+                UIController.Instance.HandleCutscene(false);
                 Time.timeScale = 1f;
             }
         }

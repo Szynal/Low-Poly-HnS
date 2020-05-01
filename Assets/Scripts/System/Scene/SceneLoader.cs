@@ -18,7 +18,7 @@ namespace LowPolyHnS
         private float fadeToBlackTime = 1f;
 
         [SerializeField] private Camera loadingCamera = null;
-        [SerializeField] private FE_LoadingCircleRotater loadingIndicator = null;
+        [SerializeField] private LoadingCircleRotater loadingIndicator = null;
 
         private List<SceneSave> statesOfScenes = new List<SceneSave>();
         private SceneSave lastSceneState;
@@ -281,9 +281,9 @@ namespace LowPolyHnS
                     break;
                 case ESceneType.Menu:
                 {
-                    if (FE_UIController.Instance != null)
+                    if (UIController.Instance != null)
                     {
-                        Destroy(FE_UIController.Instance.gameObject);
+                        Destroy(UIController.Instance.gameObject);
                     }
 
                     if (isInLoading)
