@@ -266,6 +266,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: Generic_GameManager
       objectReference: {fileID: 0}
+    - target: {fileID: 1376466739670179999, guid: c6c4906f2c09a2a40bb6a7ebb17b7da0,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1376466739670179999, guid: c6c4906f2c09a2a40bb6a7ebb17b7da0,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1376466739670179999, guid: c6c4906f2c09a2a40bb6a7ebb17b7da0,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: -336.5768
+      objectReference: {fileID: 0}
     - target: {fileID: 4514522296803194282, guid: c6c4906f2c09a2a40bb6a7ebb17b7da0,
         type: 3}
       propertyPath: m_HorizontalAxis
@@ -286,8 +301,79 @@ PrefabInstance:
       propertyPath: m_CancelButton
       value: Cancel
       objectReference: {fileID: 0}
+    - target: {fileID: 5350038524596754066, guid: c6c4906f2c09a2a40bb6a7ebb17b7da0,
+        type: 3}
+      propertyPath: ImagesToFade.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5350038524596754066, guid: c6c4906f2c09a2a40bb6a7ebb17b7da0,
+        type: 3}
+      propertyPath: CircleRotate
+      value: 
+      objectReference: {fileID: 2020634418}
+    - target: {fileID: 5350038524596754066, guid: c6c4906f2c09a2a40bb6a7ebb17b7da0,
+        type: 3}
+      propertyPath: ImagesToFade.Array.data[0]
+      value: 
+      objectReference: {fileID: 2020634420}
+    - target: {fileID: 5350038524596754066, guid: c6c4906f2c09a2a40bb6a7ebb17b7da0,
+        type: 3}
+      propertyPath: ImagesToFade.Array.data[1]
+      value: 
+      objectReference: {fileID: 2020634419}
+    - target: {fileID: 7338575016039420801, guid: c6c4906f2c09a2a40bb6a7ebb17b7da0,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c6c4906f2c09a2a40bb6a7ebb17b7da0, type: 3}
+--- !u!1 &2020634417 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7338575016039420801, guid: c6c4906f2c09a2a40bb6a7ebb17b7da0,
+    type: 3}
+  m_PrefabInstance: {fileID: 2020634416}
+  m_PrefabAsset: {fileID: 0}
+--- !u!111 &2020634418
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2020634417}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: 14da348e47cd57641a2f5e43d7bef18a, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: 14da348e47cd57641a2f5e43d7bef18a, type: 2}
+  m_WrapMode: 2
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
+--- !u!114 &2020634419 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7530325707594905666, guid: c6c4906f2c09a2a40bb6a7ebb17b7da0,
+    type: 3}
+  m_PrefabInstance: {fileID: 2020634416}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2020634420 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8057767657334557659, guid: c6c4906f2c09a2a40bb6a7ebb17b7da0,
+    type: 3}
+  m_PrefabInstance: {fileID: 2020634416}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2037264554
 GameObject:
   m_ObjectHideFlags: 0

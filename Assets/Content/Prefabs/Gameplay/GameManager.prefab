@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1737191468742506483}
   - component: {fileID: 7004830941385636508}
   m_Layer: 0
-  m_Name: Generic_GameManager
+  m_Name: GameManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -49,7 +49,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3dac50a176ebb76458e4b2e5499aab36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ItemDatabase: {fileID: 11400000, guid: a12bfee25c16da343981701f6cbe802d, type: 2}
   SavedCharactersInventory:
     PlayerInvList: 
     PlayerSpellList: 
@@ -100,7 +99,6 @@ MonoBehaviour:
     Settings:
       UseCharacterBasedMovement: 0
   CheatOptions:
-    UseGravitatingCamera: 0
     GodMode: 0
   Settings:
     UseCharacterBasedMovement: 1
@@ -548,6 +546,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6441556823411303459}
   - component: {fileID: 5350038524596754066}
+  - component: {fileID: 587539530390559121}
   m_Layer: 5
   m_Name: LoadCircle
   m_TagString: Untagged
@@ -588,12 +587,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 030853e6ef56065408d19fc432ea1c91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  transformToRotate: {fileID: 1376466739670179999}
-  rotationSpeed: -45
-  imagesToFade:
+  CircleRotate: {fileID: 587539530390559121}
+  ImagesToFade:
   - {fileID: 8057767657334557659}
   - {fileID: 7530325707594905666}
-  fadeTime: 0.5
+  FadeTime: 1
+--- !u!111 &587539530390559121
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7338575016039420801}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: 14da348e47cd57641a2f5e43d7bef18a, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: 14da348e47cd57641a2f5e43d7bef18a, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1 &7341165959235613387
 GameObject:
   m_ObjectHideFlags: 0

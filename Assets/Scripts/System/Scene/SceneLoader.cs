@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using LowPolyHnS.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -18,7 +19,7 @@ namespace LowPolyHnS
         private float fadeToBlackTime = 1f;
 
         [SerializeField] private Camera loadingCamera = null;
-        [SerializeField] private LoadingCircleRotater loadingIndicator = null;
+        [SerializeField] private LoadingCircle loadingIndicator = null;
 
         private List<SceneSave> statesOfScenes = new List<SceneSave>();
         private SceneSave lastSceneState;
