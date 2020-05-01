@@ -48,7 +48,6 @@ public class CutsceneController : MonoBehaviour
 
     protected PlayableDirector director;
     protected Coroutine transitionCoroutine;
-    protected FE_PlayerInventoryInteraction playerRef;
     protected SceneTeleporter sceneTeleporter;
     protected Camera targetCamera;
     protected bool canSkip;
@@ -129,7 +128,7 @@ public class CutsceneController : MonoBehaviour
         }
     }
 
-    public void PlayCutscene(FE_PlayerInventoryInteraction interactionController = null)
+    public void PlayCutscene()
     {
         if (GameManager.Instance.IsInCutscene)
         {
@@ -138,12 +137,6 @@ public class CutsceneController : MonoBehaviour
         }
 
         GameManager.Instance.OnCutsceneStart();
-
-        if (interactionController != null)
-        {
-            playerRef = interactionController;
-            playerRef.InputController.ChangeInputMode(EInputMode.None);
-        }
 
         //Play cutscene based on our transition type
         switch (StartTransitionType)
@@ -213,11 +206,6 @@ public class CutsceneController : MonoBehaviour
         {
             OnStartPlayback();
         }
-        else if (playerRef != null)
-        {
-            playerRef.InputController.ChangeInputMode(EInputMode.Full);
-            playerRef = null;
-        }
 
         if (startPlaying == false)
         {
@@ -235,11 +223,6 @@ public class CutsceneController : MonoBehaviour
         if (startPlaying)
         {
             OnStartPlayback();
-        }
-        else if (playerRef != null)
-        {
-            playerRef.InputController.ChangeInputMode(EInputMode.Full);
-            playerRef = null;
         }
 
         if (startPlaying == false)
@@ -294,11 +277,6 @@ public class CutsceneController : MonoBehaviour
         {
             OnStartPlayback();
         }
-        else if (playerRef != null)
-        {
-            playerRef.InputController.ChangeInputMode(EInputMode.Full);
-            playerRef = null;
-        }
 
         if (startPlaying == false)
         {
@@ -346,11 +324,6 @@ public class CutsceneController : MonoBehaviour
                 break;
 
             case ECameraTransitionType.None:
-                if (playerRef != null)
-                {
-                    playerRef.InputController.ChangeInputMode(EInputMode.Full);
-                    playerRef = null;
-                }
 
                 endCutscene();
                 break;

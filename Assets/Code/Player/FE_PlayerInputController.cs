@@ -33,7 +33,6 @@ public class FE_PlayerInputController : MonoBehaviour, ISaveable
     public InventoryInputDelegate InventoryUpDownInput;
 
     private bool usedAboutFace;
-    private FE_PlayerInventoryInteraction inventoryInteractionManager;
     private CharacterHealth healthScript;
 
     //In awake we check for references to handlers for given actions
@@ -42,7 +41,6 @@ public class FE_PlayerInputController : MonoBehaviour, ISaveable
         if (Instance == null)
         {
             Instance = this;
-            inventoryInteractionManager = GetComponent<FE_PlayerInventoryInteraction>();
             healthScript = GetComponent<CharacterHealth>();
         }
     }
@@ -95,17 +93,7 @@ public class FE_PlayerInputController : MonoBehaviour, ISaveable
 
 
         GameManager.Instance.SavedCharactersInventory.PlayerDisguised = saveState.PlayerDisguised;
-
-        foreach (FE_Item item in inventoryInteractionManager.Inventory)
-        {
-            saveState.InventoryIDList_Player.Add(item.itemID);
-        }
-
         GameManager.Instance.SavedCharactersInventory.PlayerInvList = saveState.InventoryIDList_Player;
-
-        saveState.AmmoTable_Player = inventoryInteractionManager.Ammunition;
-        GameManager.Instance.SavedCharactersInventory.PlayerSpellList = inventoryInteractionManager.Ammunition;
-
 
         saveState.Position_X = transform.position.x;
         saveState.Position_Y = transform.position.y;
@@ -144,27 +132,10 @@ public class FE_PlayerInputController : MonoBehaviour, ISaveable
             desiredAmmoTable = GameManager.Instance.SavedCharactersInventory.PlayerSpellList;
         }
 
-
-        if (desiredAmmoTable != null && desiredAmmoTable.Length > 0)
-        {
-            inventoryInteractionManager.Ammunition = desiredAmmoTable;
-        }
-
         List<int> desiredInvList = loadState.InventoryIDList_Player.Count > 0
             ? loadState.InventoryIDList_Player
             : GameManager.Instance.SavedCharactersInventory.PlayerInvList;
 
-
-        if (desiredInvList != null && desiredInvList.Count > 0)
-        {
-            inventoryInteractionManager.Inventory.Clear();
-            foreach (int id in desiredInvList)
-            {
-                inventoryInteractionManager.Inventory.Add(GameManager.Instance.ItemDatabase.GetItemByID(id));
-            }
-        }
-
-        inventoryInteractionManager.InitializeInventory();
 
         if (loadState.InventoryIDList_Player.Count > 0)
         {

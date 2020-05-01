@@ -24,10 +24,8 @@ public class FE_StateChanger : FE_InteractableObject
         }
     }
 
-    protected override void onActivation(FE_PlayerInventoryInteraction _instigator)
+    protected override void onActivation()
     {
-        base.onActivation(_instigator);
-
         SetCanInteract(false);
 
         if (hasParent)
@@ -93,11 +91,6 @@ public class FE_StateChanger : FE_InteractableObject
                 MultipleStateObjectManager.Instance.ChangeStateByName(_objectChange.MSOName, _objectChange.NewMSOState);
                 break;
 
-            case EActionType.GivePlayerItem:
-                FE_PlayerInventoryInteraction.Instance.AddItem(
-                    Instantiate(GameManager.Instance.ItemDatabase.GetItemByID(_objectChange.ItemIDToGive)));
-                break;
-
             case EActionType.UseSceneTeleporter:
                 if (_objectChange.SceneTeleporterToUse != null)
                 {
@@ -118,7 +111,7 @@ public class FE_StateChanger : FE_InteractableObject
             case EActionType.StartInsceneCutscene:
                 if (_objectChange.CutsceneToStart != null)
                 {
-                    _objectChange.CutsceneToStart.PlayCutscene(FE_PlayerInventoryInteraction.Instance);
+                    _objectChange.CutsceneToStart.PlayCutscene();
                 }
 
                 break;
@@ -133,11 +126,6 @@ public class FE_StateChanger : FE_InteractableObject
                     }
                 }
 
-                break;
-
-            case EActionType.RemoveItemFromPlayer:
-                FE_PlayerInventoryInteraction.Instance.RemoveItem(
-                    FE_PlayerInventoryInteraction.Instance.GetInventoryItemByID(_objectChange.ItemIDToGive));
                 break;
 
             case EActionType.StartFinaleChooser:

@@ -209,11 +209,6 @@ namespace LowPolyHnS
                         }
                     }
 
-                    if (FE_UIController.Instance != null && playerObject != null)
-                    {
-                        playerObject.GetComponentInChildren<FE_PlayerInventoryInteraction>().RefreshInteractions();
-                    }
-
                     //We want to always move player to the new scene, so we can properly save his state
                     if (playerObject != null)
                     {
@@ -255,8 +250,7 @@ namespace LowPolyHnS
                     if (cutsceneController != null)
                     {
                         cutsceneController.SceneName = loadedScene.name;
-                        cutsceneController.PlayCutscene(playerObject
-                            .GetComponent<FE_PlayerInventoryInteraction>());
+                        cutsceneController.PlayCutscene();
                     }
 
                     break;
@@ -397,18 +391,6 @@ namespace LowPolyHnS
 
                         break;
                     }
-                    case FE_Pickup pickup when loadedFrom.GetPickupStateByID(pickup.SaveableID) != null:
-                        saveable.OnLoad(loadedFrom.GetPickupStateByID(pickup.SaveableID));
-                        break;
-                    case FE_Pickup pickup:
-                        Destroy(pickup.gameObject);
-                        break;
-                    case FE_AmmoPickup ammoPickup when loadedFrom.GetPickupStateByID(ammoPickup.SaveableID) != null:
-                        saveable.OnLoad(loadedFrom.GetPickupStateByID(ammoPickup.SaveableID));
-                        break;
-                    case FE_AmmoPickup ammoPickup:
-                        Destroy(ammoPickup.gameObject);
-                        break;
                     case FE_MultipleStateObject multiStateObject:
                     {
                         if (MultipleStateObjectManager.Instance.GetStateByID(multiStateObject.SaveableID) != -1)

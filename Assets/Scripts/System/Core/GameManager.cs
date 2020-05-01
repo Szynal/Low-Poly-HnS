@@ -36,7 +36,6 @@ namespace LowPolyHnS
 
         [HideInInspector] public static GameManager Instance;
 
-        public FE_ItemDatabase ItemDatabase;
         public CharactersInventory SavedCharactersInventory;
         public bool IsInCutscene;
         public SaveFile CurrentSave;
@@ -106,7 +105,7 @@ namespace LowPolyHnS
 
             if (scheduledCutscenes.Count > 0)
             {
-                scheduledCutscenes.Dequeue().PlayCutscene(FE_PlayerInventoryInteraction.Instance);
+                scheduledCutscenes.Dequeue().PlayCutscene();
             }
         }
 

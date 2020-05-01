@@ -37,13 +37,7 @@ public abstract class FE_InteractableObject : MonoBehaviour
     {
         return needItem;
     }
-
-    public int RequiredItemID;
-    [SerializeField] private bool removeItemAfterUse = false;
-
-    protected FE_PlayerInventoryInteraction playerRef;
-    protected bool isInProperSpot = false;
-
+    
     protected bool needToUnholsterAfter;
 
     public delegate void OnInteractableUsed(FE_InteractableObject _usedInteractable);
@@ -63,63 +57,12 @@ public abstract class FE_InteractableObject : MonoBehaviour
         }
     }
 
-    virtual protected void OnTriggerEnter(Collider _other)
+
+    public virtual void Activate()
     {
-        if (canInteract)
-        {
-            if (_other.tag == "Player")
-            {
-                playerRef = _other.GetComponent<FE_PlayerInventoryInteraction>();
-                if (playerRef.GetObjectsToUse().Contains(this) == false)
-                {
-                    playerRef.AddInteraction(this);
-                }
-            }
-        }
     }
 
-    virtual protected void OnTriggerExit(Collider _other)
-    {
-        if (_other.tag == "Player" &&
-            _other.GetComponent<FE_PlayerInventoryInteraction>().GetObjectsToUse().Contains(this))
-        {
-            playerRef.RemoveInteraction(this);
-            playerRef = null;
-        }
-    }
-
-    protected virtual void OnDestroy()
-    {
-        if (playerRef != null)
-        {
-            playerRef.RemoveInteraction(this);
-            playerRef = null;
-        }
-    }
-
-    protected virtual void OnDisable()
-    {
-        if (playerRef != null)
-        {
-            playerRef.RemoveInteraction(this);
-            playerRef = null;
-        }
-    }
-
-    public virtual void Activate(FE_PlayerInventoryInteraction _instigator, FE_Item _itemUsed = null,
-        bool _bypassItemUsage = false)
-    {
-        if (needItem == false || _itemUsed != null && _itemUsed.itemID == RequiredItemID || _bypassItemUsage)
-        {
-            onActivation(_instigator);
-        }
-        else
-        {
-            failActivation();
-        }
-    }
-
-    virtual protected void onActivation(FE_PlayerInventoryInteraction _instigator)
+    virtual protected void onActivation()
     {
         if (StartCutsceneOnUse)
         {
@@ -134,24 +77,6 @@ public abstract class FE_InteractableObject : MonoBehaviour
         if (needToUnholsterAfter)
         {
             needToUnholsterAfter = false;
-        }
-
-        if (RequireItem() && removeItemAfterUse)
-        {
-            FE_UseableItem _useableToRemove =
-                FE_PlayerInventoryInteraction.Instance.GetInventoryItemByID(RequiredItemID) as FE_UseableItem;
-            if (_useableToRemove != null && _useableToRemove.IsStackable)
-            {
-                if (_useableToRemove.UseStack())
-                {
-                    FE_PlayerInventoryInteraction.Instance.RemoveItem(_useableToRemove);
-                }
-            }
-            else
-            {
-                FE_PlayerInventoryInteraction.Instance.RemoveItem(
-                    GameManager.Instance.ItemDatabase.GetItemByID(RequiredItemID));
-            }
         }
 
         if (isMultipleUse)
@@ -180,11 +105,6 @@ public abstract class FE_InteractableObject : MonoBehaviour
         {
             canInteract = false;
             GetComponent<Collider>().enabled = false;
-            if (playerRef != null)
-            {
-                playerRef.RemoveInteraction(this);
-                playerRef = null;
-            }
         }
     }
 }

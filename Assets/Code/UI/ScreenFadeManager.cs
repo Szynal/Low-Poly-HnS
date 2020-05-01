@@ -79,10 +79,6 @@ namespace LowPolyHnS
 
             yield return StartCoroutine(fadeToBlack(false, fadeTime, callbackFunction));
 
-            if (FE_PlayerInventoryInteraction.Instance.InputController != null)
-            {
-                FE_PlayerInventoryInteraction.Instance.InputController.ChangeInputMode(EInputMode.Full);
-            }
         }
     }
 }
