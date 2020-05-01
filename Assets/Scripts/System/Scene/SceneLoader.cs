@@ -384,7 +384,7 @@ namespace LowPolyHnS
 
                 switch (monoBehaviour)
                 {
-                    case LoadSaveController _:
+                    case PlayerLoadSaveController _:
                     {
                         if (playerLoadParams == null && loadedFrom.GetPlayerState() != null)
                         {
@@ -428,7 +428,7 @@ namespace LowPolyHnS
 
         private void LoadCustomPlayerParams()
         {
-            ISaveable player = LoadSaveController.Instance;
+            ISaveable player = PlayerLoadSaveController.Instance;
 
             if (lastSceneState == null) return;
 
@@ -442,7 +442,7 @@ namespace LowPolyHnS
             }
             else
             {
-                Transform playerTrans = ((LoadSaveController) player).transform;
+                Transform playerTrans = ((PlayerLoadSaveController) player).transform;
                 playerState.Position_X = playerTrans.position.x;
                 playerState.Position_Y = playerTrans.position.y;
                 playerState.Position_Z = playerTrans.position.z;

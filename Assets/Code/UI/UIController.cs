@@ -1,16 +1,10 @@
 ﻿using LowPolyHnS;
-using LowPolyHnS.Core;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class UIController : MonoBehaviour
 {
     public static UIController Instance;
-
-    [Header("Player UI references")] [SerializeField]
-    private Image playerHealthImage = null;
-
     [SerializeField] private Image gameOverBackgroundImage = null;
 
     [Header("References to menus")] [SerializeField]
@@ -19,13 +13,7 @@ public class UIController : MonoBehaviour
     [SerializeField] private SubMenuController saveMenu = null;
     [SerializeField] private SubMenuController loadMenu = null;
     [SerializeField] private SubMenuController gameOverMenu = null;
-    [Header("Other")] [SerializeField] private GameObject controllerInputMap = null;
-    [SerializeField] private GameObject keyboardInputMap = null;
 
-    [SerializeField] public EventSystem MenuEventSystem = null;
-
-    private LoadSaveController inputController;
-    private bool dangerNearby;
     private bool gameOverShown;
 
     #region Basic Unity Methods
@@ -42,24 +30,9 @@ public class UIController : MonoBehaviour
         }
     }
 
-    private void Start()
-    {
-        inputController = LoadSaveController.Instance;
-    }
-
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Home))
-        {
-            Time.timeScale = controllerInputMap.activeInHierarchy ? 1f : 0f;
-            controllerInputMap.SetActive(!controllerInputMap.activeInHierarchy);
-        }
-        else if (Input.GetKeyDown(KeyCode.M))
-        {
-            Time.timeScale = keyboardInputMap.activeInHierarchy ? 1f : 0f;
-            keyboardInputMap.SetActive(!keyboardInputMap.activeInHierarchy);
-        }
-        else if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
             TogglePauseMenu();
         }
@@ -67,36 +40,9 @@ public class UIController : MonoBehaviour
 
     #endregion
 
-    public void ShowHealth(bool _show, bool _isDanger = false)
-    {
-        if (_show)
-        {
-            playerHealthImage.enabled = _show;
-        }
-
-        dangerNearby = _isDanger;
-    }
-
-    public void SetHealthColor(int _newHealth)
-    {
-        if (_newHealth > 50)
-        {
-            playerHealthImage.color = Color.green;
-        }
-        else if (_newHealth <= 50 && _newHealth > 20)
-        {
-            playerHealthImage.color = new Color(250f, 155f, 0f);
-        }
-        else
-        {
-            playerHealthImage.color = Color.red;
-        }
-    }
-
-    public void HandleCutscene(bool _isPlaying)
+    public void HandleCutscene(bool isPlaying)
     {
     }
-
 
     #region Menus
 

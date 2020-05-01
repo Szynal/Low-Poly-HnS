@@ -3,9 +3,9 @@ using UnityEngine;
 
 namespace LowPolyHnS.Core
 {
-    public class LoadSaveController : MonoBehaviour, ISaveable
+    public class PlayerLoadSaveController : MonoBehaviour, ISaveable
     {
-        public static LoadSaveController Instance;
+        public static PlayerLoadSaveController Instance;
         [HideInInspector] [SerializeField] public int SaveableID = -1;
 
         private CharacterHealth healthScript;
