@@ -1,6 +1,4 @@
-﻿// Author: dpienkowska
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using LowPolyHnS;
 using UnityEngine;
 using UnityEngine.UI;

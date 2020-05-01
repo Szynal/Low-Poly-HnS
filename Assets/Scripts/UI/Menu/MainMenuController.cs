@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using LowPolyHnS.UI;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -8,7 +9,7 @@ namespace LowPolyHnS
     public class MainMenuController : SubMenuController
     {
         [Header("MainMenu Properties")] [SerializeField]
-        private LoadScreen loadScreenPanel = null;
+        private LoadPanel loadPanelPanel = null;
 
         public void StartNewGame()
         {
@@ -18,12 +19,12 @@ namespace LowPolyHnS
 
         public void OpenLoadScreen()
         {
-            if (loadScreenPanel == null)
+            if (loadPanelPanel == null)
             {
                 return;
             }
 
-            loadScreenPanel.HandleShowing(true);
+            loadPanelPanel.HandleShowing(true);
         }
 
         public void OnMenuExited()
