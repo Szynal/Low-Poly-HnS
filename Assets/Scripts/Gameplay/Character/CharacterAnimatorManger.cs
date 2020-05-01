@@ -7,10 +7,10 @@ namespace LowPolyHnS
     {
         private Animator animator;
 
-        private static int _moveParameter = Animator.StringToHash("Move");
-        private static int _deathTriggerParameter = Animator.StringToHash("DeadTrigger");
-        private static int _deathParameter = Animator.StringToHash("Dead");
-        private static int _hitParameter = Animator.StringToHash("Hit");
+        private static int MOVE_PARAMETER = Animator.StringToHash("Move");
+        private static int DEATH_TRIGGER_PARAMETER = Animator.StringToHash("DeadTrigger");
+        private static int DEATH_PARAMETER = Animator.StringToHash("Dead");
+        private static int HIT_PARAMETER = Animator.StringToHash("Hit");
 
         private void Start()
         {
@@ -20,22 +20,22 @@ namespace LowPolyHnS
         public void AnimateCharacterMovement(bool isMoving, Vector3 motion)
         {
             if (animator == null) return;
-            animator.SetFloat(_moveParameter, isMoving
-                ? Mathf.Lerp(animator.GetFloat(_moveParameter), motion.sqrMagnitude, 10 * Time.deltaTime)
-                : Mathf.Lerp(animator.GetFloat(_moveParameter), 0, 2 * Time.deltaTime));
+            animator.SetFloat(MOVE_PARAMETER, isMoving
+                ? Mathf.Lerp(animator.GetFloat(MOVE_PARAMETER), motion.sqrMagnitude, 10 * Time.deltaTime)
+                : Mathf.Lerp(animator.GetFloat(MOVE_PARAMETER), 0, 2 * Time.deltaTime));
         }
 
         public void AnimateCharacterDeath()
         {
             if (animator == null) return;
-            animator.SetTrigger(_deathTriggerParameter);
-            animator.SetInteger(_deathParameter, Random.Range(1, 5));
+            animator.SetTrigger(DEATH_TRIGGER_PARAMETER);
+            animator.SetInteger(DEATH_PARAMETER, Random.Range(1, 5));
         }
 
         public void AnimateCharacterHit()
         {
             if (animator == null) return;
-            animator.SetTrigger(_hitParameter);
+            animator.SetTrigger(HIT_PARAMETER);
         }
     }
 }
