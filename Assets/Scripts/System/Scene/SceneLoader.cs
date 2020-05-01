@@ -220,17 +220,11 @@ namespace LowPolyHnS
                     //In case we have a save from which we want to load things
                     if (GetStateFromID(loadedScene.buildIndex) != null)
                     {
-                        List<ISaveable> _saveablesOnScene = new List<ISaveable>();
-                        //We create a list of saveables, so we can use it in loading the state
-                        foreach (MonoBehaviour _mb in Resources.FindObjectsOfTypeAll<MonoBehaviour>())
-                        {
-                            if (_mb.gameObject.scene.isLoaded && _mb is ISaveable)
-                            {
-                                _saveablesOnScene.Add((ISaveable) _mb);
-                            }
-                        }
+                        List<ISaveable> listOfSaveables = Resources.FindObjectsOfTypeAll<MonoBehaviour>()
+                            .Where(_mb => _mb != null && _mb.gameObject.scene.isLoaded && _mb is ISaveable)
+                            .Cast<ISaveable>().ToList();
 
-                        OnLoadedFromSave(GetStateFromID(loadedScene.buildIndex), _saveablesOnScene);
+                        OnLoadedFromSave(GetStateFromID(loadedScene.buildIndex), listOfSaveables);
                     }
 
                     //If we have custom player parameters for loading this scene, we use them now

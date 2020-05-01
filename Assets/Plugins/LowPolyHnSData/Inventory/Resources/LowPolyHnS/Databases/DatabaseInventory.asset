@@ -26,22 +26,22 @@ MonoBehaviour:
       name:
         content: Potions
         postProcess: 0
-        translationID: 0
+        translationID: 801255606
     - id: General/
       name:
         content: Equipment
         postProcess: 0
-        translationID: 0
+        translationID: 166368512
     - id: General/Equipment
       name:
         content: RightHand
         postProcess: 0
-        translationID: 0
+        translationID: 1908286856
     - id: General/Equipment/
       name:
         content: Helmets
         postProcess: 0
-        translationID: 0
+        translationID: -647108262
     - id: General/Equipment/
       name:
         content: LeftHand
@@ -319,7 +319,7 @@ MonoBehaviour:
   maxStack: 99
   weight: 1
   itemTypes: 1
-  onClick: 0
+  onClick: 1
   consumeItem: 1
   actionsOnClick: {fileID: 114455550709671036, guid: e0f24da964b664ceca0096f3ef2ed016,
     type: 3}
@@ -368,9 +368,9 @@ MonoBehaviour:
   fillAllTypes: 0
   conditionsEquip: {fileID: 114711394317633460, guid: 9a83779ce24cb4cb7aa6096b962f778d,
     type: 3}
-  actionsOnEquip: {fileID: 114579303995260872, guid: 1d06bd9a28a544d1696736b1f70bc36f,
+  actionsOnEquip: {fileID: 3452684391871621746, guid: d6fa23f15515b984a8bda4a0de8a83c6,
     type: 3}
-  actionsOnUnequip: {fileID: 114862963190555666, guid: a83d97d34a1494808814958dc7b7be7e,
+  actionsOnUnequip: {fileID: 515005581597876629, guid: 050dfc3b0c82e2242901215bc9505013,
     type: 3}
 --- !u!114 &114273004538180096
 MonoBehaviour:
