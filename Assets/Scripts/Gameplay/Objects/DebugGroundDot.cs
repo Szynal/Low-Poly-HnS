@@ -9,7 +9,7 @@ public class DebugGroundDot : MonoBehaviour
             RaycastHit hit;
             if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100))
             {
-                transform.position = hit.point;
+                transform.position = new Vector3(hit.point.x, hit.point.y + 0.1f, hit.point.z); ;
             }
         }
     }
