@@ -368,9 +368,9 @@ MonoBehaviour:
   fillAllTypes: 0
   conditionsEquip: {fileID: 114711394317633460, guid: 9a83779ce24cb4cb7aa6096b962f778d,
     type: 3}
-  actionsOnEquip: {fileID: 114579303995260872, guid: 1d06bd9a28a544d1696736b1f70bc36f,
+  actionsOnEquip: {fileID: 8327226329684632938, guid: d6fa23f15515b984a8bda4a0de8a83c6,
     type: 3}
-  actionsOnUnequip: {fileID: 114862963190555666, guid: a83d97d34a1494808814958dc7b7be7e,
+  actionsOnUnequip: {fileID: 817165540198249985, guid: 050dfc3b0c82e2242901215bc9505013,
     type: 3}
 --- !u!114 &114273004538180096
 MonoBehaviour:

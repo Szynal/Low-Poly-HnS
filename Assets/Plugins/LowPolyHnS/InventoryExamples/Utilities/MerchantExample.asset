@@ -15,7 +15,7 @@ MonoBehaviour:
   uuid: b5be0d83d21f428785ecd0f46d17dc23
   title: Vending Machine
   description: A normal vending machine
-  merchantUI: {fileID: 0}
+  merchantUI: {fileID: 1776935227048216, guid: 06dd90d0cba7045c9ba3073f0b19fd6b, type: 3}
   warehouse:
     wares:
     - item:
