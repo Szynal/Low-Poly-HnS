@@ -48,18 +48,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &829465304487671709
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 829465304630489994}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 547ae5db05fd1264388d2ddde7aecf5f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &829465305050561198
 GameObject:
   m_ObjectHideFlags: 0
@@ -76,7 +64,6 @@ GameObject:
   - component: {fileID: 829465305050561171}
   - component: {fileID: 829465305050561168}
   - component: {fileID: 829465305050561169}
-  - component: {fileID: 829465305050561177}
   - component: {fileID: 829465305050561176}
   m_Layer: 0
   m_Name: ItemContainer
@@ -168,7 +155,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   actions:
-  - {fileID: 829465305050561177}
   - {fileID: 829465305050561176}
   - {fileID: 829465305050561168}
   executingIndex: -1
@@ -199,7 +185,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79fae313ca97d4c34b12ba4e3024cd66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isExpanded: 1
+  isExpanded: 0
   container:
     target: 2
     gameObject: {fileID: 0}
@@ -240,33 +226,7 @@ MonoBehaviour:
   saveContainer: 1
   containerUI: {fileID: 1776935227048216, guid: ccfea348bb7624caf9da9a620fd21953,
     type: 3}
---- !u!114 &829465305050561177
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 829465305050561198}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 68bbe85e213a5408c9a7a5c54b2251ca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isExpanded: 1
-  events:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 829465304487671709}
-        m_MethodName: AnimateChest
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+  Animator: {fileID: 829465304487671708}
 --- !u!114 &829465305050561176
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -279,7 +239,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 093bbc6a7c1334b37ac569a948728c55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isExpanded: 1
+  isExpanded: 0
   waitTime: 1
 --- !u!1001 &829465304630520194
 PrefabInstance:
@@ -290,7 +250,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 104968, guid: 53208521fffd8a242acf30e93a01b99a, type: 3}
       propertyPath: m_Name
-      value: Chest_01
+      value: Mesh
       objectReference: {fileID: 0}
     - target: {fileID: 104968, guid: 53208521fffd8a242acf30e93a01b99a, type: 3}
       propertyPath: m_TagString

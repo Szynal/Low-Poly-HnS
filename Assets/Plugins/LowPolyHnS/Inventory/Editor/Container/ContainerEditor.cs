@@ -20,6 +20,7 @@ namespace LowPolyHnS.Inventory
         private ReorderableList initItemsList;
 
         private SerializedProperty spSaveContainer;
+        private SerializedProperty spAnimatorContainer;
         private SerializedProperty spContainerUI;
 
         // INIT METHODS: --------------------------------------------------------------------------
@@ -30,6 +31,7 @@ namespace LowPolyHnS.Inventory
 
             spInitItems = serializedObject.FindProperty("initItems");
             spSaveContainer = serializedObject.FindProperty("saveContainer");
+            spAnimatorContainer = serializedObject.FindProperty("Animator");
             spContainerUI = serializedObject.FindProperty("containerUI");
 
             initItemsList = new ReorderableList(
@@ -56,6 +58,7 @@ namespace LowPolyHnS.Inventory
 
             EditorGUILayout.Space();
             EditorGUILayout.PropertyField(spContainerUI, GC_CONT_UI);
+            EditorGUILayout.PropertyField(spAnimatorContainer);
             EditorGUILayout.PropertyField(spSaveContainer);
 
             GlobalEditorID.Paint(container);

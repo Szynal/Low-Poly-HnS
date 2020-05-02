@@ -21,14 +21,10 @@ namespace LowPolyHnS
 
         private Transform playerCamera;
 
-        private Plane plane;
-        private Ray ray;
-
         private CharacterAnimatorManger animatorManger;
 
         private bool canMove = true;
         private bool isMoving = true;
-
 
         public float MouseTimer;
         [SerializeField] private float mouseClickTime = 0.1f;
@@ -148,11 +144,7 @@ namespace LowPolyHnS
             transform.position = new Vector3(transform.position.x, agent.nextPosition.y, transform.position.z);
             agent.nextPosition = transform.position;
         }
-
-        private void UpdateNavAgentPosition2()
-        {
-        }
-
+        
         private void Pathfinding()
         {
             Ray pointToRay = Camera.main.ScreenPointToRay(Input.mousePosition);

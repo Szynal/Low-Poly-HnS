@@ -58,6 +58,12 @@ namespace LowPolyHnS.Inventory
         public bool saveContainer = true;
         public GameObject containerUI;
 
+        public Animator Animator;
+        private static int STATE_NAME_HASH = Animator.StringToHash("ChestOpenClose");
+        private static int CHEST_PARAMETER = Animator.StringToHash("Open");
+        private AnimatorStateInfo animatorState;
+        private bool isOpen;
+
         private readonly EventAdd eventAdd = new EventAdd();
         private readonly EventRmv eventRmv = new EventRmv();
 
@@ -231,6 +237,46 @@ namespace LowPolyHnS.Inventory
         public void ResetData()
         {
             Initialize();
+        }
+
+        // ANIMATOR: -----------------------------------------------------------------------------
+
+        public void Animate()
+        {
+            if (Animator == null) return;
+            animatorState = Animator.GetCurrentAnimatorStateInfo(0);
+            isOpen = PlayAnimation(Animator, STATE_NAME_HASH, CHEST_PARAMETER, isOpen,
+                animatorState.normalizedTime);
+        }
+
+        public static bool PlayAnimation(Animator animator, int stateNameHash, int parameterNameHash, bool typeOn,
+            float normalizedTime)
+        {
+            float playTime = normalizedTime % 1;
+
+            if (typeOn && normalizedTime > 1)
+            {
+                playTime = 1.0f;
+            }
+            else if (!typeOn && (normalizedTime > 1 || normalizedTime < 0))
+            {
+                playTime = 0.0f;
+            }
+
+            if (animator.GetFloat(parameterNameHash) >= 1)
+            {
+                typeOn = false;
+                animator.SetFloat(parameterNameHash, -1);
+                animator.Play(stateNameHash, -1, playTime);
+            }
+            else
+            {
+                typeOn = true;
+                animator.SetFloat(parameterNameHash, 1);
+                animator.Play(stateNameHash, -1, playTime);
+            }
+
+            return typeOn;
         }
     }
 }

@@ -109,11 +109,7 @@ namespace LowPolyHnS.Inventory
 
             currentContainer.RemoveOnAddListener(UpdateContainerItems);
             currentContainer.RemoveOnRemoveListener(UpdateContainerItems);
-            GameObject[] _itemContainers = GameObject.FindGameObjectsWithTag("ItemContainer");
-
-            foreach (GameObject container in _itemContainers)
-            {   
-            }
+            currentContainer.Animate();
         }
 
         public void ChangePlayerTypes(int itemTypes)

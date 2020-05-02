@@ -99,29 +99,6 @@ namespace LowPolyHnS.Core
             if (!overridePlatform) overridePlatform = CheckPlatformIgniter(Platforms.Editor);
 #endif
 
-#if UNITY_ANDROID || UNITY_IOS
-			if (!overridePlatform) overridePlatform = this.CheckPlatformIgniter(Platforms.Mobile);
-#endif
-
-#if UNITY_TVOS
-			if (!overridePlatform) overridePlatform = this.CheckPlatformIgniter(Platforms.tvOS);
-#endif
-
-#if UNITY_PS4
-			if (!overridePlatform) overridePlatform = this.CheckPlatformIgniter(Platforms.PS4);
-#endif
-
-#if UNITY_XBOXONE
-			if (!overridePlatform) overridePlatform = this.CheckPlatformIgniter(Platforms.XBoxOne);
-#endif
-
-#if UNITY_WIIU
-			if (!overridePlatform) overridePlatform = this.CheckPlatformIgniter(Platforms.WiiU);
-#endif
-
-#if UNITY_SWITCH
-			if (!overridePlatform) overridePlatform = this.CheckPlatformIgniter(Platforms.Switch);
-#endif
 
             if (!overridePlatform)
             {
