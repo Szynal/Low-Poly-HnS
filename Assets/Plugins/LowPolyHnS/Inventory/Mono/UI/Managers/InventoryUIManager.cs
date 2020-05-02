@@ -7,13 +7,11 @@ namespace LowPolyHnS.Inventory
     public class InventoryUIManager : MonoBehaviour
     {
         private const int TIME_LAYER = 200;
-
         private static InventoryUIManager Instance;
         private static DatabaseInventory DATABASE_INVENTORY;
+        private const string DEFAULT_UI_PATH = "Assets/Content/Prefabs/UI";
 
-        private const string DEFAULT_UI_PATH = "LowPolyHnS/Inventory/InventoryRPG";
-
-        // PROPERTIES: ----------------------------------------------------------------------------
+        #region PROPERTIES
 
         [Space] public Image floatingItem;
 
@@ -23,7 +21,7 @@ namespace LowPolyHnS.Inventory
         private GameObject inventoryRoot;
         private bool isOpen;
 
-        // INITIALIZERS: --------------------------------------------------------------------------
+        #endregion
 
         private void Awake()
         {
@@ -37,8 +35,6 @@ namespace LowPolyHnS.Inventory
             if (floatingItem != null) floatingItemRT = floatingItem.GetComponent<RectTransform>();
             OnDragItem(null, false);
         }
-
-        // PUBLIC METHODS: ------------------------------------------------------------------------
 
         public void Open()
         {
@@ -68,7 +64,17 @@ namespace LowPolyHnS.Inventory
             return isOpen;
         }
 
-        // STATIC METHODS: ------------------------------------------------------------------------
+        public static void OpenCloseInventory()
+        {
+            if (IsInventoryOpen())
+            {
+                CloseInventory();
+            }
+            else
+            {
+                OpenInventory();
+            }
+        }
 
         public static void OpenInventory()
         {
@@ -88,27 +94,29 @@ namespace LowPolyHnS.Inventory
 
         public static bool IsInventoryOpen()
         {
-            if (Instance == null) return false;
-            return Instance.IsOpen();
+            return Instance != null && Instance.IsOpen();
         }
 
         private static void RequireInstance()
         {
             if (DATABASE_INVENTORY == null) DATABASE_INVENTORY = DatabaseInventory.Load();
-            if (Instance == null)
+
+            if (Instance != null)
             {
-                EventSystemManager.Instance.Wakeup();
-                if (DATABASE_INVENTORY.inventorySettings == null)
-                {
-                    Debug.LogError("No inventory database found");
-                    return;
-                }
-
-                GameObject prefab = DATABASE_INVENTORY.inventorySettings.inventoryUIPrefab;
-                if (prefab == null) prefab = Resources.Load<GameObject>(DEFAULT_UI_PATH);
-
-                Instantiate(prefab, Vector3.zero, Quaternion.identity);
+                return;
             }
+
+            EventSystemManager.Instance.Wakeup();
+            if (DATABASE_INVENTORY.inventorySettings == null)
+            {
+                Debug.LogError("No inventory database found");
+                return;
+            }
+
+            GameObject prefab = DATABASE_INVENTORY.inventorySettings.inventoryUIPrefab;
+            if (prefab == null) prefab = Resources.Load<GameObject>(DEFAULT_UI_PATH);
+
+            Instantiate(prefab, Vector3.zero, Quaternion.identity);
         }
 
         public static void OnDragItem(Sprite sprite, bool dragging)
@@ -123,8 +131,6 @@ namespace LowPolyHnS.Inventory
             Vector2 position = Instance.GetPointerPositionUnscaled(Input.mousePosition);
             Instance.floatingItemRT.anchoredPosition = position;
         }
-
-        // PRIVATE METHODS: -----------------------------------------------------------------------
 
         private void ChangeState(bool toOpen)
         {
@@ -148,8 +154,15 @@ namespace LowPolyHnS.Inventory
 
         private Vector2 GetPointerPositionUnscaled(Vector2 mousePosition)
         {
-            if (canvasScaler == null) canvasScaler = transform.GetComponentInParent<CanvasScaler>();
-            if (canvasScaler == null) return mousePosition;
+            if (canvasScaler == null)
+            {
+                canvasScaler = transform.GetComponentInParent<CanvasScaler>();
+            }
+
+            if (canvasScaler == null)
+            {
+                return mousePosition;
+            }
 
             Vector2 referenceResolution = canvasScaler.referenceResolution;
             Vector2 currentResolution = new Vector2(Screen.width, Screen.height);

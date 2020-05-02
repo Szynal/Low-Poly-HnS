@@ -1,4 +1,5 @@
-﻿using LowPolyHnS.Core;
+﻿using System;
+using LowPolyHnS.Core;
 using UnityEngine;
 
 namespace LowPolyHnS.Inventory
@@ -19,7 +20,8 @@ namespace LowPolyHnS.Inventory
         public enum ACTION_TYPE
         {
             Open,
-            Close
+            Close,
+            OpenCloseSystem
         }
 
         public MENU_TYPE menuType = MENU_TYPE.Inventory;
@@ -32,9 +34,24 @@ namespace LowPolyHnS.Inventory
             switch (menuType)
             {
                 case MENU_TYPE.Inventory:
-                    if (actionType == ACTION_TYPE.Open) InventoryUIManager.OpenInventory();
-                    if (actionType == ACTION_TYPE.Close) InventoryUIManager.CloseInventory();
+                    switch (actionType)
+                    {
+                        case ACTION_TYPE.Open:
+                            InventoryUIManager.OpenInventory();
+                            break;
+                        case ACTION_TYPE.Close:
+                            InventoryUIManager.CloseInventory();
+                            break;
+                        case ACTION_TYPE.OpenCloseSystem:
+                            InventoryUIManager.OpenCloseInventory();
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+
                     break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
 
             return true;

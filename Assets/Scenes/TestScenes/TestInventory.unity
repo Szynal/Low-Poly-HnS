@@ -2780,6 +2780,22 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1378470847, guid: 5bb97218fa3ea6b44a437df564502ec6, type: 3}
+      propertyPath: isExpanded
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1378470847, guid: 5bb97218fa3ea6b44a437df564502ec6, type: 3}
+      propertyPath: actionType
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1378470848, guid: 5bb97218fa3ea6b44a437df564502ec6, type: 3}
+      propertyPath: actions.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1378470848, guid: 5bb97218fa3ea6b44a437df564502ec6, type: 3}
+      propertyPath: actions.Array.data[1]
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 2013223488, guid: 5bb97218fa3ea6b44a437df564502ec6, type: 3}
       propertyPath: m_AnchorMin.x
       value: 0
