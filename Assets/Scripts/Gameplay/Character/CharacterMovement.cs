@@ -10,8 +10,11 @@ namespace LowPolyHnS
     [RequireComponent(typeof(Rigidbody))]
     public class CharacterMovement : MonoBehaviour
     {
-        private NavMeshAgent agent;
         private CharacterController controller;
+        private NavMeshAgent agent;
+
+        private int layerMask = 1 << 9;
+        private RaycastHit hitInfo;
 
         private Vector3 cursorPosition;
         private Vector3 motion = Vector3.zero;
@@ -47,6 +50,11 @@ namespace LowPolyHnS
 
         private void Update()
         {
+            if (!canMove)
+            {
+                return;
+            }
+
             if (Input.GetMouseButtonDown(0))
             {
                 MouseTimer = 0f;
@@ -57,10 +65,12 @@ namespace LowPolyHnS
                 MouseTimer += Time.deltaTime;
             }
 
-            if (canMove)
+            if (Input.GetMouseButtonUp(0) && MouseTimer < 0.3f)
             {
-                Move();
+                Pathfinding();
             }
+
+            Move();
         }
 
         private void Move()
@@ -81,8 +91,7 @@ namespace LowPolyHnS
                 motion = Input.GetMouseButton(0) ? GetCursorDirection() : Vector3.zero;
             }
 
-
-            UpdateNavAgentPosition2();
+            agent.nextPosition = transform.position;
             Rotate();
             controller?.Move(Vector3.down);
 
@@ -94,12 +103,10 @@ namespace LowPolyHnS
 
         private Vector3 GetCursorDirection()
         {
-            plane = new Plane(Vector3.up, transform.position);
-            ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-            if (plane.Raycast(ray, out var point))
+            Ray pointToRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(pointToRay.origin, pointToRay.direction, out hitInfo, 100, layerMask))
             {
-                cursorPosition = ray.GetPoint(point);
+                cursorPosition = hitInfo.point;
             }
 
             Vector3 heading = cursorPosition - transform.position;
@@ -144,7 +151,15 @@ namespace LowPolyHnS
 
         private void UpdateNavAgentPosition2()
         {
-            agent.nextPosition = transform.position;
+        }
+
+        private void Pathfinding()
+        {
+            Ray pointToRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(pointToRay.origin, pointToRay.direction, out hitInfo, 100, layerMask))
+            {
+                agent.destination = hitInfo.point;
+            }
         }
 
         public async void EnableRagdoll(float delay)
