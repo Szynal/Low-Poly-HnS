@@ -13,7 +13,4 @@ MonoBehaviour:
   m_Name: DatabaseLocalization
   m_EditorClassIdentifier: 
   languages: []
-  translationList:
-  - key: 101500815
-    placeholder: Helmets
-    content: []
+  translationList: []

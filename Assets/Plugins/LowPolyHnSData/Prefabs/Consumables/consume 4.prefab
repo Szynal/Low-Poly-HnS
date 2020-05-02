@@ -53,6 +53,8 @@ MonoBehaviour:
   onFinish:
     m_PersistentCalls:
       m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
 --- !u!114 &114376854373756430
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -98,9 +100,6 @@ MonoBehaviour:
       targetObject: {fileID: 0}
       select: 1
       index: 0
-    eventChangeVariable:
-      m_PersistentCalls:
-        m_Calls: []
   item:
-    item: {fileID: 114202326578594358, guid: 17839004acbb6924ebf5be3ce8a59dcc, type: 2}
+    item: {fileID: 114202326578594358, guid: 7db43c44761c8486cb3f2e9968376eb5, type: 2}
   type: 2
