@@ -83,8 +83,7 @@ namespace LowPolyHnS.Inventory
 
         private void UpdateUI()
         {
-            if (item != null &&
-                InventoryManager.Instance.GetInventoryAmountOfItem(item.uuid) == 0)
+            if (item != null && InventoryManager.Instance.GetInventoryAmountOfItem(item.uuid) == 0)
             {
                 UnbindItem();
                 return;
