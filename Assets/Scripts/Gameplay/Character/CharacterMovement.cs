@@ -26,7 +26,6 @@ namespace LowPolyHnS
         private bool isMoving = true;
         public float MouseTimer;
         [SerializeField] private float mouseClickTime = 0.1f;
-        [SerializeField] private GameObject rippleClickEffect = null;
 
         private void Start()
         {
@@ -92,11 +91,6 @@ namespace LowPolyHnS
 
             if (animatorManger == null) return;
             animatorManger.AnimateCharacterMovement(isMoving, motion);
-
-            if (!animatorManger.GetMoveParam())
-            {
-                rippleClickEffect?.SetActive(false);
-            }
         }
 
         private Vector3 GetCursorDirection()
@@ -111,7 +105,7 @@ namespace LowPolyHnS
             float distance = heading.magnitude;
             Vector3 direction = heading / distance;
 
-            rippleClickEffect?.SetActive(false);
+            animatorManger?.RippleClickEffect?.SetActive(false);
 
             return new Vector3(direction.x, direction.z);
         }
@@ -148,16 +142,29 @@ namespace LowPolyHnS
             Ray pointToRay = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(pointToRay.origin, pointToRay.direction, out hitInfo, 100, layerMask))
             {
-                if (rippleClickEffect != null)
-                {
-                    rippleClickEffect.SetActive(true);
-                    rippleClickEffect.transform.position = new Vector3(hitInfo.point.x, hitInfo.point.y + 0.1f,
-                        hitInfo.point.z);
-                }
-
+                UpdateRippleClickEffect(hitInfo);
                 agent.destination = hitInfo.point;
             }
         }
+
+        private void UpdateRippleClickEffect(RaycastHit raycastHit)
+        {
+            if (animatorManger == null)
+            {
+                return;
+            }
+
+            GameObject clickEffect = animatorManger.RippleClickEffect;
+            if (clickEffect == null)
+            {
+                return;
+            }
+
+            clickEffect.SetActive(true);
+            clickEffect.transform.position =
+                new Vector3(raycastHit.point.x, raycastHit.point.y + 0.1f, raycastHit.point.z);
+        }
+
 
         public async void EnableRagdoll(float delay)
         {
