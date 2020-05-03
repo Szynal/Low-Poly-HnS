@@ -15,7 +15,6 @@ namespace LowPolyHnS
 
         private int layerMask = 1 << 9;
         private RaycastHit hitInfo;
-
         private Vector3 cursorPosition;
         private Vector3 motion = Vector3.zero;
 
@@ -25,9 +24,9 @@ namespace LowPolyHnS
 
         private bool canMove = true;
         private bool isMoving = true;
-
         public float MouseTimer;
         [SerializeField] private float mouseClickTime = 0.1f;
+        [SerializeField] private GameObject rippleClickEffect = null;
 
         private void Start()
         {
@@ -91,9 +90,12 @@ namespace LowPolyHnS
             Rotate();
             controller?.Move(Vector3.down);
 
-            if (animatorManger != null)
+            if (animatorManger == null) return;
+            animatorManger.AnimateCharacterMovement(isMoving, motion);
+
+            if (!animatorManger.GetMoveParam())
             {
-                animatorManger.AnimateCharacterMovement(isMoving, motion);
+                rippleClickEffect?.SetActive(false);
             }
         }
 
@@ -108,6 +110,8 @@ namespace LowPolyHnS
             Vector3 heading = cursorPosition - transform.position;
             float distance = heading.magnitude;
             Vector3 direction = heading / distance;
+
+            rippleClickEffect?.SetActive(false);
 
             return new Vector3(direction.x, direction.z);
         }
@@ -139,17 +143,18 @@ namespace LowPolyHnS
             transform.forward = Vector3.Lerp(transform.forward, movementVector, 8 * Time.deltaTime);
         }
 
-        private void UpdateNavAgentPosition()
-        {
-            transform.position = new Vector3(transform.position.x, agent.nextPosition.y, transform.position.z);
-            agent.nextPosition = transform.position;
-        }
-        
         private void Pathfinding()
         {
             Ray pointToRay = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(pointToRay.origin, pointToRay.direction, out hitInfo, 100, layerMask))
             {
+                if (rippleClickEffect != null)
+                {
+                    rippleClickEffect.SetActive(true);
+                    rippleClickEffect.transform.position = new Vector3(hitInfo.point.x, hitInfo.point.y + 0.1f,
+                        hitInfo.point.z);
+                }
+
                 agent.destination = hitInfo.point;
             }
         }

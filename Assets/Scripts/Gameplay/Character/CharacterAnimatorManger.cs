@@ -12,6 +12,7 @@ namespace LowPolyHnS
         private static int DEATH_PARAMETER = Animator.StringToHash("Dead");
         private static int HIT_PARAMETER = Animator.StringToHash("Hit");
 
+        [SerializeField] private GameObject rippleClickEffect = null;
         private void Start()
         {
             animator = GetComponent<Animator>();
@@ -23,6 +24,11 @@ namespace LowPolyHnS
             animator.SetFloat(MOVE_PARAMETER, isMoving
                 ? Mathf.Lerp(animator.GetFloat(MOVE_PARAMETER), motion.sqrMagnitude, 10 * Time.deltaTime)
                 : Mathf.Lerp(animator.GetFloat(MOVE_PARAMETER), 0, 2 * Time.deltaTime));
+
+            if (animator.GetFloat(MOVE_PARAMETER) < 0.1)
+            {
+                rippleClickEffect.SetActive(false);
+            }
         }
 
         public void AnimateCharacterDeath()
@@ -36,6 +42,11 @@ namespace LowPolyHnS
         {
             if (animator == null) return;
             animator.SetTrigger(HIT_PARAMETER);
+        }
+
+        public bool GetMoveParam()
+        {
+            return animator.GetFloat(MOVE_PARAMETER) > 0;
         }
     }
 }
