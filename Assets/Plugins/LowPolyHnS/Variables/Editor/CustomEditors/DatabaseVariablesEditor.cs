@@ -58,7 +58,7 @@ namespace LowPolyHnS.Variables
         }
 
         // OVERRIDE METHODS: ----------------------------------------------------------------------
-        
+
         public override string GetName()
         {
             return "Variables";

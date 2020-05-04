@@ -2648,6 +2648,22 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1206140786, guid: 5bb97218fa3ea6b44a437df564502ec6, type: 3}
+      propertyPath: inputType
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1206140786, guid: 5bb97218fa3ea6b44a437df564502ec6, type: 3}
+      propertyPath: characterLocomotion.canJump
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1206140786, guid: 5bb97218fa3ea6b44a437df564502ec6, type: 3}
+      propertyPath: characterLocomotion.canUseNavigationMesh
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1206140786, guid: 5bb97218fa3ea6b44a437df564502ec6, type: 3}
+      propertyPath: save
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 162844688338026334, guid: 5bb97218fa3ea6b44a437df564502ec6,
         type: 3}
       propertyPath: m_AnchorMax.x

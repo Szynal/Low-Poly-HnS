@@ -91,7 +91,7 @@ namespace LowPolyHnS.Localization
         }
 
         // OVERRIDE METHODS: -------------------------------------------------------------------------------------------
-        
+
         public override string GetName()
         {
             return "Localization";

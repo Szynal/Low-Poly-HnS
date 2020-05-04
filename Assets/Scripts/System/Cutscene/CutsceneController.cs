@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using LowPolyHnS;
 using LowPolyHnS.UI;
@@ -339,7 +338,7 @@ public class CutsceneController : MonoBehaviour
         {
             sceneTeleporter.HandleTeleport();
         }
-        
+
         GameManager.Instance.OnCutsceneEnd(EndTransitionTime / 2f);
 
         if (hasItsOwnScene)

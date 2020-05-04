@@ -22,9 +22,9 @@ namespace LowPolyHnS.Core
             string prevText = property.stringValue;
             string nextText = EditorGUI.DelayedTextField(rectText, label, prevText);
 
-            List<string> suggestions = this.GetSuggestions();
+            List<string> suggestions = GetSuggestions();
 
-            Rect[] rects = this.GetSuggestionRects(rectText);
+            Rect[] rects = GetSuggestionRects(rectText);
             for (int i = 0; i < rects.Length; ++i)
             {
                 EditorGUI.BeginDisabledGroup(string.IsNullOrEmpty(suggestions[i]));
@@ -35,17 +35,15 @@ namespace LowPolyHnS.Core
             if (prevText != nextText)
             {
                 property.stringValue = nextText;
-                this.RecordSuggestion(nextText);
+                RecordSuggestion(nextText);
             }
         }
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
-            return (
-                EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing +
-                EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing +
-                EditorGUIUtility.singleLineHeight
-            );
+            return EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing +
+                   EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing +
+                   EditorGUIUtility.singleLineHeight;
         }
 
         private Rect[] GetSuggestionRects(Rect rectText)
@@ -76,14 +74,14 @@ namespace LowPolyHnS.Core
                 EditorGUIUtility.singleLineHeight
             );
 
-            return new Rect[] {rect1, rect2, rect3, rect4};
+            return new[] {rect1, rect2, rect3, rect4};
         }
 
         private void RecordSuggestion(string suggestion)
         {
             if (string.IsNullOrEmpty(suggestion)) return;
 
-            List<string> suggestions = this.GetSuggestions();
+            List<string> suggestions = GetSuggestions();
             if (suggestion.Contains(suggestion))
             {
                 suggestions.Remove(suggestion);

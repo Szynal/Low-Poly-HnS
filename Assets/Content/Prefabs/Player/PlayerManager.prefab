@@ -7899,7 +7899,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1559146146702618, guid: bb80fa59493fada49acdbc878023d1f0, type: 3}
       propertyPath: m_Name
-      value: CharacterCamera
+      value: PlayerCamera
       objectReference: {fileID: 0}
     - target: {fileID: 1559146146702618, guid: bb80fa59493fada49acdbc878023d1f0, type: 3}
       propertyPath: m_Layer
@@ -7977,11 +7977,6 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1257027642313922, guid: fece4e6c51722ed49b325c7a83bdbe3a, type: 3}
       propertyPath: RippleClickEffect
-      value: 
-      objectReference: {fileID: 262045619}
-    - target: {fileID: 647350326523645888, guid: fece4e6c51722ed49b325c7a83bdbe3a,
-        type: 3}
-      propertyPath: rippleClickEffect
       value: 
       objectReference: {fileID: 262045619}
     - target: {fileID: 676306226646476444, guid: fece4e6c51722ed49b325c7a83bdbe3a,
@@ -8064,8 +8059,7 @@ PrefabInstance:
       propertyPath: cameraPosition
       value: 
       objectReference: {fileID: 4363557552075605}
-    m_RemovedComponents:
-    - {fileID: 1071196391, guid: fece4e6c51722ed49b325c7a83bdbe3a, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fece4e6c51722ed49b325c7a83bdbe3a, type: 3}
 --- !u!114 &7078214933518192611 stripped
 MonoBehaviour:

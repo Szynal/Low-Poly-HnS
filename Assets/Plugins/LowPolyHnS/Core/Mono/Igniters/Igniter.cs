@@ -5,6 +5,7 @@ namespace LowPolyHnS.Core
 {
 #if UNITY_EDITOR
     using UnityEditor;
+
 #endif
 
     [AddComponentMenu("")]
