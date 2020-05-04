@@ -173,7 +173,7 @@ MonoBehaviour:
   isExpanded: 1
   operation: 0
   itemHolder:
-    item: {fileID: 0}
+    item: {fileID: 114202326578594358, guid: 17839004acbb6924ebf5be3ce8a59dcc, type: 2}
   amount: 1
 --- !u!114 &24437792
 MonoBehaviour:
