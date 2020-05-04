@@ -10,11 +10,8 @@ namespace LowPolyHnS.Characters
         public enum INPUT_TYPE
         {
             PointAndClick,
-            Directional,
-            FollowPointer,
-            SideScrollX,
-            SideScrollZ,
-            TankControl
+            Wsad,
+            FollowPointer
         }
 
         public enum MOUSE_BUTTON
@@ -34,7 +31,7 @@ namespace LowPolyHnS.Characters
 
         // PROPERTIES: ----------------------------------------------------------------------------
 
-        public INPUT_TYPE inputType = INPUT_TYPE.Directional;
+        public INPUT_TYPE inputType = INPUT_TYPE.Wsad;
         public MOUSE_BUTTON mouseButtonMove = MOUSE_BUTTON.LeftClick;
         public LayerMask mouseLayerMask = ~0;
         public bool invertAxis;
@@ -50,6 +47,8 @@ namespace LowPolyHnS.Characters
         public bool useAcceleration = true;
         public float acceleration = 4f;
         public float deceleration = 2f;
+
+        public GameObject RippleClickEffect = null;
 
         // INITIALIZERS: --------------------------------------------------------------------------
 
@@ -90,7 +89,7 @@ namespace LowPolyHnS.Characters
 
             switch (inputType)
             {
-                case INPUT_TYPE.Directional:
+                case INPUT_TYPE.Wsad:
                     UpdateInputDirectional();
                     break;
                 case INPUT_TYPE.PointAndClick:
@@ -98,15 +97,6 @@ namespace LowPolyHnS.Characters
                     break;
                 case INPUT_TYPE.FollowPointer:
                     UpdateInputFollowPointer();
-                    break;
-                case INPUT_TYPE.SideScrollX:
-                    UpdateInputSideScroll(Vector3.right);
-                    break;
-                case INPUT_TYPE.SideScrollZ:
-                    UpdateInputSideScroll(Vector3.forward);
-                    break;
-                case INPUT_TYPE.TankControl:
-                    UpdateInputTank();
                     break;
             }
 
@@ -149,27 +139,6 @@ namespace LowPolyHnS.Characters
             characterLocomotion.SetDirectionalDirection(moveDirection);
         }
 
-        protected virtual void UpdateInputTank()
-        {
-            Vector3 movement = Vector3.zero;
-            float rotationY = 0f;
-
-            if (!IsControllable()) return;
-
-
-            movement = transform.TransformDirection(new Vector3(
-                0f,
-                0f,
-                Input.GetAxisRaw(AXIS_V)
-            ));
-
-            rotationY = Input.GetAxis(AXIS_H);
-
-
-            ComputeMovement(movement);
-            characterLocomotion.SetTankDirection(direction, rotationY);
-        }
-
         protected virtual void UpdateInputPointClick()
         {
             if (!IsControllable()) return;
@@ -182,6 +151,12 @@ namespace LowPolyHnS.Characters
 
                 Ray cameraRay = maincam.ScreenPointToRay(Input.mousePosition);
                 characterLocomotion.SetTarget(cameraRay, mouseLayerMask, null, 0f);
+
+                if (RippleClickEffect != null)
+                {
+                    RippleClickEffect.transform.position = characterLocomotion.GetAimDirection();
+                    RippleClickEffect.SetActive(true);
+                }
             }
         }
 

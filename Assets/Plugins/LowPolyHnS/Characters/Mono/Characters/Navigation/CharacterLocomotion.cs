@@ -264,15 +264,6 @@ namespace LowPolyHnS.Characters
             ((LocomotionSystemDirectional) currentLocomotionSystem).SetDirection(direction, rotation);
         }
 
-        public void SetTankDirection(Vector3 direction, float rotationY)
-        {
-            ChangeLocomotionSystem<LocomotionSystemTank>();
-            ((LocomotionSystemTank) currentLocomotionSystem).SetDirection(
-                direction,
-                rotationY
-            );
-        }
-
         public void SetTarget(Ray ray, LayerMask layerMask, ILocomotionSystem.TargetRotation rotation,
             float stopThreshold, UnityAction callback = null)
         {

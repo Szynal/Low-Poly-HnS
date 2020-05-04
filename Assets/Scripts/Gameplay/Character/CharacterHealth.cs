@@ -5,9 +5,6 @@ using UnityEngine;
 [Serializable]
 public class CharacterHealth : Health
 {
-    private CharacterMovement characterMovement;
-    private CharacterAnimatorManger animatorManger;
-
     [Header("CharacterHealth")] [SerializeField]
     private DeathCutscene deathCutscene = null;
 
@@ -23,9 +20,6 @@ public class CharacterHealth : Health
         {
             sliderScript.UpdateHealthBar(HealthCurrent);
         }
-
-        characterMovement = GetComponent<CharacterMovement>();
-        animatorManger = GetComponent<CharacterAnimatorManger>();
     }
 
     public override void TakeDamage(int dmgAmount)
@@ -42,12 +36,7 @@ public class CharacterHealth : Health
 
         HealthCurrent -= dmgAmount;
         sliderScript.UpdateHealthBar(HealthCurrent);
-
-        if (animatorManger != null)
-        {
-            animatorManger.AnimateCharacterHit();
-        }
-
+        
         if (HealthCurrent <= 0)
         {
             Die();
@@ -59,16 +48,6 @@ public class CharacterHealth : Health
     protected override void Die()
     {
         base.Die();
-
-        if (characterMovement != null)
-        {
-            characterMovement.EnableRagdoll(1);
-        }
-
-        if (animatorManger != null)
-        {
-            animatorManger.AnimateCharacterDeath();
-        }
 
         deathCutscene.PlayCutscene();
     }

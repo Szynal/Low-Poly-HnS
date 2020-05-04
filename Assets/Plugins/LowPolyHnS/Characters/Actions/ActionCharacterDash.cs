@@ -18,9 +18,7 @@ namespace LowPolyHnS.Characters
         {
             CharacterMovement3D,
             TowardsTarget,
-            TowardsPosition,
-            MovementSidescrollXY,
-            MovementSidescrollZY
+            TowardsPosition
         }
 
         public TargetCharacter character = new TargetCharacter(TargetCharacter.Target.Player);
@@ -69,15 +67,6 @@ namespace LowPolyHnS.Characters
                     moveDirection.Scale(PLANE);
                     break;
 
-                case Direction.MovementSidescrollXY:
-                    moveDirection = locomotion.GetMovementDirection();
-                    moveDirection.Scale(new Vector3(1, 1, 0));
-                    break;
-
-                case Direction.MovementSidescrollZY:
-                    moveDirection = locomotion.GetMovementDirection();
-                    moveDirection.Scale(new Vector3(0, 1, 1));
-                    break;
             }
 
             Vector3 charDirection = Vector3.Scale(

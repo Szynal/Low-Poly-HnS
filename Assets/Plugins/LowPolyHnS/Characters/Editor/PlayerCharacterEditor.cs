@@ -21,6 +21,8 @@ namespace LowPolyHnS.Characters
         private const string PROP_ACC = "acceleration";
         private const string PROP_DEC = "deceleration";
 
+        private const string PROP_CLICK = "RippleClickEffect";
+
         // PROPERTIES: ----------------------------------------------------------------------------
 
         private Section sectionInput;
@@ -33,6 +35,8 @@ namespace LowPolyHnS.Characters
         private SerializedProperty spUseAcceleration;
         private SerializedProperty spAcceleration;
         private SerializedProperty spDeceleration;
+
+        private SerializedProperty spRippleClickEffect;
 
         // INITIALIZERS: --------------------------------------------------------------------------
 
@@ -53,6 +57,8 @@ namespace LowPolyHnS.Characters
             spUseAcceleration = serializedObject.FindProperty(PROP_USE_ACC);
             spAcceleration = serializedObject.FindProperty(PROP_ACC);
             spDeceleration = serializedObject.FindProperty(PROP_DEC);
+
+            spRippleClickEffect = serializedObject.FindProperty(PROP_CLICK);
 
             if (spMouseLayerMask.intValue == 0)
             {
@@ -96,14 +102,9 @@ namespace LowPolyHnS.Characters
                         {
                             spMouseLayerMask.intValue = ~0;
                         }
+                        EditorGUILayout.PropertyField(spRippleClickEffect);
                     }
-
-                    if (spInputType.intValue == (int) PlayerCharacter.INPUT_TYPE.SideScrollX ||
-                        spInputType.intValue == (int) PlayerCharacter.INPUT_TYPE.SideScrollZ)
-                    {
-                        EditorGUILayout.PropertyField(spInvertAxis);
-                    }
-
+                    
                     EditorGUI.indentLevel--;
                     EditorGUILayout.PropertyField(spInputJump);
 

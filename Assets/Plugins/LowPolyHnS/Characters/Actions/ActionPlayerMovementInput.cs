@@ -12,7 +12,7 @@ namespace LowPolyHnS.Characters
     [AddComponentMenu("")]
     public class ActionPlayerMovementInput : IAction
     {
-        public PlayerCharacter.INPUT_TYPE inputType = PlayerCharacter.INPUT_TYPE.Directional;
+        public PlayerCharacter.INPUT_TYPE inputType = PlayerCharacter.INPUT_TYPE.Wsad;
 
         public PlayerCharacter.MOUSE_BUTTON mouseButton = PlayerCharacter.MOUSE_BUTTON.LeftClick;
         public bool invertAxis = false;
@@ -30,12 +30,6 @@ namespace LowPolyHnS.Characters
                     inputType == PlayerCharacter.INPUT_TYPE.FollowPointer)
                 {
                     player.mouseButtonMove = mouseButton;
-                }
-
-                if (inputType == PlayerCharacter.INPUT_TYPE.SideScrollX ||
-                    inputType == PlayerCharacter.INPUT_TYPE.SideScrollZ)
-                {
-                    player.invertAxis = invertAxis;
                 }
             }
 
@@ -100,15 +94,7 @@ namespace LowPolyHnS.Characters
                 EditorGUILayout.PropertyField(spMouseButton);
                 EditorGUI.indentLevel--;
             }
-
-            if (spInputType.intValue == (int) PlayerCharacter.INPUT_TYPE.SideScrollX ||
-                spInputType.intValue == (int) PlayerCharacter.INPUT_TYPE.SideScrollZ)
-            {
-                EditorGUI.indentLevel++;
-                EditorGUILayout.PropertyField(spInvertAxis);
-                EditorGUI.indentLevel--;
-            }
-
+            
             serializedObject.ApplyModifiedProperties();
         }
 
