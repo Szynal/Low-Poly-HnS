@@ -94,6 +94,15 @@ namespace LowPolyHnS.Characters
                     break;
                 case INPUT_TYPE.PointAndClick:
                     UpdateInputPointClick();
+
+                    if (characterLocomotion.navmeshAgent.enabled == false)
+                    {
+                        if (RippleClickEffect != null)
+                        {
+                            RippleClickEffect.SetActive(false);
+                        }
+                    }
+
                     break;
                 case INPUT_TYPE.FollowPointer:
                     UpdateInputFollowPointer();
@@ -154,7 +163,8 @@ namespace LowPolyHnS.Characters
 
                 if (RippleClickEffect != null)
                 {
-                    RippleClickEffect.transform.position = characterLocomotion.GetAimDirection();
+                    RippleClickEffect.transform.position =
+                        characterLocomotion.navmeshAgent.destination + new Vector3(0f, 0.1f, 0f);
                     RippleClickEffect.SetActive(true);
                 }
             }
@@ -188,29 +198,6 @@ namespace LowPolyHnS.Characters
                     }
                 }
             }
-        }
-
-        protected virtual void UpdateInputSideScroll(Vector3 axis)
-        {
-            Vector3 targetDirection = Vector3.zero;
-            if (!IsControllable()) return;
-
-
-            targetDirection = axis * Input.GetAxis(AXIS_H);
-
-
-            Camera maincam = GetMainCamera();
-            if (maincam == null) return;
-
-            ComputeMovement(targetDirection);
-
-            float invertValue = invertAxis ? -1 : 1;
-            Vector3 moveDirection = Vector3.Scale(direction, axis * invertValue);
-
-            moveDirection.Normalize();
-            moveDirection *= direction.magnitude;
-
-            characterLocomotion.SetDirectionalDirection(moveDirection);
         }
 
         // OTHER METHODS: -------------------------------------------------------------------------
