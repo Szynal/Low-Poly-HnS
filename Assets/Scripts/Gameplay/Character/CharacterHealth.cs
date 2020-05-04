@@ -48,7 +48,6 @@ public class CharacterHealth : Health
     protected override void Die()
     {
         base.Die();
-
         deathCutscene.PlayCutscene();
     }
 }
