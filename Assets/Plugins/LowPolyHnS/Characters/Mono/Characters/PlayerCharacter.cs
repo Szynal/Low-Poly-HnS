@@ -160,7 +160,7 @@ namespace LowPolyHnS.Characters
             {
                 mouseTimer += Time.deltaTime;
 
-                if (mouseTimer > 0.1f)
+                if (mouseTimer > 0.2f)
                 {
                     if (HookPlayer.Instance == null) return;
 
@@ -188,7 +188,7 @@ namespace LowPolyHnS.Characters
 
             if (Input.GetMouseButtonUp((int) mouseButtonMove) && !uiConstrained)
             {
-                if (mouseTimer > 0.1f)
+                if (mouseTimer > 0.2f)
                 {
                     return;
                 }
