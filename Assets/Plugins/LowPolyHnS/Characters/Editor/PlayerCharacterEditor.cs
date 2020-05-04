@@ -90,7 +90,8 @@ namespace LowPolyHnS.Characters
                     EditorGUI.indentLevel++;
 
                     if (spInputType.intValue == (int) PlayerCharacter.INPUT_TYPE.PointAndClick ||
-                        spInputType.intValue == (int) PlayerCharacter.INPUT_TYPE.FollowPointer)
+                        spInputType.intValue == (int) PlayerCharacter.INPUT_TYPE.FollowPointer ||
+                        spInputType.intValue == (int) PlayerCharacter.INPUT_TYPE.FollowAndClickPointer)
                     {
                         EditorGUILayout.PropertyField(spMouseButtonMove);
                     }
@@ -102,9 +103,21 @@ namespace LowPolyHnS.Characters
                         {
                             spMouseLayerMask.intValue = ~0;
                         }
+
                         EditorGUILayout.PropertyField(spRippleClickEffect);
                     }
-                    
+
+                    if (spInputType.intValue == (int) PlayerCharacter.INPUT_TYPE.FollowAndClickPointer)
+                    {
+                        EditorGUILayout.PropertyField(spMouseLayerMask);
+                        if (spMouseLayerMask.intValue == 0)
+                        {
+                            spMouseLayerMask.intValue = ~0;
+                        }
+
+                        EditorGUILayout.PropertyField(spRippleClickEffect);
+                    }
+
                     EditorGUI.indentLevel--;
                     EditorGUILayout.PropertyField(spInputJump);
 
