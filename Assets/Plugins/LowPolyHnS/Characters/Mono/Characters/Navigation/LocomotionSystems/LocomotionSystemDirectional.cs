@@ -1,11 +1,7 @@
-﻿namespace LowPolyHnS.Characters
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using LowPolyHnS.Core;
-    using LowPolyHnS.Core.Hooks;
+﻿using UnityEngine;
 
+namespace LowPolyHnS.Characters
+{
     public class LocomotionSystemDirectional : ILocomotionSystem
     {
         // PROPERTIES: ----------------------------------------------------------------------------
@@ -16,56 +12,56 @@
 
         public override CharacterLocomotion.LOCOMOTION_SYSTEM Update()
         {
-            if (!this.characterLocomotion.characterController.enabled)
+            if (!characterLocomotion.characterController.enabled)
             {
                 return CharacterLocomotion.LOCOMOTION_SYSTEM.CharacterController;
             }
 
             base.Update();
 
-            if (this.characterLocomotion.navmeshAgent != null)
+            if (characterLocomotion.navmeshAgent != null)
             {
-                this.characterLocomotion.navmeshAgent.updatePosition = false;
-                this.characterLocomotion.navmeshAgent.updateUpAxis = false;
+                characterLocomotion.navmeshAgent.updatePosition = false;
+                characterLocomotion.navmeshAgent.updateUpAxis = false;
             }
 
-            Vector3 targetDirection = this.desiredDirection;
+            Vector3 targetDirection = desiredDirection;
 
-            float speed = this.CalculateSpeed(targetDirection, this.characterLocomotion.characterController.isGrounded);
-            Quaternion targetRotation = this.UpdateRotation(targetDirection);
+            float speed = CalculateSpeed(targetDirection, characterLocomotion.characterController.isGrounded);
+            Quaternion targetRotation = UpdateRotation(targetDirection);
 
-            this.UpdateAnimationConstraints(ref targetDirection, ref targetRotation);
-            this.UpdateSliding();
+            UpdateAnimationConstraints(ref targetDirection, ref targetRotation);
+            UpdateSliding();
 
             targetDirection = Vector3.ClampMagnitude(Vector3.Scale(targetDirection, HORIZONTAL_PLANE), 1.0f);
             targetDirection *= speed;
 
-            if (this.isSliding) targetDirection = this.slideDirection;
-            targetDirection += Vector3.up * this.characterLocomotion.verticalSpeed;
+            if (isSliding) targetDirection = slideDirection;
+            targetDirection += Vector3.up * characterLocomotion.verticalSpeed;
 
-            if (this.isRootMoving)
+            if (isRootMoving)
             {
-                this.UpdateRootMovement(Vector3.up * this.characterLocomotion.verticalSpeed);
-                this.characterLocomotion.characterController.transform.rotation = targetRotation;
+                UpdateRootMovement(Vector3.up * characterLocomotion.verticalSpeed);
+                characterLocomotion.characterController.transform.rotation = targetRotation;
             }
-            else if (this.isDashing)
+            else if (isDashing)
             {
-                targetDirection = this.dashVelocity;
-                targetRotation = this.characterLocomotion.characterController.transform.rotation;
+                targetDirection = dashVelocity;
+                targetRotation = characterLocomotion.characterController.transform.rotation;
 
-                this.characterLocomotion.characterController.Move(targetDirection * Time.deltaTime);
-                this.characterLocomotion.characterController.transform.rotation = targetRotation;
+                characterLocomotion.characterController.Move(targetDirection * Time.deltaTime);
+                characterLocomotion.characterController.transform.rotation = targetRotation;
             }
             else
             {
-                this.characterLocomotion.characterController.Move(targetDirection * Time.deltaTime);
-                this.characterLocomotion.characterController.transform.rotation = targetRotation;
+                characterLocomotion.characterController.Move(targetDirection * Time.deltaTime);
+                characterLocomotion.characterController.transform.rotation = targetRotation;
             }
 
-            if (this.characterLocomotion.navmeshAgent != null &&
-                this.characterLocomotion.navmeshAgent.isActiveAndEnabled)
+            if (characterLocomotion.navmeshAgent != null &&
+                characterLocomotion.navmeshAgent.isActiveAndEnabled)
             {
-                this.characterLocomotion.navmeshAgent.enabled = false;
+                characterLocomotion.navmeshAgent.enabled = false;
             }
 
             return CharacterLocomotion.LOCOMOTION_SYSTEM.CharacterController;
@@ -73,14 +69,13 @@
 
         public override void OnDestroy()
         {
-            return;
         }
 
         // PUBLIC METHODS: ------------------------------------------------------------------------
 
         public void SetDirection(Vector3 direction, TargetRotation rotation = null)
         {
-            this.desiredDirection = direction;
+            desiredDirection = direction;
         }
     }
 }

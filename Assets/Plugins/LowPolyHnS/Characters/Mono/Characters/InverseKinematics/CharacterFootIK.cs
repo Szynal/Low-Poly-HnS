@@ -1,16 +1,14 @@
-﻿namespace LowPolyHnS.Characters
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
+﻿using UnityEngine;
 
+namespace LowPolyHnS.Characters
+{
     [AddComponentMenu("")]
     public class CharacterFootIK : MonoBehaviour
     {
         private const float FOOT_OFFSET_Y = 0.1f;
         private const float SMOOTH_POSITION = 0.1f;
         private const float SMOOTH_ROTATION = 0.1f;
-        private const float SMOOTH_WEIGHT   = 0.2f;
+        private const float SMOOTH_WEIGHT = 0.2f;
         private const float BODY_MAX_INCLINE = 10f;
 
         private static readonly int IK_L_FOOT = Animator.StringToHash("IK_leftFoot");
@@ -23,12 +21,12 @@
             public AvatarIKGoal footIK;
             public Transform foot;
 
-            public float height = 0.0f;
+            public float height;
             public Vector3 normal = Vector3.up;
 
             public Foot(Transform foot, AvatarIKGoal footIK, int weightID)
             {
-                this.hit = false;
+                hit = false;
                 this.weightID = weightID;
                 this.footIK = footIK;
                 this.foot = foot;
@@ -36,7 +34,7 @@
 
             public float GetWeight(Animator animator)
             {
-                return animator.GetFloat(this.weightID);
+                return animator.GetFloat(weightID);
             }
         }
 
@@ -63,60 +61,60 @@
         public void Setup(Character character)
         {
             this.character = character;
-            this.characterAnimator = this.character.GetCharacterAnimator();
-            this.animator = this.characterAnimator.animator;
-            this.controller = gameObject.GetComponentInParent<CharacterController>();
-            if (this.animator == null || !this.animator.isHuman || this.controller == null) return;
+            characterAnimator = this.character.GetCharacterAnimator();
+            animator = characterAnimator.animator;
+            controller = gameObject.GetComponentInParent<CharacterController>();
+            if (animator == null || !animator.isHuman || controller == null) return;
 
-            Transform lFoot = this.animator.GetBoneTransform(HumanBodyBones.LeftFoot);
-            Transform rFoot = this.animator.GetBoneTransform(HumanBodyBones.RightFoot);
+            Transform lFoot = animator.GetBoneTransform(HumanBodyBones.LeftFoot);
+            Transform rFoot = animator.GetBoneTransform(HumanBodyBones.RightFoot);
 
-            this.leftFoot = new Foot(lFoot, AvatarIKGoal.LeftFoot, IK_L_FOOT);
-            this.rightFoot = new Foot(rFoot, AvatarIKGoal.RightFoot, IK_R_FOOT);
+            leftFoot = new Foot(lFoot, AvatarIKGoal.LeftFoot, IK_L_FOOT);
+            rightFoot = new Foot(rFoot, AvatarIKGoal.RightFoot, IK_R_FOOT);
 
-            this.defaultOffset = transform.localPosition.y;
+            defaultOffset = transform.localPosition.y;
         }
 
         private void LateUpdate()
         {
-            if (this.character == null || this.characterAnimator == null) return;
-            if (!this.characterAnimator.useFootIK) return;
-            if (this.character.IsRagdoll()) return;
+            if (character == null || characterAnimator == null) return;
+            if (!characterAnimator.useFootIK) return;
+            if (character.IsRagdoll()) return;
 
-            this.WeightCompensationPosition();
+            WeightCompensationPosition();
         }
 
         // IK METHODS: ----------------------------------------------------------------------------
 
         private void OnAnimatorIK(int layerIndex)
         {
-            if (this.animator == null || !this.animator.isHuman) return;
-            if (this.character == null || this.characterAnimator == null) return;
-            if (this.character.IsRagdoll()) return;
+            if (animator == null || !animator.isHuman) return;
+            if (character == null || characterAnimator == null) return;
+            if (character.IsRagdoll()) return;
 
-            this.eventBeforeIK.Invoke(layerIndex);
+            eventBeforeIK.Invoke(layerIndex);
 
-            if (!this.characterAnimator.useFootIK) return;
+            if (!characterAnimator.useFootIK) return;
 
-            if (this.controller.isGrounded)
+            if (controller.isGrounded)
             {
-                UpdateFoot(this.leftFoot);
-                UpdateFoot(this.rightFoot);
+                UpdateFoot(leftFoot);
+                UpdateFoot(rightFoot);
 
-                SetFoot(this.leftFoot);
-                SetFoot(this.rightFoot);
+                SetFoot(leftFoot);
+                SetFoot(rightFoot);
             }
 
-            this.eventAfterIK.Invoke(layerIndex);
+            eventAfterIK.Invoke(layerIndex);
         }
 
         private void UpdateFoot(Foot foot)
         {
-            float rayMagnitude = this.controller.height/2.0f;
+            float rayMagnitude = controller.height / 2.0f;
             Vector3 rayPosition = foot.foot.position;
-            rayPosition.y += rayMagnitude/2.0f;
+            rayPosition.y += rayMagnitude / 2.0f;
 
-            int layerMask = this.characterAnimator.footLayerMask;
+            int layerMask = characterAnimator.footLayerMask;
             QueryTriggerInteraction queryTrigger = QueryTriggerInteraction.Ignore;
 
             int hitCount = Physics.RaycastNonAlloc(
@@ -139,7 +137,7 @@
 
         private void SetFoot(Foot foot)
         {
-            float weight = foot.GetWeight(this.animator);
+            float weight = foot.GetWeight(animator);
 
             if (foot.hit)
             {
@@ -147,24 +145,24 @@
                 float angle = Vector3.Angle(transform.up, foot.normal);
                 Quaternion rotation = Quaternion.AngleAxis(angle * weight, rotationAxis);
 
-                this.animator.SetIKRotationWeight(foot.footIK, weight);
-                this.animator.SetIKRotation(foot.footIK, rotation * this.animator.GetIKRotation(foot.footIK));
+                animator.SetIKRotationWeight(foot.footIK, weight);
+                animator.SetIKRotation(foot.footIK, rotation * animator.GetIKRotation(foot.footIK));
 
-                float baseHeight = this.transform.position.y - FOOT_OFFSET_Y;
+                float baseHeight = transform.position.y - FOOT_OFFSET_Y;
                 float animHeight = (foot.foot.position.y - baseHeight) / (rotation * Vector3.up).y;
                 Vector3 position = new Vector3(
-                    foot.foot.position.x, 
-                    Mathf.Max(foot.height, baseHeight) + animHeight, 
+                    foot.foot.position.x,
+                    Mathf.Max(foot.height, baseHeight) + animHeight,
                     foot.foot.position.z
                 );
 
-                this.animator.SetIKPositionWeight(foot.footIK, weight);
-                this.animator.SetIKPosition(foot.footIK, position);
+                animator.SetIKPositionWeight(foot.footIK, weight);
+                animator.SetIKPosition(foot.footIK, position);
             }
             else
             {
-                this.animator.SetIKPositionWeight(foot.footIK, weight);
-                this.animator.SetIKRotationWeight(foot.footIK, weight);
+                animator.SetIKPositionWeight(foot.footIK, weight);
+                animator.SetIKRotationWeight(foot.footIK, weight);
             }
         }
 
@@ -172,20 +170,20 @@
 
         private void WeightCompensationPosition()
         {
-            float position = this.controller.transform.position.y + this.defaultOffset;
+            float position = controller.transform.position.y + defaultOffset;
 
-            if (this.controller.isGrounded)
+            if (controller.isGrounded)
             {
                 float targetHeight = transform.position.y;
 
-                if (this.leftFoot.hit && this.leftFoot.height < targetHeight) targetHeight = this.leftFoot.height;
-                if (this.rightFoot.hit && this.rightFoot.height < targetHeight) targetHeight = this.rightFoot.height;
+                if (leftFoot.hit && leftFoot.height < targetHeight) targetHeight = leftFoot.height;
+                if (rightFoot.hit && rightFoot.height < targetHeight) targetHeight = rightFoot.height;
 
                 targetHeight += FOOT_OFFSET_Y;
                 if (position > targetHeight)
                 {
-                    float maxDistance = this.controller.transform.position.y + this.defaultOffset;
-                    maxDistance -= this.controller.height * 0.075f;
+                    float maxDistance = controller.transform.position.y + defaultOffset;
+                    maxDistance -= controller.height * 0.075f;
                     position = Mathf.Max(targetHeight, maxDistance);
                 }
             }
@@ -193,7 +191,7 @@
             float yAxis = Mathf.SmoothDamp(
                 transform.position.y,
                 position,
-                ref this.speedPosition,
+                ref speedPosition,
                 SMOOTH_POSITION
             );
 
@@ -204,8 +202,8 @@
 
         private Vector3 GetControllerBase()
         {
-            Vector3 position = this.controller.transform.TransformPoint(this.controller.center);
-            position.y -= (this.controller.height * 0.5f - this.controller.radius);
+            Vector3 position = controller.transform.TransformPoint(controller.center);
+            position.y -= controller.height * 0.5f - controller.radius;
 
             return position;
         }

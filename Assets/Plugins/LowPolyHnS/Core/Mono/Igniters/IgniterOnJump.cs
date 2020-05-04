@@ -1,16 +1,14 @@
-﻿namespace LowPolyHnS.Core
-{
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-    using LowPolyHnS.Characters;
+﻿using LowPolyHnS.Characters;
+using UnityEngine;
 
-	[AddComponentMenu("")]
-    public class IgniterOnJump : Igniter 
-	{
-		#if UNITY_EDITOR
-		public new static string NAME = "Character/On Jump";
-        #endif
+namespace LowPolyHnS.Core
+{
+    [AddComponentMenu("")]
+    public class IgniterOnJump : Igniter
+    {
+#if UNITY_EDITOR
+        public new static string NAME = "Character/On Jump";
+#endif
 
         public TargetCharacter character = new TargetCharacter(TargetCharacter.Target.Player);
         public int jumpChain = 0;

@@ -1,10 +1,10 @@
-﻿namespace LowPolyHnS.Characters
-{
-    using System;
-    using UnityEngine;
-    using UnityEngine.Animations;
-    using UnityEngine.Playables;
+﻿using System;
+using UnityEngine;
+using UnityEngine.Animations;
+using UnityEngine.Playables;
 
+namespace LowPolyHnS.Characters
+{
     public class PlayableGesture : PlayableBase
     {
         public AnimationClip animationClip { get; private set; }
@@ -69,36 +69,36 @@
 
         public override bool Update()
         {
-            if (this.endFreezeTime > 0f && Time.time > this.endFreezeTime)
+            if (endFreezeTime > 0f && Time.time > endFreezeTime)
             {
-                this.Stop(0f);
+                Stop(0f);
                 return true;
             }
 
-            if (this.Input1.IsDone())
+            if (Input1.IsDone())
             {
-                this.Stop(0f);
+                Stop(0f);
                 return true;
             }
 
-            float time = (float)this.Input1.GetTime();
-            if (time + this.fadeOut >= this.Input1.GetDuration())
+            float time = (float) Input1.GetTime();
+            if (time + fadeOut >= Input1.GetDuration())
             {
-                float t = ((float)this.Input1.GetDuration() - time) / this.fadeOut;
+                float t = ((float) Input1.GetDuration() - time) / fadeOut;
 
                 t = Mathf.Clamp01(t);
-                this.UpdateMixerWeights(t);
+                UpdateMixerWeights(t);
             }
-            else if (time <= this.fadeIn)
+            else if (time <= fadeIn)
             {
-                float t = time / this.fadeIn;
+                float t = time / fadeIn;
 
                 t = Mathf.Clamp01(t);
-                this.UpdateMixerWeights(t);
+                UpdateMixerWeights(t);
             }
             else
             {
-                this.UpdateMixerWeights(1f);
+                UpdateMixerWeights(1f);
             }
 
             return false;
@@ -108,10 +108,10 @@
 
         public void StretchDuration(float extraTime)
         {
-            if (this.Input1.GetDuration() - this.Input1.GetTime() < extraTime)
+            if (Input1.GetDuration() - Input1.GetTime() < extraTime)
             {
-                this.Input1.SetSpeed(0f);
-                this.endFreezeTime = Time.time + extraTime;
+                Input1.SetSpeed(0f);
+                endFreezeTime = Time.time + extraTime;
             }
         }
 
@@ -120,9 +120,9 @@
             base.Stop(fadeOut);
             this.fadeOut = fadeOut;
 
-            this.Input1.SetDuration(Math.Min(
-                this.Input1.GetTime() + fadeOut,
-                this.Input1.GetDuration())
+            Input1.SetDuration(Math.Min(
+                Input1.GetTime() + fadeOut,
+                Input1.GetDuration())
             );
         }
     }

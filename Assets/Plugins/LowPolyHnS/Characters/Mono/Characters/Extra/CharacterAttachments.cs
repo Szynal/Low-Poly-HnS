@@ -1,11 +1,10 @@
-﻿namespace LowPolyHnS.Characters
-{
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEngine.Events;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Events;
 
+namespace LowPolyHnS.Characters
+{
     [AddComponentMenu("")]
     public class CharacterAttachments : MonoBehaviour
     {
@@ -19,13 +18,14 @@
 
         [Serializable]
         public class AttachmentEvent : UnityEvent<EventData>
-        { }
+        {
+        }
 
         [Serializable]
         public class Attachment
         {
-            public GameObject prefab = null;
-            public GameObject instance = null;
+            public GameObject prefab;
+            public GameObject instance;
             public Vector3 locPosition = Vector3.zero;
             public Quaternion locRotation = Quaternion.identity;
 
@@ -33,8 +33,8 @@
             {
                 this.prefab = prefab;
                 this.instance = instance;
-                this.locPosition = instance.transform.localPosition;
-                this.locRotation = instance.transform.localRotation;
+                locPosition = instance.transform.localPosition;
+                locRotation = instance.transform.localRotation;
             }
         }
 
@@ -51,14 +51,15 @@
         public void Setup(Animator animator)
         {
             this.animator = animator;
-            this.attachments = new Dictionary<HumanBodyBones, List<Attachment>>();
+            attachments = new Dictionary<HumanBodyBones, List<Attachment>>();
         }
 
         // PUBLIC METHODS: ------------------------------------------------------------------------
 
-        public void Attach(HumanBodyBones bone, GameObject prefab, Vector3 position, Quaternion rotation, Space space = Space.Self)
+        public void Attach(HumanBodyBones bone, GameObject prefab, Vector3 position, Quaternion rotation,
+            Space space = Space.Self)
         {
-            if (!this.attachments.ContainsKey(bone)) this.attachments.Add(bone, new List<Attachment>());
+            if (!attachments.ContainsKey(bone)) attachments.Add(bone, new List<Attachment>());
 
             GameObject instance = prefab;
             if (string.IsNullOrEmpty(prefab.scene.name))
@@ -66,11 +67,11 @@
                 instance = Instantiate(prefab, Vector3.zero, Quaternion.identity);
             }
 
-            instance.transform.SetParent(this.animator.GetBoneTransform(bone));
+            instance.transform.SetParent(animator.GetBoneTransform(bone));
 
             switch (space)
             {
-                case Space.Self :
+                case Space.Self:
                     instance.transform.localPosition = position;
                     instance.transform.localRotation = rotation;
                     break;
@@ -81,11 +82,11 @@
                     break;
             }
 
-            this.attachments[bone].Add(new Attachment(instance, prefab));
+            attachments[bone].Add(new Attachment(instance, prefab));
 
-            if (this.onAttach != null)
+            if (onAttach != null)
             {
-                this.onAttach.Invoke(new EventData
+                onAttach.Invoke(new EventData
                 {
                     attachment = instance,
                     bone = bone
@@ -95,22 +96,22 @@
 
         public List<GameObject> Detach(HumanBodyBones bone)
         {
-            return this.DetachOrDestroy(bone, false);
+            return DetachOrDestroy(bone, false);
         }
 
         public bool Detach(GameObject instance)
         {
-            return this.DetachOrDestroy(instance, false);
+            return DetachOrDestroy(instance, false);
         }
 
         public void Remove(HumanBodyBones bone)
         {
-            this.DetachOrDestroy(bone, true);
+            DetachOrDestroy(bone, true);
         }
 
         public void Remove(GameObject instance)
         {
-            this.DetachOrDestroy(instance, true);
+            DetachOrDestroy(instance, true);
         }
 
         // PRIVATE METHODS: -----------------------------------------------------------------------
@@ -119,10 +120,10 @@
         {
             List<Attachment> objects = new List<Attachment>();
             List<GameObject> results = new List<GameObject>();
-            if (this.attachments.ContainsKey(bone))
+            if (attachments.ContainsKey(bone))
             {
-                objects = new List<Attachment>(this.attachments[bone]);
-                this.attachments.Remove(bone);
+                objects = new List<Attachment>(attachments[bone]);
+                attachments.Remove(bone);
 
                 for (int i = 0; i < objects.Count; ++i)
                 {
@@ -130,9 +131,9 @@
                     {
                         objects[i].instance.transform.SetParent(null);
 
-                        if (this.onDetach != null)
+                        if (onDetach != null)
                         {
-                            this.onDetach.Invoke(new EventData
+                            onDetach.Invoke(new EventData
                             {
                                 attachment = objects[i].instance,
                                 bone = bone,
@@ -151,14 +152,14 @@
 
         private bool DetachOrDestroy(GameObject instance, bool destroy)
         {
-            foreach (KeyValuePair<HumanBodyBones, List<Attachment>> item in this.attachments)
+            foreach (KeyValuePair<HumanBodyBones, List<Attachment>> item in attachments)
             {
                 if (item.Value == null) continue;
 
                 int subItemIndex = -1;
-                for (int i = 0; i < this.attachments[item.Key].Count; ++i)
+                for (int i = 0; i < attachments[item.Key].Count; ++i)
                 {
-                    if (this.attachments[item.Key][i].instance == instance)
+                    if (attachments[item.Key][i].instance == instance)
                     {
                         subItemIndex = i;
                         break;
@@ -167,12 +168,12 @@
 
                 if (subItemIndex >= 0)
                 {
-                    this.attachments[item.Key].RemoveAt(subItemIndex);
+                    attachments[item.Key].RemoveAt(subItemIndex);
                     instance.transform.SetParent(null);
 
-                    if (this.onDetach != null)
+                    if (onDetach != null)
                     {
-                        this.onDetach.Invoke(new EventData
+                        onDetach.Invoke(new EventData
                         {
                             attachment = instance,
                             bone = item.Key,
@@ -182,9 +183,9 @@
 
                     if (destroy) Destroy(instance);
 
-                    if (this.attachments[item.Key].Count == 0)
+                    if (attachments[item.Key].Count == 0)
                     {
-                        this.attachments.Remove(item.Key);
+                        attachments.Remove(item.Key);
                     }
 
                     return true;

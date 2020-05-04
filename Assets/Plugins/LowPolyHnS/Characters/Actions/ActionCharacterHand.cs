@@ -1,18 +1,16 @@
-﻿namespace LowPolyHnS.Characters
+﻿using LowPolyHnS.Core;
+using UnityEngine;
+
+namespace LowPolyHnS.Characters
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-	using LowPolyHnS.Core;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[AddComponentMenu("")]
-	public class ActionCharacterHand : IAction
-	{
+    [AddComponentMenu("")]
+    public class ActionCharacterHand : IAction
+    {
         public enum Action
         {
             Reach,
@@ -25,14 +23,13 @@
         public CharacterHandIK.Limb hand = CharacterHandIK.Limb.LeftHand;
         public TargetGameObject reachTarget = new TargetGameObject();
 
-        [Range(0.01f, 5.0f)]
-        public float duration = 0.5f;
+        [Range(0.01f, 5.0f)] public float duration = 0.5f;
 
         // EXECUTABLE: ----------------------------------------------------------------------------
 
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
-            Character characterTarget = this.character.GetCharacter(target);
+            Character characterTarget = character.GetCharacter(target);
             if (characterTarget == null) return true;
 
             CharacterAnimator animator = characterTarget.GetCharacterAnimator();
@@ -41,91 +38,92 @@
             CharacterHandIK handIK = animator.GetCharacterHandIK();
             if (handIK == null) return true;
 
-            switch (this.action)
+            switch (action)
             {
                 case Action.Reach:
                     handIK.Reach(
-                        this.hand, 
-                        this.reachTarget.GetTransform(target), 
-                        this.duration
+                        hand,
+                        reachTarget.GetTransform(target),
+                        duration
                     );
                     break;
 
                 case Action.LetGo:
-                    handIK.LetGo(this.hand, this.duration);
+                    handIK.LetGo(hand, duration);
                     break;
             }
 
             return true;
         }
 
-		// +--------------------------------------------------------------------------------------+
-		// | EDITOR                                                                               |
-		// +--------------------------------------------------------------------------------------+
+        // +--------------------------------------------------------------------------------------+
+        // | EDITOR                                                                               |
+        // +--------------------------------------------------------------------------------------+
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 
-	    public static new string NAME = "Character/Character Hand";
+        public static new string NAME = "Character/Character Hand";
         private const string NODE_TITLE = "{0} with {1}";
 
-		// PROPERTIES: ----------------------------------------------------------------------------
+        // PROPERTIES: ----------------------------------------------------------------------------
 
-		private SerializedProperty spCharacter;
+        private SerializedProperty spCharacter;
         private SerializedProperty spAction;
 
         private SerializedProperty spHand;
         private SerializedProperty spReachTarget;
         private SerializedProperty spDuration;
 
-		// INSPECTOR METHODS: ---------------------------------------------------------------------
+        // INSPECTOR METHODS: ---------------------------------------------------------------------
 
-		public override string GetNodeTitle()
-		{
-			return string.Format(
-                NODE_TITLE, 
-                this.action.ToString(),
-                this.hand.ToString()
+        public override string GetNodeTitle()
+        {
+            return string.Format(
+                NODE_TITLE,
+                action.ToString(),
+                hand.ToString()
             );
-		}
+        }
 
-		protected override void OnEnableEditorChild ()
-		{
-            this.spCharacter = this.serializedObject.FindProperty("character");
-            this.spAction = this.serializedObject.FindProperty("action");
+        protected override void OnEnableEditorChild()
+        {
+            spCharacter = serializedObject.FindProperty("character");
+            spAction = serializedObject.FindProperty("action");
 
-            this.spHand = this.serializedObject.FindProperty("hand");
-            this.spReachTarget = this.serializedObject.FindProperty("reachTarget");
-            this.spDuration = serializedObject.FindProperty("duration");
-		}
+            spHand = serializedObject.FindProperty("hand");
+            spReachTarget = serializedObject.FindProperty("reachTarget");
+            spDuration = serializedObject.FindProperty("duration");
+        }
 
-		protected override void OnDisableEditorChild ()
-		{
-            this.spCharacter = null;
-            this.spAction = null;
+        protected override void OnDisableEditorChild()
+        {
+            spCharacter = null;
+            spAction = null;
 
-            this.spHand = null;
-            this.spReachTarget = null;
-            this.spDuration = null;
-		}
+            spHand = null;
+            spReachTarget = null;
+            spDuration = null;
+        }
 
-		public override void OnInspectorGUI()
-		{
-			this.serializedObject.Update();
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
 
-            EditorGUILayout.PropertyField(this.spCharacter);
-            EditorGUILayout.PropertyField(this.spAction);
+            EditorGUILayout.PropertyField(spCharacter);
+            EditorGUILayout.PropertyField(spAction);
 
             EditorGUILayout.Space();
-            EditorGUILayout.PropertyField(this.spHand);
-            if (this.spAction.intValue == (int)Action.Reach)
+            EditorGUILayout.PropertyField(spHand);
+            if (spAction.intValue == (int) Action.Reach)
             {
-                EditorGUILayout.PropertyField(this.spReachTarget);
+                EditorGUILayout.PropertyField(spReachTarget);
             }
-            EditorGUILayout.PropertyField(this.spDuration);
 
-			this.serializedObject.ApplyModifiedProperties();
-		}
+            EditorGUILayout.PropertyField(spDuration);
 
-		#endif
-	}
+            serializedObject.ApplyModifiedProperties();
+        }
+
+#endif
+    }
 }

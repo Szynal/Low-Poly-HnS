@@ -1,19 +1,18 @@
-﻿namespace LowPolyHnS.Characters
-{
-    using System;
-    using System.Collections.Generic;
-    using UnityEditor;
-    using UnityEngine;
-    using UnityEngine.Animations;
-    using UnityEngine.Playables;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Animations;
+using UnityEngine.Playables;
 
+namespace LowPolyHnS.Characters
+{
     public class CharacterAnimation
     {
         public enum Layer
         {
             Layer1,
             Layer2,
-            Layer3,
+            Layer3
         }
 
         public const float EPSILON = 0.01f;
@@ -42,45 +41,45 @@
         public CharacterAnimation(CharacterAnimator characterAnimator, CharacterState defaultState = null)
         {
             this.characterAnimator = characterAnimator;
-            this.runtimeController = defaultState != null
+            runtimeController = defaultState != null
                 ? defaultState.GetRuntimeAnimatorController()
                 : characterAnimator.animator.runtimeAnimatorController;
 
-            this.Setup();
+            Setup();
         }
 
         public void OnDestroy()
         {
-            if (!this.graph.Equals(null)) this.graph.Destroy();
+            if (!graph.Equals(null)) graph.Destroy();
         }
 
         public void ChangeRuntimeController(RuntimeAnimatorController controller = null)
         {
-            if (controller != null) this.runtimeController = controller;
-            this.Setup();
+            if (controller != null) runtimeController = controller;
+            Setup();
         }
 
         // PUBLIC METHODS: ------------------------------------------------------------------------
 
         public void Update()
         {
-            for (int i = this.states.Count - 1; i >= 0; --i)
+            for (int i = states.Count - 1; i >= 0; --i)
             {
-                bool remove = this.states[i].Update();
+                bool remove = states[i].Update();
                 if (remove)
                 {
-                    this.states[i].Destroy();
-                    this.states.RemoveAt(i);
+                    states[i].Destroy();
+                    states.RemoveAt(i);
                 }
             }
 
-            for (int i = this.gestures.Count - 1; i >= 0; --i)
+            for (int i = gestures.Count - 1; i >= 0; --i)
             {
-                bool remove = this.gestures[i].Update();
+                bool remove = gestures[i].Update();
                 if (remove)
                 {
-                    this.gestures[i].Destroy();
-                    this.gestures.RemoveAt(i);
+                    gestures[i].Destroy();
+                    gestures.RemoveAt(i);
                 }
             }
         }
@@ -90,38 +89,38 @@
         public void PlayGesture(AnimationClip animationClip, AvatarMask avatarMask,
             float fadeIn, float fadeOut, float speed)
         {
-            this.StopGesture(fadeIn);
-            this.gestures.Add(PlayableGesture.Create(
+            StopGesture(fadeIn);
+            gestures.Add(PlayableGesture.Create(
                 animationClip, avatarMask,
                 fadeIn, fadeOut, speed,
-                ref this.graph,
-                ref this.mixerGesturesInput,
-                ref this.mixerGesturesOutput
+                ref graph,
+                ref mixerGesturesInput,
+                ref mixerGesturesOutput
             ));
         }
 
         public void CrossFadeGesture(AnimationClip animationClip, AvatarMask avatarMask,
             float fadeIn, float fadeOut, float speed)
         {
-            if (this.gestures.Count == 0)
+            if (gestures.Count == 0)
             {
-                this.gestures.Add(PlayableGesture.Create(
+                gestures.Add(PlayableGesture.Create(
                     animationClip, avatarMask,
                     fadeIn, fadeOut, speed,
-                    ref this.graph,
-                    ref this.mixerGesturesInput,
-                    ref this.mixerGesturesOutput
+                    ref graph,
+                    ref mixerGesturesInput,
+                    ref mixerGesturesOutput
                 ));
             }
             else
             {
-                PlayableGesture previous = gestures[this.gestures.Count - 1];
+                PlayableGesture previous = gestures[gestures.Count - 1];
                 previous.StretchDuration(fadeIn);
 
-                this.gestures.Add(PlayableGesture.CreateAfter(
+                gestures.Add(PlayableGesture.CreateAfter(
                     animationClip, avatarMask,
                     fadeIn, fadeOut, speed,
-                    ref this.graph,
+                    ref graph,
                     previous
                 ));
             }
@@ -129,9 +128,9 @@
 
         public void StopGesture(float fadeOut)
         {
-            for (int i = this.gestures.Count - 1; i >= 0; --i)
+            for (int i = gestures.Count - 1; i >= 0; --i)
             {
-                this.gestures[i].Stop(fadeOut);
+                gestures[i].Stop(fadeOut);
             }
         }
 
@@ -143,19 +142,19 @@
             PlayableState prevPlayable;
             PlayableState nextPlayable;
 
-            int insertIndex = this.GetSurroundingStates(layer,
+            int insertIndex = GetSurroundingStates(layer,
                 out prevPlayable,
                 out nextPlayable
             );
 
             if (prevPlayable == null && nextPlayable == null)
             {
-                this.states.Add(PlayableStateClip.Create(
+                states.Add(PlayableStateClip.Create(
                     animationClip, avatarMask, layer, 0f,
                     transition, speed, weight,
-                    ref this.graph,
-                    ref this.mixerStatesInput,
-                    ref this.mixerStatesOutput
+                    ref graph,
+                    ref mixerStatesInput,
+                    ref mixerStatesOutput
                 ));
             }
             else if (prevPlayable != null)
@@ -165,19 +164,19 @@
                     prevPlayable.StretchDuration(transition);
                 }
 
-                this.states.Insert(insertIndex, PlayableStateClip.CreateAfter(
+                states.Insert(insertIndex, PlayableStateClip.CreateAfter(
                     animationClip, avatarMask, layer, 0f,
                     transition, speed, weight,
-                    ref this.graph,
+                    ref graph,
                     prevPlayable
                 ));
             }
             else if (nextPlayable != null)
             {
-                this.states.Insert(insertIndex, PlayableStateClip.CreateBefore(
+                states.Insert(insertIndex, PlayableStateClip.CreateBefore(
                     animationClip, avatarMask, layer, 0f,
                     transition, speed, weight,
-                    ref this.graph,
+                    ref graph,
                     nextPlayable
                 ));
             }
@@ -189,20 +188,20 @@
             PlayableState prevPlayable;
             PlayableState nextPlayable;
 
-            int insertIndex = this.GetSurroundingStates(layer,
+            int insertIndex = GetSurroundingStates(layer,
                 out prevPlayable,
                 out nextPlayable
             );
 
             if (prevPlayable == null && nextPlayable == null)
             {
-                this.states.Add(PlayableStateCharacter.Create(
+                states.Add(PlayableStateCharacter.Create(
                     stateAsset, avatarMask, this, layer,
-                    this.runtimeControllerPlayable.GetTime(),
+                    runtimeControllerPlayable.GetTime(),
                     transition, speed, weight,
-                    ref this.graph,
-                    ref this.mixerStatesInput,
-                    ref this.mixerStatesOutput
+                    ref graph,
+                    ref mixerStatesInput,
+                    ref mixerStatesOutput
                 ));
             }
             else if (prevPlayable != null)
@@ -212,21 +211,21 @@
                     prevPlayable.StretchDuration(transition);
                 }
 
-                this.states.Insert(insertIndex, PlayableStateCharacter.CreateAfter(
+                states.Insert(insertIndex, PlayableStateCharacter.CreateAfter(
                     stateAsset, avatarMask, this, layer,
-                    this.runtimeControllerPlayable.GetTime(),
+                    runtimeControllerPlayable.GetTime(),
                     transition, speed, weight,
-                    ref this.graph,
+                    ref graph,
                     prevPlayable
                 ));
             }
             else if (nextPlayable != null)
             {
-                this.states.Insert(insertIndex, PlayableStateCharacter.CreateBefore(
+                states.Insert(insertIndex, PlayableStateCharacter.CreateBefore(
                     stateAsset, avatarMask, this, layer,
-                    this.runtimeControllerPlayable.GetTime(),
+                    runtimeControllerPlayable.GetTime(),
                     transition, speed, weight,
-                    ref this.graph,
+                    ref graph,
                     nextPlayable
                 ));
             }
@@ -238,20 +237,20 @@
             PlayableState prevPlayable;
             PlayableState nextPlayable;
 
-            int insertIndex = this.GetSurroundingStates(layer,
+            int insertIndex = GetSurroundingStates(layer,
                 out prevPlayable,
                 out nextPlayable
             );
 
             if (prevPlayable == null && nextPlayable == null)
             {
-                this.states.Add(PlayableStateRTC.Create(
+                states.Add(PlayableStateRTC.Create(
                     rtc, avatarMask, layer,
-                    syncTime ? this.runtimeControllerPlayable.GetTime() : 0f,
+                    syncTime ? runtimeControllerPlayable.GetTime() : 0f,
                     transition, speed, weight,
-                    ref this.graph,
-                    ref this.mixerStatesInput,
-                    ref this.mixerStatesOutput
+                    ref graph,
+                    ref mixerStatesInput,
+                    ref mixerStatesOutput
                 ));
             }
             else if (prevPlayable != null)
@@ -261,21 +260,21 @@
                     prevPlayable.StretchDuration(transition);
                 }
 
-                this.states.Insert(insertIndex, PlayableStateRTC.CreateAfter(
+                states.Insert(insertIndex, PlayableStateRTC.CreateAfter(
                     rtc, avatarMask, layer,
-                    syncTime ? this.runtimeControllerPlayable.GetTime() : 0f,
+                    syncTime ? runtimeControllerPlayable.GetTime() : 0f,
                     transition, speed, weight,
-                    ref this.graph,
+                    ref graph,
                     prevPlayable
                 ));
             }
             else if (nextPlayable != null)
             {
-                this.states.Insert(insertIndex, PlayableStateRTC.CreateBefore(
+                states.Insert(insertIndex, PlayableStateRTC.CreateBefore(
                     rtc, avatarMask, layer,
-                    syncTime ? this.runtimeControllerPlayable.GetTime() : 0f,
+                    syncTime ? runtimeControllerPlayable.GetTime() : 0f,
                     transition, speed, weight,
-                    ref this.graph,
+                    ref graph,
                     nextPlayable
                 ));
             }
@@ -283,34 +282,34 @@
 
         public void ResetState(float time, int layer)
         {
-            for (int i = 0; i < this.states.Count; ++i)
+            for (int i = 0; i < states.Count; ++i)
             {
-                if (this.states[i].Layer == layer)
+                if (states[i].Layer == layer)
                 {
-                    this.states[i].OnExitState();
-                    this.states[i].Stop(time);
+                    states[i].OnExitState();
+                    states[i].Stop(time);
                 }
             }
         }
 
         public void ChangeStateWeight(int layer, float weight)
         {
-            for (int i = this.states.Count - 1; i >= 0; --i)
+            for (int i = states.Count - 1; i >= 0; --i)
             {
-                if (this.states[i].Layer == layer)
+                if (states[i].Layer == layer)
                 {
-                    this.states[i].SetWeight(weight);
+                    states[i].SetWeight(weight);
                 }
             }
         }
 
         public CharacterState GetState(int layer)
         {
-            for (int i = this.states.Count - 1; i >= 0; --i)
+            for (int i = states.Count - 1; i >= 0; --i)
             {
-                if (this.states[i].Layer == layer)
+                if (states[i].Layer == layer)
                 {
-                    return this.states[i].CharacterState;
+                    return states[i].CharacterState;
                 }
             }
 
@@ -321,65 +320,65 @@
 
         private void Setup()
         {
-            if (!this.runtimeController) throw new Exception(ERR_NORTC);
+            if (!runtimeController) throw new Exception(ERR_NORTC);
 
-            if (this.characterAnimator.animator.playableGraph.IsValid())
+            if (characterAnimator.animator.playableGraph.IsValid())
             {
-                this.characterAnimator.animator.playableGraph.Destroy();
+                characterAnimator.animator.playableGraph.Destroy();
             }
 
-            if (this.graph.IsValid()) this.graph.Destroy();
+            if (graph.IsValid()) graph.Destroy();
 
-            this.graph = PlayableGraph.Create(GRAPH_NAME);
-            this.graph.SetTimeUpdateMode(DirectorUpdateMode.GameTime);
+            graph = PlayableGraph.Create(GRAPH_NAME);
+            graph.SetTimeUpdateMode(DirectorUpdateMode.GameTime);
 
             AnimationPlayableOutput output = AnimationPlayableOutput.Create(
-                this.graph, GRAPH_NAME,
-                this.characterAnimator.animator
+                graph, GRAPH_NAME,
+                characterAnimator.animator
             );
 
-            this.SetupSectionDefaultStates();
-            this.SetupSectionStates();
-            this.SetupSectionGestures();
+            SetupSectionDefaultStates();
+            SetupSectionStates();
+            SetupSectionGestures();
 
-            output.SetSourcePlayable(this.mixerGesturesOutput);
+            output.SetSourcePlayable(mixerGesturesOutput);
             output.SetSourceOutputPort(0);
 
-            this.graph.Play();
+            graph.Play();
         }
 
         private void SetupSectionDefaultStates()
         {
-            this.runtimeControllerPlayable = AnimatorControllerPlayable.Create(
-                this.graph,
-                this.runtimeController
+            runtimeControllerPlayable = AnimatorControllerPlayable.Create(
+                graph,
+                runtimeController
             );
 
-            this.mixerStatesInput = AnimationMixerPlayable.Create(this.graph, 1, true);
-            this.mixerStatesInput.ConnectInput(0, this.runtimeControllerPlayable, 0, 1f);
-            this.mixerStatesInput.SetInputWeight(0, 1f);
+            mixerStatesInput = AnimationMixerPlayable.Create(graph, 1, true);
+            mixerStatesInput.ConnectInput(0, runtimeControllerPlayable, 0, 1f);
+            mixerStatesInput.SetInputWeight(0, 1f);
         }
 
         private void SetupSectionStates()
         {
-            this.states = new List<PlayableState>();
+            states = new List<PlayableState>();
 
-            this.mixerStatesOutput = AnimationMixerPlayable.Create(this.graph, 1, true);
-            this.mixerStatesOutput.ConnectInput(0, this.mixerStatesInput, 0, 1f);
-            this.mixerStatesOutput.SetInputWeight(0, 1f);
+            mixerStatesOutput = AnimationMixerPlayable.Create(graph, 1, true);
+            mixerStatesOutput.ConnectInput(0, mixerStatesInput, 0, 1f);
+            mixerStatesOutput.SetInputWeight(0, 1f);
         }
 
         private void SetupSectionGestures()
         {
-            this.gestures = new List<PlayableGesture>();
+            gestures = new List<PlayableGesture>();
 
-            this.mixerGesturesInput = AnimationMixerPlayable.Create(this.graph, 1, true);
-            this.mixerGesturesInput.ConnectInput(0, this.mixerStatesOutput, 0, 1f);
-            this.mixerGesturesInput.SetInputWeight(0, 1f);
+            mixerGesturesInput = AnimationMixerPlayable.Create(graph, 1, true);
+            mixerGesturesInput.ConnectInput(0, mixerStatesOutput, 0, 1f);
+            mixerGesturesInput.SetInputWeight(0, 1f);
 
-            this.mixerGesturesOutput = AnimationMixerPlayable.Create(this.graph, 1, true);
-            this.mixerGesturesOutput.ConnectInput(0, this.mixerGesturesInput, 0, 1f);
-            this.mixerGesturesOutput.SetInputWeight(0, 1f);
+            mixerGesturesOutput = AnimationMixerPlayable.Create(graph, 1, true);
+            mixerGesturesOutput.ConnectInput(0, mixerGesturesInput, 0, 1f);
+            mixerGesturesOutput.SetInputWeight(0, 1f);
         }
 
         private int GetSurroundingStates(int layer, out PlayableState prev, out PlayableState next)
@@ -387,15 +386,15 @@
             prev = null;
             next = null;
 
-            for (int i = 0; i < this.states.Count; ++i)
+            for (int i = 0; i < states.Count; ++i)
             {
-                if (this.states[i].Layer <= layer)
+                if (states[i].Layer <= layer)
                 {
-                    prev = this.states[i];
+                    prev = states[i];
                     return i;
                 }
 
-                next = this.states[i];
+                next = states[i];
             }
 
             return 0;

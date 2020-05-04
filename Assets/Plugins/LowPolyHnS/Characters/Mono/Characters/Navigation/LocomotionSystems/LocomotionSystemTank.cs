@@ -1,58 +1,53 @@
-﻿namespace LowPolyHnS.Characters
+﻿using UnityEngine;
+
+namespace LowPolyHnS.Characters
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using LowPolyHnS.Core;
-	using LowPolyHnS.Core.Hooks;
-    using System;
+    public class LocomotionSystemTank : ILocomotionSystem
+    {
+        // PROPERTIES: ----------------------------------------------------------------------------
 
-    public class LocomotionSystemTank : ILocomotionSystem 
-	{
-		// PROPERTIES: ----------------------------------------------------------------------------
-
-		protected Vector3 desiredDirection = Vector3.zero;
-		protected float rotationY = 0f;
+        protected Vector3 desiredDirection = Vector3.zero;
+        protected float rotationY;
 
         // OVERRIDE METHODS: ----------------------------------------------------------------------
 
         public override CharacterLocomotion.LOCOMOTION_SYSTEM Update()
-		{
+        {
             base.Update();
 
-			if (this.characterLocomotion.navmeshAgent != null)
-			{
-				this.characterLocomotion.navmeshAgent.updatePosition = false;
-				this.characterLocomotion.navmeshAgent.updateUpAxis = false;
-			}
-
-			Vector3 targetDirection = this.desiredDirection;
-			Quaternion targetRotation = Quaternion.identity;
-
-            CharacterController controller = this.characterLocomotion.characterController;
-
-			float targetSpeed = this.CalculateSpeed(targetDirection, controller.isGrounded);
-
-			this.UpdateAnimationConstraints(ref targetDirection, ref targetRotation);
-			targetDirection *= targetSpeed;
-
-            this.pivotSpeed = this.rotationY * this.characterLocomotion.angularSpeed * Time.deltaTime;
-            targetRotation = Quaternion.Euler(Vector3.up * this.pivotSpeed);
-
-            this.UpdateSliding();
-
-			if (this.isSliding) targetDirection = this.slideDirection;
-			targetDirection += Vector3.up * this.characterLocomotion.verticalSpeed;
-
-            if (this.isRootMoving)
+            if (characterLocomotion.navmeshAgent != null)
             {
-                this.UpdateRootMovement(Vector3.up * this.characterLocomotion.verticalSpeed);
-                this.characterLocomotion.characterController.transform.rotation = targetRotation;
+                characterLocomotion.navmeshAgent.updatePosition = false;
+                characterLocomotion.navmeshAgent.updateUpAxis = false;
             }
-            else if (this.isDashing)
-			{
-				targetDirection = this.dashVelocity;
-				targetRotation = controller.transform.rotation;
+
+            Vector3 targetDirection = desiredDirection;
+            Quaternion targetRotation = Quaternion.identity;
+
+            CharacterController controller = characterLocomotion.characterController;
+
+            float targetSpeed = CalculateSpeed(targetDirection, controller.isGrounded);
+
+            UpdateAnimationConstraints(ref targetDirection, ref targetRotation);
+            targetDirection *= targetSpeed;
+
+            pivotSpeed = rotationY * characterLocomotion.angularSpeed * Time.deltaTime;
+            targetRotation = Quaternion.Euler(Vector3.up * pivotSpeed);
+
+            UpdateSliding();
+
+            if (isSliding) targetDirection = slideDirection;
+            targetDirection += Vector3.up * characterLocomotion.verticalSpeed;
+
+            if (isRootMoving)
+            {
+                UpdateRootMovement(Vector3.up * characterLocomotion.verticalSpeed);
+                characterLocomotion.characterController.transform.rotation = targetRotation;
+            }
+            else if (isDashing)
+            {
+                targetDirection = dashVelocity;
+                targetRotation = controller.transform.rotation;
 
                 controller.Move(targetDirection * Time.deltaTime);
                 controller.transform.rotation *= targetRotation;
@@ -63,26 +58,25 @@
                 controller.transform.rotation *= targetRotation;
             }
 
-			if (this.characterLocomotion.navmeshAgent != null && 
-                this.characterLocomotion.navmeshAgent.isActiveAndEnabled)
-			{
-                this.characterLocomotion.navmeshAgent.enabled = false;
+            if (characterLocomotion.navmeshAgent != null &&
+                characterLocomotion.navmeshAgent.isActiveAndEnabled)
+            {
+                characterLocomotion.navmeshAgent.enabled = false;
             }
 
             return CharacterLocomotion.LOCOMOTION_SYSTEM.CharacterController;
-		}
+        }
 
-        public override void OnDestroy ()
-		{
-			return;
-		}
+        public override void OnDestroy()
+        {
+        }
 
-		// PUBLIC METHODS: ------------------------------------------------------------------------
+        // PUBLIC METHODS: ------------------------------------------------------------------------
 
         public void SetDirection(Vector3 direction, float rotationY)
-		{
-			this.desiredDirection = direction;
+        {
+            desiredDirection = direction;
             this.rotationY = rotationY;
-		}
+        }
     }
 }

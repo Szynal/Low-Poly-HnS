@@ -1,35 +1,34 @@
-﻿namespace LowPolyHnS.Characters
+﻿using System.Collections;
+using LowPolyHnS.Core;
+using LowPolyHnS.Variables;
+using UnityEngine;
+
+namespace LowPolyHnS.Characters
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-	using LowPolyHnS.Core;
-    using LowPolyHnS.Variables;
-
-    #if UNITY_EDITOR
+#if UNITY_EDITOR
     using UnityEditor;
-	#endif
 
-	[AddComponentMenu("")]
-	public class ActionCharacterMoveTo : IAction 
-	{
-		public enum MOVE_TO
-		{
-			Position,
-			Transform,
-			Marker,
+#endif
+
+    [AddComponentMenu("")]
+    public class ActionCharacterMoveTo : IAction
+    {
+        public enum MOVE_TO
+        {
+            Position,
+            Transform,
+            Marker,
             Variable
-		}
+        }
 
         public TargetCharacter target = new TargetCharacter();
 
-		public MOVE_TO moveTo = MOVE_TO.Position;
-		public bool waitUntilArrives = true;
+        public MOVE_TO moveTo = MOVE_TO.Position;
+        public bool waitUntilArrives = true;
 
-		public Vector3 position;
-		public new Transform transform;
-		public NavigationMarker marker;
+        public Vector3 position;
+        public new Transform transform;
+        public NavigationMarker marker;
 
         [VariableFilter(Variable.DataType.GameObject, Variable.DataType.Vector3)]
         public VariableProperty variable = new VariableProperty(Variable.VarType.LocalVariable);
@@ -37,58 +36,57 @@
         public bool cancelable = false;
         public float cancelDelay = 1.0f;
 
-        [Range(0.0f, 5.0f)]
-        [Tooltip("Threshold distance from the target that is considered as reached")]
+        [Range(0.0f, 5.0f)] [Tooltip("Threshold distance from the target that is considered as reached")]
         public float stopThreshold = 0.0f;
 
-        private Character character = null;
-        private bool forceStop = false;
+        private Character character;
+        private bool forceStop;
 
-        private bool wasControllable = false;
-		private bool isCharacterMoving = false;
+        private bool wasControllable;
+        private bool isCharacterMoving;
 
         // EXECUTABLE: ----------------------------------------------------------------------------
 
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
-            if (this.waitUntilArrives) return false;
-            this.character = this.target.GetCharacter(target);
+            if (waitUntilArrives) return false;
+            character = this.target.GetCharacter(target);
 
             Vector3 cPosition = Vector3.zero;
             ILocomotionSystem.TargetRotation cRotation = null;
             float cStopThresh = 0f;
 
-            this.GetTarget(this.character, target, ref cPosition, ref cRotation, ref cStopThresh);
-            cStopThresh = Mathf.Max(cStopThresh, this.stopThreshold);
+            GetTarget(character, target, ref cPosition, ref cRotation, ref cStopThresh);
+            cStopThresh = Mathf.Max(cStopThresh, stopThreshold);
 
-            this.character.characterLocomotion.SetTarget(cPosition, cRotation, cStopThresh);
+            character.characterLocomotion.SetTarget(cPosition, cRotation, cStopThresh);
             return true;
         }
 
         public override IEnumerator Execute(GameObject target, IAction[] actions, int index)
-		{
-            this.forceStop = false;
-            this.character = this.target.GetCharacter(target);
+        {
+            forceStop = false;
+            character = this.target.GetCharacter(target);
 
-            Vector3 cPosition  = Vector3.zero;
+            Vector3 cPosition = Vector3.zero;
             ILocomotionSystem.TargetRotation cRotation = null;
-            float cStopThresh = this.stopThreshold;
+            float cStopThresh = stopThreshold;
 
-            this.GetTarget(character, target, ref cPosition, ref cRotation, ref cStopThresh);
-            cStopThresh = Mathf.Max(cStopThresh, this.stopThreshold);
+            GetTarget(character, target, ref cPosition, ref cRotation, ref cStopThresh);
+            cStopThresh = Mathf.Max(cStopThresh, stopThreshold);
 
-            this.isCharacterMoving = true;
-            this.wasControllable = this.character.characterLocomotion.isControllable;
-            this.character.characterLocomotion.SetIsControllable(false);
+            isCharacterMoving = true;
+            wasControllable = character.characterLocomotion.isControllable;
+            character.characterLocomotion.SetIsControllable(false);
 
-            this.character.characterLocomotion.SetTarget(cPosition, cRotation, cStopThresh, this.CharacterArrivedCallback);
+            character.characterLocomotion.SetTarget(cPosition, cRotation, cStopThresh, CharacterArrivedCallback);
 
             bool canceled = false;
             float initTime = Time.time;
 
-            while (this.isCharacterMoving && !canceled && !forceStop)
+            while (isCharacterMoving && !canceled && !forceStop)
             {
-                if (this.cancelable && (Time.time - initTime) >= this.cancelDelay)
+                if (cancelable && Time.time - initTime >= cancelDelay)
                 {
                     canceled = Input.anyKey;
                 }
@@ -96,43 +94,47 @@
                 yield return null;
             }
 
-            this.character.characterLocomotion.SetIsControllable(this.wasControllable);
+            character.characterLocomotion.SetIsControllable(wasControllable);
 
             if (canceled) yield return int.MaxValue;
-			else yield return 0;
-		}
+            else yield return 0;
+        }
 
         public override void Stop()
         {
-            this.forceStop = true;
-            if (this.character == null) return;
+            forceStop = true;
+            if (character == null) return;
 
-            this.character.characterLocomotion.SetIsControllable(this.wasControllable);
-            this.character.characterLocomotion.Stop();
+            character.characterLocomotion.SetIsControllable(wasControllable);
+            character.characterLocomotion.Stop();
         }
 
         public void CharacterArrivedCallback()
-		{
-			this.isCharacterMoving = false;
-		}
+        {
+            isCharacterMoving = false;
+        }
 
-        private void GetTarget(Character targetCharacter, GameObject invoker, 
+        private void GetTarget(Character targetCharacter, GameObject invoker,
             ref Vector3 cPosition, ref ILocomotionSystem.TargetRotation cRotation, ref float cStopThresh)
         {
             cStopThresh = 0.0f;
-            switch (this.moveTo)
+            switch (moveTo)
             {
-                case MOVE_TO.Position: cPosition = this.position; break;
-                case MOVE_TO.Transform: cPosition = this.transform.position; break;
+                case MOVE_TO.Position:
+                    cPosition = position;
+                    break;
+                case MOVE_TO.Transform:
+                    cPosition = transform.position;
+                    break;
                 case MOVE_TO.Marker:
-                    cPosition = this.marker.transform.position;
-                    cRotation = new ILocomotionSystem.TargetRotation(true, this.marker.transform.forward);
-                    cStopThresh = this.marker.stopThreshold;
+                    cPosition = marker.transform.position;
+                    cRotation = new ILocomotionSystem.TargetRotation(true, marker.transform.forward);
+                    cStopThresh = marker.stopThreshold;
                     break;
 
                 case MOVE_TO.Variable:
-                    object valueVariable = this.variable.Get(invoker);
-                    switch (this.variable.GetVariableDataType(invoker))
+                    object valueVariable = variable.Get(invoker);
+                    switch (variable.GetVariableDataType(invoker))
                     {
                         case Variable.DataType.GameObject:
                             GameObject variableGo = valueVariable as GameObject;
@@ -150,111 +152,120 @@
                                 cStopThresh = varMarker.stopThreshold;
                             }
                             else cPosition = variableGo.transform.position;
+
                             break;
 
                         case Variable.DataType.Vector3:
-                            cPosition = (Vector3)valueVariable;
+                            cPosition = (Vector3) valueVariable;
                             break;
                     }
+
                     break;
             }
         }
 
-		// +--------------------------------------------------------------------------------------+
-		// | EDITOR                                                                               |
-		// +--------------------------------------------------------------------------------------+
+        // +--------------------------------------------------------------------------------------+
+        // | EDITOR                                                                               |
+        // +--------------------------------------------------------------------------------------+
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 
-		public static new string NAME = "Character/Move Character";
-		private const string NODE_TITLE = "Move {0} to {1} {2}";
+        public static new string NAME = "Character/Move Character";
+        private const string NODE_TITLE = "Move {0} to {1} {2}";
 
         private static readonly GUIContent GC_CANCEL = new GUIContent("Cancelable");
 
-		// PROPERTIES: ----------------------------------------------------------------------------
+        // PROPERTIES: ----------------------------------------------------------------------------
 
-		private SerializedProperty spTarget;
-		private SerializedProperty spMoveTo;
-		private SerializedProperty spWaitUntilArrives;
-		private SerializedProperty spPosition;
-		private SerializedProperty spTransform;
-		private SerializedProperty spMarker;
+        private SerializedProperty spTarget;
+        private SerializedProperty spMoveTo;
+        private SerializedProperty spWaitUntilArrives;
+        private SerializedProperty spPosition;
+        private SerializedProperty spTransform;
+        private SerializedProperty spMarker;
         private SerializedProperty spVariable;
 
         private SerializedProperty spStopThreshold;
         private SerializedProperty spCancelable;
         private SerializedProperty spCancelDelay;
 
-		// INSPECTOR METHODS: ---------------------------------------------------------------------
+        // INSPECTOR METHODS: ---------------------------------------------------------------------
 
-		public override string GetNodeTitle()
-		{
-			string value = "none";
-			switch (this.moveTo)
-			{
-			case MOVE_TO.Position : 
-				value = string.Format("({0},{1},{2})", this.position.x, this.position.y, this.position.z); 
-				break;
+        public override string GetNodeTitle()
+        {
+            string value = "none";
+            switch (moveTo)
+            {
+                case MOVE_TO.Position:
+                    value = string.Format("({0},{1},{2})", position.x, position.y, position.z);
+                    break;
 
-			case MOVE_TO.Transform :
-				value = (this.transform == null ? "nothing" : this.transform.gameObject.name);
-				break;
-			case MOVE_TO.Marker :
-				value = (this.marker == null ? "nothing" : this.marker.gameObject.name);
-				break;
+                case MOVE_TO.Transform:
+                    value = transform == null ? "nothing" : transform.gameObject.name;
+                    break;
+                case MOVE_TO.Marker:
+                    value = marker == null ? "nothing" : marker.gameObject.name;
+                    break;
 
-            case MOVE_TO.Variable:
-                value = this.variable.GetVariableID();
-                break;
-			}
-
-			return string.Format(
-				NODE_TITLE, 
-                this.target,
-				this.moveTo, 
-				value
-			);
-		}
-
-		protected override void OnEnableEditorChild ()
-		{
-			this.spTarget = this.serializedObject.FindProperty("target");
-			this.spMoveTo = this.serializedObject.FindProperty("moveTo");
-			this.spWaitUntilArrives = this.serializedObject.FindProperty("waitUntilArrives");
-			this.spPosition = this.serializedObject.FindProperty("position");
-			this.spTransform = this.serializedObject.FindProperty("transform");
-			this.spMarker = this.serializedObject.FindProperty("marker");
-            this.spVariable = this.serializedObject.FindProperty("variable");
-            this.spStopThreshold = this.serializedObject.FindProperty("stopThreshold");
-            this.spCancelable = this.serializedObject.FindProperty("cancelable");
-            this.spCancelDelay = this.serializedObject.FindProperty("cancelDelay");
-		}
-
-		protected override void OnDisableEditorChild ()
-		{
-			return;
-		}
-
-		public override void OnInspectorGUI()
-		{
-			this.serializedObject.Update();
-
-            EditorGUILayout.PropertyField(this.spTarget);
-			EditorGUILayout.Space();
-			EditorGUILayout.PropertyField(this.spMoveTo);
-
-			switch ((MOVE_TO)this.spMoveTo.intValue)
-			{
-			case MOVE_TO.Position  : EditorGUILayout.PropertyField(this.spPosition);  break;
-			case MOVE_TO.Transform : EditorGUILayout.PropertyField(this.spTransform); break;
-			case MOVE_TO.Marker    : EditorGUILayout.PropertyField(this.spMarker);    break;
-            case MOVE_TO.Variable  : EditorGUILayout.PropertyField(this.spVariable); break;
+                case MOVE_TO.Variable:
+                    value = variable.GetVariableID();
+                    break;
             }
 
-			EditorGUILayout.Space();
-            EditorGUILayout.PropertyField(this.spStopThreshold);
-            EditorGUILayout.PropertyField(this.spWaitUntilArrives);
-            if (this.spWaitUntilArrives.boolValue)
+            return string.Format(
+                NODE_TITLE,
+                target,
+                moveTo,
+                value
+            );
+        }
+
+        protected override void OnEnableEditorChild()
+        {
+            spTarget = serializedObject.FindProperty("target");
+            spMoveTo = serializedObject.FindProperty("moveTo");
+            spWaitUntilArrives = serializedObject.FindProperty("waitUntilArrives");
+            spPosition = serializedObject.FindProperty("position");
+            spTransform = serializedObject.FindProperty("transform");
+            spMarker = serializedObject.FindProperty("marker");
+            spVariable = serializedObject.FindProperty("variable");
+            spStopThreshold = serializedObject.FindProperty("stopThreshold");
+            spCancelable = serializedObject.FindProperty("cancelable");
+            spCancelDelay = serializedObject.FindProperty("cancelDelay");
+        }
+
+        protected override void OnDisableEditorChild()
+        {
+        }
+
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
+
+            EditorGUILayout.PropertyField(spTarget);
+            EditorGUILayout.Space();
+            EditorGUILayout.PropertyField(spMoveTo);
+
+            switch ((MOVE_TO) spMoveTo.intValue)
+            {
+                case MOVE_TO.Position:
+                    EditorGUILayout.PropertyField(spPosition);
+                    break;
+                case MOVE_TO.Transform:
+                    EditorGUILayout.PropertyField(spTransform);
+                    break;
+                case MOVE_TO.Marker:
+                    EditorGUILayout.PropertyField(spMarker);
+                    break;
+                case MOVE_TO.Variable:
+                    EditorGUILayout.PropertyField(spVariable);
+                    break;
+            }
+
+            EditorGUILayout.Space();
+            EditorGUILayout.PropertyField(spStopThreshold);
+            EditorGUILayout.PropertyField(spWaitUntilArrives);
+            if (spWaitUntilArrives.boolValue)
             {
                 Rect rect = GUILayoutUtility.GetRect(GUIContent.none, EditorStyles.textField);
                 Rect rectLabel = new Rect(
@@ -277,16 +288,16 @@
                 );
 
                 EditorGUI.LabelField(rectLabel, GC_CANCEL);
-                EditorGUI.PropertyField(rectCancenable, this.spCancelable, GUIContent.none);
+                EditorGUI.PropertyField(rectCancenable, spCancelable, GUIContent.none);
 
-                EditorGUI.BeginDisabledGroup(!this.spCancelable.boolValue);
-                EditorGUI.PropertyField(rectDelay, this.spCancelDelay, GUIContent.none);
+                EditorGUI.BeginDisabledGroup(!spCancelable.boolValue);
+                EditorGUI.PropertyField(rectDelay, spCancelDelay, GUIContent.none);
                 EditorGUI.EndDisabledGroup();
             }
 
-			this.serializedObject.ApplyModifiedProperties();
-		}
+            serializedObject.ApplyModifiedProperties();
+        }
 
-		#endif
-	}
+#endif
+    }
 }

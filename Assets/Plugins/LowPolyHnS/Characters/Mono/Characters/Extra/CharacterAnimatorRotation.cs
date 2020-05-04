@@ -1,10 +1,8 @@
-﻿namespace LowPolyHnS.Characters
-{
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
+﻿using System;
+using UnityEngine;
 
+namespace LowPolyHnS.Characters
+{
     [Serializable]
     public class CharacterAnimatorRotation
     {
@@ -19,23 +17,23 @@
 
             public AnimFloat(float value)
             {
-                this.target = value;
+                target = value;
                 this.value = value;
-                this.time = 0f;
+                time = 0f;
             }
 
             public float Update()
             {
-                float t = (Time.time - this.time) / ROTATION_SMOOTH;
-                this.value = Mathf.LerpAngle(this.value, this.target, t);
+                float t = (Time.time - time) / ROTATION_SMOOTH;
+                value = Mathf.LerpAngle(value, target, t);
 
-                return this.value;
+                return value;
             }
 
             public void SetTarget(float value)
             {
-                this.target = value;
-                this.time = Time.time;
+                target = value;
+                time = Time.time;
             }
         }
 
@@ -50,9 +48,9 @@
         public Quaternion Update()
         {
             Quaternion rotation = Quaternion.Euler(
-                this.x.Update(),
-                this.y.Update(),
-                this.z.Update()
+                x.Update(),
+                y.Update(),
+                z.Update()
             );
 
             return rotation;
@@ -62,36 +60,36 @@
 
         public Quaternion GetCurrentRotation()
         {
-            return Quaternion.Euler(this.x.value, this.y.value, this.z.value);
+            return Quaternion.Euler(x.value, y.value, z.value);
         }
 
         public Quaternion GetTargetRotation()
         {
-            return Quaternion.Euler(this.x.target, this.y.target, this.z.target);
+            return Quaternion.Euler(x.target, y.target, z.target);
         }
 
         // PUBLIC SETTERS: ------------------------------------------------------------------------
 
         public void SetPitch(float value)
         {
-            this.x.SetTarget(value);
+            x.SetTarget(value);
         }
 
         public void SetYaw(float value)
         {
-            this.y.SetTarget(value);
+            y.SetTarget(value);
         }
 
         public void SetRoll(float value)
         {
-            this.z.SetTarget(value);
+            z.SetTarget(value);
         }
 
         public void SetQuaternion(Quaternion rotation)
         {
-            this.SetPitch(rotation.eulerAngles.x);
-            this.SetYaw(rotation.eulerAngles.y);
-            this.SetRoll(rotation.eulerAngles.z);
+            SetPitch(rotation.eulerAngles.x);
+            SetYaw(rotation.eulerAngles.y);
+            SetRoll(rotation.eulerAngles.z);
         }
     }
 }

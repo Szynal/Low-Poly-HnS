@@ -1,9 +1,9 @@
-﻿namespace LowPolyHnS.Characters
-{
-    using UnityEngine;
-    using UnityEngine.Animations;
-    using UnityEngine.Playables;
+﻿using UnityEngine;
+using UnityEngine.Animations;
+using UnityEngine.Playables;
 
+namespace LowPolyHnS.Characters
+{
     public class PlayableStateCharacter : PlayableStateRTC
     {
         private readonly CharacterAnimation character;
@@ -16,8 +16,8 @@
             : base(avatarMask, layer, time, speed, weight)
         {
             this.character = character;
-            this.CharacterState = stateAsset;
-            this.CharacterState.StartState(character);
+            CharacterState = stateAsset;
+            CharacterState.StartState(character);
         }
 
         // STATIC CONSTRUCTORS: -------------------------------------------------------------------
@@ -46,7 +46,7 @@
                 float offsetTime = Mathf.Max(0.15f, fade);
                 input1.SetDelay(offsetTime);
             }
-            
+
             input1.SetTime(startTime);
             input1.SetSpeed(speed);
 
@@ -118,7 +118,7 @@
 
         public override void OnExitState()
         {
-            this.CharacterState.ExitState(this.character);
+            CharacterState.ExitState(character);
         }
     }
 }

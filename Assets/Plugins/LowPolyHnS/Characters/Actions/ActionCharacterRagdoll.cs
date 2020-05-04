@@ -1,18 +1,16 @@
-﻿namespace LowPolyHnS.Characters
+﻿using LowPolyHnS.Core;
+using UnityEngine;
+
+namespace LowPolyHnS.Characters
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-	using LowPolyHnS.Core;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[AddComponentMenu("")]
+    [AddComponentMenu("")]
     public class ActionCharacterRagdoll : IAction
-	{
+    {
         public enum Operation
         {
             Ragdoll,
@@ -27,13 +25,17 @@
 
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
-            Character c = this.character.GetCharacter(target);
+            Character c = character.GetCharacter(target);
             if (c != null)
             {
-                switch (this.turnTo)
+                switch (turnTo)
                 {
-                    case Operation.Ragdoll : c.SetRagdoll(true, this.autoRecover); break;
-                    case Operation.Recover : c.SetRagdoll(false); break;
+                    case Operation.Ragdoll:
+                        c.SetRagdoll(true, autoRecover);
+                        break;
+                    case Operation.Recover:
+                        c.SetRagdoll(false);
+                        break;
                 }
             }
 
@@ -44,55 +46,55 @@
         // | EDITOR                                                                               |
         // +--------------------------------------------------------------------------------------+
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
 
         public static new string NAME = "Character/Character Ragdoll";
         private const string NODE_TITLE = "{0} character {1}";
 
-		// PROPERTIES: ----------------------------------------------------------------------------
+        // PROPERTIES: ----------------------------------------------------------------------------
 
-		private SerializedProperty spCharacter;
+        private SerializedProperty spCharacter;
         private SerializedProperty spTurnTo;
         private SerializedProperty spAutoRecover;
 
-		// INSPECTOR METHODS: ---------------------------------------------------------------------
+        // INSPECTOR METHODS: ---------------------------------------------------------------------
 
-		public override string GetNodeTitle()
-		{
-            return string.Format(NODE_TITLE, this.turnTo, this.character.ToString());
-		}
+        public override string GetNodeTitle()
+        {
+            return string.Format(NODE_TITLE, turnTo, character);
+        }
 
-		protected override void OnEnableEditorChild ()
-		{
-            this.spCharacter = this.serializedObject.FindProperty("character");
-            this.spTurnTo = this.serializedObject.FindProperty("turnTo");
-            this.spAutoRecover = this.serializedObject.FindProperty("autoRecover");
-		}
+        protected override void OnEnableEditorChild()
+        {
+            spCharacter = serializedObject.FindProperty("character");
+            spTurnTo = serializedObject.FindProperty("turnTo");
+            spAutoRecover = serializedObject.FindProperty("autoRecover");
+        }
 
-		protected override void OnDisableEditorChild ()
-		{
-            this.spCharacter = null;
-            this.spTurnTo = null;
-            this.spAutoRecover = null;
-		}
+        protected override void OnDisableEditorChild()
+        {
+            spCharacter = null;
+            spTurnTo = null;
+            spAutoRecover = null;
+        }
 
-		public override void OnInspectorGUI()
-		{
-			this.serializedObject.Update();
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
 
-            EditorGUILayout.PropertyField(this.spCharacter);
-            EditorGUILayout.PropertyField(this.spTurnTo);
+            EditorGUILayout.PropertyField(spCharacter);
+            EditorGUILayout.PropertyField(spTurnTo);
 
-            if (this.spTurnTo.intValue == (int)Operation.Ragdoll)
+            if (spTurnTo.intValue == (int) Operation.Ragdoll)
             {
                 EditorGUI.indentLevel++;
-                EditorGUILayout.PropertyField(this.spAutoRecover);
+                EditorGUILayout.PropertyField(spAutoRecover);
                 EditorGUI.indentLevel--;
             }
 
-			this.serializedObject.ApplyModifiedProperties();
-		}
+            serializedObject.ApplyModifiedProperties();
+        }
 
-		#endif
-	}
+#endif
+    }
 }

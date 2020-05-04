@@ -1,20 +1,16 @@
-﻿namespace LowPolyHnS.Characters
+﻿using LowPolyHnS.Core;
+using UnityEngine;
+
+namespace LowPolyHnS.Characters
 {
-    using System;
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-	using LowPolyHnS.Core;
-    using LowPolyHnS.Variables;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[AddComponentMenu("")]
-	public class ActionCharacterStopGesture : IAction
-	{
+    [AddComponentMenu("")]
+    public class ActionCharacterStopGesture : IAction
+    {
         public TargetCharacter character = new TargetCharacter();
         public float transition = 0.2f;
 
@@ -22,11 +18,11 @@
 
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
-            Character charTarget = this.character.GetCharacter(target);
+            Character charTarget = character.GetCharacter(target);
             if (charTarget != null && charTarget.GetCharacterAnimator() != null)
             {
                 CharacterAnimator characterAnimator = charTarget.GetCharacterAnimator();
-                characterAnimator.StopGesture(this.transition);
+                characterAnimator.StopGesture(transition);
             }
 
             return true;
@@ -36,45 +32,45 @@
         // | EDITOR                                                                               |
         // +--------------------------------------------------------------------------------------+
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
 
         public static new string NAME = "Character/Character Stop Gesture";
         private const string NODE_TITLE = "Character {0} stop gesture";
 
-		// PROPERTIES: ----------------------------------------------------------------------------
+        // PROPERTIES: ----------------------------------------------------------------------------
 
-		private SerializedProperty spCharacter;
+        private SerializedProperty spCharacter;
         private SerializedProperty spTransition;
 
         // INSPECTOR METHODS: ---------------------------------------------------------------------
 
         public override string GetNodeTitle()
-		{
-            return string.Format(NODE_TITLE, this.character);
-		}
-
-		protected override void OnEnableEditorChild ()
-		{
-            this.spCharacter = this.serializedObject.FindProperty("character");
-            this.spTransition = this.serializedObject.FindProperty("transition");
+        {
+            return string.Format(NODE_TITLE, character);
         }
 
-		protected override void OnDisableEditorChild ()
-		{
-            this.spCharacter = null;
-            this.spTransition = null;
-		}
+        protected override void OnEnableEditorChild()
+        {
+            spCharacter = serializedObject.FindProperty("character");
+            spTransition = serializedObject.FindProperty("transition");
+        }
 
-		public override void OnInspectorGUI()
-		{
-			this.serializedObject.Update();
+        protected override void OnDisableEditorChild()
+        {
+            spCharacter = null;
+            spTransition = null;
+        }
 
-            EditorGUILayout.PropertyField(this.spCharacter);
-            EditorGUILayout.PropertyField(this.spTransition);
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
 
-            this.serializedObject.ApplyModifiedProperties();
-		}
+            EditorGUILayout.PropertyField(spCharacter);
+            EditorGUILayout.PropertyField(spTransition);
 
-		#endif
-	}
+            serializedObject.ApplyModifiedProperties();
+        }
+
+#endif
+    }
 }

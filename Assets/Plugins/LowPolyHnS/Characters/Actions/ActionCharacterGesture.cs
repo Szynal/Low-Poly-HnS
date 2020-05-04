@@ -1,20 +1,19 @@
-﻿namespace LowPolyHnS.Characters
+﻿using System;
+using System.Collections;
+using LowPolyHnS.Core;
+using LowPolyHnS.Variables;
+using UnityEngine;
+
+namespace LowPolyHnS.Characters
 {
-    using System;
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-	using LowPolyHnS.Core;
-    using LowPolyHnS.Variables;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[AddComponentMenu("")]
-	public class ActionCharacterGesture : IAction
-	{
+    [AddComponentMenu("")]
+    public class ActionCharacterGesture : IAction
+    {
         public TargetCharacter character = new TargetCharacter();
         public AnimationClip clip;
         public AvatarMask avatarMask;
@@ -32,58 +31,58 @@
 
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
-            Character charTarget = this.character.GetCharacter(target);
-            if (this.clip != null && charTarget != null && charTarget.GetCharacterAnimator() != null)
+            Character charTarget = character.GetCharacter(target);
+            if (clip != null && charTarget != null && charTarget.GetCharacterAnimator() != null)
             {
-                this.characterAnimator = charTarget.GetCharacterAnimator();
-                this.characterAnimator.CrossFadeGesture(
-                    this.clip, this.speed.GetValue(target), this.avatarMask,
-                    this.fadeIn, this.fadeOut
+                characterAnimator = charTarget.GetCharacterAnimator();
+                characterAnimator.CrossFadeGesture(
+                    clip, speed.GetValue(target), avatarMask,
+                    fadeIn, fadeOut
                 );
             }
 
-            return !this.waitTillComplete;
+            return !waitTillComplete;
         }
 
         public override IEnumerator Execute(GameObject target, IAction[] actions, int index)
-		{
-            this.forceStop = false;
-            Character charTarget = this.character.GetCharacter(target);
-            if (this.clip != null && charTarget != null && charTarget.GetCharacterAnimator() != null)
+        {
+            forceStop = false;
+            Character charTarget = character.GetCharacter(target);
+            if (clip != null && charTarget != null && charTarget.GetCharacterAnimator() != null)
             {
-                if (this.waitTillComplete)
+                if (waitTillComplete)
                 {
-                    float wait = Time.time + (this.clip.length / this.speed.GetValue(target));
+                    float wait = Time.time + clip.length / speed.GetValue(target);
 
-                    WaitUntil waitUntil = new WaitUntil(() => this.forceStop || Time.time > wait);
+                    WaitUntil waitUntil = new WaitUntil(() => forceStop || Time.time > wait);
                     yield return waitUntil;
                 }
             }
 
-			yield return 0;
-		}
+            yield return 0;
+        }
 
         public override void Stop()
         {
-            this.forceStop = true;
-            if (this.characterAnimator == null) return;
-            this.characterAnimator.StopGesture(this.fadeOut);
+            forceStop = true;
+            if (characterAnimator == null) return;
+            characterAnimator.StopGesture(fadeOut);
         }
 
         // +--------------------------------------------------------------------------------------+
         // | EDITOR                                                                               |
         // +--------------------------------------------------------------------------------------+
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
 
         public static new string NAME = "Character/Character Gesture";
         private const string NODE_TITLE = "Character {0} do gesture {1}";
 
         private static readonly GUIContent GC_MASK = new GUIContent("Mask (optional)");
 
-		// PROPERTIES: ----------------------------------------------------------------------------
+        // PROPERTIES: ----------------------------------------------------------------------------
 
-		private SerializedProperty spCharacter;
+        private SerializedProperty spCharacter;
         private SerializedProperty spClip;
         private SerializedProperty spAvatarMask;
         private SerializedProperty spWaitTillComplete;
@@ -94,58 +93,58 @@
         // INSPECTOR METHODS: ---------------------------------------------------------------------
 
         public override string GetNodeTitle()
-		{
-            string clipName = (this.clip == null ? "none" : this.clip.name);
+        {
+            string clipName = clip == null ? "none" : clip.name;
             if (clipName.Contains("@"))
             {
-                string[] split = clipName.Split(new char[] {'@'}, 2, StringSplitOptions.RemoveEmptyEntries);
+                string[] split = clipName.Split(new[] {'@'}, 2, StringSplitOptions.RemoveEmptyEntries);
                 clipName = split[split.Length - 1];
             }
-            
-            return string.Format(NODE_TITLE, this.character.ToString(), clipName);
-		}
 
-		protected override void OnEnableEditorChild ()
-		{
-            this.spCharacter = this.serializedObject.FindProperty("character");
-            this.spClip = this.serializedObject.FindProperty("clip");
-            this.spAvatarMask = this.serializedObject.FindProperty("avatarMask");
-            this.spWaitTillComplete = this.serializedObject.FindProperty("waitTillComplete");
-            this.spSpeed = this.serializedObject.FindProperty("speed");
-            this.spFadeIn = this.serializedObject.FindProperty("fadeIn");
-            this.spFadeOut = this.serializedObject.FindProperty("fadeOut");
+            return string.Format(NODE_TITLE, character, clipName);
         }
 
-		protected override void OnDisableEditorChild ()
-		{
-            this.spCharacter = null;
-            this.spClip = null;
-            this.spAvatarMask = null;
-            this.spWaitTillComplete = null;
-            this.spSpeed = null;
-            this.spFadeIn = null;
-            this.spFadeOut = null;
+        protected override void OnEnableEditorChild()
+        {
+            spCharacter = serializedObject.FindProperty("character");
+            spClip = serializedObject.FindProperty("clip");
+            spAvatarMask = serializedObject.FindProperty("avatarMask");
+            spWaitTillComplete = serializedObject.FindProperty("waitTillComplete");
+            spSpeed = serializedObject.FindProperty("speed");
+            spFadeIn = serializedObject.FindProperty("fadeIn");
+            spFadeOut = serializedObject.FindProperty("fadeOut");
         }
 
-		public override void OnInspectorGUI()
-		{
-			this.serializedObject.Update();
+        protected override void OnDisableEditorChild()
+        {
+            spCharacter = null;
+            spClip = null;
+            spAvatarMask = null;
+            spWaitTillComplete = null;
+            spSpeed = null;
+            spFadeIn = null;
+            spFadeOut = null;
+        }
 
-            EditorGUILayout.PropertyField(this.spCharacter);
-            EditorGUILayout.PropertyField(this.spClip);
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
+
+            EditorGUILayout.PropertyField(spCharacter);
+            EditorGUILayout.PropertyField(spClip);
 
             EditorGUI.indentLevel++;
-            EditorGUILayout.PropertyField(this.spAvatarMask, GC_MASK);
-            EditorGUILayout.PropertyField(this.spSpeed);
+            EditorGUILayout.PropertyField(spAvatarMask, GC_MASK);
+            EditorGUILayout.PropertyField(spSpeed);
 
-            EditorGUILayout.PropertyField(this.spFadeIn);
-            EditorGUILayout.PropertyField(this.spFadeOut);
-            EditorGUILayout.PropertyField(this.spWaitTillComplete);
+            EditorGUILayout.PropertyField(spFadeIn);
+            EditorGUILayout.PropertyField(spFadeOut);
+            EditorGUILayout.PropertyField(spWaitTillComplete);
             EditorGUI.indentLevel--;
 
-            this.serializedObject.ApplyModifiedProperties();
-		}
+            serializedObject.ApplyModifiedProperties();
+        }
 
-		#endif
-	}
+#endif
+    }
 }

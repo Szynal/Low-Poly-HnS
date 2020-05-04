@@ -1,21 +1,19 @@
-﻿namespace LowPolyHnS.Core
-{
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-    using LowPolyHnS.Characters;
-    using LowPolyHnS.Variables;
+﻿using LowPolyHnS.Characters;
+using LowPolyHnS.Variables;
+using UnityEngine;
 
+namespace LowPolyHnS.Core
+{
     [AddComponentMenu("")]
-    public class IgniterOnLand : Igniter 
-	{
-		#if UNITY_EDITOR
-		public new static string NAME = "Character/On Land";
-        #endif
+    public class IgniterOnLand : Igniter
+    {
+#if UNITY_EDITOR
+        public new static string NAME = "Character/On Land";
+#endif
 
         public TargetCharacter character = new TargetCharacter(TargetCharacter.Target.Player);
 
-        [Space][VariableFilter(Variable.DataType.Number)]
+        [Space] [VariableFilter(Variable.DataType.Number)]
         public VariableProperty storeVerticalSpeed = new VariableProperty();
 
         private void Start()

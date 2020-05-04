@@ -1,11 +1,11 @@
-﻿namespace LowPolyHnS.Characters
-{
-    using System.Collections;
-    using LowPolyHnS.Core;
-    using UnityEngine;
-    using UnityEngine.Animations;
-    using UnityEngine.Playables;
+﻿using System.Collections;
+using LowPolyHnS.Core;
+using UnityEngine;
+using UnityEngine.Animations;
+using UnityEngine.Playables;
 
+namespace LowPolyHnS.Characters
+{
     public abstract class PlayableBase
     {
         // PROPERTIES: ----------------------------------------------------------------------------
@@ -21,11 +21,11 @@
 
         // INTERFACE PROPERTIES: ------------------------------------------------------------------
 
-        public Playable Mixer => this.mixer;
+        public Playable Mixer => mixer;
 
-        public Playable Input0 => this.mixer.GetInput(0);
-        public Playable Input1 => this.mixer.GetInput(1);
-        public Playable Output => this.mixer.GetOutput(0);
+        public Playable Input0 => mixer.GetInput(0);
+        public Playable Input1 => mixer.GetInput(1);
+        public Playable Output => mixer.GetOutput(0);
 
         // CONSTRUCTOR: ---------------------------------------------------------------------------
 
@@ -42,11 +42,11 @@
 
         public void Destroy()
         {
-            Playable output = this.Output;
-            Playable input0 = this.Input0;
+            Playable output = Output;
+            Playable input0 = Input0;
 
             output.DisconnectInput(0);
-            this.mixer.DisconnectInput(0);
+            mixer.DisconnectInput(0);
 
             output.ConnectInput(0, input0, 0);
 
@@ -57,12 +57,12 @@
                     break;
 
                 case 2:
-                    float outputWeight = this.mixer.GetInputWeight(0);
+                    float outputWeight = mixer.GetInputWeight(0);
                     output.SetInputWeight(0, outputWeight);
                     break;
             }
 
-            IEnumerator destroy = this.DestroyNextFrame();
+            IEnumerator destroy = DestroyNextFrame();
             CoroutinesManager.Instance.StartCoroutine(destroy);
         }
 
@@ -70,8 +70,8 @@
         {
             yield return null;
 
-            if (this.Input1.IsValid() && this.Input1.CanDestroy()) this.Input1.Destroy();
-            if (this.Mixer.IsValid()  && this.Mixer.CanDestroy())  this.Mixer.Destroy();
+            if (Input1.IsValid() && Input1.CanDestroy()) Input1.Destroy();
+            if (Mixer.IsValid() && Mixer.CanDestroy()) Mixer.Destroy();
         }
 
         // PUBLIC METHODS: ------------------------------------------------------------------------
@@ -96,7 +96,7 @@
             input0.GetOutput(0).DisconnectInput(0);
             output.DisconnectInput(0);
 
-            this.SetupMixer(ref graph, ref input0, ref input1, ref output);
+            SetupMixer(ref graph, ref input0, ref input1, ref output);
         }
 
         protected void Setup<TInput1>(
@@ -107,7 +107,7 @@
             Playable output = previous.Output;
             previous.Output.DisconnectInput(0);
 
-            this.SetupMixer(ref graph, ref input0, ref input1, ref output);
+            SetupMixer(ref graph, ref input0, ref input1, ref output);
         }
 
         protected void Setup<TInput1>(
@@ -118,7 +118,7 @@
             Playable output = next.Mixer;
             output.DisconnectInput(0);
 
-            this.SetupMixer(ref graph, ref input0, ref input1, ref output);
+            SetupMixer(ref graph, ref input0, ref input1, ref output);
         }
 
         protected void UpdateMixerWeights(float weight)
@@ -126,8 +126,8 @@
             float weight0 = 1f;
             float weight1 = weight;
 
-            this.mixer.SetInputWeight(0, weight0);
-            this.mixer.SetInputWeight(1, weight1);
+            mixer.SetInputWeight(0, weight0);
+            mixer.SetInputWeight(1, weight1);
         }
 
         // PRIVATE METHODS: -----------------------------------------------------------------------
@@ -138,21 +138,21 @@
             where TInput1 : struct, IPlayable
             where TOutput : struct, IPlayable
         {
-            input1.SetSpeed(this.speed);
+            input1.SetSpeed(speed);
 
-            this.mixer = AnimationLayerMixerPlayable.Create(graph, 2);
-            this.mixer.ConnectInput(0, input0, 0, 0f);
-            this.mixer.ConnectInput(1, input1, 0, 1f);
+            mixer = AnimationLayerMixerPlayable.Create(graph, 2);
+            mixer.ConnectInput(0, input0, 0, 0f);
+            mixer.ConnectInput(1, input1, 0, 1f);
 
-            if (this.avatarMask != null)
+            if (avatarMask != null)
             {
-                this.mixer.SetLayerMaskFromAvatarMask(1, this.avatarMask);
+                mixer.SetLayerMaskFromAvatarMask(1, avatarMask);
             }
 
-            output.ConnectInput(0, this.mixer, 0, 1f);
-            this.UpdateMixerWeights(this.fadeIn > CharacterAnimation.EPSILON
+            output.ConnectInput(0, mixer, 0, 1f);
+            UpdateMixerWeights(fadeIn > CharacterAnimation.EPSILON
                 ? 0f
-                : this.weight
+                : weight
             );
         }
     }

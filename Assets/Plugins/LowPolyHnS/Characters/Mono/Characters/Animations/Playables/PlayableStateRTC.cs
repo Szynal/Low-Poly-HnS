@@ -1,9 +1,9 @@
-﻿namespace LowPolyHnS.Characters
-{
-    using UnityEngine;
-    using UnityEngine.Animations;
-    using UnityEngine.Playables;
+﻿using UnityEngine;
+using UnityEngine.Animations;
+using UnityEngine.Playables;
 
+namespace LowPolyHnS.Characters
+{
     public class PlayableStateRTC : PlayableState
     {
         // CONSTRUCTOR: ---------------------------------------------------------------------------
@@ -12,7 +12,8 @@
             int layer,
             float time, float speed, float weight)
             : base(avatarMask, layer, time, speed, weight)
-        { }
+        {
+        }
 
         // STATIC CONSTRUCTORS: -------------------------------------------------------------------
 

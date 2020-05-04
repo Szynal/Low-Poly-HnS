@@ -1,18 +1,16 @@
-﻿namespace LowPolyHnS.Characters
+﻿using LowPolyHnS.Core;
+using UnityEngine;
+
+namespace LowPolyHnS.Characters
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-	using LowPolyHnS.Core;
+#if UNITY_EDITOR
+    using UnityEditor;
 
-	#if UNITY_EDITOR
-	using UnityEditor;
-	#endif
+#endif
 
-	[AddComponentMenu("")]
-	public class ActionCharacterModel : IAction
-	{
+    [AddComponentMenu("")]
+    public class ActionCharacterModel : IAction
+    {
         public TargetCharacter character = new TargetCharacter();
         public TargetGameObject prefabModel = new TargetGameObject(TargetGameObject.Target.GameObject);
 
@@ -20,8 +18,8 @@
 
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
-            Character charTarget = this.character.GetCharacter(target);
-            GameObject prefab = this.prefabModel.GetGameObject(target);
+            Character charTarget = character.GetCharacter(target);
+            GameObject prefab = prefabModel.GetGameObject(target);
             if (charTarget != null && prefab != null)
             {
                 CharacterAnimator targetCharAnim = charTarget.GetComponent<CharacterAnimator>();
@@ -34,49 +32,49 @@
             return true;
         }
 
-		// +--------------------------------------------------------------------------------------+
-		// | EDITOR                                                                               |
-		// +--------------------------------------------------------------------------------------+
+        // +--------------------------------------------------------------------------------------+
+        // | EDITOR                                                                               |
+        // +--------------------------------------------------------------------------------------+
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 
         public static new string NAME = "Character/Character Model";
         private const string NODE_TITLE = "Change character {0} model";
 
-		// PROPERTIES: ----------------------------------------------------------------------------
+        // PROPERTIES: ----------------------------------------------------------------------------
 
         private SerializedProperty spCharacter;
         private SerializedProperty spPrefabModel;
 
-		// INSPECTOR METHODS: ---------------------------------------------------------------------
+        // INSPECTOR METHODS: ---------------------------------------------------------------------
 
-		public override string GetNodeTitle()
-		{
-            return string.Format(NODE_TITLE, this.character.ToString());
-		}
+        public override string GetNodeTitle()
+        {
+            return string.Format(NODE_TITLE, character);
+        }
 
-		protected override void OnEnableEditorChild ()
-		{
-            this.spCharacter = this.serializedObject.FindProperty("character");
-            this.spPrefabModel = this.serializedObject.FindProperty("prefabModel");
-		}
+        protected override void OnEnableEditorChild()
+        {
+            spCharacter = serializedObject.FindProperty("character");
+            spPrefabModel = serializedObject.FindProperty("prefabModel");
+        }
 
-		protected override void OnDisableEditorChild ()
-		{
-            this.spCharacter = null;
-            this.spPrefabModel = null;
-		}
+        protected override void OnDisableEditorChild()
+        {
+            spCharacter = null;
+            spPrefabModel = null;
+        }
 
-		public override void OnInspectorGUI()
-		{
-			this.serializedObject.Update();
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
 
-            EditorGUILayout.PropertyField(this.spCharacter);
-            EditorGUILayout.PropertyField(this.spPrefabModel);
+            EditorGUILayout.PropertyField(spCharacter);
+            EditorGUILayout.PropertyField(spPrefabModel);
 
-			this.serializedObject.ApplyModifiedProperties();
-		}
+            serializedObject.ApplyModifiedProperties();
+        }
 
-		#endif
-	}
+#endif
+    }
 }

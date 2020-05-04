@@ -1,9 +1,7 @@
-﻿namespace LowPolyHnS.Characters
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
+﻿using UnityEngine;
 
+namespace LowPolyHnS.Characters
+{
     public static class RagdollUtilities
     {
         public static Bounds GetBounds(Transform origin, params Transform[] points)
@@ -20,7 +18,7 @@
 
         public static void GetDirection(Vector3 point, out int direction, out float distance)
         {
-            direction = RagdollUtilities.LargestComponent(point);
+            direction = LargestComponent(point);
             distance = point[direction];
         }
 
@@ -29,10 +27,10 @@
             int direction = 0;
             float distance = 0.0f;
 
-            RagdollUtilities.GetDirection(point, out direction, out distance);
+            GetDirection(point, out direction, out distance);
             Vector3 axis = Vector3.zero;
 
-            if (distance > 0) axis[direction] =  1.0f;
+            if (distance > 0) axis[direction] = 1.0f;
             if (distance < 0) axis[direction] = -1.0f;
 
             return axis;
@@ -65,13 +63,14 @@
             return bounds;
         }
 
-        public static Bounds Clip(Bounds bounds, Transform relativeTo, Transform clipTransform, Vector3 unitY, bool below)
+        public static Bounds Clip(Bounds bounds, Transform relativeTo, Transform clipTransform, Vector3 unitY,
+            bool below)
         {
-            int axis = RagdollUtilities.LargestComponent(bounds.size);
+            int axis = LargestComponent(bounds.size);
             float dotMax = Vector3.Dot(unitY, relativeTo.TransformPoint(bounds.max));
             float dotMin = Vector3.Dot(unitY, relativeTo.TransformPoint(bounds.min));
 
-            if ((dotMax > dotMin) == below)
+            if (dotMax > dotMin == below)
             {
                 Vector3 min = bounds.min;
                 min[axis] = relativeTo.InverseTransformPoint(clipTransform.position)[axis];
@@ -86,6 +85,5 @@
 
             return bounds;
         }
-
     }
 }

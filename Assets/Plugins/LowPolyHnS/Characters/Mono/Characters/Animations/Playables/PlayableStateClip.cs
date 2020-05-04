@@ -1,16 +1,16 @@
-﻿namespace LowPolyHnS.Characters
-{
-    using UnityEngine;
-    using UnityEngine.Animations;
-    using UnityEngine.Playables;
+﻿using UnityEngine;
+using UnityEngine.Animations;
+using UnityEngine.Playables;
 
+namespace LowPolyHnS.Characters
+{
     public class PlayableStateClip : PlayableState
     {
         private PlayableStateClip(AnimationClip animationClip, AvatarMask avatarMask,
             int layer, float time, float speed, float weight)
             : base(avatarMask, layer, time, speed, weight)
         {
-            this.AnimationClip = animationClip;
+            AnimationClip = animationClip;
         }
 
         // STATIC CONSTRUCTORS: -------------------------------------------------------------------

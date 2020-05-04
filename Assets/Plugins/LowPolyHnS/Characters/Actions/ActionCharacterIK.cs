@@ -1,14 +1,11 @@
-﻿namespace LowPolyHnS.Characters
-{
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-    using LowPolyHnS.Core;
+﻿using LowPolyHnS.Core;
+using UnityEngine;
 
-	[AddComponentMenu("")]
-	public class ActionCharacterIK : IAction
-	{
+namespace LowPolyHnS.Characters
+{
+    [AddComponentMenu("")]
+    public class ActionCharacterIK : IAction
+    {
         public enum Section
         {
             Head,
@@ -23,32 +20,38 @@
 
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
-            Character instance = this.character.GetCharacter(target);
+            Character instance = character.GetCharacter(target);
             if (instance == null) return true;
 
             CharacterAnimator animator = instance.GetCharacterAnimator();
             if (animator == null) return true;
 
-            switch (this.part)
+            switch (part)
             {
-                case Section.Head: animator.useSmartHeadIK = this.enable; break;
-                case Section.Hands: animator.useHandIK = this.enable; break;
-                case Section.Feet: animator.useFootIK = this.enable; break;
+                case Section.Head:
+                    animator.useSmartHeadIK = enable;
+                    break;
+                case Section.Hands:
+                    animator.useHandIK = enable;
+                    break;
+                case Section.Feet:
+                    animator.useFootIK = enable;
+                    break;
             }
 
             return true;
         }
 
-		#if UNITY_EDITOR
+#if UNITY_EDITOR
 
         public static new string NAME = "Character/Inverse Kinematics";
         private const string NODE_TITLE = "Set {0} {1} IK as {2}";
 
         public override string GetNodeTitle()
         {
-            return string.Format(NODE_TITLE, this.character, this.part, enable.ToString());
+            return string.Format(NODE_TITLE, character, part, enable.ToString());
         }
 
-        #endif
+#endif
     }
 }

@@ -1,14 +1,12 @@
-﻿namespace LowPolyHnS.Characters
-{
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.Events;
-    using LowPolyHnS.Core;
+﻿using System.Collections;
+using LowPolyHnS.Core;
+using UnityEngine;
 
-	[AddComponentMenu("")]
-	public class ActionCharacterRotateTowards : IAction
-	{
+namespace LowPolyHnS.Characters
+{
+    [AddComponentMenu("")]
+    public class ActionCharacterRotateTowards : IAction
+    {
         private static readonly Vector3 PLANE = new Vector3(1, 0, 1);
 
         public TargetCharacter character = new TargetCharacter();
@@ -16,56 +14,53 @@
 
         private float duration;
         private bool wasControllable;
-		private Character cacheCharacter;
+        private Character cacheCharacter;
 
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
-            this.cacheCharacter = this.character.GetCharacter(target);
-            if (this.cacheCharacter == null) return true;
+            cacheCharacter = character.GetCharacter(target);
+            if (cacheCharacter == null) return true;
 
-            this.wasControllable = this.cacheCharacter.IsControllable();
-            this.cacheCharacter.characterLocomotion.SetIsControllable(false);
+            wasControllable = cacheCharacter.IsControllable();
+            cacheCharacter.characterLocomotion.SetIsControllable(false);
 
-            Vector3 rotationDirection = (
-                this.target.GetPosition(target) - this.cacheCharacter.gameObject.transform.position
-            );
+            Vector3 rotationDirection = this.target.GetPosition(target) - cacheCharacter.gameObject.transform.position;
 
             rotationDirection = Vector3.Scale(rotationDirection, PLANE).normalized;
-            this.duration = Vector3.Angle(
-                this.cacheCharacter.transform.TransformDirection(Vector3.forward),
-                rotationDirection
-            ) / this.cacheCharacter.characterLocomotion.angularSpeed;
+            duration = Vector3.Angle(
+                           cacheCharacter.transform.TransformDirection(Vector3.forward),
+                           rotationDirection
+                       ) / cacheCharacter.characterLocomotion.angularSpeed;
 
-            this.cacheCharacter.characterLocomotion.SetRotation(rotationDirection);
+            cacheCharacter.characterLocomotion.SetRotation(rotationDirection);
 
-			return false;
+            return false;
         }
 
         public override IEnumerator Execute(GameObject target, IAction[] actions, int index, params object[] parameters)
         {
-
-            WaitForSeconds wait = new WaitForSeconds(this.duration);
+            WaitForSeconds wait = new WaitForSeconds(duration);
             yield return wait;
 
-            if (this.cacheCharacter != null)
+            if (cacheCharacter != null)
             {
-                CharacterLocomotion locomotion = this.cacheCharacter.characterLocomotion;
-                locomotion.SetIsControllable(this.wasControllable);
+                CharacterLocomotion locomotion = cacheCharacter.characterLocomotion;
+                locomotion.SetIsControllable(wasControllable);
             }
-            
+
             yield return 0;
         }
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
 
         public static new string NAME = "Character/Character Rotate Towards";
         private const string NODE_TITLE = "Rotate {0} towards {1}";
 
         public override string GetNodeTitle()
         {
-            return string.Format(NODE_TITLE, this.character, this.target);
+            return string.Format(NODE_TITLE, character, target);
         }
 
-        #endif
+#endif
     }
 }

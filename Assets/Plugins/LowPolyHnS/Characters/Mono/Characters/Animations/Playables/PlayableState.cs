@@ -1,9 +1,8 @@
-﻿namespace LowPolyHnS.Characters
-{
-    using UnityEngine;
-    using UnityEngine.Animations;
-    using UnityEngine.Playables;
+﻿using UnityEngine;
+using UnityEngine.Playables;
 
+namespace LowPolyHnS.Characters
+{
     public abstract class PlayableState : PlayableBase
     {
         public int Layer { get; protected set; }
@@ -20,28 +19,28 @@
             int layer, float time, float speed, float weight)
             : base(avatarMask, time, 0f, speed, weight)
         {
-            this.Layer = layer;
+            Layer = layer;
         }
 
         // UPDATE: --------------------------------------------------------------------------------
 
         public override bool Update()
         {
-            if (this.Input1.IsDone())
+            if (Input1.IsDone())
             {
-                this.Stop(0f);
+                Stop(0f);
                 return true;
             }
 
-            float increment = this.currentWeight < this.weight
-                ? this.fadeIn
-                : -this.fadeOut;
+            float increment = currentWeight < weight
+                ? fadeIn
+                : -fadeOut;
 
-            if (Mathf.Abs(increment) < float.Epsilon) this.currentWeight = this.weight;
-            else this.currentWeight += Time.deltaTime / increment;
+            if (Mathf.Abs(increment) < float.Epsilon) currentWeight = weight;
+            else currentWeight += Time.deltaTime / increment;
 
-            this.UpdateMixerWeights(Mathf.Clamp01(this.currentWeight));
-            return this.isDisposing && this.currentWeight < float.Epsilon;
+            UpdateMixerWeights(Mathf.Clamp01(currentWeight));
+            return isDisposing && currentWeight < float.Epsilon;
         }
 
         // PUBLIC METHODS: ------------------------------------------------------------------------
@@ -50,15 +49,15 @@
         {
             base.Stop(fadeOut);
 
-            this.isDisposing = true;
-            this.weight = 0f;
+            isDisposing = true;
+            weight = 0f;
         }
 
         public void StretchDuration(float freezeTime)
         {
-            double duration = this.Input1.GetTime() + freezeTime;
-            this.Input1.SetDuration(duration);
-            this.Input1.SetSpeed(1f);
+            double duration = Input1.GetTime() + freezeTime;
+            Input1.SetDuration(duration);
+            Input1.SetSpeed(1f);
         }
 
         public void SetWeight(float weight)
@@ -67,6 +66,7 @@
         }
 
         public virtual void OnExitState()
-        { }
+        {
+        }
     }
 }

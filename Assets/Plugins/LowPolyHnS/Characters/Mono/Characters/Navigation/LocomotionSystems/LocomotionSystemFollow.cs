@@ -1,13 +1,8 @@
-﻿namespace LowPolyHnS.Characters
-{
-    using System.Collections;
-    using System.Collections.Generic;
-    using UnityEngine;
-    using UnityEngine.Events;
-    using UnityEngine.AI;
-    using LowPolyHnS.Core;
-    using LowPolyHnS.Core.Hooks;
+﻿using UnityEngine;
+using UnityEngine.AI;
 
+namespace LowPolyHnS.Characters
+{
     public class LocomotionSystemFollow : ILocomotionSystem
     {
         // PROPERTIES: ----------------------------------------------------------------------------
@@ -17,8 +12,8 @@
         private NavMeshPath path;
 
         private Transform targetTransform;
-        private float minRadius = 0.0f;
-        private float maxRadius = 0.0f;
+        private float minRadius;
+        private float maxRadius;
 
         // OVERRIDE METHODS: ----------------------------------------------------------------------
 
@@ -26,90 +21,88 @@
         {
             base.Update();
 
-            Vector3 currPosition = this.characterLocomotion.character.transform.position;
-            float distance = (this.targetTransform != null
-                ? Vector3.Distance(currPosition, this.targetTransform.position)
-                : -1.0f
-            );
+            Vector3 currPosition = characterLocomotion.character.transform.position;
+            float distance = targetTransform != null
+                ? Vector3.Distance(currPosition, targetTransform.position)
+                : -1.0f;
 
-            bool stopConditions = this.targetTransform == null;
-            stopConditions |= (this.isFollowing && distance <= this.minRadius);
-            stopConditions |= (!this.isFollowing && distance <= this.maxRadius);
+            bool stopConditions = targetTransform == null;
+            stopConditions |= isFollowing && distance <= minRadius;
+            stopConditions |= !isFollowing && distance <= maxRadius;
 
             if (stopConditions)
             {
-                this.isFollowing = false;
+                isFollowing = false;
 
-                if (this.usingNavmesh)
+                if (usingNavmesh)
                 {
-                    this.characterLocomotion.navmeshAgent.enabled = true;
-                    this.characterLocomotion.navmeshAgent.isStopped = true;
+                    characterLocomotion.navmeshAgent.enabled = true;
+                    characterLocomotion.navmeshAgent.isStopped = true;
                 }
                 else
                 {
-                    Vector3 defaultDirection = Vector3.up * this.characterLocomotion.verticalSpeed * Time.deltaTime;
-                    this.characterLocomotion.characterController.Move(defaultDirection);
+                    Vector3 defaultDirection = Vector3.up * characterLocomotion.verticalSpeed * Time.deltaTime;
+                    characterLocomotion.characterController.Move(defaultDirection);
                 }
 
-                return (this.usingNavmesh
+                return usingNavmesh
                     ? CharacterLocomotion.LOCOMOTION_SYSTEM.NavigationMeshAgent
-                    : CharacterLocomotion.LOCOMOTION_SYSTEM.CharacterController
-                );
+                    : CharacterLocomotion.LOCOMOTION_SYSTEM.CharacterController;
             }
 
-            this.isFollowing = true;
+            isFollowing = true;
 
-            if (this.usingNavmesh)
+            if (usingNavmesh)
             {
-                NavMeshAgent agent = this.characterLocomotion.navmeshAgent;
+                NavMeshAgent agent = characterLocomotion.navmeshAgent;
                 agent.enabled = true;
                 agent.updatePosition = true;
                 agent.updateUpAxis = true;
 
-                CharacterController controller = this.characterLocomotion.characterController;
+                CharacterController controller = characterLocomotion.characterController;
 
                 NavMeshHit hit = new NavMeshHit();
-                NavMesh.SamplePosition(this.targetTransform.position, out hit, 1.0f, NavMesh.AllAreas);
+                NavMesh.SamplePosition(targetTransform.position, out hit, 1.0f, NavMesh.AllAreas);
                 if (hit.hit) agent.SetDestination(hit.position);
 
                 float remainingDistance = agent.remainingDistance;
                 bool isGrounded = agent.isOnOffMeshLink;
-                agent.speed = this.CalculateSpeed(controller.transform.forward, isGrounded);
-                agent.angularSpeed = this.characterLocomotion.angularSpeed;
+                agent.speed = CalculateSpeed(controller.transform.forward, isGrounded);
+                agent.angularSpeed = characterLocomotion.angularSpeed;
 
                 agent.isStopped = false;
                 agent.updateRotation = true;
 
-                this.UpdateNavmeshAnimationConstraints();
+                UpdateNavmeshAnimationConstraints();
                 return CharacterLocomotion.LOCOMOTION_SYSTEM.NavigationMeshAgent;
             }
             else
             {
-                if (this.characterLocomotion.navmeshAgent != null)
+                if (characterLocomotion.navmeshAgent != null)
                 {
-                    this.characterLocomotion.navmeshAgent.enabled = false;
+                    characterLocomotion.navmeshAgent.enabled = false;
                 }
 
-                CharacterController controller = this.characterLocomotion.characterController;
-                Vector3 targetPosition = Vector3.Scale(this.targetTransform.position, HORIZONTAL_PLANE);
+                CharacterController controller = characterLocomotion.characterController;
+                Vector3 targetPosition = Vector3.Scale(targetTransform.position, HORIZONTAL_PLANE);
                 targetPosition += Vector3.up * currPosition.y;
                 Vector3 targetDirection = (targetPosition - currPosition).normalized;
 
-                float speed = this.CalculateSpeed(targetDirection, controller.isGrounded);
-                Quaternion targetRotation = this.UpdateRotation(targetDirection);
+                float speed = CalculateSpeed(targetDirection, controller.isGrounded);
+                Quaternion targetRotation = UpdateRotation(targetDirection);
 
-                this.UpdateAnimationConstraints(ref targetDirection, ref targetRotation);
+                UpdateAnimationConstraints(ref targetDirection, ref targetRotation);
 
                 targetDirection = Vector3.Scale(targetDirection, HORIZONTAL_PLANE) * speed;
-                targetDirection += Vector3.up * this.characterLocomotion.verticalSpeed;
+                targetDirection += Vector3.up * characterLocomotion.verticalSpeed;
 
                 controller.Move(targetDirection * Time.deltaTime);
                 controller.transform.rotation = targetRotation;
 
-                if (this.characterLocomotion.navmeshAgent != null && this.characterLocomotion.navmeshAgent.isOnNavMesh)
+                if (characterLocomotion.navmeshAgent != null && characterLocomotion.navmeshAgent.isOnNavMesh)
                 {
-                    Vector3 position = this.characterLocomotion.characterController.transform.position;
-                    this.characterLocomotion.navmeshAgent.Warp(position);
+                    Vector3 position = characterLocomotion.characterController.transform.position;
+                    characterLocomotion.navmeshAgent.Warp(position);
                 }
 
                 return CharacterLocomotion.LOCOMOTION_SYSTEM.CharacterController;
@@ -118,15 +111,14 @@
 
         public override void OnDestroy()
         {
-            return;
         }
 
         // PRIVATE METHODS: -----------------------------------------------------------------------
 
         private void UpdateNavmeshAnimationConstraints()
         {
-            NavMeshAgent agent = this.characterLocomotion.navmeshAgent;
-            if (this.characterLocomotion.animatorConstraint == CharacterLocomotion.ANIM_CONSTRAINT.KEEP_MOVEMENT)
+            NavMeshAgent agent = characterLocomotion.navmeshAgent;
+            if (characterLocomotion.animatorConstraint == CharacterLocomotion.ANIM_CONSTRAINT.KEEP_MOVEMENT)
             {
                 if (agent.velocity == Vector3.zero)
                 {
@@ -134,7 +126,7 @@
                 }
             }
 
-            if (this.characterLocomotion.animatorConstraint == CharacterLocomotion.ANIM_CONSTRAINT.KEEP_POSITION)
+            if (characterLocomotion.animatorConstraint == CharacterLocomotion.ANIM_CONSTRAINT.KEEP_POSITION)
             {
                 agent.isStopped = true;
             }
@@ -144,11 +136,11 @@
 
         public void SetFollow(Transform targetTransform, float minRadius, float maxRadius)
         {
-            this.usingNavmesh = this.characterLocomotion.canUseNavigationMesh;
+            usingNavmesh = characterLocomotion.canUseNavigationMesh;
             this.targetTransform = targetTransform;
             this.minRadius = minRadius;
             this.maxRadius = maxRadius;
-            this.isFollowing = false;
+            isFollowing = false;
         }
     }
 }
