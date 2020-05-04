@@ -11,7 +11,8 @@ namespace LowPolyHnS.Characters
         {
             PointAndClick,
             Wsad,
-            FollowPointer
+            FollowPointer,
+            FollowAndClickPointer
         }
 
         public enum MOUSE_BUTTON
@@ -35,6 +36,9 @@ namespace LowPolyHnS.Characters
         public MOUSE_BUTTON mouseButtonMove = MOUSE_BUTTON.LeftClick;
         public LayerMask mouseLayerMask = ~0;
         public bool invertAxis;
+
+        private float mouseTimer;
+        private float mouseClickTime = 0.1f;
 
         public KeyCode jumpKey = KeyCode.Space;
 
@@ -81,8 +85,6 @@ namespace LowPolyHnS.Characters
             }
         }
 
-        // UPDATE: --------------------------------------------------------------------------------
-
         protected virtual void Update()
         {
             if (!Application.isPlaying) return;
@@ -94,18 +96,13 @@ namespace LowPolyHnS.Characters
                     break;
                 case INPUT_TYPE.PointAndClick:
                     UpdateInputPointClick();
-
-                    if (characterLocomotion.navmeshAgent.enabled == false)
-                    {
-                        if (RippleClickEffect != null)
-                        {
-                            RippleClickEffect.SetActive(false);
-                        }
-                    }
-
                     break;
                 case INPUT_TYPE.FollowPointer:
                     UpdateInputFollowPointer();
+                    break;
+
+                case INPUT_TYPE.FollowAndClickPointer:
+                    UpdateInputFollowAndClick();
                     break;
             }
 
@@ -148,6 +145,69 @@ namespace LowPolyHnS.Characters
             characterLocomotion.SetDirectionalDirection(moveDirection);
         }
 
+        protected virtual void UpdateInputFollowAndClick()
+        {
+            if (!IsControllable()) return;
+            UpdateUIConstraints();
+
+            if (Input.GetMouseButtonDown((int) mouseButtonMove) && !uiConstrained)
+            {
+                mouseTimer = 0f;
+            }
+
+
+            if (Input.GetMouseButton((int) mouseButtonMove) && !uiConstrained)
+            {
+                mouseTimer += Time.deltaTime;
+
+                if (mouseTimer > 0.1f)
+                {
+                    if (HookPlayer.Instance == null) return;
+
+                    Camera maincam = GetMainCamera();
+                    if (maincam == null) return;
+
+                    Ray cameraRay = maincam.ScreenPointToRay(Input.mousePosition);
+
+                    Transform player = HookPlayer.Instance.transform;
+                    Plane groundPlane = new Plane(Vector3.up, player.position);
+
+                    if (groundPlane.Raycast(cameraRay, out var rayDistance))
+                    {
+                        Vector3 cursor = cameraRay.GetPoint(rayDistance);
+                        if (Vector3.Distance(player.position, cursor) >= 0.05f)
+                        {
+                            Vector3 target = Vector3.MoveTowards(player.position, cursor, 1f);
+                            characterLocomotion.SetTarget(target, null, 0f);
+                        }
+                    }
+                }
+
+                UpdateRippleClickEffect(false);
+            }
+
+            if (Input.GetMouseButtonUp((int) mouseButtonMove) && !uiConstrained)
+            {
+                if (mouseTimer > 0.1f)
+                {
+                    return;
+                }
+
+                Camera maincam = GetMainCamera();
+                if (maincam == null) return;
+
+                Ray cameraRay = maincam.ScreenPointToRay(Input.mousePosition);
+                characterLocomotion.SetTarget(cameraRay, mouseLayerMask, null, 0f);
+
+                UpdateRippleClickEffect(true);
+            }
+
+            if (characterLocomotion.navmeshAgent.enabled == false)
+            {
+                UpdateRippleClickEffect(false);
+            }
+        }
+
         protected virtual void UpdateInputPointClick()
         {
             if (!IsControllable()) return;
@@ -161,12 +221,12 @@ namespace LowPolyHnS.Characters
                 Ray cameraRay = maincam.ScreenPointToRay(Input.mousePosition);
                 characterLocomotion.SetTarget(cameraRay, mouseLayerMask, null, 0f);
 
-                if (RippleClickEffect != null)
-                {
-                    RippleClickEffect.transform.position =
-                        characterLocomotion.navmeshAgent.destination + new Vector3(0f, 0.1f, 0f);
-                    RippleClickEffect.SetActive(true);
-                }
+                UpdateRippleClickEffect(true);
+            }
+
+            if (characterLocomotion.navmeshAgent.enabled == false)
+            {
+                UpdateRippleClickEffect(false);
             }
         }
 
@@ -187,8 +247,7 @@ namespace LowPolyHnS.Characters
                 Transform player = HookPlayer.Instance.transform;
                 Plane groundPlane = new Plane(Vector3.up, player.position);
 
-                float rayDistance = 0f;
-                if (groundPlane.Raycast(cameraRay, out rayDistance))
+                if (groundPlane.Raycast(cameraRay, out float rayDistance))
                 {
                     Vector3 cursor = cameraRay.GetPoint(rayDistance);
                     if (Vector3.Distance(player.position, cursor) >= 0.05f)
@@ -200,7 +259,7 @@ namespace LowPolyHnS.Characters
             }
         }
 
-        // OTHER METHODS: -------------------------------------------------------------------------
+        #region OTHER METHODS
 
         protected Camera GetMainCamera()
         {
@@ -227,17 +286,6 @@ namespace LowPolyHnS.Characters
         {
             EventSystemManager.Instance.Wakeup();
             uiConstrained = EventSystemManager.Instance.IsPointerOverUI();
-
-#if UNITY_IOS || UNITY_ANDROID
-            for (int i = 0; i < Input.touches.Length; ++i)
-            {
-                if (Input.GetTouch(i).phase != TouchPhase.Began) continue;
-
-                int fingerID = Input.GetTouch(i).fingerId;
-                bool pointerOverUI = EventSystemManager.Instance.IsPointerOverUI(fingerID);
-                if (pointerOverUI) this.uiConstrained = true;
-            }
-#endif
         }
 
         protected void ComputeMovement(Vector3 target)
@@ -270,11 +318,36 @@ namespace LowPolyHnS.Characters
             }
         }
 
-        // GAME SAVE: -----------------------------------------------------------------------------
+
+        private void UpdateRippleClickEffect(bool effectEnable)
+        {
+            if (RippleClickEffect == null)
+            {
+                return;
+            }
+
+            if (effectEnable)
+            {
+                RippleClickEffect.transform.position =
+                    characterLocomotion.navmeshAgent.destination + new Vector3(0f, 0.1f, 0f);
+                RippleClickEffect.SetActive(true);
+            }
+            else
+            {
+                RippleClickEffect.SetActive(false);
+            }
+        }
+
+        #endregion
+
+
+        #region GAME SAVE
 
         protected override string GetUniqueCharacterID()
         {
             return PLAYER_ID;
         }
+
+        #endregion
     }
 }
