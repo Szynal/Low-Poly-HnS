@@ -10,7 +10,6 @@ namespace LowPolyHnS.Characters
     {
         private const string MSG_EMPTY_MODEL = "Drop a model from your project or load the default Character.";
         private const string PATH_DEFAULT_MODEL = "Assets/Plugins/LowPolyHnS/Characters/Models/Character.fbx";
-        private const string PATH_FPS_MODEL = "Assets/Plugins/LowPolyHnS/Characters/Models/CharacterFPS.fbx";
 
         private const string PATH_DEFAULT_RCONT =
             "Assets/Plugins/LowPolyHnS/Characters/Animations/Controllers/Locomotion.controller";
@@ -224,12 +223,6 @@ namespace LowPolyHnS.Characters
             {
                 GameObject prefabDefault = AssetDatabase.LoadAssetAtPath<GameObject>(PATH_DEFAULT_MODEL);
                 LoadCharacter(prefabDefault);
-            }
-
-            if (GUI.Button(buttonRectB, "FPS Character", CoreGUIStyles.GetButtonRight()))
-            {
-                GameObject prefabFPS = AssetDatabase.LoadAssetAtPath<GameObject>(PATH_FPS_MODEL);
-                LoadCharacter(prefabFPS);
             }
 
             switch (evt.type)
