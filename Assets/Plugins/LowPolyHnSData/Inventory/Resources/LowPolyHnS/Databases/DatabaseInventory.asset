@@ -1,5 +1,46 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-9000702557057661082
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6c3b42562c09470ea31efe19c9d3dd9, type: 3}
+  m_Name: item.2029978918
+  m_EditorClassIdentifier: 
+  uuid: 2029978918
+  itemName:
+    content: Armor
+    postProcess: 0
+    translationID: 0
+  itemDescription:
+    content: Red armor
+    postProcess: 0
+    translationID: 0
+  itemColor: {r: 0.745283, g: 0, b: 0, a: 1}
+  sprite: {fileID: 21300000, guid: 00dfef9721b7b47bd8d11c253353104d, type: 3}
+  prefab: {fileID: 100138, guid: 7f19287d761d1432fa7564b57b99e687, type: 3}
+  canBeSold: 1
+  price: 200
+  maxStack: 1
+  weight: 15
+  itemTypes: 16
+  onClick: 1
+  consumeItem: 0
+  actionsOnClick: {fileID: 1724228778146691673, guid: 574ee8ca76c384546b7e986aa23c8af3,
+    type: 3}
+  equipable: 1
+  fillAllTypes: 0
+  conditionsEquip: {fileID: 697865840858753574, guid: ef9663c25f73c0846bbd20369106658a,
+    type: 3}
+  actionsOnEquip: {fileID: 2380054064016243881, guid: 1f05b80d403bdc74988238fe636ac872,
+    type: 3}
+  actionsOnUnequip: {fileID: 3108475893651153014, guid: 41e76dde7b183a54e8b812016f00b3f5,
+    type: 3}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17,8 +58,8 @@ MonoBehaviour:
     - {fileID: 114273004538180096}
     - {fileID: 114876379292609582}
     - {fileID: 114177772742640968}
-    - {fileID: 114973290084467346}
     - {fileID: 114202326578594358}
+    - {fileID: -9000702557057661082}
     recipes:
     - {fileID: 114798038658200360}
     itemTypes:
@@ -27,14 +68,14 @@ MonoBehaviour:
         content: Potions
         postProcess: 0
         translationID: 0
-    - id: General/
-      name:
-        content: Equipment
-        postProcess: 0
-        translationID: 0
-    - id: General/Equipment
+    - id: General/Equipment/
       name:
         content: RightHand
+        postProcess: 0
+        translationID: 0
+    - id: General/Equipment/
+      name:
+        content: LeftHand
         postProcess: 0
         translationID: 0
     - id: General/Equipment/
@@ -44,7 +85,7 @@ MonoBehaviour:
         translationID: 0
     - id: General/Equipment/
       name:
-        content: LeftHand
+        content: Armor
         postProcess: 0
         translationID: 0
     - id: 
@@ -183,8 +224,10 @@ MonoBehaviour:
         postProcess: 0
         translationID: 0
   inventorySettings:
-    merchantUIPrefab: {fileID: 0}
-    containerUIPrefab: {fileID: 0}
+    merchantUIPrefab: {fileID: 1776935227048216, guid: 06dd90d0cba7045c9ba3073f0b19fd6b,
+      type: 3}
+    containerUIPrefab: {fileID: 1776935227048216, guid: ccfea348bb7624caf9da9a620fd21953,
+      type: 3}
     inventoryUIPrefab: {fileID: 1776935227048216, guid: 8d2fd14a2c95a4818a01edf51761b09d,
       type: 3}
     onDragGrabItem: 1
@@ -660,44 +703,3 @@ MonoBehaviour:
   conditionsEquip: {fileID: 0}
   actionsOnEquip: {fileID: 0}
   actionsOnUnequip: {fileID: 0}
---- !u!114 &114973290084467346
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d6c3b42562c09470ea31efe19c9d3dd9, type: 3}
-  m_Name: item.980408996
-  m_EditorClassIdentifier: 
-  uuid: 980408996
-  itemName:
-    content: Reducer
-    postProcess: 0
-    translationID: 0
-  itemDescription:
-    content: Changes your size
-    postProcess: 0
-    translationID: 0
-  itemColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-  sprite: {fileID: 21300000, guid: 13dc1c2acc1b44d1c98cc682d0503e45, type: 3}
-  prefab: {fileID: 0}
-  canBeSold: 1
-  price: 1000
-  maxStack: 99
-  weight: 1
-  itemTypes: 1
-  onClick: 1
-  consumeItem: 1
-  actionsOnClick: {fileID: 114086370648568720, guid: 8ba11ac483a064bd48aedfa83453a51a,
-    type: 3}
-  equipable: 0
-  fillAllTypes: 0
-  conditionsEquip: {fileID: 114101755897189266, guid: 42809b3a75ab843d0a2a66a52e4f165b,
-    type: 3}
-  actionsOnEquip: {fileID: 114977925338163432, guid: 2221a8836a00145edab0ca452ffaff8e,
-    type: 3}
-  actionsOnUnequip: {fileID: 114222569409153632, guid: 0985155c770a847719e899bdb537068d,
-    type: 3}
