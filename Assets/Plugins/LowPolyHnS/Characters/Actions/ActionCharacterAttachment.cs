@@ -1,16 +1,18 @@
-﻿using LowPolyHnS.Core;
-using UnityEngine;
-
-namespace LowPolyHnS.Characters
+﻿namespace LowPolyHnS.Characters
 {
-#if UNITY_EDITOR
-    using UnityEditor;
+	using System.Collections;
+	using System.Collections.Generic;
+	using UnityEngine;
+	using UnityEngine.Events;
+	using LowPolyHnS.Core;
 
-#endif
+	#if UNITY_EDITOR
+	using UnityEditor;
+	#endif
 
-    [AddComponentMenu("")]
-    public class ActionCharacterAttachment : IAction
-    {
+	[AddComponentMenu("")]
+	public class ActionCharacterAttachment : IAction
+	{
         public enum Action
         {
             Attach,
@@ -31,7 +33,7 @@ namespace LowPolyHnS.Characters
 
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
-            Character characterTarget = character.GetCharacter(target);
+            Character characterTarget = this.character.GetCharacter(target);
             if (characterTarget == null) return true;
 
             CharacterAnimator animator = characterTarget.GetCharacterAnimator();
@@ -40,42 +42,41 @@ namespace LowPolyHnS.Characters
             CharacterAttachments attachments = animator.GetCharacterAttachments();
             if (attachments == null) return true;
 
-            switch (action)
+            switch (this.action)
             {
                 case Action.Attach:
                     attachments.Attach(
-                        bone,
-                        instance.GetGameObject(target),
-                        position,
-                        Quaternion.Euler(rotation),
-                        space
-                    );
-                    break;
+                        this.bone,
+                        this.instance.GetGameObject(target),
+                        this.position,
+                        Quaternion.Euler(this.rotation),
+                        this.space
+                    ); break;
 
                 case Action.Detach:
-                    attachments.Detach(bone);
+                    attachments.Detach(this.bone);
                     break;
 
                 case Action.Remove:
-                    attachments.Remove(bone);
+                    attachments.Remove(this.bone);
                     break;
             }
 
             return true;
         }
 
-        // +--------------------------------------------------------------------------------------+
-        // | EDITOR                                                                               |
-        // +--------------------------------------------------------------------------------------+
+		// +--------------------------------------------------------------------------------------+
+		// | EDITOR                                                                               |
+		// +--------------------------------------------------------------------------------------+
 
-#if UNITY_EDITOR
+		#if UNITY_EDITOR
 
-        public static new string NAME = "Character/Character Attachment";
+	    public static new string NAME = "Character/Character Attachment";
         private const string NODE_TITLE = "{0} from {1}";
 
-        // PROPERTIES: ----------------------------------------------------------------------------
+		// PROPERTIES: ----------------------------------------------------------------------------
 
-        private SerializedProperty spCharacter;
+		private SerializedProperty spCharacter;
         private SerializedProperty spAction;
 
         private SerializedProperty spBone;
@@ -84,61 +85,61 @@ namespace LowPolyHnS.Characters
         private SerializedProperty spPosition;
         private SerializedProperty spRotation;
 
-        // INSPECTOR METHODS: ---------------------------------------------------------------------
+		// INSPECTOR METHODS: ---------------------------------------------------------------------
 
-        public override string GetNodeTitle()
-        {
-            return string.Format(
-                NODE_TITLE,
-                action.ToString(),
-                bone.ToString()
+		public override string GetNodeTitle()
+		{
+			return string.Format(
+                NODE_TITLE, 
+                this.action.ToString(),
+                this.bone.ToString()
             );
-        }
+		}
 
-        protected override void OnEnableEditorChild()
-        {
-            spCharacter = serializedObject.FindProperty("character");
-            spAction = serializedObject.FindProperty("action");
+		protected override void OnEnableEditorChild ()
+		{
+            this.spCharacter = this.serializedObject.FindProperty("character");
+            this.spAction = this.serializedObject.FindProperty("action");
 
-            spBone = serializedObject.FindProperty("bone");
-            spInstance = serializedObject.FindProperty("instance");
-            spSpace = serializedObject.FindProperty("space");
-            spPosition = serializedObject.FindProperty("position");
-            spRotation = serializedObject.FindProperty("rotation");
-        }
+            this.spBone = this.serializedObject.FindProperty("bone");
+            this.spInstance = this.serializedObject.FindProperty("instance");
+            this.spSpace = serializedObject.FindProperty("space");
+            this.spPosition = this.serializedObject.FindProperty("position");
+            this.spRotation = this.serializedObject.FindProperty("rotation");
+		}
 
-        protected override void OnDisableEditorChild()
-        {
-            spCharacter = null;
-            spAction = null;
+		protected override void OnDisableEditorChild ()
+		{
+            this.spCharacter = null;
+            this.spAction = null;
 
-            spBone = null;
-            spInstance = null;
-            spSpace = null;
-            spPosition = null;
-            spRotation = null;
-        }
+            this.spBone = null;
+            this.spInstance = null;
+            this.spSpace = null;
+            this.spPosition = null;
+            this.spRotation = null;
+		}
 
-        public override void OnInspectorGUI()
-        {
-            serializedObject.Update();
+		public override void OnInspectorGUI()
+		{
+			this.serializedObject.Update();
 
-            EditorGUILayout.PropertyField(spCharacter);
-            EditorGUILayout.PropertyField(spAction);
+            EditorGUILayout.PropertyField(this.spCharacter);
+            EditorGUILayout.PropertyField(this.spAction);
 
             EditorGUILayout.Space();
-            EditorGUILayout.PropertyField(spBone);
-            if (spAction.intValue == (int) Action.Attach)
+            EditorGUILayout.PropertyField(this.spBone);
+            if (this.spAction.intValue == (int)Action.Attach)
             {
-                EditorGUILayout.PropertyField(spInstance);
-                EditorGUILayout.PropertyField(spSpace);
-                EditorGUILayout.PropertyField(spPosition);
-                EditorGUILayout.PropertyField(spRotation);
+                EditorGUILayout.PropertyField(this.spInstance);
+                EditorGUILayout.PropertyField(this.spSpace);
+                EditorGUILayout.PropertyField(this.spPosition);
+                EditorGUILayout.PropertyField(this.spRotation);
             }
 
-            serializedObject.ApplyModifiedProperties();
-        }
+			this.serializedObject.ApplyModifiedProperties();
+		}
 
-#endif
-    }
+		#endif
+	}
 }

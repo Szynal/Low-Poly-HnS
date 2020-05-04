@@ -1,40 +1,44 @@
-﻿using LowPolyHnS.Core;
-using LowPolyHnS.Variables;
-using UnityEngine;
-
-namespace LowPolyHnS.Characters
+﻿namespace LowPolyHnS.Characters
 {
-    [AddComponentMenu("")]
-    public class ActionCharacterVisibility : IAction
-    {
+	using System.Collections;
+	using System.Collections.Generic;
+    using LowPolyHnS.Core;
+    using LowPolyHnS.Variables;
+    using UnityEngine;
+	using UnityEngine.Events;
+
+	[AddComponentMenu("")]
+	public class ActionCharacterVisibility : IAction
+	{
         public TargetCharacter character = new TargetCharacter(TargetCharacter.Target.Invoker);
 
-        [Space] public BoolProperty visible = new BoolProperty(true);
+        [Space]
+        public BoolProperty visible = new BoolProperty(true);
 
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
-            Character instance = character.GetCharacter(target);
+            Character instance = this.character.GetCharacter(target);
             if (instance == null) return true;
 
             CharacterAnimator animator = instance.GetCharacterAnimator();
             if (animator == null) return true;
 
-            bool value = visible.GetValue(target);
+            bool value = this.visible.GetValue(target);
             animator.SetVisibility(value);
 
             return true;
         }
 
-#if UNITY_EDITOR
+        #if UNITY_EDITOR
 
         public static new string NAME = "Character/Character Visible";
         private const string NODE_TITLE = "Character {0} is visible {1}";
 
         public override string GetNodeTitle()
         {
-            return string.Format(NODE_TITLE, character, visible);
+            return string.Format(NODE_TITLE, this.character, this.visible);
         }
 
-#endif
+        #endif
     }
 }

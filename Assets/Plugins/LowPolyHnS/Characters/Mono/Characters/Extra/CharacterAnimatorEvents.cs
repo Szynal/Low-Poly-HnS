@@ -1,67 +1,68 @@
-﻿using System.Collections;
-using LowPolyHnS.Core;
-using UnityEngine;
-
-namespace LowPolyHnS.Characters
+﻿namespace LowPolyHnS.Characters
 {
+	using System.Collections;
+	using System.Collections.Generic;
+	using UnityEngine;
+    using LowPolyHnS.Core;
+
     [AddComponentMenu("")]
-    public class CharacterAnimatorEvents : MonoBehaviour
-    {
-        // PROPERTIES: -------------------------------------------------------------------------------------------------
+	public class CharacterAnimatorEvents : MonoBehaviour 
+	{
+		// PROPERTIES: -------------------------------------------------------------------------------------------------
 
-        private Character character;
+		private Character character;
 
-        // INITIALIZER: ------------------------------------------------------------------------------------------------
+		// INITIALIZER: ------------------------------------------------------------------------------------------------
 
-        public void Setup(Character character)
-        {
-            this.character = character;
-        }
+		public void Setup(Character character)
+		{
+			this.character = character;
+		}
 
-        // EVENTS: -----------------------------------------------------------------------------------------------------
+		// EVENTS: -----------------------------------------------------------------------------------------------------
 
-        public void Event_KeepPosition(float timeout)
-        {
+		public void Event_KeepPosition(float timeout)
+		{
             CoroutinesManager.Instance.StartCoroutine(
-                CoroutineTrigger(CharacterLocomotion.ANIM_CONSTRAINT.KEEP_POSITION, timeout)
+                this.CoroutineTrigger(CharacterLocomotion.ANIM_CONSTRAINT.KEEP_POSITION, timeout)
             );
-        }
+		}
 
-        public void Event_KeepMovement(float timeout)
-        {
+		public void Event_KeepMovement(float timeout)
+		{
             CoroutinesManager.Instance.StartCoroutine(
-                CoroutineTrigger(CharacterLocomotion.ANIM_CONSTRAINT.KEEP_MOVEMENT, timeout)
+                this.CoroutineTrigger(CharacterLocomotion.ANIM_CONSTRAINT.KEEP_MOVEMENT, timeout)
             );
-        }
+		}
 
         public void Event_BothSteps(AnimationEvent animationEvent)
         {
             if (animationEvent.animatorClipInfo.weight < 0.4f) return;
-            if (character.onStep != null) character.onStep.Invoke(CharacterLocomotion.STEP.Any);
+            if (this.character.onStep != null) this.character.onStep.Invoke(CharacterLocomotion.STEP.Any);
         }
 
         public void Event_LeftStep(AnimationEvent animationEvent)
         {
             if (animationEvent.animatorClipInfo.weight < 0.4f) return;
-            if (character.onStep != null) character.onStep.Invoke(CharacterLocomotion.STEP.Left);
+            if (this.character.onStep != null) this.character.onStep.Invoke(CharacterLocomotion.STEP.Left);
         }
 
         public void Event_RightStep(AnimationEvent animationEvent)
         {
             if (animationEvent.animatorClipInfo.weight < 0.4f) return;
-            if (character.onStep != null) character.onStep.Invoke(CharacterLocomotion.STEP.Right);
+            if (this.character.onStep != null) this.character.onStep.Invoke(CharacterLocomotion.STEP.Right);
         }
 
         // COROUTINES: -------------------------------------------------------------------------------------------------
 
         private IEnumerator CoroutineTrigger(CharacterLocomotion.ANIM_CONSTRAINT constraint, float timeout)
-        {
-            character.characterLocomotion.SetAnimatorConstraint(constraint);
+		{
+			this.character.characterLocomotion.SetAnimatorConstraint(constraint);
 
-            WaitForSeconds coroutine = new WaitForSeconds(timeout);
-            yield return coroutine;
+			WaitForSeconds coroutine = new WaitForSeconds(timeout);
+			yield return coroutine;
 
-            character.characterLocomotion.SetAnimatorConstraint(CharacterLocomotion.ANIM_CONSTRAINT.NONE);
-        }
-    }
+			this.character.characterLocomotion.SetAnimatorConstraint(CharacterLocomotion.ANIM_CONSTRAINT.NONE);
+		}
+	}
 }

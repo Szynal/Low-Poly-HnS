@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Events;
-
-namespace LowPolyHnS.Characters
+﻿namespace LowPolyHnS.Characters
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using UnityEngine;
+    using UnityEngine.Events;
+
     [AddComponentMenu("")]
     public class CharacterAttachments : MonoBehaviour
     {
@@ -18,14 +19,13 @@ namespace LowPolyHnS.Characters
 
         [Serializable]
         public class AttachmentEvent : UnityEvent<EventData>
-        {
-        }
+        { }
 
         [Serializable]
         public class Attachment
         {
-            public GameObject prefab;
-            public GameObject instance;
+            public GameObject prefab = null;
+            public GameObject instance = null;
             public Vector3 locPosition = Vector3.zero;
             public Quaternion locRotation = Quaternion.identity;
 
@@ -33,8 +33,8 @@ namespace LowPolyHnS.Characters
             {
                 this.prefab = prefab;
                 this.instance = instance;
-                locPosition = instance.transform.localPosition;
-                locRotation = instance.transform.localRotation;
+                this.locPosition = instance.transform.localPosition;
+                this.locRotation = instance.transform.localRotation;
             }
         }
 
@@ -51,15 +51,14 @@ namespace LowPolyHnS.Characters
         public void Setup(Animator animator)
         {
             this.animator = animator;
-            attachments = new Dictionary<HumanBodyBones, List<Attachment>>();
+            this.attachments = new Dictionary<HumanBodyBones, List<Attachment>>();
         }
 
         // PUBLIC METHODS: ------------------------------------------------------------------------
 
-        public void Attach(HumanBodyBones bone, GameObject prefab, Vector3 position, Quaternion rotation,
-            Space space = Space.Self)
+        public void Attach(HumanBodyBones bone, GameObject prefab, Vector3 position, Quaternion rotation, Space space = Space.Self)
         {
-            if (!attachments.ContainsKey(bone)) attachments.Add(bone, new List<Attachment>());
+            if (!this.attachments.ContainsKey(bone)) this.attachments.Add(bone, new List<Attachment>());
 
             GameObject instance = prefab;
             if (string.IsNullOrEmpty(prefab.scene.name))
@@ -67,11 +66,11 @@ namespace LowPolyHnS.Characters
                 instance = Instantiate(prefab, Vector3.zero, Quaternion.identity);
             }
 
-            instance.transform.SetParent(animator.GetBoneTransform(bone));
+            instance.transform.SetParent(this.animator.GetBoneTransform(bone));
 
             switch (space)
             {
-                case Space.Self:
+                case Space.Self :
                     instance.transform.localPosition = position;
                     instance.transform.localRotation = rotation;
                     break;
@@ -82,11 +81,11 @@ namespace LowPolyHnS.Characters
                     break;
             }
 
-            attachments[bone].Add(new Attachment(instance, prefab));
+            this.attachments[bone].Add(new Attachment(instance, prefab));
 
-            if (onAttach != null)
+            if (this.onAttach != null)
             {
-                onAttach.Invoke(new EventData
+                this.onAttach.Invoke(new EventData
                 {
                     attachment = instance,
                     bone = bone
@@ -96,22 +95,22 @@ namespace LowPolyHnS.Characters
 
         public List<GameObject> Detach(HumanBodyBones bone)
         {
-            return DetachOrDestroy(bone, false);
+            return this.DetachOrDestroy(bone, false);
         }
 
         public bool Detach(GameObject instance)
         {
-            return DetachOrDestroy(instance, false);
+            return this.DetachOrDestroy(instance, false);
         }
 
         public void Remove(HumanBodyBones bone)
         {
-            DetachOrDestroy(bone, true);
+            this.DetachOrDestroy(bone, true);
         }
 
         public void Remove(GameObject instance)
         {
-            DetachOrDestroy(instance, true);
+            this.DetachOrDestroy(instance, true);
         }
 
         // PRIVATE METHODS: -----------------------------------------------------------------------
@@ -120,10 +119,10 @@ namespace LowPolyHnS.Characters
         {
             List<Attachment> objects = new List<Attachment>();
             List<GameObject> results = new List<GameObject>();
-            if (attachments.ContainsKey(bone))
+            if (this.attachments.ContainsKey(bone))
             {
-                objects = new List<Attachment>(attachments[bone]);
-                attachments.Remove(bone);
+                objects = new List<Attachment>(this.attachments[bone]);
+                this.attachments.Remove(bone);
 
                 for (int i = 0; i < objects.Count; ++i)
                 {
@@ -131,9 +130,9 @@ namespace LowPolyHnS.Characters
                     {
                         objects[i].instance.transform.SetParent(null);
 
-                        if (onDetach != null)
+                        if (this.onDetach != null)
                         {
-                            onDetach.Invoke(new EventData
+                            this.onDetach.Invoke(new EventData
                             {
                                 attachment = objects[i].instance,
                                 bone = bone,
@@ -152,14 +151,14 @@ namespace LowPolyHnS.Characters
 
         private bool DetachOrDestroy(GameObject instance, bool destroy)
         {
-            foreach (KeyValuePair<HumanBodyBones, List<Attachment>> item in attachments)
+            foreach (KeyValuePair<HumanBodyBones, List<Attachment>> item in this.attachments)
             {
                 if (item.Value == null) continue;
 
                 int subItemIndex = -1;
-                for (int i = 0; i < attachments[item.Key].Count; ++i)
+                for (int i = 0; i < this.attachments[item.Key].Count; ++i)
                 {
-                    if (attachments[item.Key][i].instance == instance)
+                    if (this.attachments[item.Key][i].instance == instance)
                     {
                         subItemIndex = i;
                         break;
@@ -168,12 +167,12 @@ namespace LowPolyHnS.Characters
 
                 if (subItemIndex >= 0)
                 {
-                    attachments[item.Key].RemoveAt(subItemIndex);
+                    this.attachments[item.Key].RemoveAt(subItemIndex);
                     instance.transform.SetParent(null);
 
-                    if (onDetach != null)
+                    if (this.onDetach != null)
                     {
-                        onDetach.Invoke(new EventData
+                        this.onDetach.Invoke(new EventData
                         {
                             attachment = instance,
                             bone = item.Key,
@@ -183,9 +182,9 @@ namespace LowPolyHnS.Characters
 
                     if (destroy) Destroy(instance);
 
-                    if (attachments[item.Key].Count == 0)
+                    if (this.attachments[item.Key].Count == 0)
                     {
-                        attachments.Remove(item.Key);
+                        this.attachments.Remove(item.Key);
                     }
 
                     return true;

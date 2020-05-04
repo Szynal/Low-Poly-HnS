@@ -1,10 +1,12 @@
-﻿using System.IO;
-using LowPolyHnS.Core;
-using UnityEditor;
-using UnityEngine;
-
-namespace LowPolyHnS.Characters
+﻿namespace LowPolyHnS.Characters
 {
+    using System.IO;
+    using System.Collections;
+    using System.Collections.Generic;
+    using UnityEngine;
+    using UnityEditor;
+    using LowPolyHnS.Core;
+
     [CustomEditor(typeof(CharacterAnimator))]
     public class CharacterAnimatorEditor : Editor
     {
@@ -12,14 +14,11 @@ namespace LowPolyHnS.Characters
         private const string PATH_DEFAULT_MODEL = "Assets/Plugins/LowPolyHnS/Characters/Models/Character.fbx";
         private const string PATH_FPS_MODEL = "Assets/Plugins/LowPolyHnS/Characters/Models/CharacterFPS.fbx";
 
-        private const string PATH_DEFAULT_RCONT =
-            "Assets/Plugins/LowPolyHnS/Characters/Animations/Controllers/Locomotion.controller";
+        private const string PATH_DEFAULT_RCONT = "Assets/Plugins/LowPolyHnS/Characters/Animations/Controllers/Locomotion.controller";
 
         private const string MSG_PREFAB_INSTANCE_TITLE = "Cannot restructure Prefab instance";
-
         private const string MSG_PREFAB_INSTANCE_BODY = "You can open the Prefab in Prefab Mode " +
-                                                        "to change the 3D model or unpack the Prefab instance to remove its Prefab connection.";
-
+            "to change the 3D model or unpack the Prefab instance to remove its Prefab connection.";
         private const string MSG_PREFAB_INSTANCE_OK = "Ok";
         private const string MSG_PREFAB_INSTANCE_OPEN = "Open Prefab";
 
@@ -32,7 +31,7 @@ namespace LowPolyHnS.Characters
 
         private SerializedProperty spAnimator;
         private SerializedProperty spDefaultState;
-        private bool isDraggingModel;
+        private bool isDraggingModel = false;
 
         private SerializedProperty spUseFootIK;
         private SerializedProperty spFootLayerMask;
@@ -51,36 +50,37 @@ namespace LowPolyHnS.Characters
 
         protected void OnEnable()
         {
-            characterAnimator = (CharacterAnimator) target;
+            this.characterAnimator = (CharacterAnimator)this.target;
 
             string iconModelPath = Path.Combine(CharacterEditor.CHARACTER_ICONS_PATH, "CharacterAnimModel.png");
             Texture2D iconModel = AssetDatabase.LoadAssetAtPath<Texture2D>(iconModelPath);
-            sectionModel = new CharacterEditor.Section("Character Model", iconModel, Repaint);
+            this.sectionModel = new CharacterEditor.Section("Character Model", iconModel, this.Repaint);
 
             string iconIKPath = Path.Combine(CharacterEditor.CHARACTER_ICONS_PATH, "CharacterAnimIK.png");
             Texture2D iconIK = AssetDatabase.LoadAssetAtPath<Texture2D>(iconIKPath);
-            sectionIK = new CharacterEditor.Section("Inverse Kinematics", iconIK, Repaint);
+            this.sectionIK = new CharacterEditor.Section("Inverse Kinematics", iconIK, this.Repaint);
 
             string iconRagdollPath = Path.Combine(CharacterEditor.CHARACTER_ICONS_PATH, "CharacterAnimRagdoll.png");
             Texture2D iconRagdoll = AssetDatabase.LoadAssetAtPath<Texture2D>(iconRagdollPath);
-            sectionRagdoll = new CharacterEditor.Section("Ragdoll", iconRagdoll, Repaint);
+            this.sectionRagdoll = new CharacterEditor.Section("Ragdoll", iconRagdoll, this.Repaint);
 
-            spAnimator = serializedObject.FindProperty("animator");
-            spDefaultState = serializedObject.FindProperty("defaultState");
+            this.spAnimator = serializedObject.FindProperty("animator");
+            this.spDefaultState = serializedObject.FindProperty("defaultState");
 
-            spUseFootIK = serializedObject.FindProperty("useFootIK");
-            spFootLayerMask = serializedObject.FindProperty("footLayerMask");
-            spUseHandIK = serializedObject.FindProperty("useHandIK");
-            spUseSmartHeadIK = serializedObject.FindProperty("useSmartHeadIK");
-            spUseProceduralLanding = serializedObject.FindProperty("useProceduralLanding");
+            this.spUseFootIK = serializedObject.FindProperty("useFootIK");
+            this.spFootLayerMask = serializedObject.FindProperty("footLayerMask");
+            this.spUseHandIK = serializedObject.FindProperty("useHandIK");
+            this.spUseSmartHeadIK = serializedObject.FindProperty("useSmartHeadIK");
+            this.spUseProceduralLanding = serializedObject.FindProperty("useProceduralLanding");
 
-            spAutoInitRagdoll = serializedObject.FindProperty("autoInitializeRagdoll");
-            spRagdollMass = serializedObject.FindProperty("ragdollMass");
-            spStableTimeout = serializedObject.FindProperty("stableTimeout");
-            spStandFaceUp = serializedObject.FindProperty("standFaceUp");
-            spStandFaceDown = serializedObject.FindProperty("standFaceDown");
+            this.spAutoInitRagdoll = serializedObject.FindProperty("autoInitializeRagdoll");
+            this.spRagdollMass = serializedObject.FindProperty("ragdollMass");
+            this.spStableTimeout = serializedObject.FindProperty("stableTimeout");
+            this.spStandFaceUp = serializedObject.FindProperty("standFaceUp");
+            this.spStandFaceDown = serializedObject.FindProperty("standFaceDown");
 
-            spTimeScaleCoefficient = serializedObject.FindProperty("timeScaleCoefficient");
+            this.spTimeScaleCoefficient = serializedObject.FindProperty("timeScaleCoefficient");
+
         }
 
         // INSPECTOR GUI: -------------------------------------------------------------------------
@@ -90,9 +90,9 @@ namespace LowPolyHnS.Characters
             serializedObject.Update();
             EditorGUILayout.Space();
 
-            PaintAnimModel();
-            PaintAnimIK();
-            PaintAnimRagdoll();
+            this.PaintAnimModel();
+            this.PaintAnimIK();
+            this.PaintAnimRagdoll();
 
             EditorGUILayout.Space();
             serializedObject.ApplyModifiedProperties();
@@ -100,32 +100,31 @@ namespace LowPolyHnS.Characters
 
         private void PaintAnimModel()
         {
-            sectionModel.PaintSection();
-            using (var group = new EditorGUILayout.FadeGroupScope(sectionModel.state.faded))
+            this.sectionModel.PaintSection();
+            using (var group = new EditorGUILayout.FadeGroupScope(this.sectionModel.state.faded))
             {
                 if (group.visible)
                 {
                     EditorGUILayout.BeginVertical(CoreGUIStyles.GetBoxExpanded());
 
-                    EditorGUILayout.PropertyField(spAnimator);
-                    EditorGUILayout.PropertyField(spTimeScaleCoefficient);
-                    EditorGUILayout.PropertyField(spDefaultState);
+                    EditorGUILayout.PropertyField(this.spAnimator);
+                    EditorGUILayout.PropertyField(this.spTimeScaleCoefficient);
+                    EditorGUILayout.PropertyField(this.spDefaultState);
 
-                    if (spAnimator.objectReferenceValue == null)
+                    if (this.spAnimator.objectReferenceValue == null)
                     {
                         EditorGUILayout.Space();
                         EditorGUILayout.HelpBox(MSG_EMPTY_MODEL, MessageType.Warning);
-                        PaintChangeModel();
+                        this.PaintChangeModel();
                     }
                     else
                     {
                         EditorGUILayout.Space();
-                        PaintChangeModel();
-                        if (((Animator) spAnimator.objectReferenceValue).applyRootMotion)
+                        this.PaintChangeModel(); if (((Animator)this.spAnimator.objectReferenceValue).applyRootMotion)
                         {
-                            Animator reference = (Animator) spAnimator.objectReferenceValue;
+                            Animator reference = (Animator)this.spAnimator.objectReferenceValue;
                             reference.applyRootMotion = false;
-                            spAnimator.objectReferenceValue = reference;
+                            this.spAnimator.objectReferenceValue = reference;
 
                             serializedObject.ApplyModifiedProperties();
                             serializedObject.Update();
@@ -139,23 +138,23 @@ namespace LowPolyHnS.Characters
 
         private void PaintAnimIK()
         {
-            sectionIK.PaintSection();
-            using (var group = new EditorGUILayout.FadeGroupScope(sectionIK.state.faded))
+            this.sectionIK.PaintSection();
+            using (var group = new EditorGUILayout.FadeGroupScope(this.sectionIK.state.faded))
             {
                 if (group.visible)
                 {
                     EditorGUILayout.BeginVertical(CoreGUIStyles.GetBoxExpanded());
-                    EditorGUILayout.PropertyField(spUseFootIK);
-                    if (spUseFootIK.boolValue)
+                    EditorGUILayout.PropertyField(this.spUseFootIK);
+                    if (this.spUseFootIK.boolValue)
                     {
                         EditorGUI.indentLevel++;
-                        EditorGUILayout.PropertyField(spFootLayerMask);
+                        EditorGUILayout.PropertyField(this.spFootLayerMask);
                         EditorGUI.indentLevel--;
                     }
 
-                    EditorGUILayout.PropertyField(spUseHandIK);
-                    EditorGUILayout.PropertyField(spUseSmartHeadIK);
-                    EditorGUILayout.PropertyField(spUseProceduralLanding);
+                    EditorGUILayout.PropertyField(this.spUseHandIK);
+                    EditorGUILayout.PropertyField(this.spUseSmartHeadIK);
+                    EditorGUILayout.PropertyField(this.spUseProceduralLanding);
                     EditorGUILayout.EndVertical();
                 }
             }
@@ -163,18 +162,18 @@ namespace LowPolyHnS.Characters
 
         private void PaintAnimRagdoll()
         {
-            sectionRagdoll.PaintSection();
-            using (var group = new EditorGUILayout.FadeGroupScope(sectionRagdoll.state.faded))
+            this.sectionRagdoll.PaintSection();
+            using (var group = new EditorGUILayout.FadeGroupScope(this.sectionRagdoll.state.faded))
             {
                 if (group.visible)
                 {
                     EditorGUILayout.BeginVertical(CoreGUIStyles.GetBoxExpanded());
-                    EditorGUILayout.PropertyField(spAutoInitRagdoll);
-                    EditorGUILayout.PropertyField(spRagdollMass);
-                    EditorGUILayout.PropertyField(spStableTimeout);
+                    EditorGUILayout.PropertyField(this.spAutoInitRagdoll);
+                    EditorGUILayout.PropertyField(this.spRagdollMass);
+                    EditorGUILayout.PropertyField(this.spStableTimeout);
                     EditorGUILayout.Space();
-                    EditorGUILayout.PropertyField(spStandFaceUp);
-                    EditorGUILayout.PropertyField(spStandFaceDown);
+                    EditorGUILayout.PropertyField(this.spStandFaceUp);
+                    EditorGUILayout.PropertyField(this.spStandFaceDown);
                     EditorGUILayout.EndVertical();
                 }
             }
@@ -195,13 +194,14 @@ namespace LowPolyHnS.Characters
             Rect dropRect = new Rect(
                 rect.x + EditorGUIUtility.labelWidth + dropPadding,
                 rect.y,
-                rect.width - EditorGUIUtility.labelWidth - 2f * dropPadding,
+                rect.width - EditorGUIUtility.labelWidth - (2f * dropPadding),
                 rect.height
             );
 
-            GUIStyle styleDropZone = isDraggingModel
+            GUIStyle styleDropZone = (this.isDraggingModel
                 ? CoreGUIStyles.GetDropZoneActive()
-                : CoreGUIStyles.GetDropZoneNormal();
+                : CoreGUIStyles.GetDropZoneNormal()
+            );
 
             GUI.Box(dropRect, "Drop your 3D model", styleDropZone);
 
@@ -209,7 +209,7 @@ namespace LowPolyHnS.Characters
             buttonRectA = new Rect(
                 buttonRectA.x + EditorGUIUtility.labelWidth,
                 buttonRectA.y,
-                buttonRectA.width / 2f - EditorGUIUtility.labelWidth / 2.0f,
+                (buttonRectA.width / 2f) - EditorGUIUtility.labelWidth / 2.0f,
                 buttonRectA.height
             );
 
@@ -223,13 +223,13 @@ namespace LowPolyHnS.Characters
             if (GUI.Button(buttonRectA, "Default Character", CoreGUIStyles.GetButtonLeft()))
             {
                 GameObject prefabDefault = AssetDatabase.LoadAssetAtPath<GameObject>(PATH_DEFAULT_MODEL);
-                LoadCharacter(prefabDefault);
+                this.LoadCharacter(prefabDefault);
             }
 
             if (GUI.Button(buttonRectB, "FPS Character", CoreGUIStyles.GetButtonRight()))
             {
                 GameObject prefabFPS = AssetDatabase.LoadAssetAtPath<GameObject>(PATH_FPS_MODEL);
-                LoadCharacter(prefabFPS);
+                this.LoadCharacter(prefabFPS);
             }
 
             switch (evt.type)
@@ -237,32 +237,33 @@ namespace LowPolyHnS.Characters
                 case EventType.DragUpdated:
                 case EventType.DragPerform:
 
-                    isDraggingModel = false;
+                    this.isDraggingModel = false;
                     if (!dropRect.Contains(evt.mousePosition)) break;
                     if (DragAndDrop.objectReferences.Length != 1) break;
 
                     GameObject draggedObject = DragAndDrop.objectReferences[0] as GameObject;
                     if (draggedObject == null) break;
 
-                    bool prefabAllowed = PrefabUtility.GetPrefabAssetType(draggedObject) == PrefabAssetType.Model ||
-                                         PrefabUtility.GetPrefabAssetType(draggedObject) == PrefabAssetType.Regular ||
-                                         PrefabUtility.GetPrefabAssetType(draggedObject) == PrefabAssetType.Variant;
+                    bool prefabAllowed = (
+                        PrefabUtility.GetPrefabAssetType(draggedObject) == PrefabAssetType.Model ||
+                        PrefabUtility.GetPrefabAssetType(draggedObject) == PrefabAssetType.Regular ||
+                        PrefabUtility.GetPrefabAssetType(draggedObject) == PrefabAssetType.Variant
+                    );
 
                     if (!prefabAllowed) break;
                     DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
 
                     if (evt.type == EventType.DragUpdated)
                     {
-                        isDraggingModel = true;
+                        this.isDraggingModel = true;
                     }
                     else if (evt.type == EventType.DragPerform)
                     {
-                        isDraggingModel = false;
+                        this.isDraggingModel = false;
 
                         DragAndDrop.AcceptDrag();
-                        LoadCharacter(draggedObject);
+                        this.LoadCharacter(draggedObject);
                     }
-
                     break;
             }
         }
@@ -280,7 +281,7 @@ namespace LowPolyHnS.Characters
         {
             if (prefab == null) return;
             if (prefab.GetComponentInChildren<Animator>() == null) return;
-            if (PrefabUtility.IsPartOfNonAssetPrefabInstance(characterAnimator.gameObject))
+            if (PrefabUtility.IsPartOfNonAssetPrefabInstance(this.characterAnimator.gameObject))
             {
                 bool enterPrefabMode = EditorUtility.DisplayDialog(
                     MSG_PREFAB_INSTANCE_TITLE,
@@ -291,17 +292,17 @@ namespace LowPolyHnS.Characters
 
                 if (enterPrefabMode)
                 {
-                    string path = PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(target);
+                    string path = PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(this.target);
                     AssetDatabase.OpenAsset(AssetDatabase.LoadAssetAtPath<GameObject>(path));
                 }
 
                 return;
             }
 
-            GameObject instance = Instantiate(prefab);
+            GameObject instance = Instantiate<GameObject>(prefab);
             instance.name = prefab.name;
 
-            instance.transform.SetParent(characterAnimator.transform);
+            instance.transform.SetParent(this.characterAnimator.transform);
             instance.transform.localPosition = Vector3.zero;
             instance.transform.localRotation = Quaternion.identity;
 
@@ -309,13 +310,13 @@ namespace LowPolyHnS.Characters
             RuntimeAnimatorController rc = AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>(PATH_DEFAULT_RCONT);
             instanceAnimator.runtimeAnimatorController = rc;
 
-            if (spAnimator.objectReferenceValue != null)
+            if (this.spAnimator.objectReferenceValue != null)
             {
-                Animator previous = (Animator) spAnimator.objectReferenceValue;
+                Animator previous = (Animator)this.spAnimator.objectReferenceValue;
                 DestroyImmediate(previous.gameObject);
             }
 
-            spAnimator.objectReferenceValue = instanceAnimator;
+            this.spAnimator.objectReferenceValue = instanceAnimator;
             serializedObject.ApplyModifiedProperties();
             serializedObject.Update();
         }

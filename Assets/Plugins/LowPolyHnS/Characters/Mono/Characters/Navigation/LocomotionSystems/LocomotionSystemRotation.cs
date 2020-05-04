@@ -1,7 +1,12 @@
-﻿using UnityEngine;
-
-namespace LowPolyHnS.Characters
+﻿namespace LowPolyHnS.Characters
 {
+    using System.Collections;
+    using System.Collections.Generic;
+    using UnityEngine;
+    using LowPolyHnS.Core;
+    using LowPolyHnS.Core.Hooks;
+    using UnityEditor;
+
     public class LocomotionSystemRotation : ILocomotionSystem
     {
         private const float ERROR_MARGIN = 0.1f;
@@ -16,33 +21,36 @@ namespace LowPolyHnS.Characters
         {
             base.Update();
 
-            if (characterLocomotion.navmeshAgent != null)
+            if (this.characterLocomotion.navmeshAgent != null)
             {
-                characterLocomotion.navmeshAgent.updatePosition = false;
-                characterLocomotion.navmeshAgent.updateUpAxis = false;
+                this.characterLocomotion.navmeshAgent.updatePosition = false;
+                this.characterLocomotion.navmeshAgent.updateUpAxis = false;
             }
 
-            Quaternion targetRotation = UpdateRotation(desiredDirection);
-            Transform charTransform = characterLocomotion.characterController.transform;
+            Quaternion targetRotation = this.UpdateRotation(this.desiredDirection);
+            Transform charTransform = this.characterLocomotion.characterController.transform;
 
             Vector3 charForward = charTransform.TransformDirection(Vector3.forward);
             Vector3 charRight = charTransform.TransformDirection(Vector3.right);
 
-            float difference = Vector3.Dot(charForward, desiredDirection);
+            float difference = Vector3.Dot(charForward, this.desiredDirection);
 
-            if (Mathf.Abs(difference) < ERROR_MARGIN) pivotSpeed = 0f;
+            if (Mathf.Abs(difference) < ERROR_MARGIN) this.pivotSpeed = 0f;
             else
             {
-                pivotSpeed = Vector3.Dot(charRight, desiredDirection);
-                if (difference < 0f) pivotSpeed = pivotSpeed >= 0 ? 1f : -1f;
+                this.pivotSpeed = Vector3.Dot(charRight, this.desiredDirection);
+                if (difference < 0f) this.pivotSpeed = this.pivotSpeed >= 0 ? 1f : -1f;
             }
 
-            characterLocomotion.characterController.transform.rotation = targetRotation;
+            this.characterLocomotion.characterController.transform.rotation = targetRotation;
 
-            if (characterLocomotion.navmeshAgent != null &&
-                characterLocomotion.navmeshAgent.isActiveAndEnabled)
+            Vector3 targetDirection = Vector3.up * this.characterLocomotion.verticalSpeed;
+            this.characterLocomotion.characterController.Move(targetDirection);
+
+            if (this.characterLocomotion.navmeshAgent != null &&
+                this.characterLocomotion.navmeshAgent.isActiveAndEnabled)
             {
-                characterLocomotion.navmeshAgent.enabled = false;
+                this.characterLocomotion.navmeshAgent.enabled = false;
             }
 
             return CharacterLocomotion.LOCOMOTION_SYSTEM.CharacterController;
@@ -50,13 +58,14 @@ namespace LowPolyHnS.Characters
 
         public override void OnDestroy()
         {
+            return;
         }
 
         // PUBLIC METHODS: ------------------------------------------------------------------------
 
         public void SetDirection(Vector3 direction, TargetRotation rotation = null)
         {
-            desiredDirection = direction;
+            this.desiredDirection = direction;
         }
     }
 }

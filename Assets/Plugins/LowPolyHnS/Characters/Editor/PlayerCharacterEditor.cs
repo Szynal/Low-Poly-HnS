@@ -1,145 +1,142 @@
-﻿namespace LowPolyHnS.Characters
+﻿using System.IO;
+using LowPolyHnS.Core;
+using UnityEditor;
+using UnityEngine;
+
+namespace LowPolyHnS.Characters
 {
-	using System.IO;
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using UnityEngine.AI;
-	using UnityEditor;
-	using LowPolyHnS.Core;
+    [CustomEditor(typeof(PlayerCharacter))]
+    public class PlayerCharacterEditor : CharacterEditor
+    {
+        private const string PLAYER_PREFAB_PATH = "Assets/Plugins/LowPolyHnS/Characters/Prefabs/Player.prefab";
+        private const string SECTION_INPUT = "Player Input";
 
-	[CustomEditor(typeof(PlayerCharacter))]
-	public class PlayerCharacterEditor : CharacterEditor
-	{
-		private const string PLAYER_PREFAB_PATH = "Assets/Plugins/LowPolyHnS/Characters/Prefabs/Player.prefab";
-		private const string SECTION_INPUT = "Player Input";
+        private const string PROP_INPUTT = "inputType";
+        private const string PROP_MOUSEB = "mouseButtonMove";
+        private const string PROP_LAYERM = "mouseLayerMask";
+        private const string PROP_INVERT = "invertAxis";
+        private const string PROP_INPUT_JMP = "jumpKey";
 
-		private const string PROP_INPUTT = "inputType";
-		private const string PROP_MOUSEB = "mouseButtonMove";
-		private const string PROP_LAYERM = "mouseLayerMask";
-		private const string PROP_INVERT = "invertAxis";
-		private const string PROP_INPUT_JMP = "jumpKey";
+        private const string PROP_USE_ACC = "useAcceleration";
+        private const string PROP_ACC = "acceleration";
+        private const string PROP_DEC = "deceleration";
 
-		private const string PROP_USE_ACC = "useAcceleration";
-		private const string PROP_ACC = "acceleration";
-		private const string PROP_DEC = "deceleration";
+        // PROPERTIES: ----------------------------------------------------------------------------
 
-		// PROPERTIES: ----------------------------------------------------------------------------
+        private Section sectionInput;
+        private SerializedProperty spInputType;
+        private SerializedProperty spMouseButtonMove;
+        private SerializedProperty spMouseLayerMask;
+        private SerializedProperty spInvertAxis;
+        private SerializedProperty spInputJump;
 
-		private Section sectionInput;
-		private SerializedProperty spInputType;
-		private SerializedProperty spMouseButtonMove;
-		private SerializedProperty spMouseLayerMask;
-		private SerializedProperty spInvertAxis;
-		private SerializedProperty spInputJump;
+        private SerializedProperty spUseAcceleration;
+        private SerializedProperty spAcceleration;
+        private SerializedProperty spDeceleration;
 
-		private SerializedProperty spUseAcceleration;
-		private SerializedProperty spAcceleration;
-		private SerializedProperty spDeceleration;
+        // INITIALIZERS: --------------------------------------------------------------------------
 
-		// INITIALIZERS: --------------------------------------------------------------------------
+        protected new void OnEnable()
+        {
+            base.OnEnable();
 
-		protected new void OnEnable()
-		{
-			base.OnEnable();
+            string iconInputPath = Path.Combine(CHARACTER_ICONS_PATH, "PlayerInput.png");
+            Texture2D iconInput = AssetDatabase.LoadAssetAtPath<Texture2D>(iconInputPath);
+            sectionInput = new Section(SECTION_INPUT, iconInput, Repaint);
 
-			string iconInputPath = Path.Combine(CHARACTER_ICONS_PATH, "PlayerInput.png");
-			Texture2D iconInput = AssetDatabase.LoadAssetAtPath<Texture2D>(iconInputPath);
-			this.sectionInput = new Section(SECTION_INPUT, iconInput, this.Repaint);
+            spInputType = serializedObject.FindProperty(PROP_INPUTT);
+            spMouseButtonMove = serializedObject.FindProperty(PROP_MOUSEB);
+            spMouseLayerMask = serializedObject.FindProperty(PROP_LAYERM);
+            spInvertAxis = serializedObject.FindProperty(PROP_INVERT);
+            spInputJump = serializedObject.FindProperty(PROP_INPUT_JMP);
 
-			this.spInputType = serializedObject.FindProperty(PROP_INPUTT);
-			this.spMouseButtonMove = serializedObject.FindProperty(PROP_MOUSEB);
-			this.spMouseLayerMask = serializedObject.FindProperty(PROP_LAYERM);
-			this.spInvertAxis = serializedObject.FindProperty(PROP_INVERT);
-			this.spInputJump = serializedObject.FindProperty(PROP_INPUT_JMP);
+            spUseAcceleration = serializedObject.FindProperty(PROP_USE_ACC);
+            spAcceleration = serializedObject.FindProperty(PROP_ACC);
+            spDeceleration = serializedObject.FindProperty(PROP_DEC);
 
-			this.spUseAcceleration = serializedObject.FindProperty(PROP_USE_ACC);
-			this.spAcceleration = serializedObject.FindProperty(PROP_ACC);
-			this.spDeceleration = serializedObject.FindProperty(PROP_DEC);
+            if (spMouseLayerMask.intValue == 0)
+            {
+                spMouseLayerMask.intValue = ~0;
+            }
+        }
 
-			if (this.spMouseLayerMask.intValue == 0)
-			{
-				this.spMouseLayerMask.intValue = ~0;
-			}
-		}
+        protected new void OnDisable()
+        {
+            base.OnDisable();
+        }
 
-		protected new void OnDisable()
-		{
-			base.OnDisable();
-		}
+        // INSPECTOR GUI: -------------------------------------------------------------------------
 
-		// INSPECTOR GUI: -------------------------------------------------------------------------
+        public override void OnInspectorGUI()
+        {
+            serializedObject.Update();
+            EditorGUILayout.Space();
 
-		public override void OnInspectorGUI()
-		{
-			serializedObject.Update();
-			EditorGUILayout.Space();
+            PaintInspector();
+            sectionInput.PaintSection();
+            using (var group = new EditorGUILayout.FadeGroupScope(sectionInput.state.faded))
+            {
+                if (group.visible)
+                {
+                    EditorGUILayout.BeginVertical(CoreGUIStyles.GetBoxExpanded());
 
-			base.PaintInspector();
-			this.sectionInput.PaintSection();
-			using (var group = new EditorGUILayout.FadeGroupScope(this.sectionInput.state.faded))
-			{
-				if (group.visible)
-				{
-					EditorGUILayout.BeginVertical(CoreGUIStyles.GetBoxExpanded());
+                    EditorGUILayout.PropertyField(spInputType);
+                    EditorGUI.indentLevel++;
 
-					EditorGUILayout.PropertyField(this.spInputType);
-					EditorGUI.indentLevel++;
+                    if (spInputType.intValue == (int) PlayerCharacter.INPUT_TYPE.PointAndClick ||
+                        spInputType.intValue == (int) PlayerCharacter.INPUT_TYPE.FollowPointer)
+                    {
+                        EditorGUILayout.PropertyField(spMouseButtonMove);
+                    }
 
-					if (this.spInputType.intValue == (int)PlayerCharacter.INPUT_TYPE.PointAndClick ||
-						this.spInputType.intValue == (int)PlayerCharacter.INPUT_TYPE.FollowPointer)
-					{
-						EditorGUILayout.PropertyField(this.spMouseButtonMove);
-					}
+                    if (spInputType.intValue == (int) PlayerCharacter.INPUT_TYPE.PointAndClick)
+                    {
+                        EditorGUILayout.PropertyField(spMouseLayerMask);
+                        if (spMouseLayerMask.intValue == 0)
+                        {
+                            spMouseLayerMask.intValue = ~0;
+                        }
+                    }
 
-					if (this.spInputType.intValue == (int)PlayerCharacter.INPUT_TYPE.PointAndClick)
-					{
-						EditorGUILayout.PropertyField(this.spMouseLayerMask);
-						if (this.spMouseLayerMask.intValue == 0)
-						{
-							this.spMouseLayerMask.intValue = ~0;
-						}
-					}
+                    if (spInputType.intValue == (int) PlayerCharacter.INPUT_TYPE.SideScrollX ||
+                        spInputType.intValue == (int) PlayerCharacter.INPUT_TYPE.SideScrollZ)
+                    {
+                        EditorGUILayout.PropertyField(spInvertAxis);
+                    }
 
-					if (this.spInputType.intValue == (int)PlayerCharacter.INPUT_TYPE.SideScrollX ||
-						this.spInputType.intValue == (int)PlayerCharacter.INPUT_TYPE.SideScrollZ)
-					{
-						EditorGUILayout.PropertyField(this.spInvertAxis);
-					}
+                    EditorGUI.indentLevel--;
+                    EditorGUILayout.PropertyField(spInputJump);
 
-					EditorGUI.indentLevel--;
-					EditorGUILayout.PropertyField(this.spInputJump);
+                    EditorGUILayout.Space();
+                    EditorGUILayout.PropertyField(spUseAcceleration);
+                    EditorGUI.indentLevel++;
+                    EditorGUI.BeginDisabledGroup(!spUseAcceleration.boolValue);
 
-					EditorGUILayout.Space();
-					EditorGUILayout.PropertyField(this.spUseAcceleration);
-					EditorGUI.indentLevel++;
-					EditorGUI.BeginDisabledGroup(!this.spUseAcceleration.boolValue);
+                    EditorGUILayout.PropertyField(spAcceleration);
+                    EditorGUILayout.PropertyField(spDeceleration);
 
-					EditorGUILayout.PropertyField(this.spAcceleration);
-					EditorGUILayout.PropertyField(this.spDeceleration);
+                    EditorGUI.EndDisabledGroup();
+                    EditorGUI.indentLevel--;
 
-					EditorGUI.EndDisabledGroup();
-					EditorGUI.indentLevel--;
+                    EditorGUILayout.EndVertical();
+                }
+            }
 
-					EditorGUILayout.EndVertical();
-				}
-			}
+            EditorGUILayout.Space();
+            serializedObject.ApplyModifiedProperties();
+        }
 
-			EditorGUILayout.Space();
-			serializedObject.ApplyModifiedProperties();
-		}
+        // MENU ITEM: -----------------------------------------------------------------------------
 
-		// MENU ITEM: -----------------------------------------------------------------------------
+        [MenuItem("GameObject/LowPolyHnS/Characters/Player", false, 0)]
+        public static void CreatePlayer()
+        {
+            GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(PLAYER_PREFAB_PATH);
+            if (prefab == null) return;
 
-		[MenuItem("GameObject/LowPolyHnS/Characters/Player", false, 0)]
-		public static void CreatePlayer()
-		{
-			GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(PLAYER_PREFAB_PATH);
-			if (prefab == null) return;
-
-			GameObject instance = Instantiate(prefab);
-			instance.name = prefab.name;
-			instance = CreateSceneObject.Create(instance, true);
-		}
-	}
+            GameObject instance = Instantiate(prefab);
+            instance.name = prefab.name;
+            instance = CreateSceneObject.Create(instance);
+        }
+    }
 }

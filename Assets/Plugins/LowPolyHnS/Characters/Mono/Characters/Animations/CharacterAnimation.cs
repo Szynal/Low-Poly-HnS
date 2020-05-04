@@ -1,18 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Animations;
-using UnityEngine.Playables;
-
-namespace LowPolyHnS.Characters
+﻿namespace LowPolyHnS.Characters
 {
+    using System;
+    using System.Collections.Generic;
+    using UnityEditor;
+    using UnityEngine;
+    using UnityEngine.Animations;
+    using UnityEngine.Playables;
+
     public class CharacterAnimation
     {
         public enum Layer
         {
             Layer1,
             Layer2,
-            Layer3
+            Layer3,
         }
 
         public const float EPSILON = 0.01f;
@@ -41,45 +42,45 @@ namespace LowPolyHnS.Characters
         public CharacterAnimation(CharacterAnimator characterAnimator, CharacterState defaultState = null)
         {
             this.characterAnimator = characterAnimator;
-            runtimeController = defaultState != null
+            this.runtimeController = defaultState != null
                 ? defaultState.GetRuntimeAnimatorController()
                 : characterAnimator.animator.runtimeAnimatorController;
 
-            Setup();
+            this.Setup();
         }
 
         public void OnDestroy()
         {
-            if (!graph.Equals(null)) graph.Destroy();
+            if (!this.graph.Equals(null)) this.graph.Destroy();
         }
 
         public void ChangeRuntimeController(RuntimeAnimatorController controller = null)
         {
-            if (controller != null) runtimeController = controller;
-            Setup();
+            if (controller != null) this.runtimeController = controller;
+            this.Setup();
         }
 
         // PUBLIC METHODS: ------------------------------------------------------------------------
 
         public void Update()
         {
-            for (int i = states.Count - 1; i >= 0; --i)
+            for (int i = this.states.Count - 1; i >= 0; --i)
             {
-                bool remove = states[i].Update();
+                bool remove = this.states[i].Update();
                 if (remove)
                 {
-                    states[i].Destroy();
-                    states.RemoveAt(i);
+                    this.states[i].Destroy();
+                    this.states.RemoveAt(i);
                 }
             }
 
-            for (int i = gestures.Count - 1; i >= 0; --i)
+            for (int i = this.gestures.Count - 1; i >= 0; --i)
             {
-                bool remove = gestures[i].Update();
+                bool remove = this.gestures[i].Update();
                 if (remove)
                 {
-                    gestures[i].Destroy();
-                    gestures.RemoveAt(i);
+                    this.gestures[i].Destroy();
+                    this.gestures.RemoveAt(i);
                 }
             }
         }
@@ -89,38 +90,38 @@ namespace LowPolyHnS.Characters
         public void PlayGesture(AnimationClip animationClip, AvatarMask avatarMask,
             float fadeIn, float fadeOut, float speed)
         {
-            StopGesture(fadeIn);
-            gestures.Add(PlayableGesture.Create(
+            this.StopGesture(fadeIn);
+            this.gestures.Add(PlayableGesture.Create(
                 animationClip, avatarMask,
                 fadeIn, fadeOut, speed,
-                ref graph,
-                ref mixerGesturesInput,
-                ref mixerGesturesOutput
+                ref this.graph,
+                ref this.mixerGesturesInput,
+                ref this.mixerGesturesOutput
             ));
         }
 
         public void CrossFadeGesture(AnimationClip animationClip, AvatarMask avatarMask,
             float fadeIn, float fadeOut, float speed)
         {
-            if (gestures.Count == 0)
+            if (this.gestures.Count == 0)
             {
-                gestures.Add(PlayableGesture.Create(
+                this.gestures.Add(PlayableGesture.Create(
                     animationClip, avatarMask,
                     fadeIn, fadeOut, speed,
-                    ref graph,
-                    ref mixerGesturesInput,
-                    ref mixerGesturesOutput
+                    ref this.graph,
+                    ref this.mixerGesturesInput,
+                    ref this.mixerGesturesOutput
                 ));
             }
             else
             {
-                PlayableGesture previous = gestures[gestures.Count - 1];
+                PlayableGesture previous = gestures[this.gestures.Count - 1];
                 previous.StretchDuration(fadeIn);
 
-                gestures.Add(PlayableGesture.CreateAfter(
+                this.gestures.Add(PlayableGesture.CreateAfter(
                     animationClip, avatarMask,
                     fadeIn, fadeOut, speed,
-                    ref graph,
+                    ref this.graph,
                     previous
                 ));
             }
@@ -128,9 +129,9 @@ namespace LowPolyHnS.Characters
 
         public void StopGesture(float fadeOut)
         {
-            for (int i = gestures.Count - 1; i >= 0; --i)
+            for (int i = this.gestures.Count - 1; i >= 0; --i)
             {
-                gestures[i].Stop(fadeOut);
+                this.gestures[i].Stop(fadeOut);
             }
         }
 
@@ -142,19 +143,19 @@ namespace LowPolyHnS.Characters
             PlayableState prevPlayable;
             PlayableState nextPlayable;
 
-            int insertIndex = GetSurroundingStates(layer,
+            int insertIndex = this.GetSurroundingStates(layer,
                 out prevPlayable,
                 out nextPlayable
             );
 
             if (prevPlayable == null && nextPlayable == null)
             {
-                states.Add(PlayableStateClip.Create(
+                this.states.Add(PlayableStateClip.Create(
                     animationClip, avatarMask, layer, 0f,
                     transition, speed, weight,
-                    ref graph,
-                    ref mixerStatesInput,
-                    ref mixerStatesOutput
+                    ref this.graph,
+                    ref this.mixerStatesInput,
+                    ref this.mixerStatesOutput
                 ));
             }
             else if (prevPlayable != null)
@@ -164,19 +165,19 @@ namespace LowPolyHnS.Characters
                     prevPlayable.StretchDuration(transition);
                 }
 
-                states.Insert(insertIndex, PlayableStateClip.CreateAfter(
+                this.states.Insert(insertIndex, PlayableStateClip.CreateAfter(
                     animationClip, avatarMask, layer, 0f,
                     transition, speed, weight,
-                    ref graph,
+                    ref this.graph,
                     prevPlayable
                 ));
             }
             else if (nextPlayable != null)
             {
-                states.Insert(insertIndex, PlayableStateClip.CreateBefore(
+                this.states.Insert(insertIndex, PlayableStateClip.CreateBefore(
                     animationClip, avatarMask, layer, 0f,
                     transition, speed, weight,
-                    ref graph,
+                    ref this.graph,
                     nextPlayable
                 ));
             }
@@ -188,20 +189,20 @@ namespace LowPolyHnS.Characters
             PlayableState prevPlayable;
             PlayableState nextPlayable;
 
-            int insertIndex = GetSurroundingStates(layer,
+            int insertIndex = this.GetSurroundingStates(layer,
                 out prevPlayable,
                 out nextPlayable
             );
 
             if (prevPlayable == null && nextPlayable == null)
             {
-                states.Add(PlayableStateCharacter.Create(
+                this.states.Add(PlayableStateCharacter.Create(
                     stateAsset, avatarMask, this, layer,
-                    runtimeControllerPlayable.GetTime(),
+                    this.runtimeControllerPlayable.GetTime(),
                     transition, speed, weight,
-                    ref graph,
-                    ref mixerStatesInput,
-                    ref mixerStatesOutput
+                    ref this.graph,
+                    ref this.mixerStatesInput,
+                    ref this.mixerStatesOutput
                 ));
             }
             else if (prevPlayable != null)
@@ -211,21 +212,21 @@ namespace LowPolyHnS.Characters
                     prevPlayable.StretchDuration(transition);
                 }
 
-                states.Insert(insertIndex, PlayableStateCharacter.CreateAfter(
+                this.states.Insert(insertIndex, PlayableStateCharacter.CreateAfter(
                     stateAsset, avatarMask, this, layer,
-                    runtimeControllerPlayable.GetTime(),
+                    this.runtimeControllerPlayable.GetTime(),
                     transition, speed, weight,
-                    ref graph,
+                    ref this.graph,
                     prevPlayable
                 ));
             }
             else if (nextPlayable != null)
             {
-                states.Insert(insertIndex, PlayableStateCharacter.CreateBefore(
+                this.states.Insert(insertIndex, PlayableStateCharacter.CreateBefore(
                     stateAsset, avatarMask, this, layer,
-                    runtimeControllerPlayable.GetTime(),
+                    this.runtimeControllerPlayable.GetTime(),
                     transition, speed, weight,
-                    ref graph,
+                    ref this.graph,
                     nextPlayable
                 ));
             }
@@ -237,20 +238,20 @@ namespace LowPolyHnS.Characters
             PlayableState prevPlayable;
             PlayableState nextPlayable;
 
-            int insertIndex = GetSurroundingStates(layer,
+            int insertIndex = this.GetSurroundingStates(layer,
                 out prevPlayable,
                 out nextPlayable
             );
 
             if (prevPlayable == null && nextPlayable == null)
             {
-                states.Add(PlayableStateRTC.Create(
+                this.states.Add(PlayableStateRTC.Create(
                     rtc, avatarMask, layer,
-                    syncTime ? runtimeControllerPlayable.GetTime() : 0f,
+                    syncTime ? this.runtimeControllerPlayable.GetTime() : 0f,
                     transition, speed, weight,
-                    ref graph,
-                    ref mixerStatesInput,
-                    ref mixerStatesOutput
+                    ref this.graph,
+                    ref this.mixerStatesInput,
+                    ref this.mixerStatesOutput
                 ));
             }
             else if (prevPlayable != null)
@@ -260,21 +261,21 @@ namespace LowPolyHnS.Characters
                     prevPlayable.StretchDuration(transition);
                 }
 
-                states.Insert(insertIndex, PlayableStateRTC.CreateAfter(
+                this.states.Insert(insertIndex, PlayableStateRTC.CreateAfter(
                     rtc, avatarMask, layer,
-                    syncTime ? runtimeControllerPlayable.GetTime() : 0f,
+                    syncTime ? this.runtimeControllerPlayable.GetTime() : 0f,
                     transition, speed, weight,
-                    ref graph,
+                    ref this.graph,
                     prevPlayable
                 ));
             }
             else if (nextPlayable != null)
             {
-                states.Insert(insertIndex, PlayableStateRTC.CreateBefore(
+                this.states.Insert(insertIndex, PlayableStateRTC.CreateBefore(
                     rtc, avatarMask, layer,
-                    syncTime ? runtimeControllerPlayable.GetTime() : 0f,
+                    syncTime ? this.runtimeControllerPlayable.GetTime() : 0f,
                     transition, speed, weight,
-                    ref graph,
+                    ref this.graph,
                     nextPlayable
                 ));
             }
@@ -282,34 +283,34 @@ namespace LowPolyHnS.Characters
 
         public void ResetState(float time, int layer)
         {
-            for (int i = 0; i < states.Count; ++i)
+            for (int i = 0; i < this.states.Count; ++i)
             {
-                if (states[i].Layer == layer)
+                if (this.states[i].Layer == layer)
                 {
-                    states[i].OnExitState();
-                    states[i].Stop(time);
+                    this.states[i].OnExitState();
+                    this.states[i].Stop(time);
                 }
             }
         }
 
         public void ChangeStateWeight(int layer, float weight)
         {
-            for (int i = states.Count - 1; i >= 0; --i)
+            for (int i = this.states.Count - 1; i >= 0; --i)
             {
-                if (states[i].Layer == layer)
+                if (this.states[i].Layer == layer)
                 {
-                    states[i].SetWeight(weight);
+                    this.states[i].SetWeight(weight);
                 }
             }
         }
 
         public CharacterState GetState(int layer)
         {
-            for (int i = states.Count - 1; i >= 0; --i)
+            for (int i = this.states.Count - 1; i >= 0; --i)
             {
-                if (states[i].Layer == layer)
+                if (this.states[i].Layer == layer)
                 {
-                    return states[i].CharacterState;
+                    return this.states[i].CharacterState;
                 }
             }
 
@@ -320,65 +321,65 @@ namespace LowPolyHnS.Characters
 
         private void Setup()
         {
-            if (!runtimeController) throw new Exception(ERR_NORTC);
+            if (!this.runtimeController) throw new Exception(ERR_NORTC);
 
-            if (characterAnimator.animator.playableGraph.IsValid())
+            if (this.characterAnimator.animator.playableGraph.IsValid())
             {
-                characterAnimator.animator.playableGraph.Destroy();
+                this.characterAnimator.animator.playableGraph.Destroy();
             }
 
-            if (graph.IsValid()) graph.Destroy();
+            if (this.graph.IsValid()) this.graph.Destroy();
 
-            graph = PlayableGraph.Create(GRAPH_NAME);
-            graph.SetTimeUpdateMode(DirectorUpdateMode.GameTime);
+            this.graph = PlayableGraph.Create(GRAPH_NAME);
+            this.graph.SetTimeUpdateMode(DirectorUpdateMode.GameTime);
 
             AnimationPlayableOutput output = AnimationPlayableOutput.Create(
-                graph, GRAPH_NAME,
-                characterAnimator.animator
+                this.graph, GRAPH_NAME,
+                this.characterAnimator.animator
             );
 
-            SetupSectionDefaultStates();
-            SetupSectionStates();
-            SetupSectionGestures();
+            this.SetupSectionDefaultStates();
+            this.SetupSectionStates();
+            this.SetupSectionGestures();
 
-            output.SetSourcePlayable(mixerGesturesOutput);
+            output.SetSourcePlayable(this.mixerGesturesOutput);
             output.SetSourceOutputPort(0);
 
-            graph.Play();
+            this.graph.Play();
         }
 
         private void SetupSectionDefaultStates()
         {
-            runtimeControllerPlayable = AnimatorControllerPlayable.Create(
-                graph,
-                runtimeController
+            this.runtimeControllerPlayable = AnimatorControllerPlayable.Create(
+                this.graph,
+                this.runtimeController
             );
 
-            mixerStatesInput = AnimationMixerPlayable.Create(graph, 1, true);
-            mixerStatesInput.ConnectInput(0, runtimeControllerPlayable, 0, 1f);
-            mixerStatesInput.SetInputWeight(0, 1f);
+            this.mixerStatesInput = AnimationMixerPlayable.Create(this.graph, 1, true);
+            this.mixerStatesInput.ConnectInput(0, this.runtimeControllerPlayable, 0, 1f);
+            this.mixerStatesInput.SetInputWeight(0, 1f);
         }
 
         private void SetupSectionStates()
         {
-            states = new List<PlayableState>();
+            this.states = new List<PlayableState>();
 
-            mixerStatesOutput = AnimationMixerPlayable.Create(graph, 1, true);
-            mixerStatesOutput.ConnectInput(0, mixerStatesInput, 0, 1f);
-            mixerStatesOutput.SetInputWeight(0, 1f);
+            this.mixerStatesOutput = AnimationMixerPlayable.Create(this.graph, 1, true);
+            this.mixerStatesOutput.ConnectInput(0, this.mixerStatesInput, 0, 1f);
+            this.mixerStatesOutput.SetInputWeight(0, 1f);
         }
 
         private void SetupSectionGestures()
         {
-            gestures = new List<PlayableGesture>();
+            this.gestures = new List<PlayableGesture>();
 
-            mixerGesturesInput = AnimationMixerPlayable.Create(graph, 1, true);
-            mixerGesturesInput.ConnectInput(0, mixerStatesOutput, 0, 1f);
-            mixerGesturesInput.SetInputWeight(0, 1f);
+            this.mixerGesturesInput = AnimationMixerPlayable.Create(this.graph, 1, true);
+            this.mixerGesturesInput.ConnectInput(0, this.mixerStatesOutput, 0, 1f);
+            this.mixerGesturesInput.SetInputWeight(0, 1f);
 
-            mixerGesturesOutput = AnimationMixerPlayable.Create(graph, 1, true);
-            mixerGesturesOutput.ConnectInput(0, mixerGesturesInput, 0, 1f);
-            mixerGesturesOutput.SetInputWeight(0, 1f);
+            this.mixerGesturesOutput = AnimationMixerPlayable.Create(this.graph, 1, true);
+            this.mixerGesturesOutput.ConnectInput(0, this.mixerGesturesInput, 0, 1f);
+            this.mixerGesturesOutput.SetInputWeight(0, 1f);
         }
 
         private int GetSurroundingStates(int layer, out PlayableState prev, out PlayableState next)
@@ -386,15 +387,15 @@ namespace LowPolyHnS.Characters
             prev = null;
             next = null;
 
-            for (int i = 0; i < states.Count; ++i)
+            for (int i = 0; i < this.states.Count; ++i)
             {
-                if (states[i].Layer <= layer)
+                if (this.states[i].Layer <= layer)
                 {
-                    prev = states[i];
+                    prev = this.states[i];
                     return i;
                 }
 
-                next = states[i];
+                next = this.states[i];
             }
 
             return 0;

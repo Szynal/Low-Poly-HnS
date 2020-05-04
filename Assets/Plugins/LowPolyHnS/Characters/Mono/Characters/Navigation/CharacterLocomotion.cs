@@ -1,12 +1,14 @@
-﻿using System;
-using LowPolyHnS.Core;
-using UnityEngine;
-using UnityEngine.AI;
-using UnityEngine.Events;
-
-namespace LowPolyHnS.Characters
+﻿namespace LowPolyHnS.Characters
 {
-    [Serializable]
+    using System.Collections;
+    using System.Collections.Generic;
+    using UnityEngine;
+    using UnityEngine.AI;
+    using UnityEngine.Events;
+    using LowPolyHnS.Core;
+    using LowPolyHnS.Variables;
+
+    [System.Serializable]
     public class CharacterLocomotion
     {
         public enum ANIM_CONSTRAINT
@@ -62,7 +64,8 @@ namespace LowPolyHnS.Characters
         public bool isBusy = false;
 
         public float runSpeed = 4.0f;
-        [Range(0, 720f)] public float angularSpeed = 540f;
+        [Range(0, 720f)]
+        public float angularSpeed = 540f;
         public float gravity = -9.81f;
         public float maxFallSpeed = -100f;
 
@@ -74,7 +77,7 @@ namespace LowPolyHnS.Characters
         public float pushForce = 1.0f;
 
         [HideInInspector] public Vector3 terrainNormal = Vector3.up;
-        [HideInInspector] public float verticalSpeed;
+        [HideInInspector] public float verticalSpeed = 0.0f;
 
         // ADVANCED PROPERTIES: -------------------------------------------------------------------
 
@@ -89,9 +92,9 @@ namespace LowPolyHnS.Characters
 
         // INNER PROPERTIES: ----------------------------------------------------------------------
 
-        private float lastGroundTime;
-        private float lastJumpTime;
-        private int jumpChain;
+        private float lastGroundTime = 0f;
+        private float lastJumpTime = 0f;
+        private int jumpChain = 0;
 
         [HideInInspector] public Character character;
 
@@ -106,55 +109,55 @@ namespace LowPolyHnS.Characters
 
         public void Setup(Character character)
         {
-            lastGroundTime = Time.time;
-            lastJumpTime = Time.time;
+            this.lastGroundTime = Time.time;
+            this.lastJumpTime = Time.time;
 
             this.character = character;
-            characterController = this.character.GetComponent<CharacterController>();
+            this.characterController = this.character.GetComponent<CharacterController>();
 
-            currentLocomotionType = LOCOMOTION_SYSTEM.CharacterController;
+            this.currentLocomotionType = LOCOMOTION_SYSTEM.CharacterController;
 
-            GenerateNavmeshAgent();
-            SetDirectionalDirection(Vector3.zero);
+            this.GenerateNavmeshAgent();
+            this.SetDirectionalDirection(Vector3.zero);
         }
 
         // UPDATE: --------------------------------------------------------------------------------
 
         public void Update()
         {
-            currentLocomotionType = LOCOMOTION_SYSTEM.CharacterController;
-            if (currentLocomotionSystem != null)
+            this.currentLocomotionType = LOCOMOTION_SYSTEM.CharacterController;
+            if (this.currentLocomotionSystem != null)
             {
-                currentLocomotionType = currentLocomotionSystem.Update();
+                this.currentLocomotionType = this.currentLocomotionSystem.Update();
             }
 
-            switch (currentLocomotionType)
+            switch (this.currentLocomotionType)
             {
                 case LOCOMOTION_SYSTEM.CharacterController:
-                    UpdateVerticalSpeed(characterController.isGrounded);
+                    this.UpdateVerticalSpeed(this.characterController.isGrounded);
                     break;
 
                 case LOCOMOTION_SYSTEM.NavigationMeshAgent:
-                    UpdateVerticalSpeed(!navmeshAgent.isOnOffMeshLink);
+                    this.UpdateVerticalSpeed(!this.navmeshAgent.isOnOffMeshLink);
                     break;
             }
 
-            UpdateCharacterState(currentLocomotionType);
+            this.UpdateCharacterState(this.currentLocomotionType);
         }
 
         // PUBLIC METHODS: ------------------------------------------------------------------------
 
         public void Dash(Vector3 direction, float impulse, float duration, float drag)
         {
-            SetDirectionalDirection(Vector3.zero);
-            currentLocomotionSystem.Dash(direction, impulse, duration, drag);
+            this.SetDirectionalDirection(Vector3.zero);
+            this.currentLocomotionSystem.Dash(direction, impulse, duration, drag);
         }
 
         public void RootMovement(float impulse, float duration, float gravityInfluence,
             AnimationCurve acForward, AnimationCurve acSides, AnimationCurve acVertical)
         {
-            SetDirectionalDirection(Vector3.zero);
-            currentLocomotionSystem.RootMovement(
+            this.SetDirectionalDirection(Vector3.zero);
+            this.currentLocomotionSystem.RootMovement(
                 impulse, duration, gravityInfluence,
                 acForward, acSides, acVertical
             );
@@ -162,28 +165,30 @@ namespace LowPolyHnS.Characters
 
         public int Jump()
         {
-            return Jump(jumpForce);
+            return this.Jump(this.jumpForce);
         }
 
         public int Jump(float jumpForce)
         {
-            bool isGrounded = characterController.isGrounded ||
-                              Time.time < lastGroundTime + JUMP_COYOTE_TIME;
+            bool isGrounded = (
+                this.characterController.isGrounded ||
+                Time.time < this.lastGroundTime + JUMP_COYOTE_TIME
+            );
 
-            bool jumpDelay = lastJumpTime + timeBetweenJumps < Time.time;
-            bool jumpNumber = isGrounded || jumpChain < jumpTimes;
-            if (canJump && jumpNumber && jumpDelay)
+            bool jumpDelay = this.lastJumpTime + this.timeBetweenJumps < Time.time;
+            bool jumpNumber = isGrounded || this.jumpChain < this.jumpTimes;
+            if (this.canJump && jumpNumber && jumpDelay)
             {
-                verticalSpeed = jumpForce;
-                lastJumpTime = Time.time;
-                if (character.onJump != null)
+                this.verticalSpeed = jumpForce;
+                this.lastJumpTime = Time.time;
+                if (this.character.onJump != null)
                 {
-                    character.onJump.Invoke(jumpChain);
+                    this.character.onJump.Invoke(this.jumpChain);
                 }
 
-                jumpChain++;
+                this.jumpChain++;
 
-                return jumpChain;
+                return this.jumpChain;
             }
 
             return -1;
@@ -191,46 +196,46 @@ namespace LowPolyHnS.Characters
 
         public void Teleport(Vector3 position, Quaternion rotation)
         {
-            Teleport(position);
-            character.transform.rotation = rotation;
+            this.Teleport(position);
+            this.character.transform.rotation = rotation;
 
             Vector3 direction = rotation * Vector3.forward;
 
-            SetDirectionalDirection(direction);
-            currentLocomotionSystem.movementDirection = direction;
+            this.SetDirectionalDirection(direction);
+            this.currentLocomotionSystem.movementDirection = direction;
         }
 
         public void Teleport(Vector3 position)
         {
-            switch (currentLocomotionType)
+            switch (this.currentLocomotionType)
             {
-                case LOCOMOTION_SYSTEM.CharacterController:
-                    character.transform.position = position;
+                case CharacterLocomotion.LOCOMOTION_SYSTEM.CharacterController:
+                    this.character.transform.position = position;
                     break;
 
-                case LOCOMOTION_SYSTEM.NavigationMeshAgent:
-                    character.transform.position = position;
-                    character.characterLocomotion.navmeshAgent.Warp(position);
+                case CharacterLocomotion.LOCOMOTION_SYSTEM.NavigationMeshAgent:
+                    this.character.transform.position = position;
+                    this.character.characterLocomotion.navmeshAgent.Warp(position);
                     break;
             }
         }
 
         public void SetAnimatorConstraint(ANIM_CONSTRAINT constraint)
         {
-            animatorConstraint = constraint;
+            this.animatorConstraint = constraint;
         }
 
         public void ChangeHeight(float height)
         {
-            if (characterController != null)
+            if (this.characterController != null)
             {
-                characterController.height = height;
-                characterController.center = Vector3.up * (height / 2.0f);
+                this.characterController.height = height;
+                this.characterController.center = Vector3.up * (height / 2.0f);
             }
 
-            if (navmeshAgent != null)
+            if (this.navmeshAgent != null)
             {
-                navmeshAgent.height = height;
+                this.navmeshAgent.height = height;
             }
         }
 
@@ -239,35 +244,35 @@ namespace LowPolyHnS.Characters
             if (isControllable == this.isControllable) return;
             this.isControllable = isControllable;
 
-            if (!isControllable) SetDirectionalDirection(Vector3.zero);
-            if (character.onIsControllable != null)
+            if (!isControllable) this.SetDirectionalDirection(Vector3.zero);
+            if (this.character.onIsControllable != null)
             {
-                character.onIsControllable.Invoke(this.isControllable);
+                this.character.onIsControllable.Invoke(this.isControllable);
             }
         }
 
         public Vector3 GetAimDirection()
         {
-            return currentLocomotionSystem.aimDirection;
+            return this.currentLocomotionSystem.aimDirection;
         }
 
         public Vector3 GetMovementDirection()
         {
-            return currentLocomotionSystem.movementDirection;
+            return this.currentLocomotionSystem.movementDirection;
         }
 
         // PUBLIC LOCOMOTION METHODS: -------------------------------------------------------------
 
         public void SetDirectionalDirection(Vector3 direction, ILocomotionSystem.TargetRotation rotation = null)
         {
-            ChangeLocomotionSystem<LocomotionSystemDirectional>();
-            ((LocomotionSystemDirectional) currentLocomotionSystem).SetDirection(direction, rotation);
+            this.ChangeLocomotionSystem<LocomotionSystemDirectional>();
+            ((LocomotionSystemDirectional)this.currentLocomotionSystem).SetDirection(direction, rotation);
         }
 
         public void SetTankDirection(Vector3 direction, float rotationY)
         {
-            ChangeLocomotionSystem<LocomotionSystemTank>();
-            ((LocomotionSystemTank) currentLocomotionSystem).SetDirection(
+            this.ChangeLocomotionSystem<LocomotionSystemTank>();
+            ((LocomotionSystemTank)this.currentLocomotionSystem).SetDirection(
                 direction,
                 rotationY
             );
@@ -276,116 +281,121 @@ namespace LowPolyHnS.Characters
         public void SetTarget(Ray ray, LayerMask layerMask, ILocomotionSystem.TargetRotation rotation,
             float stopThreshold, UnityAction callback = null)
         {
-            ChangeLocomotionSystem<LocomotionSystemTarget>();
-            ((LocomotionSystemTarget) currentLocomotionSystem)
+            this.ChangeLocomotionSystem<LocomotionSystemTarget>();
+            ((LocomotionSystemTarget)this.currentLocomotionSystem)
                 .SetTarget(ray, layerMask, rotation, stopThreshold, callback);
         }
 
         public void SetTarget(Vector3 position, ILocomotionSystem.TargetRotation rotation,
             float stopThreshold, UnityAction callback = null)
         {
-            ChangeLocomotionSystem<LocomotionSystemTarget>();
-            ((LocomotionSystemTarget) currentLocomotionSystem)
+            this.ChangeLocomotionSystem<LocomotionSystemTarget>();
+            ((LocomotionSystemTarget)this.currentLocomotionSystem)
                 .SetTarget(position, rotation, stopThreshold, callback);
         }
 
         public void FollowTarget(Transform target, float minRadius, float maxRadius)
         {
-            ChangeLocomotionSystem<LocomotionSystemFollow>();
-            ((LocomotionSystemFollow) currentLocomotionSystem).SetFollow(target, minRadius, maxRadius);
+            this.ChangeLocomotionSystem<LocomotionSystemFollow>();
+            ((LocomotionSystemFollow)this.currentLocomotionSystem).SetFollow(target, minRadius, maxRadius);
         }
 
         public void Stop(ILocomotionSystem.TargetRotation rotation = null, UnityAction callback = null)
         {
-            ChangeLocomotionSystem<LocomotionSystemTarget>();
-            ((LocomotionSystemTarget) currentLocomotionSystem).Stop(rotation, callback);
+            this.ChangeLocomotionSystem<LocomotionSystemTarget>();
+            ((LocomotionSystemTarget)this.currentLocomotionSystem).Stop(rotation, callback);
         }
 
         public void SetRotation(Vector3 direction)
         {
-            ChangeLocomotionSystem<LocomotionSystemRotation>();
-            ((LocomotionSystemRotation) currentLocomotionSystem).SetDirection(direction);
+            this.ChangeLocomotionSystem<LocomotionSystemRotation>();
+            ((LocomotionSystemRotation)this.currentLocomotionSystem).SetDirection(direction);
         }
 
         // PRIVATE METHODS: -----------------------------------------------------------------------
 
         private void GenerateNavmeshAgent()
         {
-            if (!canUseNavigationMesh) return;
+            if (!this.canUseNavigationMesh) return;
 
-            if (navmeshAgent == null) navmeshAgent = character.gameObject.GetComponent<NavMeshAgent>();
-            if (navmeshAgent == null) navmeshAgent = character.gameObject.AddComponent<NavMeshAgent>();
+            if (this.navmeshAgent == null) this.navmeshAgent = this.character.gameObject.GetComponent<NavMeshAgent>();
+            if (this.navmeshAgent == null) this.navmeshAgent = this.character.gameObject.AddComponent<NavMeshAgent>();
 
-            navmeshAgent.updatePosition = false;
-            navmeshAgent.updateRotation = false;
-            navmeshAgent.updateUpAxis = false;
-            navmeshAgent.radius = characterController.radius;
-            navmeshAgent.height = characterController.height;
-            navmeshAgent.acceleration = ACCELERATION;
+            this.navmeshAgent.updatePosition = false;
+            this.navmeshAgent.updateRotation = false;
+            this.navmeshAgent.updateUpAxis = false;
+            this.navmeshAgent.radius = this.characterController.radius;
+            this.navmeshAgent.height = this.characterController.height;
+            this.navmeshAgent.acceleration = ACCELERATION;
         }
 
         private void ChangeLocomotionSystem<TLS>() where TLS : ILocomotionSystem, new()
         {
-            if (currentLocomotionSystem != null && typeof(TLS) == currentLocomotionSystem.GetType()) return;
-            if (currentLocomotionSystem != null) currentLocomotionSystem.OnDestroy();
+            if (this.currentLocomotionSystem != null && typeof(TLS) == this.currentLocomotionSystem.GetType()) return;
+            if (this.currentLocomotionSystem != null) this.currentLocomotionSystem.OnDestroy();
 
-            currentLocomotionSystem = new TLS();
-            currentLocomotionSystem.Setup(this);
+            this.currentLocomotionSystem = new TLS();
+            this.currentLocomotionSystem.Setup(this);
         }
 
         private void UpdateVerticalSpeed(bool isGrounded)
         {
-            verticalSpeed += gravity * Time.deltaTime;
+            this.verticalSpeed += (this.gravity * Time.deltaTime);
             if (isGrounded)
             {
-                if (Time.time - lastGroundTime > JUMP_COYOTE_TIME + Time.deltaTime &&
-                    character.onLand != null)
+                if (Time.time - this.lastGroundTime > JUMP_COYOTE_TIME + Time.deltaTime &&
+                    this.character.onLand != null)
                 {
-                    character.onLand.Invoke(verticalSpeed);
+                    this.character.onLand.Invoke(this.verticalSpeed);
                 }
 
-                jumpChain = 0;
-                lastGroundTime = Time.time;
-                verticalSpeed = Mathf.Max(verticalSpeed, MAX_GROUND_VSPEED);
+                this.jumpChain = 0;
+                this.lastGroundTime = Time.time;
+                this.verticalSpeed = Mathf.Max(this.verticalSpeed, MAX_GROUND_VSPEED);
             }
 
-            verticalSpeed = Mathf.Max(verticalSpeed, maxFallSpeed);
+            this.verticalSpeed = Mathf.Max(this.verticalSpeed, this.maxFallSpeed);
         }
 
         private void UpdateCharacterState(LOCOMOTION_SYSTEM locomotionSystem)
         {
             Vector3 worldVelocity = Vector3.zero;
-            bool isSliding = currentLocomotionSystem.isSliding;
+            bool isSliding = this.currentLocomotionSystem.isSliding;
             bool isGrounded = true;
 
             switch (locomotionSystem)
             {
                 case LOCOMOTION_SYSTEM.CharacterController:
-                    worldVelocity = characterController.velocity;
-                    isGrounded = characterController.isGrounded ||
-                                 Time.time - lastGroundTime < GROUND_TIME_OFFSET;
+                    worldVelocity = this.characterController.velocity;
+                    isGrounded = (
+                        this.characterController.isGrounded ||
+                        Time.time - this.lastGroundTime < GROUND_TIME_OFFSET
+                    );
                     break;
 
                 case LOCOMOTION_SYSTEM.NavigationMeshAgent:
-                    worldVelocity = navmeshAgent.velocity == Vector3.zero
-                        ? characterController.velocity
-                        : navmeshAgent.velocity;
-                    isGrounded = !navmeshAgent.isOnOffMeshLink ||
-                                 Time.time - lastGroundTime < GROUND_TIME_OFFSET;
+                    worldVelocity = (this.navmeshAgent.velocity == Vector3.zero
+                        ? this.characterController.velocity
+                        : this.navmeshAgent.velocity
+                    );
+                    isGrounded = (
+                        !this.navmeshAgent.isOnOffMeshLink ||
+                        Time.time - this.lastGroundTime < GROUND_TIME_OFFSET
+                    );
                     break;
             }
 
-            Vector3 localVelocity = character.transform.InverseTransformDirection(worldVelocity);
-            character.characterState.forwardSpeed = localVelocity;
-            character.characterState.sidesSpeed = Mathf.Atan2(localVelocity.x, localVelocity.z);
-            character.characterState.verticalSpeed = worldVelocity.y;
+            Vector3 localVelocity = this.character.transform.InverseTransformDirection(worldVelocity);
+            this.character.characterState.forwardSpeed = localVelocity;
+            this.character.characterState.sidesSpeed = Mathf.Atan2(localVelocity.x, localVelocity.z);
+            this.character.characterState.verticalSpeed = worldVelocity.y;
 
-            character.characterState.pivotSpeed = currentLocomotionSystem.pivotSpeed;
+            this.character.characterState.pivotSpeed = this.currentLocomotionSystem.pivotSpeed;
 
-            character.characterState.isGrounded = isGrounded ? 1f : 0f;
-            character.characterState.isSliding = isSliding ? 1f : 0f;
-            character.characterState.isDashing = currentLocomotionSystem.isDashing ? 1f : 0f;
-            character.characterState.normal = terrainNormal;
+            this.character.characterState.isGrounded = isGrounded ? 1f : 0f;
+            this.character.characterState.isSliding = isSliding ? 1f : 0f;
+            this.character.characterState.isDashing = this.currentLocomotionSystem.isDashing ? 1f : 0f;
+            this.character.characterState.normal = this.terrainNormal;
         }
     }
 }

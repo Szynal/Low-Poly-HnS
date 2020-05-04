@@ -1,24 +1,27 @@
-﻿using LowPolyHnS.Core;
-using UnityEngine;
-
-namespace LowPolyHnS.Characters
+﻿namespace LowPolyHnS.Characters
 {
-#if UNITY_EDITOR
-    using UnityEditor;
+	using System.Collections;
+	using System.Collections.Generic;
+	using UnityEngine;
+	using UnityEngine.Events;
+	using LowPolyHnS.Core;
+	using LowPolyHnS.Core.Hooks;
 
-#endif
+	#if UNITY_EDITOR
+	using UnityEditor;
+	#endif
 
-    [AddComponentMenu("")]
-    public class ActionHeadTrack : IAction
-    {
-        public enum TRACK_STATE
-        {
-            TrackTarget,
-            Untrack
-        }
+	[AddComponentMenu("")]
+	public class ActionHeadTrack : IAction 
+	{
+		public enum TRACK_STATE
+		{
+			TrackTarget,
+			Untrack
+		}
 
         public TargetCharacter character = new TargetCharacter();
-        public TRACK_STATE trackState = TRACK_STATE.TrackTarget;
+		public TRACK_STATE trackState = TRACK_STATE.TrackTarget;
         public TargetGameObject trackTarget = new TargetGameObject();
         public float speed = 0.5f;
 
@@ -26,16 +29,16 @@ namespace LowPolyHnS.Characters
 
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
-            Character sourceCharacter = character.GetCharacter(target);
+            Character sourceCharacter = this.character.GetCharacter(target);
             if (sourceCharacter != null)
             {
                 CharacterHeadTrack headTrack = sourceCharacter.GetHeadTracker();
                 if (headTrack != null)
                 {
-                    switch (trackState)
+                    switch (this.trackState)
                     {
                         case TRACK_STATE.TrackTarget:
-                            headTrack.Track(trackTarget.GetTransform(target), speed);
+                            headTrack.Track(this.trackTarget.GetTransform(target), this.speed);
                             break;
 
                         case TRACK_STATE.Untrack:
@@ -48,78 +51,79 @@ namespace LowPolyHnS.Characters
             return true;
         }
 
-        // +--------------------------------------------------------------------------------------+
-        // | EDITOR                                                                               |
-        // +--------------------------------------------------------------------------------------+
+		// +--------------------------------------------------------------------------------------+
+		// | EDITOR                                                                               |
+		// +--------------------------------------------------------------------------------------+
 
-#if UNITY_EDITOR
+		#if UNITY_EDITOR
 
-        public static new string NAME = "Character/Head Track";
-        private const string NODE_TITLE = "{0} {1} {2}";
+		public static new string NAME = "Character/Head Track";
+		private const string NODE_TITLE = "{0} {1} {2}";
 
-        // PROPERTIES: ----------------------------------------------------------------------------
+		// PROPERTIES: ----------------------------------------------------------------------------
 
-        private SerializedProperty spCharacter;
-        private SerializedProperty spTrackState;
-        private SerializedProperty spTrackTarget;
+		private SerializedProperty spCharacter;
+		private SerializedProperty spTrackState;
+		private SerializedProperty spTrackTarget;
         private SerializedProperty spSpeed;
 
-        // INSPECTOR METHODS: ---------------------------------------------------------------------
+		// INSPECTOR METHODS: ---------------------------------------------------------------------
 
-        public override string GetNodeTitle()
-        {
-            string source = character.ToString();
+		public override string GetNodeTitle()
+		{
+            string source = this.character.ToString();
 
-            string target = trackTarget.ToString();
-            if (trackState == TRACK_STATE.Untrack) target = "";
+            string target = this.trackTarget.ToString();
+            if (this.trackState == TRACK_STATE.Untrack) target = "";
 
             string track = "head ";
-            if (trackState == TRACK_STATE.TrackTarget) track += "track";
-            if (trackState == TRACK_STATE.Untrack) track += "untrack";
+            if (this.trackState == TRACK_STATE.TrackTarget) track += "track";
+            if (this.trackState == TRACK_STATE.Untrack) track += "untrack";
 
 
-            return string.Format(
-                NODE_TITLE,
+			return string.Format(
+                NODE_TITLE, 
                 source,
                 track,
                 target
-            );
+			);
+		}
+
+		protected override void OnEnableEditorChild ()
+		{
+			this.spCharacter = this.serializedObject.FindProperty("character");
+			this.spTrackState = this.serializedObject.FindProperty("trackState");
+			this.spTrackTarget = this.serializedObject.FindProperty("trackTarget");
+            this.spSpeed = this.serializedObject.FindProperty("speed");
+
         }
 
-        protected override void OnEnableEditorChild()
-        {
-            spCharacter = serializedObject.FindProperty("character");
-            spTrackState = serializedObject.FindProperty("trackState");
-            spTrackTarget = serializedObject.FindProperty("trackTarget");
-            spSpeed = serializedObject.FindProperty("speed");
+		protected override void OnDisableEditorChild ()
+		{
+			this.spCharacter = null;
+			this.spTrackState = null;
+			this.spTrackTarget = null;
+            this.spSpeed = null;
         }
 
-        protected override void OnDisableEditorChild()
-        {
-            spCharacter = null;
-            spTrackState = null;
-            spTrackTarget = null;
-            spSpeed = null;
-        }
+		public override void OnInspectorGUI()
+		{
+			this.serializedObject.Update();
+				
+            EditorGUILayout.PropertyField(this.spCharacter);
+            EditorGUILayout.PropertyField(this.spTrackState);
+            EditorGUILayout.PropertyField(this.spSpeed);
 
-        public override void OnInspectorGUI()
-        {
-            serializedObject.Update();
-
-            EditorGUILayout.PropertyField(spCharacter);
-            EditorGUILayout.PropertyField(spTrackState);
-            EditorGUILayout.PropertyField(spSpeed);
-
-            if (spTrackState.intValue == (int) TRACK_STATE.TrackTarget)
-            {
+            if (this.spTrackState.intValue == (int)TRACK_STATE.TrackTarget)
+			{
                 EditorGUI.indentLevel++;
-                EditorGUILayout.PropertyField(spTrackTarget);
+                EditorGUILayout.PropertyField(this.spTrackTarget);
                 EditorGUI.indentLevel--;
-            }
+			}
 
-            serializedObject.ApplyModifiedProperties();
-        }
+			this.serializedObject.ApplyModifiedProperties();
+		}
 
-#endif
-    }
+		#endif
+	}
 }

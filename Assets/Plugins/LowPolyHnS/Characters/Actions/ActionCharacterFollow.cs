@@ -1,16 +1,18 @@
-﻿using LowPolyHnS.Core;
-using UnityEngine;
-
-namespace LowPolyHnS.Characters
+﻿namespace LowPolyHnS.Characters
 {
-#if UNITY_EDITOR
-    using UnityEditor;
+	using System.Collections;
+	using System.Collections.Generic;
+	using UnityEngine;
+	using UnityEngine.Events;
+	using LowPolyHnS.Core;
 
-#endif
+	#if UNITY_EDITOR
+	using UnityEditor;
+	#endif
 
-    [AddComponentMenu("")]
-    public class ActionCharacterFollow : IAction
-    {
+	[AddComponentMenu("")]
+	public class ActionCharacterFollow : IAction 
+	{
         public enum ActionType
         {
             Follow,
@@ -28,87 +30,88 @@ namespace LowPolyHnS.Characters
 
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
-            Character charTarget = character.GetCharacter(target);
+            Character charTarget = this.character.GetCharacter(target);
             if (charTarget == null) return true;
 
             Transform follow = null;
 
-            if (actionType == ActionType.Follow)
+            if (this.actionType == ActionType.Follow)
             {
-                follow = followTarget.GetComponent<Transform>(target);
+                follow = this.followTarget.GetComponent<Transform>(target);
             }
 
             charTarget.characterLocomotion.FollowTarget(
                 follow,
-                followMinRadius,
-                followMaxRadius
+                this.followMinRadius,
+                this.followMaxRadius
             );
 
             return true;
         }
 
-        // +--------------------------------------------------------------------------------------+
-        // | EDITOR                                                                               |
-        // +--------------------------------------------------------------------------------------+
+		// +--------------------------------------------------------------------------------------+
+		// | EDITOR                                                                               |
+		// +--------------------------------------------------------------------------------------+
 
-#if UNITY_EDITOR
+		#if UNITY_EDITOR
 
-        public static new string NAME = "Character/Character Follow";
+		public static new string NAME = "Character/Character Follow";
         private const string NODE_TITLE = "{0} {1} {2}";
 
-        // PROPERTIES: ----------------------------------------------------------------------------
+		// PROPERTIES: ----------------------------------------------------------------------------
 
-        private SerializedProperty spCharacter;
-        private SerializedProperty spActionType;
-
+		private SerializedProperty spCharacter;
+		private SerializedProperty spActionType;
+		
         private SerializedProperty spFollowTarget;
-        private SerializedProperty spMinRadius;
-        private SerializedProperty spMaxRadius;
+		private SerializedProperty spMinRadius;
+		private SerializedProperty spMaxRadius;
 
-        // INSPECTOR METHODS: ---------------------------------------------------------------------
+		// INSPECTOR METHODS: ---------------------------------------------------------------------
 
-        public override string GetNodeTitle()
-        {
-            return string.Format(
-                NODE_TITLE,
-                character,
-                ObjectNames.NicifyVariableName(actionType.ToString()),
-                actionType == ActionType.Follow ? followTarget.ToString() : ""
+		public override string GetNodeTitle()
+		{
+			return string.Format(
+				NODE_TITLE,
+                this.character,
+                ObjectNames.NicifyVariableName(this.actionType.ToString()),
+                (this.actionType == ActionType.Follow ? this.followTarget.ToString() : "")
             );
-        }
+		}
 
-        protected override void OnEnableEditorChild()
-        {
-            spCharacter = serializedObject.FindProperty("character");
-            spActionType = serializedObject.FindProperty("actionType");
-            spFollowTarget = serializedObject.FindProperty("followTarget");
-            spMinRadius = serializedObject.FindProperty("followMinRadius");
-            spMaxRadius = serializedObject.FindProperty("followMaxRadius");
-        }
+		protected override void OnEnableEditorChild ()
+		{
+            this.spCharacter = this.serializedObject.FindProperty("character");
+            this.spActionType = this.serializedObject.FindProperty("actionType");
+            this.spFollowTarget = this.serializedObject.FindProperty("followTarget");
+            this.spMinRadius = this.serializedObject.FindProperty("followMinRadius");
+            this.spMaxRadius = this.serializedObject.FindProperty("followMaxRadius");
+		}
 
-        protected override void OnDisableEditorChild()
-        {
-        }
+		protected override void OnDisableEditorChild ()
+		{
+			return;
+		}
 
-        public override void OnInspectorGUI()
-        {
-            serializedObject.Update();
+		public override void OnInspectorGUI()
+		{
+			this.serializedObject.Update();
 
-            EditorGUILayout.PropertyField(spCharacter);
-            EditorGUILayout.PropertyField(spActionType);
+            EditorGUILayout.PropertyField(this.spCharacter);
+            EditorGUILayout.PropertyField(this.spActionType);
 
-            if ((ActionType) spActionType.intValue == ActionType.Follow)
+            if ((ActionType)this.spActionType.intValue == ActionType.Follow)
             {
                 EditorGUILayout.Space();
-                EditorGUILayout.PropertyField(spFollowTarget);
+                EditorGUILayout.PropertyField(this.spFollowTarget);
 
-                EditorGUILayout.PropertyField(spMinRadius);
-                EditorGUILayout.PropertyField(spMaxRadius);
+                EditorGUILayout.PropertyField(this.spMinRadius);  
+                EditorGUILayout.PropertyField(this.spMaxRadius);  
             }
 
-            serializedObject.ApplyModifiedProperties();
-        }
+			this.serializedObject.ApplyModifiedProperties();
+		}
 
-#endif
-    }
+		#endif
+	}
 }

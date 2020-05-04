@@ -1,10 +1,10 @@
-﻿using System;
-using UnityEngine;
-using UnityEngine.Animations;
-using UnityEngine.Playables;
-
-namespace LowPolyHnS.Characters
+﻿namespace LowPolyHnS.Characters
 {
+    using System;
+    using UnityEngine;
+    using UnityEngine.Animations;
+    using UnityEngine.Playables;
+
     public class PlayableGesture : PlayableBase
     {
         public AnimationClip animationClip { get; private set; }
@@ -69,36 +69,36 @@ namespace LowPolyHnS.Characters
 
         public override bool Update()
         {
-            if (endFreezeTime > 0f && Time.time > endFreezeTime)
+            if (this.endFreezeTime > 0f && Time.time > this.endFreezeTime)
             {
-                Stop(0f);
+                this.Stop(0f);
                 return true;
             }
 
-            if (Input1.IsDone())
+            if (this.Input1.IsDone())
             {
-                Stop(0f);
+                this.Stop(0f);
                 return true;
             }
 
-            float time = (float) Input1.GetTime();
-            if (time + fadeOut >= Input1.GetDuration())
+            float time = (float)this.Input1.GetTime();
+            if (time + this.fadeOut >= this.Input1.GetDuration())
             {
-                float t = ((float) Input1.GetDuration() - time) / fadeOut;
+                float t = ((float)this.Input1.GetDuration() - time) / this.fadeOut;
 
                 t = Mathf.Clamp01(t);
-                UpdateMixerWeights(t);
+                this.UpdateMixerWeights(t);
             }
-            else if (time <= fadeIn)
+            else if (time <= this.fadeIn)
             {
-                float t = time / fadeIn;
+                float t = time / this.fadeIn;
 
                 t = Mathf.Clamp01(t);
-                UpdateMixerWeights(t);
+                this.UpdateMixerWeights(t);
             }
             else
             {
-                UpdateMixerWeights(1f);
+                this.UpdateMixerWeights(1f);
             }
 
             return false;
@@ -108,10 +108,10 @@ namespace LowPolyHnS.Characters
 
         public void StretchDuration(float extraTime)
         {
-            if (Input1.GetDuration() - Input1.GetTime() < extraTime)
+            if (this.Input1.GetDuration() - this.Input1.GetTime() < extraTime)
             {
-                Input1.SetSpeed(0f);
-                endFreezeTime = Time.time + extraTime;
+                this.Input1.SetSpeed(0f);
+                this.endFreezeTime = Time.time + extraTime;
             }
         }
 
@@ -120,9 +120,9 @@ namespace LowPolyHnS.Characters
             base.Stop(fadeOut);
             this.fadeOut = fadeOut;
 
-            Input1.SetDuration(Math.Min(
-                Input1.GetTime() + fadeOut,
-                Input1.GetDuration())
+            this.Input1.SetDuration(Math.Min(
+                this.Input1.GetTime() + fadeOut,
+                this.Input1.GetDuration())
             );
         }
     }

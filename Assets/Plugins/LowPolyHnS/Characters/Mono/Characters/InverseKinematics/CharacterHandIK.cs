@@ -1,8 +1,10 @@
-﻿using LowPolyHnS.Core;
-using UnityEngine;
-
-namespace LowPolyHnS.Characters
+﻿namespace LowPolyHnS.Characters
 {
+    using System.Collections;
+    using System.Collections.Generic;
+    using UnityEngine;
+    using LowPolyHnS.Core;
+
     [AddComponentMenu("")]
     public class CharacterHandIK : MonoBehaviour
     {
@@ -33,74 +35,74 @@ namespace LowPolyHnS.Characters
                 this.handIK = handIK;
                 this.hand = hand;
 
-                changeTime = 0.0f;
-                currentWeight = 0.0f;
+                this.changeTime = 0.0f;
+                this.currentWeight = 0.0f;
 
-                targetReach = false;
-                targetTime = 1.0f;
+                this.targetReach = false;
+                this.targetTime = 1.0f;
 
-                targetPosition = Vector3.zero;
+                this.targetPosition = Vector3.zero;
             }
 
             public void Update(Animator animator)
             {
-                if (targetTransform != null)
+                if (this.targetTransform != null)
                 {
-                    targetPosition = targetTransform.position;
+                    this.targetPosition = this.targetTransform.position;
                 }
 
-                if (targetReach)
+                if (this.targetReach)
                 {
-                    float t = Time.time - changeTime;
-                    t = Easing.QuadInOut(0.0f, 1.0f, t / targetTime);
+                    float t = Time.time - this.changeTime;
+                    t = Easing.QuadInOut(0.0f, 1.0f, t / this.targetTime);
 
-                    currentWeight = Mathf.Lerp(
-                        currentWeight,
-                        1.0f,
+                    this.currentWeight = Mathf.Lerp(
+                        this.currentWeight, 
+                        1.0f, 
                         t
                     );
 
-                    currentPosition = Vector3.Slerp(
-                        currentPosition,
-                        targetPosition,
-                        Easing.QuadInOut(0.0f, 1.0f, t / targetTime)
+                    this.currentPosition = Vector3.Slerp(
+                        this.currentPosition, 
+                        this.targetPosition,
+                        Easing.QuadInOut(0.0f, 1.0f, t/this.targetTime)
                     );
                 }
                 else
                 {
-                    float t = Time.time - changeTime;
-                    t = Easing.QuadInOut(0.0f, 1.0f, t / targetTime);
+                    float t = Time.time - this.changeTime;
+                    t = Easing.QuadInOut(0.0f, 1.0f, t / this.targetTime);
 
-                    currentWeight = Mathf.Lerp(
-                        currentWeight,
+                    this.currentWeight = Mathf.Lerp(
+                        this.currentWeight,
                         0.0f,
                         t
                     );
 
-                    currentPosition = targetPosition;
+                    this.currentPosition = this.targetPosition;
                 }
 
-                animator.SetIKPositionWeight(handIK, currentWeight);
-                animator.SetIKPosition(handIK, currentPosition);
+                animator.SetIKPositionWeight(this.handIK, this.currentWeight);
+                animator.SetIKPosition(this.handIK, this.currentPosition);
             }
 
             public void Reach(Animator animator, Transform targetTransform, float duration)
             {
-                targetReach = true;
-                targetTime = Mathf.Max(duration, 0.01f);
+                this.targetReach = true;
+                this.targetTime = Mathf.Max(duration, 0.01f);
 
                 this.targetTransform = targetTransform;
-                targetPosition = targetTransform.position;
+                this.targetPosition = targetTransform.position;
 
-                currentPosition = hand.position;
-                changeTime = Time.time;
+                this.currentPosition = this.hand.position;
+                this.changeTime = Time.time;
             }
 
             public void Unreach(float duration)
             {
-                targetReach = false;
-                targetTime = Mathf.Max(duration, 0.01f);
-                changeTime = Time.time;
+                this.targetReach = false;
+                this.targetTime = Mathf.Max(duration, 0.01f);
+                this.changeTime = Time.time;
             }
         }
 
@@ -122,39 +124,39 @@ namespace LowPolyHnS.Characters
         public void Setup(Character character)
         {
             this.character = character;
-            characterAnimator = this.character.GetCharacterAnimator();
-            animator = characterAnimator.animator;
-            controller = gameObject.GetComponentInParent<CharacterController>();
-            if (animator == null || !animator.isHuman || controller == null) return;
+            this.characterAnimator = this.character.GetCharacterAnimator();
+            this.animator = this.characterAnimator.animator;
+            this.controller = gameObject.GetComponentInParent<CharacterController>();
+            if (this.animator == null || !this.animator.isHuman || this.controller == null) return;
 
-            Transform handLTransform = animator.GetBoneTransform(HumanBodyBones.LeftHand);
-            Transform handRTransform = animator.GetBoneTransform(HumanBodyBones.RightHand);
+            Transform handLTransform = this.animator.GetBoneTransform(HumanBodyBones.LeftHand);
+            Transform handRTransform = this.animator.GetBoneTransform(HumanBodyBones.RightHand);
 
-            handL = new Hand(handLTransform, AvatarIKGoal.LeftHand);
-            handR = new Hand(handRTransform, AvatarIKGoal.RightHand);
+            this.handL = new Hand(handLTransform, AvatarIKGoal.LeftHand);
+            this.handR = new Hand(handRTransform, AvatarIKGoal.RightHand);
         }
 
         // IK METHODS: ----------------------------------------------------------------------------
 
         private void OnAnimatorIK(int layerIndex)
         {
-            if (animator == null || !animator.isHuman) return;
-            if (character == null || characterAnimator == null) return;
-            if (character.IsRagdoll()) return;
+            if (this.animator == null || !this.animator.isHuman) return;
+            if (this.character == null || this.characterAnimator == null) return;
+            if (this.character.IsRagdoll()) return;
 
-            eventBeforeIK.Invoke(layerIndex);
+            this.eventBeforeIK.Invoke(layerIndex);
 
-            if (!characterAnimator.useHandIK) return;
+            if (!this.characterAnimator.useHandIK) return;
 
-            UpdateHand(handL);
-            UpdateHand(handR);
+            UpdateHand(this.handL);
+            UpdateHand(this.handR);
 
-            eventAfterIK.Invoke(layerIndex);
+            this.eventAfterIK.Invoke(layerIndex);
         }
 
         private void UpdateHand(Hand hand)
         {
-            hand.Update(animator);
+            hand.Update(this.animator);
         }
 
         // PUBLIC METHODS: ------------------------------------------------------------------------
@@ -163,21 +165,21 @@ namespace LowPolyHnS.Characters
         {
             switch (limb)
             {
-                case Limb.LeftHand:
-                    handL.Reach(animator, target, duration);
+                case Limb.LeftHand  : 
+                    this.handL.Reach(this.animator, target, duration); 
                     break;
 
-                case Limb.RightHand:
-                    handR.Reach(animator, target, duration);
+                case Limb.RightHand : 
+                    this.handR.Reach(this.animator, target, duration); 
+                    break;
+                
+                case Limb.NearestHand : 
+                    this.NearestHand(target).Reach(this.animator, target, duration); 
                     break;
 
-                case Limb.NearestHand:
-                    NearestHand(target).Reach(animator, target, duration);
-                    break;
-
-                case Limb.BothHands:
-                    handL.Reach(animator, target, duration);
-                    handR.Reach(animator, target, duration);
+                case Limb.BothHands: 
+                    this.handL.Reach(this.animator, target, duration); 
+                    this.handR.Reach(this.animator, target, duration); 
                     break;
             }
         }
@@ -187,16 +189,16 @@ namespace LowPolyHnS.Characters
             switch (limb)
             {
                 case Limb.LeftHand:
-                    handL.Unreach(duration);
+                    this.handL.Unreach(duration);
                     break;
 
                 case Limb.RightHand:
-                    handR.Unreach(duration);
+                    this.handR.Unreach(duration);
                     break;
 
                 default:
-                    handL.Unreach(duration);
-                    handR.Unreach(duration);
+                    this.handL.Unreach(duration);
+                    this.handR.Unreach(duration);
                     break;
             }
         }
@@ -205,12 +207,13 @@ namespace LowPolyHnS.Characters
 
         private Hand NearestHand(Transform target)
         {
-            Vector3 tL = handL.hand.position;
-            Vector3 tR = handR.hand.position;
+            Vector3 tL = this.handL.hand.position;
+            Vector3 tR = this.handR.hand.position;
 
-            return Vector3.Distance(tL, target.position) < Vector3.Distance(tR, target.position)
-                ? handL
-                : handR;
+            return (Vector3.Distance(tL, target.position) < Vector3.Distance(tR, target.position) 
+                ? this.handL 
+                : this.handR
+            );
         }
     }
 }

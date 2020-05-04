@@ -1,19 +1,22 @@
-﻿using LowPolyHnS.Core;
-using LowPolyHnS.Core.Hooks;
-using UnityEngine;
-
-namespace LowPolyHnS.Characters
+﻿namespace LowPolyHnS.Characters
 {
-#if UNITY_EDITOR
-    using UnityEditor;
+	using System.Collections;
+	using System.Collections.Generic;
+	using UnityEngine;
+	using UnityEngine.Events;
+	using LowPolyHnS.Core;
+	using LowPolyHnS.Characters;
+	using LowPolyHnS.Core.Hooks;
 
-#endif
+	#if UNITY_EDITOR
+	using UnityEditor;
+	#endif
 
-    [AddComponentMenu("")]
-    public class ActionPlayerMovementInput : IAction
-    {
-        public PlayerCharacter.INPUT_TYPE inputType = PlayerCharacter.INPUT_TYPE.Directional;
-
+	[AddComponentMenu("")]
+	public class ActionPlayerMovementInput : IAction 
+	{
+		public PlayerCharacter.INPUT_TYPE inputType = PlayerCharacter.INPUT_TYPE.Directional;
+		
         public PlayerCharacter.MOUSE_BUTTON mouseButton = PlayerCharacter.MOUSE_BUTTON.LeftClick;
         public bool invertAxis = false;
 
@@ -24,94 +27,94 @@ namespace LowPolyHnS.Characters
             if (HookPlayer.Instance != null)
             {
                 PlayerCharacter player = HookPlayer.Instance.Get<PlayerCharacter>();
-                player.inputType = inputType;
+                player.inputType = this.inputType;
 
-                if (inputType == PlayerCharacter.INPUT_TYPE.PointAndClick ||
-                    inputType == PlayerCharacter.INPUT_TYPE.FollowPointer)
+                if (this.inputType == PlayerCharacter.INPUT_TYPE.PointAndClick ||
+                    this.inputType == PlayerCharacter.INPUT_TYPE.FollowPointer)
                 {
-                    player.mouseButtonMove = mouseButton;
+                    player.mouseButtonMove = this.mouseButton;
                 }
 
-                if (inputType == PlayerCharacter.INPUT_TYPE.SideScrollX ||
-                    inputType == PlayerCharacter.INPUT_TYPE.SideScrollZ)
+                if (this.inputType == PlayerCharacter.INPUT_TYPE.SideScrollX ||
+                    this.inputType == PlayerCharacter.INPUT_TYPE.SideScrollZ)
                 {
-                    player.invertAxis = invertAxis;
+                    player.invertAxis = this.invertAxis;
                 }
             }
 
             return true;
         }
 
-        // +--------------------------------------------------------------------------------------+
-        // | EDITOR                                                                               |
-        // +--------------------------------------------------------------------------------------+
+		// +--------------------------------------------------------------------------------------+
+		// | EDITOR                                                                               |
+		// +--------------------------------------------------------------------------------------+
 
-#if UNITY_EDITOR
+		#if UNITY_EDITOR
 
-        public static new string NAME = "Character/Player Movement Input";
-        private const string NODE_TITLE = "Change input to {0}";
+		public static new string NAME = "Character/Player Movement Input";
+		private const string NODE_TITLE = "Change input to {0}";
 
-        // PROPERTIES: ----------------------------------------------------------------------------
+		// PROPERTIES: ----------------------------------------------------------------------------
 
-        private SerializedProperty spInputType;
-        private SerializedProperty spMouseButton;
+		private SerializedProperty spInputType;
+		private SerializedProperty spMouseButton;
         private SerializedProperty spInvertAxis;
 
-        // INSPECTOR METHODS: ---------------------------------------------------------------------
+		// INSPECTOR METHODS: ---------------------------------------------------------------------
 
-        public override string GetNodeTitle()
-        {
-            string value = spInputType.enumDisplayNames[spInputType.intValue];
-            if (spInputType.intValue == (int) PlayerCharacter.INPUT_TYPE.PointAndClick)
-            {
-                value = string.Format(
-                    "{0} ({1})",
-                    value,
-                    spMouseButton.enumDisplayNames[spMouseButton.intValue]
-                );
-            }
+		public override string GetNodeTitle()
+		{
+			string value = this.spInputType.enumDisplayNames[this.spInputType.intValue];
+			if (this.spInputType.intValue == (int)PlayerCharacter.INPUT_TYPE.PointAndClick)
+			{
+				value = string.Format(
+					"{0} ({1})", 
+					value, 
+					this.spMouseButton.enumDisplayNames[this.spMouseButton.intValue]
+				);
+			}
 
-            return string.Format(NODE_TITLE, value);
+			return string.Format(NODE_TITLE, value);
+		}
+
+		protected override void OnEnableEditorChild ()
+		{
+			this.spInputType = this.serializedObject.FindProperty("inputType");
+			this.spMouseButton = this.serializedObject.FindProperty("mouseButton");
+            this.spInvertAxis = this.serializedObject.FindProperty("invertAxis");
         }
 
-        protected override void OnEnableEditorChild()
-        {
-            spInputType = serializedObject.FindProperty("inputType");
-            spMouseButton = serializedObject.FindProperty("mouseButton");
-            spInvertAxis = serializedObject.FindProperty("invertAxis");
-        }
+		protected override void OnDisableEditorChild ()
+		{
+			this.spInputType = null;
+			this.spMouseButton = null;
+            this.spInvertAxis = null;
+		}
 
-        protected override void OnDisableEditorChild()
-        {
-            spInputType = null;
-            spMouseButton = null;
-            spInvertAxis = null;
-        }
+		public override void OnInspectorGUI()
+		{
+			this.serializedObject.Update();
 
-        public override void OnInspectorGUI()
-        {
-            serializedObject.Update();
+			EditorGUILayout.PropertyField(this.spInputType);
+			if (this.spInputType.intValue == (int)PlayerCharacter.INPUT_TYPE.PointAndClick ||
+                this.spInputType.intValue == (int)PlayerCharacter.INPUT_TYPE.FollowPointer)
+			{
+				EditorGUI.indentLevel++;
+				EditorGUILayout.PropertyField(this.spMouseButton);
+				EditorGUI.indentLevel--;
+			}
 
-            EditorGUILayout.PropertyField(spInputType);
-            if (spInputType.intValue == (int) PlayerCharacter.INPUT_TYPE.PointAndClick ||
-                spInputType.intValue == (int) PlayerCharacter.INPUT_TYPE.FollowPointer)
+            if (this.spInputType.intValue == (int)PlayerCharacter.INPUT_TYPE.SideScrollX ||
+                this.spInputType.intValue == (int)PlayerCharacter.INPUT_TYPE.SideScrollZ)
             {
                 EditorGUI.indentLevel++;
-                EditorGUILayout.PropertyField(spMouseButton);
+                EditorGUILayout.PropertyField(this.spInvertAxis);
                 EditorGUI.indentLevel--;
             }
 
-            if (spInputType.intValue == (int) PlayerCharacter.INPUT_TYPE.SideScrollX ||
-                spInputType.intValue == (int) PlayerCharacter.INPUT_TYPE.SideScrollZ)
-            {
-                EditorGUI.indentLevel++;
-                EditorGUILayout.PropertyField(spInvertAxis);
-                EditorGUI.indentLevel--;
-            }
+			this.serializedObject.ApplyModifiedProperties();
+		}
 
-            serializedObject.ApplyModifiedProperties();
-        }
-
-#endif
-    }
+		#endif
+	}
 }

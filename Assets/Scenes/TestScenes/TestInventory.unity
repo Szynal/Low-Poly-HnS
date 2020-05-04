@@ -260,6 +260,12 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!95 &29870194 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 1618128929364488632, guid: 5bb97218fa3ea6b44a437df564502ec6,
+    type: 3}
+  m_PrefabInstance: {fileID: 1206140788}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &35456098
 GameObject:
   m_ObjectHideFlags: 0
@@ -2237,6 +2243,39 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &998570672 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 677829380328456502, guid: 5bb97218fa3ea6b44a437df564502ec6,
+    type: 3}
+  m_PrefabInstance: {fileID: 1206140788}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &998570673
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 998570672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 042fb19a4c3254667a3b04a38a506036, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 29870194}
+  defaultState: {fileID: 0}
+  useFootIK: 1
+  footLayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967291
+  useHandIK: 1
+  useSmartHeadIK: 1
+  useProceduralLanding: 1
+  autoInitializeRagdoll: 1
+  ragdollMass: 80
+  stableTimeout: 0.5
+  standFaceDown: {fileID: 0}
+  standFaceUp: {fileID: 0}
+  timeScaleCoefficient: 1
 --- !u!1001 &1030466508
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2664,6 +2703,10 @@ PrefabInstance:
       propertyPath: save
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1410414706, guid: 5bb97218fa3ea6b44a437df564502ec6, type: 3}
+      propertyPath: footLayerMask.m_Bits
+      value: 769
+      objectReference: {fileID: 0}
     - target: {fileID: 162844688338026334, guid: 5bb97218fa3ea6b44a437df564502ec6,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -2683,6 +2726,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 852385377344542396, guid: 5bb97218fa3ea6b44a437df564502ec6,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4972818546410309188, guid: 5bb97218fa3ea6b44a437df564502ec6,
         type: 3}
@@ -2854,7 +2902,8 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1410414706, guid: 5bb97218fa3ea6b44a437df564502ec6, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 5bb97218fa3ea6b44a437df564502ec6, type: 3}
 --- !u!1 &1261813239
 GameObject:

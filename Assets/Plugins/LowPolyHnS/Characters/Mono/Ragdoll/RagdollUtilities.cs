@@ -1,7 +1,9 @@
-﻿using UnityEngine;
-
-namespace LowPolyHnS.Characters
+﻿namespace LowPolyHnS.Characters
 {
+    using System.Collections;
+    using System.Collections.Generic;
+    using UnityEngine;
+
     public static class RagdollUtilities
     {
         public static Bounds GetBounds(Transform origin, params Transform[] points)
@@ -18,7 +20,7 @@ namespace LowPolyHnS.Characters
 
         public static void GetDirection(Vector3 point, out int direction, out float distance)
         {
-            direction = LargestComponent(point);
+            direction = RagdollUtilities.LargestComponent(point);
             distance = point[direction];
         }
 
@@ -27,10 +29,10 @@ namespace LowPolyHnS.Characters
             int direction = 0;
             float distance = 0.0f;
 
-            GetDirection(point, out direction, out distance);
+            RagdollUtilities.GetDirection(point, out direction, out distance);
             Vector3 axis = Vector3.zero;
 
-            if (distance > 0) axis[direction] = 1.0f;
+            if (distance > 0) axis[direction] =  1.0f;
             if (distance < 0) axis[direction] = -1.0f;
 
             return axis;
@@ -63,14 +65,13 @@ namespace LowPolyHnS.Characters
             return bounds;
         }
 
-        public static Bounds Clip(Bounds bounds, Transform relativeTo, Transform clipTransform, Vector3 unitY,
-            bool below)
+        public static Bounds Clip(Bounds bounds, Transform relativeTo, Transform clipTransform, Vector3 unitY, bool below)
         {
-            int axis = LargestComponent(bounds.size);
+            int axis = RagdollUtilities.LargestComponent(bounds.size);
             float dotMax = Vector3.Dot(unitY, relativeTo.TransformPoint(bounds.max));
             float dotMin = Vector3.Dot(unitY, relativeTo.TransformPoint(bounds.min));
 
-            if (dotMax > dotMin == below)
+            if ((dotMax > dotMin) == below)
             {
                 Vector3 min = bounds.min;
                 min[axis] = relativeTo.InverseTransformPoint(clipTransform.position)[axis];
@@ -85,5 +86,6 @@ namespace LowPolyHnS.Characters
 
             return bounds;
         }
+
     }
 }

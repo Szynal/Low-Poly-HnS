@@ -1,12 +1,14 @@
-﻿using LowPolyHnS.Core;
-using LowPolyHnS.Variables;
-using UnityEngine;
-
-namespace LowPolyHnS.Characters
+﻿namespace LowPolyHnS.Characters
 {
-#if UNITY_EDITOR
-    using UnityEditor;
+	using System.Collections;
+	using System.Collections.Generic;
+	using UnityEngine;
+	using UnityEngine.Events;
+	using LowPolyHnS.Core;
+    using LowPolyHnS.Variables;
 
+	#if UNITY_EDITOR
+	using UnityEditor;
 #endif
 
     [AddComponentMenu("")]
@@ -41,33 +43,33 @@ namespace LowPolyHnS.Characters
 
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
-            Character charTarget = character.GetCharacter(target);
+            Character charTarget = this.character.GetCharacter(target);
             if (charTarget != null && charTarget.GetCharacterAnimator() != null)
             {
-                if (action == StateAction.Reset)
+                if (this.action == StateAction.Reset)
                 {
-                    charTarget.GetCharacterAnimator().ResetState(transitionTime, layer);
+                    charTarget.GetCharacterAnimator().ResetState(this.transitionTime, this.layer);
                 }
-                else if (state == StateInput.StateAsset && stateAsset != null)
+                else if (this.state == StateInput.StateAsset && this.stateAsset != null)
                 {
                     charTarget.GetCharacterAnimator().SetState(
-                        stateAsset,
-                        avatarMask,
-                        weight,
-                        transitionTime,
-                        speed.GetValue(target),
-                        layer
+                        this.stateAsset,
+                        this.avatarMask,
+                        this.weight,
+                        this.transitionTime,
+                        this.speed.GetValue(target),
+                        this.layer
                     );
                 }
-                else if (state == StateInput.AnimationClip && stateClip != null)
+                else if (this.state == StateInput.AnimationClip && this.stateClip != null)
                 {
                     charTarget.GetCharacterAnimator().SetState(
-                        stateClip,
-                        avatarMask,
-                        weight,
-                        transitionTime,
-                        speed.GetValue(target),
-                        layer
+                        this.stateClip,
+                        this.avatarMask,
+                        this.weight,
+                        this.transitionTime,
+                        this.speed.GetValue(target),
+                        this.layer
                     );
                 }
             }
@@ -75,20 +77,20 @@ namespace LowPolyHnS.Characters
             return true;
         }
 
-        // +--------------------------------------------------------------------------------------+
-        // | EDITOR                                                                               |
-        // +--------------------------------------------------------------------------------------+
+		// +--------------------------------------------------------------------------------------+
+		// | EDITOR                                                                               |
+		// +--------------------------------------------------------------------------------------+
 
-#if UNITY_EDITOR
+		#if UNITY_EDITOR
 
-        public static new string NAME = "Character/Character State";
+		public static new string NAME = "Character/Character State";
         private const string NODE_TITLE = "{0} {1} state in {2}";
 
         private static readonly GUIContent GC_MASK = new GUIContent("Mask (optional)");
 
-        // PROPERTIES: ----------------------------------------------------------------------------
+		// PROPERTIES: ----------------------------------------------------------------------------
 
-        private SerializedProperty spCharacter;
+		private SerializedProperty spCharacter;
         private SerializedProperty spAvatarMask;
         private SerializedProperty spAction;
         private SerializedProperty spLayer;
@@ -104,82 +106,83 @@ namespace LowPolyHnS.Characters
         // INSPECTOR METHODS: ---------------------------------------------------------------------
 
         public override string GetNodeTitle()
-        {
+		{
             return string.Format(
                 NODE_TITLE,
-                action == StateAction.Reset ? "Reset" : "Change",
-                character,
-                layer.ToString()
+                (this.action == StateAction.Reset ? "Reset" : "Change"),
+                this.character.ToString(),
+                this.layer.ToString()
             );
+		}
+
+		protected override void OnEnableEditorChild ()
+		{
+            this.spCharacter = this.serializedObject.FindProperty("character");
+            this.spAvatarMask = this.serializedObject.FindProperty("avatarMask");
+            this.spAction = this.serializedObject.FindProperty("action");
+            this.spLayer = this.serializedObject.FindProperty("layer");
+
+            this.spState = this.serializedObject.FindProperty("state");
+            this.spStateAsset = this.serializedObject.FindProperty("stateAsset");
+            this.spStateClip = this.serializedObject.FindProperty("stateClip");
+
+            this.spWeight = this.serializedObject.FindProperty("weight");
+            this.spTransitionTime = this.serializedObject.FindProperty("transitionTime");
+            this.spSpeed = this.serializedObject.FindProperty("speed");
+
         }
 
-        protected override void OnEnableEditorChild()
-        {
-            spCharacter = serializedObject.FindProperty("character");
-            spAvatarMask = serializedObject.FindProperty("avatarMask");
-            spAction = serializedObject.FindProperty("action");
-            spLayer = serializedObject.FindProperty("layer");
+		protected override void OnDisableEditorChild ()
+		{
+            this.spCharacter = null;
+            this.spAvatarMask = null;
+            this.spAction = null;
+            this.spLayer = null;
 
-            spState = serializedObject.FindProperty("state");
-            spStateAsset = serializedObject.FindProperty("stateAsset");
-            spStateClip = serializedObject.FindProperty("stateClip");
+            this.spState = null;
+            this.spStateAsset = null;
+            this.spStateClip = null;
 
-            spWeight = serializedObject.FindProperty("weight");
-            spTransitionTime = serializedObject.FindProperty("transitionTime");
-            spSpeed = serializedObject.FindProperty("speed");
+            this.spWeight = null;
+            this.spTransitionTime = null;
+            this.spSpeed = null;
         }
 
-        protected override void OnDisableEditorChild()
-        {
-            spCharacter = null;
-            spAvatarMask = null;
-            spAction = null;
-            spLayer = null;
+		public override void OnInspectorGUI()
+		{
+			this.serializedObject.Update();
 
-            spState = null;
-            spStateAsset = null;
-            spStateClip = null;
-
-            spWeight = null;
-            spTransitionTime = null;
-            spSpeed = null;
-        }
-
-        public override void OnInspectorGUI()
-        {
-            serializedObject.Update();
-
-            EditorGUILayout.PropertyField(spCharacter);
-            EditorGUILayout.PropertyField(spAction);
-            if (spAction.intValue == (int) StateAction.Change)
+            EditorGUILayout.PropertyField(this.spCharacter);
+            EditorGUILayout.PropertyField(this.spAction);
+            if (this.spAction.intValue == (int)StateAction.Change)
             {
                 EditorGUI.indentLevel++;
-                EditorGUILayout.PropertyField(spState);
-                switch (spState.intValue)
+                EditorGUILayout.PropertyField(this.spState);
+                switch (this.spState.intValue)
                 {
-                    case (int) StateInput.StateAsset:
-                        EditorGUILayout.PropertyField(spStateAsset);
+                    case (int)StateInput.StateAsset:
+                        EditorGUILayout.PropertyField(this.spStateAsset);
                         break;
 
-                    case (int) StateInput.AnimationClip:
-                        EditorGUILayout.PropertyField(spStateClip);
+                    case (int)StateInput.AnimationClip:
+                        EditorGUILayout.PropertyField(this.spStateClip);
                         break;
                 }
 
                 EditorGUILayout.Space();
-                EditorGUILayout.PropertyField(spAvatarMask, GC_MASK);
-                EditorGUILayout.PropertyField(spWeight);
+                EditorGUILayout.PropertyField(this.spAvatarMask, GC_MASK);
+                EditorGUILayout.PropertyField(this.spWeight);
                 EditorGUI.indentLevel--;
             }
 
             EditorGUILayout.Space();
-            EditorGUILayout.PropertyField(spLayer);
-            EditorGUILayout.PropertyField(spTransitionTime);
-            EditorGUILayout.PropertyField(spSpeed);
+            EditorGUILayout.PropertyField(this.spLayer);
+            EditorGUILayout.PropertyField(this.spTransitionTime);
+            EditorGUILayout.PropertyField(this.spSpeed);
 
-            serializedObject.ApplyModifiedProperties();
-        }
+            this.serializedObject.ApplyModifiedProperties();
+		}
 
-#endif
-    }
+		#endif
+	}
 }

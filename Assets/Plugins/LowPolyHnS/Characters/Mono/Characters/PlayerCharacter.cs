@@ -132,8 +132,7 @@ namespace LowPolyHnS.Characters
             targetDirection = new Vector3(
                 Input.GetAxisRaw(AXIS_H),
                 0.0f,
-                Input.GetAxisRaw(AXIS_V)
-            );
+                Input.GetAxisRaw(AXIS_V));
 
 
             ComputeMovement(targetDirection);

@@ -1,9 +1,12 @@
-﻿using LowPolyHnS.Core;
-using LowPolyHnS.Core.Hooks;
-using UnityEngine;
-
-namespace LowPolyHnS.Characters
+﻿namespace LowPolyHnS.Characters
 {
+    using System.Collections;
+    using System.Collections.Generic;
+    using UnityEngine;
+    using UnityEngine.Events;
+    using LowPolyHnS.Core;
+    using LowPolyHnS.Core.Hooks;
+
     public abstract class ILocomotionSystem
     {
         public class TargetRotation
@@ -11,10 +14,10 @@ namespace LowPolyHnS.Characters
             public bool hasRotation;
             public Quaternion rotation;
 
-            public TargetRotation(bool hasRotation = false, Vector3 direction = default)
+            public TargetRotation(bool hasRotation = false, Vector3 direction = default(Vector3))
             {
                 this.hasRotation = hasRotation;
-                rotation = hasRotation && direction != Vector3.zero
+				this.rotation = hasRotation && direction != Vector3.zero
                     ? Quaternion.LookRotation(direction)
                     : Quaternion.identity;
             }
@@ -34,7 +37,7 @@ namespace LowPolyHnS.Characters
 
         // CONSTANT PROPERTIES: -------------------------------------------------------------------
 
-        protected static readonly Vector3 HORIZONTAL_PLANE = new Vector3(1, 0, 1);
+		protected static readonly Vector3 HORIZONTAL_PLANE = new Vector3(1,0,1);
 
         private const string AXIS_MOUSE_X = "Mouse X";
         private const string AXIS_MOUSE_Y = "Mouse Y";
@@ -57,7 +60,7 @@ namespace LowPolyHnS.Characters
         protected Vector3 dashVelocity = Vector3.zero;
 
         private float dashStartTime = -100f;
-        private float dashDuration;
+        private float dashDuration = 0f;
         private float dashDrag = 10f;
 
         public bool isRootMoving { private set; get; }
@@ -93,62 +96,62 @@ namespace LowPolyHnS.Characters
 
         public void Dash(Vector3 direction, float impulse, float duration, float drag)
         {
-            isDashing = true;
-            dashStartTime = Time.time;
-            dashDuration = duration;
-            dashDrag = drag;
+            this.isDashing = true;
+            this.dashStartTime = Time.time;
+            this.dashDuration = duration;
+            this.dashDrag = drag;
 
-            dashVelocity = direction.normalized * (
-                               impulse * Mathf.Log(1f / (Time.deltaTime * dashDrag + 1)) / -Time.deltaTime
-                           );
+            this.dashVelocity = direction.normalized * (
+                impulse * Mathf.Log(1f / (Time.deltaTime * this.dashDrag + 1)) / -Time.deltaTime
+            );
         }
 
         public void RootMovement(float impulse, float duration, float gravityInfluence,
             AnimationCurve acForward, AnimationCurve acSides, AnimationCurve acVertical)
         {
-            isRootMoving = true;
-            rootMoveImpulse = impulse;
-            rootMoveStartTime = Time.time;
-            rootMoveDuration = duration;
-            rootMoveGravity = gravityInfluence;
+            this.isRootMoving = true;
+            this.rootMoveImpulse = impulse;
+            this.rootMoveStartTime = Time.time;
+            this.rootMoveDuration = duration;
+            this.rootMoveGravity = gravityInfluence;
 
-            rootMoveCurveForward = acForward;
-            rootMoveCurveSides = acSides;
-            rootMoveCurveVertical = acVertical;
+            this.rootMoveCurveForward = acForward;
+            this.rootMoveCurveSides = acSides;
+            this.rootMoveCurveVertical = acVertical;
 
-            rootMoveDeltaForward = 0f;
-            rootMoveDeltaSides = 0f;
-            rootMoveDeltaVertical = 0f;
+            this.rootMoveDeltaForward = 0f;
+            this.rootMoveDeltaSides = 0f;
+            this.rootMoveDeltaVertical = 0f;
         }
 
         public void StopRootMovement()
         {
-            isRootMoving = false;
+            this.isRootMoving = false;
         }
 
         // ABSTRACT & VIRTUAL METHODS: ------------------------------------------------------------
 
         public virtual CharacterLocomotion.LOCOMOTION_SYSTEM Update()
         {
-            if (isRootMoving)
+            if (this.isRootMoving)
             {
                 // TODO: Maybe add some drag?
-                if (Time.time >= rootMoveStartTime + rootMoveDuration)
+                if (Time.time >= this.rootMoveStartTime + this.rootMoveDuration)
                 {
-                    isRootMoving = false;
+                    this.isRootMoving = false;
                 }
             }
 
-            if (isDashing)
+            if (this.isDashing)
             {
-                if (Time.time >= dashStartTime + dashDuration)
+                if (Time.time >= this.dashStartTime + this.dashDuration)
                 {
-                    dashVelocity /= 1 + dashDrag * Time.deltaTime;
+                    this.dashVelocity /= 1 + this.dashDrag * Time.deltaTime;
                 }
 
-                if (dashVelocity.magnitude < characterLocomotion.runSpeed)
+                if (this.dashVelocity.magnitude < this.characterLocomotion.runSpeed)
                 {
-                    isDashing = false;
+                    this.isDashing = false;
                 }
             }
 
@@ -161,59 +164,60 @@ namespace LowPolyHnS.Characters
 
         protected Quaternion UpdateRotation(Vector3 targetDirection)
         {
-            Quaternion targetRotation = characterLocomotion.character.transform.rotation;
-            aimDirection = characterLocomotion.character.transform.TransformDirection(Vector3.forward);
-            movementDirection = targetDirection == Vector3.zero
-                ? aimDirection
-                : targetDirection.normalized;
+            Quaternion targetRotation = this.characterLocomotion.character.transform.rotation;
+            this.aimDirection = this.characterLocomotion.character.transform.TransformDirection(Vector3.forward);
+            this.movementDirection = (targetDirection == Vector3.zero
+                ? this.aimDirection
+                : targetDirection.normalized
+            );
 
-            DirectionData faceDirection = GetFaceDirection();
+            DirectionData faceDirection = this.GetFaceDirection();
 
             if (faceDirection.direction == CharacterLocomotion.FACE_DIRECTION.MovementDirection &&
                 targetDirection != Vector3.zero)
             {
-                Quaternion srcRotation = characterLocomotion.character.transform.rotation;
+                Quaternion srcRotation = this.characterLocomotion.character.transform.rotation;
                 Quaternion dstRotation = Quaternion.LookRotation(targetDirection);
-                aimDirection = dstRotation * Vector3.forward;
+                this.aimDirection = dstRotation * Vector3.forward;
 
                 targetRotation = Quaternion.RotateTowards(
                     srcRotation,
                     dstRotation,
-                    Time.deltaTime * characterLocomotion.angularSpeed
+                    Time.deltaTime * this.characterLocomotion.angularSpeed
                 );
             }
             else if (faceDirection.direction == CharacterLocomotion.FACE_DIRECTION.CameraDirection &&
-                     HookCamera.Instance != null)
+                HookCamera.Instance != null)
             {
                 Vector3 camDirection = HookCamera.Instance.transform.TransformDirection(Vector3.forward);
-                aimDirection = camDirection;
+                this.aimDirection = camDirection;
 
                 camDirection.Scale(HORIZONTAL_PLANE);
 
-                Quaternion srcRotation = characterLocomotion.character.transform.rotation;
+                Quaternion srcRotation = this.characterLocomotion.character.transform.rotation;
                 Quaternion dstRotation = Quaternion.LookRotation(camDirection);
 
                 targetRotation = Quaternion.RotateTowards(
                     srcRotation,
                     dstRotation,
-                    Time.deltaTime * characterLocomotion.angularSpeed
+                    Time.deltaTime * this.characterLocomotion.angularSpeed
                 );
             }
             else if (faceDirection.direction == CharacterLocomotion.FACE_DIRECTION.Target)
             {
-                Vector3 target = faceDirection.target.GetPosition(characterLocomotion.character.gameObject);
-                Vector3 direction = target - characterLocomotion.character.transform.position;
-                aimDirection = direction;
+                Vector3 target = faceDirection.target.GetPosition(this.characterLocomotion.character.gameObject);
+                Vector3 direction = target - this.characterLocomotion.character.transform.position;
+                this.aimDirection = direction;
 
                 direction.Scale(HORIZONTAL_PLANE);
 
-                Quaternion srcRotation = characterLocomotion.character.transform.rotation;
+                Quaternion srcRotation = this.characterLocomotion.character.transform.rotation;
                 Quaternion dstRotation = Quaternion.LookRotation(direction);
 
                 targetRotation = Quaternion.RotateTowards(
                     srcRotation,
                     dstRotation,
-                    Time.deltaTime * characterLocomotion.angularSpeed
+                    Time.deltaTime * this.characterLocomotion.angularSpeed
                 );
             }
             else if (faceDirection.direction == CharacterLocomotion.FACE_DIRECTION.GroundPlaneCursor)
@@ -226,7 +230,7 @@ namespace LowPolyHnS.Characters
                 }
 
                 Ray cameraRay = camera.ScreenPointToRay(Input.mousePosition);
-                Transform character = characterLocomotion.character.transform;
+                Transform character = this.characterLocomotion.character.transform;
 
                 Plane plane = new Plane(Vector3.up, character.position);
                 float rayDistance = 0.0f;
@@ -235,17 +239,17 @@ namespace LowPolyHnS.Characters
                 {
                     Vector3 cursor = cameraRay.GetPoint(rayDistance);
                     Vector3 target = Vector3.MoveTowards(character.position, cursor, 1f);
-                    Vector3 direction = target - characterLocomotion.character.transform.position;
+                    Vector3 direction = target - this.characterLocomotion.character.transform.position;
                     direction.Scale(HORIZONTAL_PLANE);
 
                     Quaternion srcRotation = character.rotation;
                     Quaternion dstRotation = Quaternion.LookRotation(direction);
-                    aimDirection = dstRotation * Vector3.forward;
+                    this.aimDirection = dstRotation * Vector3.forward;
 
                     targetRotation = Quaternion.RotateTowards(
                         srcRotation,
                         dstRotation,
-                        Time.deltaTime * characterLocomotion.angularSpeed
+                        Time.deltaTime * this.characterLocomotion.angularSpeed
                     );
                 }
             }
@@ -270,14 +274,14 @@ namespace LowPolyHnS.Characters
                     deltaDirection.Scale(HORIZONTAL_PLANE);
                     deltaDirection.Normalize();
 
-                    Quaternion srcRotation = characterLocomotion.character.transform.rotation;
+                    Quaternion srcRotation = this.characterLocomotion.character.transform.rotation;
                     Quaternion dstRotation = Quaternion.LookRotation(deltaDirection);
-                    aimDirection = dstRotation * Vector3.forward;
+                    this.aimDirection = dstRotation * Vector3.forward;
 
                     targetRotation = Quaternion.RotateTowards(
                         srcRotation,
                         dstRotation,
-                        Time.deltaTime * characterLocomotion.angularSpeed
+                        Time.deltaTime * this.characterLocomotion.angularSpeed
                     );
                 }
             }
@@ -287,16 +291,17 @@ namespace LowPolyHnS.Characters
 
         protected float CalculateSpeed(Vector3 targetDirection, bool isGrounded)
         {
-            float speed = characterLocomotion.canRun
-                ? characterLocomotion.runSpeed
-                : characterLocomotion.runSpeed / 2.0f;
+            float speed = (this.characterLocomotion.canRun
+                ? this.characterLocomotion.runSpeed
+                : this.characterLocomotion.runSpeed / 2.0f
+            );
 
-            DirectionData direction = GetFaceDirection();
+            DirectionData direction = this.GetFaceDirection();
 
             if (direction.direction == CharacterLocomotion.FACE_DIRECTION.MovementDirection &&
                 targetDirection != Vector3.zero)
             {
-                Quaternion srcRotation = characterLocomotion.character.transform.rotation;
+                Quaternion srcRotation = this.characterLocomotion.character.transform.rotation;
                 Quaternion dstRotation = Quaternion.LookRotation(targetDirection);
                 float angle = Quaternion.Angle(srcRotation, dstRotation) / 180.0f;
                 float speedDampening = Mathf.Clamp(1.0f - angle, 0.5f, 1.0f);
@@ -308,88 +313,90 @@ namespace LowPolyHnS.Characters
 
         protected virtual void UpdateAnimationConstraints(ref Vector3 targetDirection, ref Quaternion targetRotation)
         {
-            if (characterLocomotion.animatorConstraint == CharacterLocomotion.ANIM_CONSTRAINT.KEEP_MOVEMENT)
+            if (this.characterLocomotion.animatorConstraint == CharacterLocomotion.ANIM_CONSTRAINT.KEEP_MOVEMENT)
             {
                 if (targetDirection == Vector3.zero)
                 {
-                    Transform characterTransform = characterLocomotion.characterController.transform;
+                    Transform characterTransform = this.characterLocomotion.characterController.transform;
                     targetDirection = characterTransform.TransformDirection(Vector3.forward);
                 }
             }
 
-            if (characterLocomotion.animatorConstraint == CharacterLocomotion.ANIM_CONSTRAINT.KEEP_POSITION)
+            if (this.characterLocomotion.animatorConstraint == CharacterLocomotion.ANIM_CONSTRAINT.KEEP_POSITION)
             {
                 targetDirection = Vector3.zero;
-                targetRotation = characterLocomotion.characterController.transform.rotation;
+                targetRotation = this.characterLocomotion.characterController.transform.rotation;
             }
         }
 
         protected virtual void UpdateSliding()
         {
-            float slopeAngle = Vector3.Angle(Vector3.up, characterLocomotion.terrainNormal);
-            bool frameSliding = characterLocomotion.character.IsGrounded() &&
-                                slopeAngle > characterLocomotion.characterController.slopeLimit;
+            float slopeAngle = Vector3.Angle(Vector3.up, this.characterLocomotion.terrainNormal);
+            bool frameSliding = (
+                this.characterLocomotion.character.IsGrounded() &&
+                slopeAngle > this.characterLocomotion.characterController.slopeLimit
+            );
 
-            slidingValue = Mathf.SmoothDamp(
-                slidingValue,
+            this.slidingValue = Mathf.SmoothDamp(
+                this.slidingValue,
                 frameSliding ? 1f : 0f,
-                ref slidingSpeed,
+                ref this.slidingSpeed,
                 SLIDING_SMOOTH
             );
 
-            isSliding = slidingValue > 0.5f;
-            if (isSliding)
+            this.isSliding = this.slidingValue > 0.5f;
+            if (this.isSliding)
             {
-                isSliding = true;
-                slideDirection = Vector3.Reflect(
-                                     Vector3.down, characterLocomotion.terrainNormal
-                                 ) * characterLocomotion.runSpeed;
+                this.isSliding = true;
+                this.slideDirection = Vector3.Reflect(
+                    Vector3.down, this.characterLocomotion.terrainNormal
+                ) * this.characterLocomotion.runSpeed;
             }
             else
             {
-                slideDirection = Vector3.zero;
+                this.slideDirection = Vector3.zero;
             }
         }
 
         protected void UpdateRootMovement(Vector3 verticalMovement)
         {
-            float t = (Time.time - rootMoveStartTime) / rootMoveDuration;
-            float deltaForward = rootMoveCurveForward.Evaluate(t) * rootMoveImpulse;
-            float deltaSides = rootMoveCurveSides.Evaluate(t) * rootMoveImpulse;
-            float deltaVertical = rootMoveCurveVertical.Evaluate(t) * rootMoveImpulse;
+            float t = (Time.time - this.rootMoveStartTime) / this.rootMoveDuration;
+            float deltaForward = this.rootMoveCurveForward.Evaluate(t) * this.rootMoveImpulse;
+            float deltaSides = this.rootMoveCurveSides.Evaluate(t) * this.rootMoveImpulse;
+            float deltaVertical = this.rootMoveCurveVertical.Evaluate(t) * this.rootMoveImpulse;
 
             Vector3 movement = new Vector3(
-                deltaSides - rootMoveDeltaSides,
-                deltaVertical - rootMoveDeltaVertical,
-                deltaForward - rootMoveDeltaForward
+                deltaSides - this.rootMoveDeltaSides,
+                deltaVertical - this.rootMoveDeltaVertical,
+                deltaForward - this.rootMoveDeltaForward
             );
 
-            movement += verticalMovement * rootMoveGravity * Time.deltaTime;
+            movement += verticalMovement * this.rootMoveGravity * Time.deltaTime;
 
-            characterLocomotion.characterController.Move(
-                characterLocomotion.character.transform.TransformDirection(movement)
+            this.characterLocomotion.characterController.Move(
+                this.characterLocomotion.character.transform.TransformDirection(movement)
             );
 
-            rootMoveDeltaForward = deltaForward;
-            rootMoveDeltaSides = deltaSides;
-            rootMoveDeltaVertical = deltaVertical;
+            this.rootMoveDeltaForward = deltaForward;
+            this.rootMoveDeltaSides = deltaSides;
+            this.rootMoveDeltaVertical = deltaVertical;
         }
 
         protected DirectionData GetFaceDirection()
         {
-            CharacterLocomotion.FACE_DIRECTION direction = characterLocomotion.faceDirection;
-            TargetPosition target = characterLocomotion.faceDirectionTarget;
+            CharacterLocomotion.FACE_DIRECTION direction = this.characterLocomotion.faceDirection;
+            TargetPosition target = this.characterLocomotion.faceDirectionTarget;
 
-            if (characterLocomotion.overrideFaceDirection != CharacterLocomotion.OVERRIDE_FACE_DIRECTION.None)
+            if (this.characterLocomotion.overrideFaceDirection != CharacterLocomotion.OVERRIDE_FACE_DIRECTION.None)
             {
-                direction = (CharacterLocomotion.FACE_DIRECTION) characterLocomotion.overrideFaceDirection;
-                target = characterLocomotion.overrideFaceDirectionTarget;
+                direction = (CharacterLocomotion.FACE_DIRECTION)this.characterLocomotion.overrideFaceDirection;
+                target = this.characterLocomotion.overrideFaceDirectionTarget;
             }
 
-            cacheDirectionData.direction = direction;
-            cacheDirectionData.target = target;
+            this.cacheDirectionData.direction = direction;
+            this.cacheDirectionData.target = target;
 
-            return cacheDirectionData;
+            return this.cacheDirectionData;
         }
     }
 }

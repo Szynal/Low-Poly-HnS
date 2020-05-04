@@ -1,17 +1,19 @@
-﻿using LowPolyHnS.Core;
-using LowPolyHnS.Variables;
-using UnityEngine;
-
-namespace LowPolyHnS.Characters
+﻿namespace LowPolyHnS.Characters
 {
-#if UNITY_EDITOR
-    using UnityEditor;
+	using System.Collections;
+	using System.Collections.Generic;
+	using UnityEngine;
+	using UnityEngine.Events;
+	using LowPolyHnS.Core;
+    using LowPolyHnS.Variables;
 
-#endif
+	#if UNITY_EDITOR
+	using UnityEditor;
+	#endif
 
-    [AddComponentMenu("")]
+	[AddComponentMenu("")]
     public class ActionCharacterStateWeight : IAction
-    {
+	{
         public TargetCharacter character = new TargetCharacter(TargetCharacter.Target.Player);
         public CharacterAnimation.Layer layer = CharacterAnimation.Layer.Layer1;
         public NumberProperty weight = new NumberProperty(1.0f);
@@ -20,71 +22,71 @@ namespace LowPolyHnS.Characters
 
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
-            Character charTarget = character.GetCharacter(target);
+            Character charTarget = this.character.GetCharacter(target);
             if (charTarget != null && charTarget.GetCharacterAnimator() != null)
             {
                 charTarget.GetCharacterAnimator().ChangeStateWeight(
-                    layer,
-                    weight.GetValue(target)
+                    this.layer,
+                    this.weight.GetValue(target)
                 );
             }
 
             return true;
         }
 
-        // +--------------------------------------------------------------------------------------+
-        // | EDITOR                                                                               |
-        // +--------------------------------------------------------------------------------------+
+		// +--------------------------------------------------------------------------------------+
+		// | EDITOR                                                                               |
+		// +--------------------------------------------------------------------------------------+
 
-#if UNITY_EDITOR
+		#if UNITY_EDITOR
 
-        public static new string NAME = "Character/Character State Weight";
+		public static new string NAME = "Character/Character State Weight";
         private const string NODE_TITLE = "Change {0} {1} state weight";
 
-        // PROPERTIES: ----------------------------------------------------------------------------
+		// PROPERTIES: ----------------------------------------------------------------------------
 
-        private SerializedProperty spCharacter;
+		private SerializedProperty spCharacter;
         private SerializedProperty spLayer;
         private SerializedProperty spWeight;
 
-        // INSPECTOR METHODS: ---------------------------------------------------------------------
+		// INSPECTOR METHODS: ---------------------------------------------------------------------
 
-        public override string GetNodeTitle()
-        {
+		public override string GetNodeTitle()
+		{
             return string.Format(
                 NODE_TITLE,
-                character,
-                layer.ToString()
+                this.character.ToString(),
+                this.layer.ToString()
             );
-        }
+		}
 
-        protected override void OnEnableEditorChild()
-        {
-            spCharacter = serializedObject.FindProperty("character");
-            spLayer = serializedObject.FindProperty("layer");
-            spWeight = serializedObject.FindProperty("weight");
-        }
+		protected override void OnEnableEditorChild ()
+		{
+            this.spCharacter = this.serializedObject.FindProperty("character");
+            this.spLayer = this.serializedObject.FindProperty("layer");
+            this.spWeight = this.serializedObject.FindProperty("weight");
+		}
 
-        protected override void OnDisableEditorChild()
-        {
-            spCharacter = null;
-            spLayer = null;
-            spWeight = null;
-        }
+		protected override void OnDisableEditorChild ()
+		{
+            this.spCharacter = null;
+            this.spLayer = null;
+            this.spWeight = null;
+		}
 
-        public override void OnInspectorGUI()
-        {
-            serializedObject.Update();
+		public override void OnInspectorGUI()
+		{
+			this.serializedObject.Update();
 
-            EditorGUILayout.PropertyField(spCharacter);
+            EditorGUILayout.PropertyField(this.spCharacter);
 
             EditorGUILayout.Space();
-            EditorGUILayout.PropertyField(spLayer);
-            EditorGUILayout.PropertyField(spWeight);
+            EditorGUILayout.PropertyField(this.spLayer);
+            EditorGUILayout.PropertyField(this.spWeight);
 
-            serializedObject.ApplyModifiedProperties();
-        }
+			this.serializedObject.ApplyModifiedProperties();
+		}
 
-#endif
-    }
+		#endif
+	}
 }

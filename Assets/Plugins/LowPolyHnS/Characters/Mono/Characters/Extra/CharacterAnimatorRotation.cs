@@ -1,8 +1,10 @@
-﻿using System;
-using UnityEngine;
-
-namespace LowPolyHnS.Characters
+﻿namespace LowPolyHnS.Characters
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using UnityEngine;
+
     [Serializable]
     public class CharacterAnimatorRotation
     {
@@ -17,23 +19,23 @@ namespace LowPolyHnS.Characters
 
             public AnimFloat(float value)
             {
-                target = value;
+                this.target = value;
                 this.value = value;
-                time = 0f;
+                this.time = 0f;
             }
 
             public float Update()
             {
-                float t = (Time.time - time) / ROTATION_SMOOTH;
-                value = Mathf.LerpAngle(value, target, t);
+                float t = (Time.time - this.time) / ROTATION_SMOOTH;
+                this.value = Mathf.LerpAngle(this.value, this.target, t);
 
-                return value;
+                return this.value;
             }
 
             public void SetTarget(float value)
             {
-                target = value;
-                time = Time.time;
+                this.target = value;
+                this.time = Time.time;
             }
         }
 
@@ -48,9 +50,9 @@ namespace LowPolyHnS.Characters
         public Quaternion Update()
         {
             Quaternion rotation = Quaternion.Euler(
-                x.Update(),
-                y.Update(),
-                z.Update()
+                this.x.Update(),
+                this.y.Update(),
+                this.z.Update()
             );
 
             return rotation;
@@ -60,36 +62,36 @@ namespace LowPolyHnS.Characters
 
         public Quaternion GetCurrentRotation()
         {
-            return Quaternion.Euler(x.value, y.value, z.value);
+            return Quaternion.Euler(this.x.value, this.y.value, this.z.value);
         }
 
         public Quaternion GetTargetRotation()
         {
-            return Quaternion.Euler(x.target, y.target, z.target);
+            return Quaternion.Euler(this.x.target, this.y.target, this.z.target);
         }
 
         // PUBLIC SETTERS: ------------------------------------------------------------------------
 
         public void SetPitch(float value)
         {
-            x.SetTarget(value);
+            this.x.SetTarget(value);
         }
 
         public void SetYaw(float value)
         {
-            y.SetTarget(value);
+            this.y.SetTarget(value);
         }
 
         public void SetRoll(float value)
         {
-            z.SetTarget(value);
+            this.z.SetTarget(value);
         }
 
         public void SetQuaternion(Quaternion rotation)
         {
-            SetPitch(rotation.eulerAngles.x);
-            SetYaw(rotation.eulerAngles.y);
-            SetRoll(rotation.eulerAngles.z);
+            this.SetPitch(rotation.eulerAngles.x);
+            this.SetYaw(rotation.eulerAngles.y);
+            this.SetRoll(rotation.eulerAngles.z);
         }
     }
 }

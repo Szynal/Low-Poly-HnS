@@ -1,17 +1,20 @@
-﻿using LowPolyHnS.Core;
-using LowPolyHnS.Variables;
-using UnityEngine;
-
-namespace LowPolyHnS.Characters
+﻿namespace LowPolyHnS.Characters
 {
-#if UNITY_EDITOR
-    using UnityEditor;
+	using System.Collections;
+	using System.Collections.Generic;
+	using UnityEngine;
+	using UnityEngine.Events;
+    using LowPolyHnS.Core;
+    using LowPolyHnS.Characters;
+    using LowPolyHnS.Variables;
 
-#endif
+    #if UNITY_EDITOR
+    using UnityEditor;
+    #endif
 
     [AddComponentMenu("")]
-    public class ActionCharacterDash : IAction
-    {
+	public class ActionCharacterDash : IAction
+	{
         private static readonly Vector3 PLANE = new Vector3(1, 0, 1);
 
         public enum Direction
@@ -33,21 +36,22 @@ namespace LowPolyHnS.Characters
         public NumberProperty duration = new NumberProperty(0f);
         public float drag = 10f;
 
-        [Space] public AnimationClip dashClipForward;
+        [Space]
+        public AnimationClip dashClipForward;
         public AnimationClip dashClipBackward;
         public AnimationClip dashClipRight;
         public AnimationClip dashClipLeft;
 
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
-            Character characterTarget = character.GetCharacter(target);
+            Character characterTarget = this.character.GetCharacter(target);
             if (characterTarget == null) return true;
 
             CharacterLocomotion locomotion = characterTarget.characterLocomotion;
             CharacterAnimator animator = characterTarget.GetCharacterAnimator();
             Vector3 moveDirection = Vector3.zero;
 
-            switch (direction)
+            switch (this.direction)
             {
                 case Direction.CharacterMovement3D:
                     moveDirection = locomotion.GetMovementDirection();
@@ -60,11 +64,10 @@ namespace LowPolyHnS.Characters
                         moveDirection = targetTransform.position - characterTarget.transform.position;
                         moveDirection.Scale(PLANE);
                     }
-
                     break;
 
                 case Direction.TowardsPosition:
-                    Vector3 targetPosition = position.GetPosition(target);
+                    Vector3 targetPosition = this.position.GetPosition(target);
                     moveDirection = targetPosition - characterTarget.transform.position;
                     moveDirection.Scale(PLANE);
                     break;
@@ -81,23 +84,23 @@ namespace LowPolyHnS.Characters
             }
 
             Vector3 charDirection = Vector3.Scale(
-                characterTarget.transform.TransformDirection(Vector3.forward),
+                characterTarget.transform.TransformDirection(Vector3.forward), 
                 PLANE
             );
 
             float angle = Vector3.SignedAngle(moveDirection, charDirection, Vector3.up);
             AnimationClip clip = null;
 
-            if (angle <= 45f && angle >= -45f) clip = dashClipForward;
-            else if (angle < 135f && angle > 45f) clip = dashClipLeft;
+            if (angle <= 45f && angle >= -45f) clip = this.dashClipForward;
+            else if (angle < 135f && angle > 45f) clip = this.dashClipLeft;
             else if (angle > -135f && angle < -45f) clip = dashClipRight;
-            else clip = dashClipBackward;
+            else clip = this.dashClipBackward;
 
             bool isDashing = characterTarget.Dash(
                 moveDirection.normalized,
-                impulse.GetValue(target),
-                duration.GetValue(target),
-                drag
+                this.impulse.GetValue(target),
+                this.duration.GetValue(target),
+                this.drag
             );
 
             if (isDashing && clip != null && animator != null)
@@ -108,7 +111,7 @@ namespace LowPolyHnS.Characters
             return true;
         }
 
-#if UNITY_EDITOR
+        #if UNITY_EDITOR
         public static new string NAME = "Character/Character Dash";
         private const string TITLE_NAME = "Character {0} dash {1}";
 
@@ -116,8 +119,8 @@ namespace LowPolyHnS.Characters
         {
             return string.Format(
                 TITLE_NAME,
-                character,
-                direction
+                this.character,
+                this.direction
             );
         }
 
@@ -137,74 +140,74 @@ namespace LowPolyHnS.Characters
 
         protected override void OnEnableEditorChild()
         {
-            spCharacter = serializedObject.FindProperty("character");
-            spDirection = serializedObject.FindProperty("direction");
-            spTarget = serializedObject.FindProperty("target");
-            spPosition = serializedObject.FindProperty("position");
+            this.spCharacter = this.serializedObject.FindProperty("character");
+            this.spDirection = this.serializedObject.FindProperty("direction");
+            this.spTarget = this.serializedObject.FindProperty("target");
+            this.spPosition = this.serializedObject.FindProperty("position");
 
-            spImpulse = serializedObject.FindProperty("impulse");
-            spDuration = serializedObject.FindProperty("duration");
-            spDrag = serializedObject.FindProperty("drag");
+            this.spImpulse = this.serializedObject.FindProperty("impulse");
+            this.spDuration = this.serializedObject.FindProperty("duration");
+            this.spDrag = this.serializedObject.FindProperty("drag");
 
-            spDashForward = serializedObject.FindProperty("dashClipForward");
-            spDashBackward = serializedObject.FindProperty("dashClipBackward");
-            spDashRight = serializedObject.FindProperty("dashClipRight");
-            spDashLeft = serializedObject.FindProperty("dashClipLeft");
+            this.spDashForward = this.serializedObject.FindProperty("dashClipForward");
+            this.spDashBackward = this.serializedObject.FindProperty("dashClipBackward");
+            this.spDashRight = this.serializedObject.FindProperty("dashClipRight");
+            this.spDashLeft = this.serializedObject.FindProperty("dashClipLeft");
         }
 
         protected override void OnDisableEditorChild()
         {
-            spCharacter = null;
-            spDirection = null;
-            spTarget = null;
-            spPosition = null;
+            this.spCharacter = null;
+            this.spDirection = null;
+            this.spTarget = null;
+            this.spPosition = null;
 
-            spImpulse = null;
-            spDuration = null;
-            spDrag = null;
+            this.spImpulse = null;
+            this.spDuration = null;
+            this.spDrag = null;
 
-            spDashForward = null;
-            spDashBackward = null;
-            spDashRight = null;
-            spDashLeft = null;
+            this.spDashForward = null;
+            this.spDashBackward = null;
+            this.spDashRight = null;
+            this.spDashLeft = null;
         }
 
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
 
-            EditorGUILayout.PropertyField(spCharacter);
+            EditorGUILayout.PropertyField(this.spCharacter);
             EditorGUILayout.Space();
 
-            EditorGUILayout.PropertyField(spDirection);
-            switch (spDirection.enumValueIndex)
+            EditorGUILayout.PropertyField(this.spDirection);
+            switch (this.spDirection.enumValueIndex)
             {
-                case (int) Direction.TowardsTarget:
-                    EditorGUILayout.PropertyField(spTarget);
+                case (int)Direction.TowardsTarget:
+                    EditorGUILayout.PropertyField(this.spTarget);
                     break;
 
-                case (int) Direction.TowardsPosition:
-                    EditorGUILayout.PropertyField(spPosition);
+                case (int)Direction.TowardsPosition:
+                    EditorGUILayout.PropertyField(this.spPosition);
                     break;
             }
 
             EditorGUILayout.Space();
-            EditorGUILayout.PropertyField(spImpulse);
+            EditorGUILayout.PropertyField(this.spImpulse);
 
             EditorGUILayout.Space();
-            EditorGUILayout.PropertyField(spDuration);
+            EditorGUILayout.PropertyField(this.spDuration);
 
             EditorGUILayout.Space();
-            EditorGUILayout.PropertyField(spDrag);
+            EditorGUILayout.PropertyField(this.spDrag);
 
             EditorGUILayout.Space();
-            EditorGUILayout.PropertyField(spDashForward);
-            EditorGUILayout.PropertyField(spDashBackward);
-            EditorGUILayout.PropertyField(spDashRight);
-            EditorGUILayout.PropertyField(spDashLeft);
+            EditorGUILayout.PropertyField(this.spDashForward);
+            EditorGUILayout.PropertyField(this.spDashBackward);
+            EditorGUILayout.PropertyField(this.spDashRight);
+            EditorGUILayout.PropertyField(this.spDashLeft);
 
             serializedObject.ApplyModifiedProperties();
         }
-#endif
+        #endif
     }
 }
