@@ -7975,10 +7975,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4972818546410309188}
     m_Modifications:
-    - target: {fileID: 1257027642313922, guid: fece4e6c51722ed49b325c7a83bdbe3a, type: 3}
-      propertyPath: RippleClickEffect
-      value: 
-      objectReference: {fileID: 262045619}
     - target: {fileID: 676306226646476444, guid: fece4e6c51722ed49b325c7a83bdbe3a,
         type: 3}
       propertyPath: m_LocalPosition.x
