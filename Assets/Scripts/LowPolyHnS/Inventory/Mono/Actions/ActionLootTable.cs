@@ -58,7 +58,7 @@ namespace LowPolyHnS.Inventory
 #if UNITY_EDITOR
 
         public static new string NAME = "Inventory/Use Loot Table";
-        public const string CUSTOM_ICON_PATH = "Assets/Scripts/LowPolyHnS/Inventory/Icons/Actions/";
+        public const string CUSTOM_ICON_PATH = "Assets/Content/Icons/Inventory/Actions/";
 
         private const string NODE_TITLE = "Use {0}";
 

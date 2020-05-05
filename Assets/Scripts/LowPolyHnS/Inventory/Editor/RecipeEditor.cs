@@ -20,7 +20,7 @@ namespace LowPolyHnS.Inventory
         private const string PROP_ONCRAFT = "removeItemsOnCraft";
         private const string PROP_ACTION = "actionsList";
 
-        private const string PATH_PREFAB_RECIPES = "Assets/Scripts/LowPolyHnSData/Inventory/Prefabs/Recipes/";
+        private const string PATH_PREFAB_RECIPES = "Assets/Scripts/Databases/Inventory/Prefabs/Recipes/";
         private const string NAME_PREFAB_RECIPES = "recipe.prefab";
 
         // PROPERTIES: -------------------------------------------------------------------------------------------------

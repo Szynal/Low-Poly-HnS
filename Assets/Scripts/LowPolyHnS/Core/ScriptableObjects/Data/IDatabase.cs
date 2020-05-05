@@ -82,7 +82,7 @@ namespace LowPolyHnS.Core
 
         protected virtual string GetProjectPath()
         {
-            return "Assets/Scripts/LowPolyHnSData/Core/Resources";
+            return "Assets/Scripts/Databases/Core/Resources";
         }
 
         protected virtual string GetResourcePath()

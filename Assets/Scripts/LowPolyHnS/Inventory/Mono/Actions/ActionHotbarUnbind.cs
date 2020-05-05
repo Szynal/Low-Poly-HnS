@@ -28,7 +28,7 @@ namespace LowPolyHnS.Inventory
 
 #if UNITY_EDITOR
 
-        public const string CUSTOM_ICON_PATH = "Assets/Scripts/LowPolyHnS/Inventory/Icons/Actions/";
+        public const string CUSTOM_ICON_PATH = "Assets/Content/Icons/Inventory/Actions/";
 
         public static new string NAME = "Inventory/Unbind Item from Hotbar";
         private const string NODE_TITLE = "Unbind item from {0}";

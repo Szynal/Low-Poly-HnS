@@ -28,7 +28,7 @@ namespace LowPolyHnS.Inventory
 
 #if UNITY_EDITOR
 
-        public const string CUSTOM_ICON_PATH = "Assets/Scripts/LowPolyHnS/Inventory/Icons/Conditions/";
+        public const string CUSTOM_ICON_PATH = "Assets/Content/Icons/Inventory/Conditions/";
 
         public static new string NAME = "Inventory/Item in Inventory";
         private const string NODE_TITLE = "Player has {0} {1} item{2} or more";

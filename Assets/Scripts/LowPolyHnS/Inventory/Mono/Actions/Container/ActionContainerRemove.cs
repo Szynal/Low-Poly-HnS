@@ -22,7 +22,7 @@ namespace LowPolyHnS.Inventory
         }
 
 #if UNITY_EDITOR
-        public const string CUSTOM_ICON_PATH = "Assets/Scripts/LowPolyHnS/Inventory/Icons/Actions/";
+        public const string CUSTOM_ICON_PATH = "Assets/Content/Icons/Inventory/Actions/";
         public static new string NAME = "Inventory/Container/Remove Item Container";
 
         private const string NODE_TITLE = "Remove {0} from {1}";

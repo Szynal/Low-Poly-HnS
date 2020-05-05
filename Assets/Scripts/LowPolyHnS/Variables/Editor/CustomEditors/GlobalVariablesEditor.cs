@@ -12,7 +12,7 @@ namespace LowPolyHnS.Variables
     {
         private const string LABEL_TITLE = "Global Variables";
 
-        public const string PATH_ASSET = "Assets/Scripts/LowPolyHnSData/Core/Variables/";
+        public const string PATH_ASSET = "Assets/Scripts/Databases/Core/Variables/";
         public const string NAME_ASSET = "Variables.asset";
 
         // PROPERTIES: ----------------------------------------------------------------------------

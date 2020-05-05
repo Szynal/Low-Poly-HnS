@@ -39,7 +39,7 @@ namespace LowPolyHnS.Inventory
 
 #if UNITY_EDITOR
 
-        public const string CUSTOM_ICON_PATH = "Assets/Scripts/LowPolyHnS/Inventory/Icons/Actions/";
+        public const string CUSTOM_ICON_PATH = "Assets/Content/Icons/Inventory/Actions/";
         public static new string NAME = "Inventory/Container/Container UI";
 
         private const string NODE_TITLE = "{0} Container UI {1}";

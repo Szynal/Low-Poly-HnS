@@ -16,7 +16,7 @@ namespace LowPolyHnS.Variables
 
         private static GlobalTags GLOBAL_TAGS_INSTANCE;
 
-        public const string PATH_ASSET = "Assets/Scripts/LowPolyHnSData/Core/Variables/";
+        public const string PATH_ASSET = "Assets/Scripts/Databases/Core/Variables/";
         public const string NAME_ASSET = "Tags.asset";
 
         [Serializable]

@@ -12,13 +12,13 @@ namespace LowPolyHnS.Inventory
         private const float ANIM_BOOL_SPEED = 3.0f;
         private const float BTN_HEIGHT = 24f;
 
-        private const string PATH_PREFAB_CONSUME = "Assets/Scripts/LowPolyHnSData/Inventory/Prefabs/Consumables/";
+        private const string PATH_PREFAB_CONSUME = "Assets/Scripts/Databases/Inventory/Prefabs/Consumables/";
         private const string NAME_PREFAB_CONSUME = "consume.prefab";
 
-        private const string PATH_PREFAB_EQUIP_COND = "Assets/Scripts/LowPolyHnSData/Inventory/Prefabs/Conditions/";
+        private const string PATH_PREFAB_EQUIP_COND = "Assets/Scripts/Databases/Inventory/Prefabs/Conditions/";
         private const string NAME_PREFAB_EQUIP_COND = "equip.prefab";
 
-        private const string PATH_PREFAB_EQUP = "Assets/Scripts/LowPolyHnSData/Inventory/Prefabs/Equip/";
+        private const string PATH_PREFAB_EQUP = "Assets/Scripts/Databases/Inventory/Prefabs/Equip/";
         private const string NAME_PREFAB_EQUIP = "equip.prefab";
         private const string NAME_PREFAB_UNEQUIP = "unequip.prefab";
 

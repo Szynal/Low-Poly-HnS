@@ -27,7 +27,7 @@ namespace LowPolyHnS.Inventory
 
 #if UNITY_EDITOR
 
-        public const string CUSTOM_ICON_PATH = "Assets/Scripts/LowPolyHnS/Inventory/Icons/Conditions/";
+        public const string CUSTOM_ICON_PATH = "Assets/Content/Icons/Inventory/Conditions/";
 
         public static new string NAME = "Inventory/Exists Recipe";
         private const string NODE_TITLE = "Exists recipe {0} + {1}";

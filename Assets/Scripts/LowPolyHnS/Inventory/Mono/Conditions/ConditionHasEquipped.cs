@@ -55,7 +55,7 @@ namespace LowPolyHnS.Inventory
 
 #if UNITY_EDITOR
 
-        public const string CUSTOM_ICON_PATH = "Assets/Scripts/LowPolyHnS/Inventory/Icons/Conditions/";
+        public const string CUSTOM_ICON_PATH = "Assets/Content/Icons/Inventory/Conditions/";
 
         public static new string NAME = "Inventory/Has Equipped";
         private const string NODE_TITLE = "Has {0} equipped {1}";

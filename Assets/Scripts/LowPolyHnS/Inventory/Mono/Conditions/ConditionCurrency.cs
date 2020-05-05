@@ -27,7 +27,7 @@ namespace LowPolyHnS.Inventory
 
 #if UNITY_EDITOR
 
-        public const string CUSTOM_ICON_PATH = "Assets/Scripts/LowPolyHnS/Inventory/Icons/Conditions/";
+        public const string CUSTOM_ICON_PATH = "Assets/Content/Icons/Inventory/Conditions/";
 
         public static new string NAME = "Inventory/Enough Currency";
         private const string NODE_TITLE = "Player has at least {0} of currency";

@@ -8,7 +8,7 @@ namespace LowPolyHnS.Inventory
 #if UNITY_EDITOR
         public new static string NAME = "Inventory/On Drop Item";
         public new static bool REQUIRES_COLLIDER = true;
-        public new static string ICON_PATH = "Assets/Scripts/LowPolyHnS/Inventory/Icons/Igniters/";
+        public new static string ICON_PATH = "Assets/Content/Icons/Inventory/Igniters/";
 #endif
 
         public ItemHolder item;

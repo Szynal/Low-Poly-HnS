@@ -31,7 +31,7 @@ namespace LowPolyHnS.Inventory
 #if UNITY_EDITOR
 
         public static new string NAME = "Inventory/Merchant UI";
-        public const string CUSTOM_ICON_PATH = "Assets/Scripts/LowPolyHnS/Inventory/Icons/Conditions/";
+        public const string CUSTOM_ICON_PATH = "Assets/Content/Icons/Inventory/Conditions/";
 
         private const string NODE_TITLE = "Merchant UI {0}";
 
