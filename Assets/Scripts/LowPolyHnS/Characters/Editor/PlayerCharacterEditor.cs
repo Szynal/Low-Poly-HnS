@@ -8,7 +8,6 @@ namespace LowPolyHnS.Characters
     [CustomEditor(typeof(PlayerCharacter))]
     public class PlayerCharacterEditor : CharacterEditor
     {
-        private const string PLAYER_PREFAB_PATH = "Assets/Scripts/LowPolyHnS/Characters/Prefabs/Player.prefab";
         private const string SECTION_INPUT = "Player Input";
 
         private const string PROP_INPUTT = "inputType";
@@ -140,17 +139,5 @@ namespace LowPolyHnS.Characters
             serializedObject.ApplyModifiedProperties();
         }
 
-        // MENU ITEM: -----------------------------------------------------------------------------
-
-        [MenuItem("GameObject/LowPolyHnS/Characters/Player", false, 0)]
-        public static void CreatePlayer()
-        {
-            GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(PLAYER_PREFAB_PATH);
-            if (prefab == null) return;
-
-            GameObject instance = Instantiate(prefab);
-            instance.name = prefab.name;
-            instance = CreateSceneObject.Create(instance);
-        }
     }
 }

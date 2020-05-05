@@ -9,7 +9,7 @@ namespace LowPolyHnS.Inventory
     [CustomEditor(typeof(Container))]
     public class ContainerEditor : Editor
     {
-        private const string GCTOOLBAR_ICON_PATH = "Assets/Scripts/LowPolyHnS/Inventory/Icons/Toolbar/Container.png";
+        private const string GCTOOLBAR_ICON_PATH = "Assets/Content/Icons/Inventory/Toolbar/Container.png";
         private static readonly GUIContent GC_CONT_UI = new GUIContent("Container UI (optional)");
 
         // PROPERTIES: ----------------------------------------------------------------------------

@@ -14,7 +14,6 @@ namespace LowPolyHnS.Localization
         private SerializedProperty spGeneralRenderMode;
         private SerializedProperty spPrefabFloatingMessage;
         private SerializedProperty spPrefabSimpleMessage;
-        private SerializedProperty spPrefabTouchstick;
         private SerializedProperty spSaveScenes;
         private SerializedProperty spProvider;
         private SerializedProperty spToolbarPositionX;
@@ -34,7 +33,6 @@ namespace LowPolyHnS.Localization
             spGeneralRenderMode = serializedObject.FindProperty("generalRenderMode");
             spPrefabFloatingMessage = serializedObject.FindProperty("prefabFloatingMessage");
             spPrefabSimpleMessage = serializedObject.FindProperty("prefabSimpleMessage");
-            spPrefabTouchstick = serializedObject.FindProperty("prefabTouchstick");
             spSaveScenes = serializedObject.FindProperty("saveScenes");
             spProvider = serializedObject.FindProperty("provider");
             spToolbarPositionX = serializedObject.FindProperty("toolbarPositionX");
@@ -85,7 +83,6 @@ namespace LowPolyHnS.Localization
             EditorGUILayout.PropertyField(spGeneralRenderMode);
             EditorGUILayout.PropertyField(spPrefabFloatingMessage);
             EditorGUILayout.PropertyField(spPrefabSimpleMessage);
-            EditorGUILayout.PropertyField(spPrefabTouchstick);
 
             PaintProvider();
 

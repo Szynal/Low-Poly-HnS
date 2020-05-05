@@ -48,9 +48,8 @@ namespace LowPolyHnS.Characters
 
         // CONSTANTS: --------------------------------------------------------------------------------------------------
 
-        public const string CHARACTER_ICONS_PATH = "Assets/Scripts/LowPolyHnS/Characters/Icons/";
-        protected const string CHARACTER_PREFAB_PATH = "Assets/Scripts/LowPolyHnS/Characters/Prefabs/Character.prefab";
-
+        public const string CHARACTER_ICONS_PATH = "Assets/Content/Icons/";
+     
         private const float ANIM_BOOL_SPEED = 3f;
         private const string SECTION_CHAR_PARAMS1 = "Basic Parameters";
         private const string SECTION_CHAR_PARAMS2 = "Advanced Parameters";
@@ -242,19 +241,6 @@ namespace LowPolyHnS.Characters
 
                 EditorGUILayout.EndVertical();
             }
-        }
-
-        // MENU ITEM: --------------------------------------------------------------------------------------------------
-
-        [MenuItem("GameObject/LowPolyHnS/Characters/Character", false, 0)]
-        public static void CreateCharacter()
-        {
-            GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(CHARACTER_PREFAB_PATH);
-            if (prefab == null) return;
-
-            GameObject instance = Instantiate(prefab);
-            instance.name = prefab.name;
-            instance = CreateSceneObject.Create(instance);
         }
     }
 }

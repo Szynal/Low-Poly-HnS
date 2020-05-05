@@ -9,10 +9,9 @@ namespace LowPolyHnS.Characters
     public class CharacterAnimatorEditor : Editor
     {
         private const string MSG_EMPTY_MODEL = "Drop a model from your project or load the default Character.";
-        private const string PATH_DEFAULT_MODEL = "Assets/Scripts/LowPolyHnS/Characters/Models/Character.fbx";
-
-        private const string PATH_DEFAULT_RCONT =
-            "Assets/Scripts/LowPolyHnS/Characters/Animations/Controllers/Locomotion.controller";
+        private const string PATH_DEFAULT_MODEL = "Assets/Content/Meshes/Characters/Character.fbx";
+        
+        private const string PATH_DEFAULT_RCONT = "Assets/Content/Animations/Characters/Controllers/Locomotion.controller";
 
         private const string MSG_PREFAB_INSTANCE_TITLE = "Cannot restructure Prefab instance";
 

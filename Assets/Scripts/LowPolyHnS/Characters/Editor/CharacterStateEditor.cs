@@ -6,11 +6,9 @@ namespace LowPolyHnS.Characters
     [CustomEditor(typeof(CharacterState), true)]
     public class CharacterStateEditor : Editor
     {
-        private const string PATH_RTC_SIM =
-            "Assets/Scripts/LowPolyHnS/Characters/Animations/Overriders/Simple.overrideController";
+        private const string PATH_RTC_SIM = "Assets/Content/Animations/Characters/Overriders/Simple.overrideController";
 
-        private const string PATH_RTC_LOC =
-            "Assets/Scripts/LowPolyHnS/Characters/Animations/Overriders/Locomotion.overrideController";
+        private const string PATH_RTC_LOC = "Assets/Content/Animations/Characters/Overriders/Locomotion.overrideController";
 
         private static readonly GUIContent GC_OTHER = new GUIContent("Animator");
         private static readonly GUIContent GC_AVATAR = new GUIContent("Avatar Mask (optional)");
