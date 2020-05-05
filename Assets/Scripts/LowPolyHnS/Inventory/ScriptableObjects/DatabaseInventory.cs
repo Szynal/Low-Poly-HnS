@@ -135,7 +135,7 @@ namespace LowPolyHnS.Inventory
 
         protected override string GetProjectPath()
         {
-            return "Assets/Scripts/Databases/Inventory/Resources";
+            return "Assets/Scripts/LowPolyHnSData/Inventory/Resources";
         }
 
 #endif
