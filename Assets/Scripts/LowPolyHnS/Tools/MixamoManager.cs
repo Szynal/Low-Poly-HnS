@@ -1,23 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using UnityEditor;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
-namespace LowPolyHnS.Tools
+namespace LowPolyHnS.Core
 {
     public class MixamoManager : EditorWindow
     {
+        private const string WIN_TITLE = "Mixamo Preferences";
+        private const string KEY_SIDEBAR_INDEX = "MixamoManager-preferences-index";
+
         private static MixamoManager EDITOR;
-        private static int WIDTH = 300;
-        private static int HEIGHT = 500;
-        private static int X;
-        private static int Y;
         private static List<string> ALL_FILES = new List<string>();
 
         private static Settings SETTINGS = new Settings();
-        private const string SETTINGS_PREFS_PATH = nameof(MixamoManager) + "_lastsettings";
+
+        public const float SIDEBAR_WIDTH = 160.0f;
+        private const string SETTINGS_PATH = nameof(MixamoManager) + "_lastsettings";
+        private const string MIXAMO_LOGO = "Assets/EditorIcons/Mixamo/mixamo-logo.png";
+        private static Texture2D IMAGE_MIXAMO_LOGO;
+
+        private Vector2 scrollSidebar = Vector2.zero;
+        private Vector2 scrollContent = Vector2.zero;
+        private int sidebarIndex;
+
+        private bool initStyles;
+        private GUIStyle styleSidebar;
         private static Color LINE_COLOR = new Color32(128, 128, 128, 64);
 
         [Serializable]
@@ -41,20 +49,89 @@ namespace LowPolyHnS.Tools
             public Avatar RigCustomAvatar;
         }
 
-        [MenuItem("LowPolyHnS/MixamoManager")]
-        private static void ShowEditor()
+
+        #region INITIALIZE METHODS
+
+        private void OnEnable()
         {
-            EDITOR = GetWindow<MixamoManager>();
-            CenterWindow();
-            LoadSettings();
+            initStyles = false;
+            ChangeSidebarIndex(EditorPrefs.GetInt(KEY_SIDEBAR_INDEX, 0));
+            IMAGE_MIXAMO_LOGO = (Texture2D) AssetDatabase.LoadAssetAtPath(MIXAMO_LOGO, typeof(Texture2D));
         }
+
+        #endregion
+
+        #region GUI METHODS
 
         private void OnGUI()
         {
-            EditorGUILayout.BeginHorizontal();
-            if (GUILayout.Button("Select directory"))
+            if (EDITOR == null)
             {
-                SETTINGS.Path = EditorUtility.OpenFolderPanel("Select directory with files", "", "");
+                OpenWindow();
+            }
+
+            if (!initStyles)
+            {
+                InitializeStyles();
+            }
+
+            int currentSidebarIndex = sidebarIndex;
+            if (currentSidebarIndex < 0)
+            {
+                currentSidebarIndex = 0;
+                ChangeSidebarIndex(currentSidebarIndex);
+            }
+
+            EditorGUILayout.BeginHorizontal();
+
+            PaintSidebar();
+            PaintSettings();
+
+            EditorGUILayout.EndHorizontal();
+
+
+            Repaint();
+        }
+
+
+        private void InitializeStyles()
+        {
+            Texture2D texture = new Texture2D(1, 1);
+            texture.SetPixel(
+                0, 0, EditorGUIUtility.isProSkin
+                    ? new Color(0f, 0f, 0f, 0.35f)
+                    : new Color(256f, 256f, 256f, 0.5f));
+
+            texture.alphaIsTransparency = true;
+            texture.Apply();
+
+            styleSidebar = new GUIStyle {normal = {background = texture}, margin = new RectOffset(0, 0, 0, 0)};
+            initStyles = true;
+        }
+
+        private void ChangeSidebarIndex(int nextIndex)
+        {
+            sidebarIndex = nextIndex;
+            EditorPrefs.SetInt(KEY_SIDEBAR_INDEX, sidebarIndex);
+
+            string windowName = GetWindowTitle();
+            titleContent = new GUIContent(windowName);
+        }
+
+        private void PaintSidebar()
+        {
+            scrollSidebar = EditorGUILayout.BeginScrollView(
+                scrollSidebar,
+                styleSidebar,
+                GUILayout.MinWidth(SIDEBAR_WIDTH),
+                GUILayout.MaxWidth(SIDEBAR_WIDTH),
+                GUILayout.ExpandHeight(true)
+            );
+
+            if (GUILayout.Button(IMAGE_MIXAMO_LOGO, new GUIStyle(GUI.skin.label), GUILayout.Height(70f),
+                GUILayout.Width(150f)))
+            {
+                Application.OpenURL("https://www.MixamoManager.com/");
             }
 
             if (GUILayout.Button("Reset settings"))
@@ -67,20 +144,34 @@ namespace LowPolyHnS.Tools
                 SaveSettings();
             }
 
+            GUILayout.Space(10f);
+            EditorGUILayout.BeginHorizontal(EditorStyles.toolbar);
+            GUILayout.FlexibleSpace();
+
+            GUILayout.Label($"Selected: {Selection.gameObjects.Length} assets", EditorStyles.boldLabel,
+                GUILayout.Width(130f));
             EditorGUILayout.EndHorizontal();
 
-            GUILayout.Label($"Path: {SETTINGS.Path} ", EditorStyles.boldLabel);
-            GUILayout.Label($"Selected: {Selection.gameObjects.Length} assets", EditorStyles.boldLabel);
+            GUI.enabled = Selection.gameObjects.Length > 0;
 
-            bool pathvalid = !string.IsNullOrEmpty(SETTINGS.Path) && Directory.Exists(SETTINGS.Path);
-            if (!pathvalid)
+            if (GUILayout.Button("Process selected assets"))
             {
-                GUI.color = Color.red;
-                GUILayout.Label("Path invalid", EditorStyles.boldLabel);
-                GUI.color = Color.white;
+                ProcessSelectedAssets();
+                SaveSettings();
             }
 
+
+            EditorGUILayout.EndScrollView();
+            Rect borderRect = GUILayoutUtility.GetRect(1f, 1f, GUILayout.ExpandHeight(true), GUILayout.Width(1f));
+            EditorGUI.DrawTextureAlpha(borderRect, Texture2D.blackTexture);
+        }
+
+        private void PaintSettings()
+        {
+            GUI.enabled = true;
+            EditorGUILayout.BeginVertical();
             DrawUILine();
+
             SETTINGS.RenameAnimClips =
                 EditorGUILayout.BeginToggleGroup("Rename anim clips to filename", SETTINGS.RenameAnimClips);
             {
@@ -126,82 +217,24 @@ namespace LowPolyHnS.Tools
 
             GUILayout.Space(30);
             DrawUILine();
-            GUILayout.BeginHorizontal();
-
-            GUI.enabled = pathvalid;
-            if (GUILayout.Button("Process directory"))
-            {
-                process_dir();
-                SaveSettings();
-            }
-
-            GUI.enabled = Selection.gameObjects.Length > 0;
-            if (GUILayout.Button("Process selected assets"))
-            {
-                processSelectedAssets();
-                SaveSettings();
-            }
-
-            GUI.enabled = true;
-            GUILayout.EndHorizontal();
         }
 
-        private static void SaveSettings()
-        {
-            string json = EditorJsonUtility.ToJson(SETTINGS);
-            EditorPrefs.SetString(SETTINGS_PREFS_PATH, json);
-        }
+        #endregion
 
-        private static void LoadSettings()
-        {
-            SETTINGS = JsonUtility.FromJson<Settings>(EditorPrefs.GetString(SETTINGS_PREFS_PATH));
-            if (SETTINGS == null)
-                SETTINGS = new Settings();
-        }
-
-        public void process_dir()
-        {
-            DirSearch(SETTINGS.Path);
-
-            if (ALL_FILES.Count > 0)
-            {
-                for (int i = 0; i < ALL_FILES.Count; i++)
-                {
-                    int idx = ALL_FILES[i].IndexOf("Assets");
-                    string filename = Path.GetFileName(ALL_FILES[i]);
-                    string asset = ALL_FILES[i].Substring(idx);
-                    AnimationClip orgClip = (AnimationClip) AssetDatabase.LoadAssetAtPath(
-                        asset, typeof(AnimationClip));
-
-                    var fileName = Path.GetFileNameWithoutExtension(ALL_FILES[i]);
-                    var importer = (ModelImporter) AssetImporter.GetAtPath(asset);
-
-                    EditorUtility.DisplayProgressBar($"Processing {ALL_FILES.Count} files", filename,
-                        1f / ALL_FILES.Count * i);
-
-                    RenameAndImport(importer, fileName);
-                }
-            }
-
-            EditorUtility.DisplayProgressBar($"Processing {ALL_FILES.Count} files", "Saving assets", 1f);
-            AssetDatabase.SaveAssets();
-            EditorUtility.ClearProgressBar();
-        }
-
-        public void processSelectedAssets()
+        public void ProcessSelectedAssets()
         {
             int count = Selection.gameObjects.Length;
             if (count > 0)
             {
                 for (int i = 0; i < count; i++)
                 {
-                    Object asset = Selection.gameObjects[i];
-                    string assetpath = AssetDatabase.GetAssetPath(asset);
-                    AnimationClip orgClip = (AnimationClip) AssetDatabase.LoadAssetAtPath(
-                        assetpath, typeof(AnimationClip));
+                    var asset = Selection.gameObjects[i];
+                    string assetPath = AssetDatabase.GetAssetPath(asset);
+                    AnimationClip orgClip =
+                        (AnimationClip) AssetDatabase.LoadAssetAtPath(assetPath, typeof(AnimationClip));
 
-                    var fileName = asset.name;
-                    var importer = (ModelImporter) AssetImporter.GetAtPath(assetpath);
+                    string fileName = asset.name;
+                    ModelImporter importer = (ModelImporter) AssetImporter.GetAtPath(assetPath);
 
                     EditorUtility.DisplayProgressBar($"Processing {count} files", fileName, 1f / count * i);
 
@@ -212,77 +245,124 @@ namespace LowPolyHnS.Tools
             EditorUtility.ClearProgressBar();
         }
 
-        private void RenameAndImport(ModelImporter asset, string name)
+
+        private static void RenameAndImport(ModelImporter asset, string animName)
         {
             ModelImporter modelImporter = asset;
             ModelImporterClipAnimation[] clipAnimations = modelImporter.defaultClipAnimations;
 
             if (SETTINGS.DisableMaterialImport)
+            {
                 modelImporter.materialImportMode = ModelImporterMaterialImportMode.None;
+            }
 
             if (SETTINGS.SetRigToHumanoid)
+            {
                 modelImporter.animationType = ModelImporterAnimationType.Human;
+            }
 
             if (SETTINGS.RigCustomAvatar != null)
+            {
                 modelImporter.sourceAvatar = SETTINGS.RigCustomAvatar;
+            }
 
             if (SETTINGS.RenameAnimClipsUnderscores)
-                name = name.Replace(' ', '_');
+            {
+                animName = animName.Replace(' ', '_');
+            }
 
             if (SETTINGS.RenameAnimClipsTolower)
-                name = name.ToLower();
-
-            for (int i = 0; i < clipAnimations.Length; i++)
             {
-                var clip = clipAnimations[i];
+                animName = animName.ToLower();
+            }
 
+            foreach (ModelImporterClipAnimation clip in clipAnimations)
+            {
                 if (SETTINGS.RenameAnimClips)
-                    clip.name = name;
-                if (SETTINGS.ChangeLoopAnimClips)
                 {
-                    clip.loopTime = SETTINGS.LoopAnimClipsTime;
-                    clip.loopPose = SETTINGS.LoopAnimClipsPose;
-                    if (SETTINGS.RootTransformRotation)
-                    {
-                        clip.lockRootRotation = SETTINGS.RootTransformRotationBakeInToPose;
-                        clip.keepOriginalOrientation = SETTINGS.RootTransformRotationKeepOriginal;
-                        clip.rotationOffset = SETTINGS.RootTransformRotationOffset;
-                    }
+                    clip.name = animName;
                 }
+
+                if (!SETTINGS.ChangeLoopAnimClips)
+                {
+                    continue;
+                }
+
+                clip.loopTime = SETTINGS.LoopAnimClipsTime;
+                clip.loopPose = SETTINGS.LoopAnimClipsPose;
+
+                if (!SETTINGS.RootTransformRotation)
+                {
+                    continue;
+                }
+
+                clip.lockRootRotation = SETTINGS.RootTransformRotationBakeInToPose;
+                clip.keepOriginalOrientation = SETTINGS.RootTransformRotationKeepOriginal;
+                clip.rotationOffset = SETTINGS.RootTransformRotationOffset;
             }
 
             modelImporter.clipAnimations = clipAnimations;
             modelImporter.SaveAndReimport();
         }
 
-        private static void CenterWindow()
+
+        #region OPEN WINDOW SHORTCUT
+
+        [MenuItem("LowPolyHnS/MixamoManager %&l")]
+        public static MixamoManager OpenWindow()
         {
-            EDITOR = GetWindow<MixamoManager>();
-            X = (Screen.currentResolution.width - WIDTH) / 2;
-            Y = (Screen.currentResolution.height - HEIGHT) / 2;
-            EDITOR.position = new Rect(X, Y, WIDTH, HEIGHT);
-            EDITOR.maxSize = new Vector2(WIDTH, HEIGHT);
-            EDITOR.minSize = EDITOR.maxSize;
+            MixamoManager window = GetWindow<MixamoManager>(true, GetWindowTitle(), true);
+            LoadSettings();
+
+            EDITOR = window;
+            window.Show();
+            return window;
         }
 
-        private static void DirSearch(string path)
+        public static void CloseWindow()
         {
-            string[] fileInfo = Directory.GetFiles(path, "*.fbx", SearchOption.AllDirectories);
-            foreach (string file in fileInfo)
+            if (EDITOR == null)
             {
-                if (file.EndsWith(".fbx"))
-                    ALL_FILES.Add(file);
+                return;
             }
+
+            EDITOR.Close();
+        }
+
+        public static void OpenWindowTab(string tabName)
+        {
+            MixamoManager window = OpenWindow();
+            tabName = tabName.ToLower();
+        }
+
+        #endregion
+
+
+        private static string GetWindowTitle()
+        {
+            return WIN_TITLE;
+        }
+
+
+        private static void SaveSettings()
+        {
+            string json = EditorJsonUtility.ToJson(SETTINGS);
+            EditorPrefs.SetString(SETTINGS_PATH, json);
+        }
+
+        private static void LoadSettings()
+        {
+            SETTINGS = JsonUtility.FromJson<Settings>(EditorPrefs.GetString(SETTINGS_PATH)) ?? new Settings();
         }
 
         private static void DrawUILine(int thickness = 1, int padding = 5)
         {
-            Rect r = EditorGUILayout.GetControlRect(GUILayout.Height(padding + thickness));
-            r.height = thickness;
-            r.y += padding / 2;
-            r.x -= 2;
-            r.width += 6;
-            EditorGUI.DrawRect(r, LINE_COLOR);
+            Rect rect = EditorGUILayout.GetControlRect(GUILayout.Height(padding + thickness));
+            rect.height = thickness;
+            rect.y += padding / 2;
+            rect.x -= 2;
+            rect.width += 6;
+            EditorGUI.DrawRect(rect, LINE_COLOR);
         }
     }
 }

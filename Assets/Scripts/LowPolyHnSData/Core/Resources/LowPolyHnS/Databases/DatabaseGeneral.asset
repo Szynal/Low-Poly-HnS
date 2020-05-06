@@ -13,11 +13,12 @@ MonoBehaviour:
   m_Name: DatabaseGeneral
   m_EditorClassIdentifier: 
   generalRenderMode: 0
-  prefabSimpleMessage: {fileID: 0}
-  prefabFloatingMessage: {fileID: 0}
-  prefabTouchstick: {fileID: 0}
+  prefabSimpleMessage: {fileID: 1362247407873064, guid: aba6cefc3418744bb99053e735f57f79,
+    type: 3}
+  prefabFloatingMessage: {fileID: 1362247407873064, guid: 03f303a0c5c66485fbc606efe0f4c276,
+    type: 3}
   saveScenes: 1
-  provider: {fileID: 0}
+  provider: {fileID: 11400000, guid: 1f9bc473c42a74d268e54adf54fbcad8, type: 2}
   toolbarPositionX: 10
   toolbarPositionY: 10
   musicAudioMixer: {fileID: 0}
