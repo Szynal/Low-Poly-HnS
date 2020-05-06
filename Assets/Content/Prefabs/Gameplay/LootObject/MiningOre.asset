@@ -15,14 +15,17 @@ MonoBehaviour:
   noDropWeight: 0
   loot:
   - item:
-      item: {fileID: 114273004538180096, guid: 17839004acbb6924ebf5be3ce8a59dcc, type: 2}
+      item: {fileID: 8039637003375704792, guid: 17839004acbb6924ebf5be3ce8a59dcc,
+        type: 2}
     amount: 1
     weight: 3
   - item:
-      item: {fileID: 114273004538180096, guid: 17839004acbb6924ebf5be3ce8a59dcc, type: 2}
+      item: {fileID: 8039637003375704792, guid: 17839004acbb6924ebf5be3ce8a59dcc,
+        type: 2}
     amount: 2
     weight: 2
   - item:
-      item: {fileID: 114273004538180096, guid: 17839004acbb6924ebf5be3ce8a59dcc, type: 2}
+      item: {fileID: 8039637003375704792, guid: 17839004acbb6924ebf5be3ce8a59dcc,
+        type: 2}
     amount: 3
     weight: 1

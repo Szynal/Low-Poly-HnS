@@ -60,6 +60,7 @@ MonoBehaviour:
     - {fileID: 114177772742640968}
     - {fileID: 114202326578594358}
     - {fileID: -9000702557057661082}
+    - {fileID: 8039637003375704792}
     recipes:
     - {fileID: 114798038658200360}
     itemTypes:
@@ -88,9 +89,9 @@ MonoBehaviour:
         content: Armor
         postProcess: 0
         translationID: 0
-    - id: 
+    - id: General/Crafting/
       name:
-        content: 
+        content: Mining
         postProcess: 0
         translationID: 0
     - id: 
@@ -703,3 +704,44 @@ MonoBehaviour:
   conditionsEquip: {fileID: 0}
   actionsOnEquip: {fileID: 0}
   actionsOnUnequip: {fileID: 0}
+--- !u!114 &8039637003375704792
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6c3b42562c09470ea31efe19c9d3dd9, type: 3}
+  m_Name: item.1578299915
+  m_EditorClassIdentifier: 
+  uuid: 1578299915
+  itemName:
+    content: Copper
+    postProcess: 0
+    translationID: 0
+  itemDescription:
+    content: Metal
+    postProcess: 0
+    translationID: 0
+  itemColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  sprite: {fileID: 21300000, guid: 455f3470e3cc4844e9da5dcce29eaad5, type: 3}
+  prefab: {fileID: 1695198407935802, guid: ecb3f2997175e4a368214188a806379b, type: 3}
+  canBeSold: 1
+  price: 2
+  maxStack: 99
+  weight: 1
+  itemTypes: 32
+  onClick: 1
+  consumeItem: 0
+  actionsOnClick: {fileID: 2377523397524369863, guid: 5eac8bafe69c0bb4996bf19b301b3b89,
+    type: 3}
+  equipable: 0
+  fillAllTypes: 0
+  conditionsEquip: {fileID: 3218544245433465052, guid: 68d7eb760f8febd4982053cf36f2a145,
+    type: 3}
+  actionsOnEquip: {fileID: 49268878011251668, guid: 94b5b281baf7b31428df9cfe3e05c506,
+    type: 3}
+  actionsOnUnequip: {fileID: 1374681057128057779, guid: 41990d88e9c3c0b498358dce9cb46269,
+    type: 3}
