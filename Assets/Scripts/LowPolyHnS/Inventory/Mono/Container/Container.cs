@@ -49,6 +49,10 @@ namespace LowPolyHnS.Inventory
         {
         }
 
+        public class EventCls : UnityEvent<int, int>
+        {
+        }
+
         // PROPERTIES: ----------------------------------------------------------------------------
 
         public Data data { private set; get; }
@@ -66,6 +70,7 @@ namespace LowPolyHnS.Inventory
 
         private readonly EventAdd eventAdd = new EventAdd();
         private readonly EventRmv eventRmv = new EventRmv();
+        private readonly EventCls eventCls = new EventCls();
 
         // INITIALIZERS: --------------------------------------------------------------------------
 
@@ -186,6 +191,16 @@ namespace LowPolyHnS.Inventory
         public void RemoveOnRemoveListener(UnityAction<int, int> callback)
         {
             eventRmv.RemoveListener(callback);
+        }
+
+        public void AddCloseListener(UnityAction<int, int> callback)
+        {
+            eventCls.AddListener(callback);
+        }
+
+        public void RemoveCloseListener(UnityAction<int, int> callback)
+        {
+            eventCls.RemoveListener(callback);
         }
 
         // IGAMESAVE: -----------------------------------------------------------------------------

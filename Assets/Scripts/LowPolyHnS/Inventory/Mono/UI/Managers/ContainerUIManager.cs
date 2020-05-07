@@ -26,6 +26,11 @@ namespace LowPolyHnS.Inventory
         {
         }
 
+        [Serializable]
+        public class ContainerCloseEvent : UnityEvent
+        {
+        }
+
         // PROPERTIES: ----------------------------------------------------------------------------
 
         public ScrollRect scrollContainer;
@@ -46,11 +51,14 @@ namespace LowPolyHnS.Inventory
         [Space] public ContainerEvent onAdd = new ContainerEvent();
         public ContainerEvent onRemove = new ContainerEvent();
         public ContainerTakeAllEvent onTakeAll = new ContainerTakeAllEvent();
+        public ContainerCloseEvent CloseEvent = new ContainerCloseEvent();
+
 
         private Dictionary<int, ContainerUIItemBox> containerItems;
         private Dictionary<int, ContainerUIItemPlayer> playerItems;
 
         [Space] public Button buttonTakeAll;
+        public Button buttonClose;
 
         // INITIALIZERS: --------------------------------------------------------------------------
 
@@ -70,6 +78,11 @@ namespace LowPolyHnS.Inventory
             if (buttonTakeAll != null)
             {
                 buttonTakeAll.onClick.AddListener(GetAllItemsFromContainer);
+            }
+
+            if (buttonClose != null)
+            {
+                buttonClose.onClick.AddListener(CloseContainerUI);
             }
         }
 
@@ -239,6 +252,13 @@ namespace LowPolyHnS.Inventory
 
             onTakeAll.Invoke();
         }
+
+
+        public void CloseContainerUI()
+        {
+            CloseEvent.Invoke();
+        }
+
 
         // PRIVATE PLAYER METHODS: ----------------------------------------------------------------
 
