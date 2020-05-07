@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 0
+  m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -4629,10 +4629,44 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 725164396}
     m_Modifications:
+    - target: {fileID: 1629146786, guid: f0ddf8e9013e04c40bfb5e7defb373aa, type: 3}
+      propertyPath: isExpanded
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1629146788, guid: f0ddf8e9013e04c40bfb5e7defb373aa, type: 3}
       propertyPath: isExpanded
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 829465304487671708, guid: f0ddf8e9013e04c40bfb5e7defb373aa,
+        type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 829465305050561170, guid: f0ddf8e9013e04c40bfb5e7defb373aa,
+        type: 3}
+      propertyPath: actions.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 829465305050561170, guid: f0ddf8e9013e04c40bfb5e7defb373aa,
+        type: 3}
+      propertyPath: actions.Array.data[4]
+      value: 
+      objectReference: {fileID: 829465304497550389}
+    - target: {fileID: 829465305050561170, guid: f0ddf8e9013e04c40bfb5e7defb373aa,
+        type: 3}
+      propertyPath: actions.Array.data[2]
+      value: 
+      objectReference: {fileID: 829465304497550388}
+    - target: {fileID: 829465305050561170, guid: f0ddf8e9013e04c40bfb5e7defb373aa,
+        type: 3}
+      propertyPath: actions.Array.data[3]
+      value: 
+      objectReference: {fileID: 829465304497550387}
+    - target: {fileID: 829465305050561170, guid: f0ddf8e9013e04c40bfb5e7defb373aa,
+        type: 3}
+      propertyPath: actions.Array.data[1]
+      value: 
+      objectReference: {fileID: 829465304497550390}
     - target: {fileID: 829465305050561174, guid: f0ddf8e9013e04c40bfb5e7defb373aa,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4693,8 +4727,142 @@ PrefabInstance:
       propertyPath: m_Name
       value: ItemContainer
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 829465305050561176, guid: f0ddf8e9013e04c40bfb5e7defb373aa, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: f0ddf8e9013e04c40bfb5e7defb373aa, type: 3}
+--- !u!1 &829465304497550386 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 829465305050561198, guid: f0ddf8e9013e04c40bfb5e7defb373aa,
+    type: 3}
+  m_PrefabInstance: {fileID: 829465304497550385}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &829465304497550387
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 829465304497550386}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7488e222b11cb4789a359d6a20b1e33d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isExpanded: 0
+  character:
+    target: 0
+    character: {fileID: 0}
+    local:
+      allowTypesMask: 512
+      name: 
+      targetType: 2
+      targetObject: {fileID: 0}
+    global:
+      allowTypesMask: 512
+      name: 
+    list:
+      targetType: 3
+      targetObject: {fileID: 0}
+      select: 1
+      index: 0
+    eventChangeVariable:
+      m_PersistentCalls:
+        m_Calls: []
+  clip: {fileID: -8727426744942048152, guid: a531e876e57e2934f9eae865b1428b98, type: 2}
+  avatarMask: {fileID: 0}
+  speed:
+    optionIndex: 0
+    value: 3
+    global:
+      allowTypesMask: 4
+      name: 
+    local:
+      allowTypesMask: 4
+      name: 
+      targetType: 2
+      targetObject: {fileID: 0}
+    list:
+      targetType: 3
+      targetObject: {fileID: 0}
+      select: 1
+      index: 0
+  fadeIn: 0.1
+  fadeOut: 0.1
+  waitTillComplete: 1
+--- !u!114 &829465304497550388 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1629146786, guid: f0ddf8e9013e04c40bfb5e7defb373aa,
+    type: 3}
+  m_PrefabInstance: {fileID: 829465304497550385}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 829465304497550386}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68bbe85e213a5408c9a7a5c54b2251ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &829465304497550389 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 829465305050561168, guid: f0ddf8e9013e04c40bfb5e7defb373aa,
+    type: 3}
+  m_PrefabInstance: {fileID: 829465304497550385}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 829465304497550386}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79fae313ca97d4c34b12ba4e3024cd66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &829465304497550390
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 829465304497550386}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 482f195701c804a2fa2c89b4d414f851, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isExpanded: 0
+  character:
+    target: 0
+    character: {fileID: 0}
+    local:
+      allowTypesMask: 512
+      name: 
+      targetType: 2
+      targetObject: {fileID: 0}
+    global:
+      allowTypesMask: 512
+      name: 
+    list:
+      targetType: 3
+      targetObject: {fileID: 0}
+      select: 1
+      index: 0
+    eventChangeVariable:
+      m_PersistentCalls:
+        m_Calls: []
+  target:
+    target: 3
+    offset: {x: 0, y: 0, z: 0}
+    targetTransform: {fileID: 1629146791}
+    targetPosition: {x: 0, y: 0, z: 0}
+    local:
+      allowTypesMask: 608
+      name: 
+      targetType: 2
+      targetObject: {fileID: 0}
+    global:
+      allowTypesMask: 608
+      name: 
+    list:
+      targetType: 3
+      targetObject: {fileID: 0}
+      select: 1
+      index: 0
 --- !u!1001 &878854164728913187
 PrefabInstance:
   m_ObjectHideFlags: 0
