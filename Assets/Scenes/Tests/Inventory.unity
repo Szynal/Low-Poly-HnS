@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -4660,10 +4660,15 @@ PrefabInstance:
       propertyPath: m_ApplyRootMotion
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 829465305050561168, guid: f0ddf8e9013e04c40bfb5e7defb373aa,
+        type: 3}
+      propertyPath: isExpanded
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 829465305050561170, guid: f0ddf8e9013e04c40bfb5e7defb373aa,
         type: 3}
       propertyPath: actions.Array.size
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 829465305050561170, guid: f0ddf8e9013e04c40bfb5e7defb373aa,
         type: 3}
@@ -4689,7 +4694,7 @@ PrefabInstance:
         type: 3}
       propertyPath: actions.Array.data[5]
       value: 
-      objectReference: {fileID: 829465304497550389}
+      objectReference: {fileID: 829465304497550392}
     - target: {fileID: 829465305050561170, guid: f0ddf8e9013e04c40bfb5e7defb373aa,
         type: 3}
       propertyPath: actions.Array.data[6]
@@ -4956,6 +4961,24 @@ MonoBehaviour:
       targetObject: {fileID: 0}
       select: 1
       index: 0
+--- !u!114 &829465304497550392
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 829465304497550386}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c96c8ab5bb4a4363b6cb5248f18b52e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isExpanded: 0
+  audioClip: {fileID: 8300000, guid: 9dc405285c6a4644c8d9845e2272e5a5, type: 3}
+  audioMixer: 2
+  mixerGroup: {fileID: 0}
+  fadeIn: 0
+  volume: 1
 --- !u!1001 &878854164728913187
 PrefabInstance:
   m_ObjectHideFlags: 0
