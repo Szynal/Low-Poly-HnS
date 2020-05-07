@@ -108,11 +108,11 @@ namespace LowPolyHnS.Characters
 #if UNITY_EDITOR
 
         public new static string NAME = "Character/Gathering";
-        private const string NODE_TITLE = "Gathering";
+        private const string NODE_TITLE = "Gathering some {1}";
 
         public override string GetNodeTitle()
         {
-            return string.Format(NODE_TITLE, "", "");
+            return string.Format(NODE_TITLE, "", lootTable.name);
         }
 
 #endif
