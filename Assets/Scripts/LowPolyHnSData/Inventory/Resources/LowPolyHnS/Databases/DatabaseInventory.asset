@@ -23,7 +23,7 @@ MonoBehaviour:
     translationID: 0
   itemColor: {r: 0.745283, g: 0, b: 0, a: 1}
   sprite: {fileID: 21300000, guid: 00dfef9721b7b47bd8d11c253353104d, type: 3}
-  prefab: {fileID: 100138, guid: 7f19287d761d1432fa7564b57b99e687, type: 3}
+  prefab: {fileID: 1750978168217177670, guid: 14d093b90e4b6cb4893cac956f086faa, type: 3}
   canBeSold: 1
   price: 200
   maxStack: 1
@@ -398,7 +398,7 @@ MonoBehaviour:
     translationID: 0
   itemColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   sprite: {fileID: 21300000, guid: a6719796afd6442638107c46bb167533, type: 3}
-  prefab: {fileID: 0}
+  prefab: {fileID: 3232748699348546228, guid: 56b7c3d5b0a4846429efb4fa202930f8, type: 3}
   canBeSold: 1
   price: 100
   maxStack: 1

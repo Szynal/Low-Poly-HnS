@@ -8608,6 +8608,16 @@ PrefabInstance:
       propertyPath: m_ObstacleAvoidanceType
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3624463137298224602, guid: fece4e6c51722ed49b325c7a83bdbe3a,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: eb12de896b3957842895e71d83d82ceb, type: 2}
+    - target: {fileID: 5977717138412892444, guid: fece4e6c51722ed49b325c7a83bdbe3a,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: a282bbeb89ca6f547bf9aa8459f6f0e7, type: 2}
     - target: {fileID: 7078214931956618583, guid: fece4e6c51722ed49b325c7a83bdbe3a,
         type: 3}
       propertyPath: cameraPosition
@@ -8616,12 +8626,6 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 647350326523645888, guid: fece4e6c51722ed49b325c7a83bdbe3a, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: fece4e6c51722ed49b325c7a83bdbe3a, type: 3}
---- !u!1 &4864774492031391507 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4864774492586364327, guid: fece4e6c51722ed49b325c7a83bdbe3a,
-    type: 3}
-  m_PrefabInstance: {fileID: 1662278324}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &7078214933518192611 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7078214931956618583, guid: fece4e6c51722ed49b325c7a83bdbe3a,
@@ -8634,6 +8638,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60a6e3e12c5d40b43a50deefed495d99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &4864774492031391507 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4864774492586364327, guid: fece4e6c51722ed49b325c7a83bdbe3a,
+    type: 3}
+  m_PrefabInstance: {fileID: 1662278324}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &676306228241087528 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 676306226646476444, guid: fece4e6c51722ed49b325c7a83bdbe3a,
