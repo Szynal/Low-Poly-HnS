@@ -34,6 +34,7 @@ namespace LowPolyHnS.Core
             public string Path = string.Empty;
             public bool RenameAnimClips = true;
             public bool RenameAnimClipsUnderscores = true;
+            public bool RenameAnimClipsSpaceTrim = true;
             public bool RenameAnimClipsTolower = true;
             public bool ChangeLoopAnimClips = true;
             public bool LoopAnimClipsTime = true;
@@ -131,7 +132,7 @@ namespace LowPolyHnS.Core
             if (GUILayout.Button(IMAGE_MIXAMO_LOGO, new GUIStyle(GUI.skin.label), GUILayout.Height(70f),
                 GUILayout.Width(150f)))
             {
-                Application.OpenURL("https://www.MixamoManager.com/");
+                Application.OpenURL("https://www.Mixamo.com/");
             }
 
             if (GUILayout.Button("Reset settings"))
@@ -178,6 +179,8 @@ namespace LowPolyHnS.Core
                 SETTINGS.RenameAnimClipsUnderscores =
                     EditorGUILayout.Toggle("Spaces to underscores", SETTINGS.RenameAnimClipsUnderscores);
                 SETTINGS.RenameAnimClipsTolower = EditorGUILayout.Toggle("To lower", SETTINGS.RenameAnimClipsTolower);
+                SETTINGS.RenameAnimClipsSpaceTrim =
+                    EditorGUILayout.Toggle("Delete spaces", SETTINGS.RenameAnimClipsSpaceTrim);
             }
             EditorGUILayout.EndToggleGroup();
             GUILayout.Space(5);
@@ -269,6 +272,12 @@ namespace LowPolyHnS.Core
             if (SETTINGS.RenameAnimClipsUnderscores)
             {
                 animName = animName.Replace(' ', '_');
+            }
+
+
+            if (SETTINGS.RenameAnimClipsSpaceTrim)
+            {
+                animName = string.Join("", animName.Split(default(string[]), StringSplitOptions.RemoveEmptyEntries));
             }
 
             if (SETTINGS.RenameAnimClipsTolower)
