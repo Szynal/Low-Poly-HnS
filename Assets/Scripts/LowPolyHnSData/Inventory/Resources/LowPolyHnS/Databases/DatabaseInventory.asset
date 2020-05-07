@@ -41,6 +41,47 @@ MonoBehaviour:
     type: 3}
   actionsOnUnequip: {fileID: 3108475893651153014, guid: 41e76dde7b183a54e8b812016f00b3f5,
     type: 3}
+--- !u!114 &-6708522800911847274
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6c3b42562c09470ea31efe19c9d3dd9, type: 3}
+  m_Name: item.1853273147
+  m_EditorClassIdentifier: 
+  uuid: 1853273147
+  itemName:
+    content: Pickaxe
+    postProcess: 0
+    translationID: 0
+  itemDescription:
+    content: 
+    postProcess: 0
+    translationID: 0
+  itemColor: {r: 0.22259307, g: 0.7075472, b: 0, a: 1}
+  sprite: {fileID: 21300000, guid: 62b77465a0a1c424ab5821210457a860, type: 3}
+  prefab: {fileID: -927199367670048503, guid: ed21335f6563a5a4db6c01fee9b64106, type: 3}
+  canBeSold: 0
+  price: 1
+  maxStack: 1
+  weight: 0
+  itemTypes: 0
+  onClick: 0
+  consumeItem: 1
+  actionsOnClick: {fileID: 2134470600859753106, guid: 345e9bd24ad33504e9ff2413e52d78fb,
+    type: 3}
+  equipable: 1
+  fillAllTypes: 0
+  conditionsEquip: {fileID: 6714896979855149733, guid: bcb8876c02d84c14d9d7a5d52a59205f,
+    type: 3}
+  actionsOnEquip: {fileID: 213442822131225703, guid: 1f7af5e961fff94419b19aaf1e414732,
+    type: 3}
+  actionsOnUnequip: {fileID: 454055060208054976, guid: b235df2ccaa5a31459442e35c3399b86,
+    type: 3}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -61,6 +102,7 @@ MonoBehaviour:
     - {fileID: 114202326578594358}
     - {fileID: -9000702557057661082}
     - {fileID: 8039637003375704792}
+    - {fileID: -6708522800911847274}
     recipes:
     - {fileID: 114798038658200360}
     itemTypes:
