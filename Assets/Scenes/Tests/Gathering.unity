@@ -2097,17 +2097,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: MiningOre
       objectReference: {fileID: 0}
-    - target: {fileID: 7547835330922581502, guid: 1d04c34d80214b043b2c3090ab72f04d,
-        type: 3}
-      propertyPath: isExpanded
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7547835330922581502, guid: 1d04c34d80214b043b2c3090ab72f04d,
-        type: 3}
-      propertyPath: LootObject
-      value: 
-      objectReference: {fileID: 11400000, guid: dcb1f19b60fba4a819939ad6dfbbeb69,
-        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1d04c34d80214b043b2c3090ab72f04d, type: 3}
 --- !u!4 &1229671228 stripped
@@ -2116,36 +2105,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1229671227}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1245596030
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1245596031}
-  m_Layer: 0
-  m_Name: HotSpot
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1245596031
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1245596030}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.466, y: 0, z: -0.755}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1474484560}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1261813239
 GameObject:
   m_ObjectHideFlags: 0
@@ -2284,26 +2243,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 725164396}
     m_Modifications:
-    - target: {fileID: 3938415793843049536, guid: cbc7fa7c562cf8b4eb0fea8dccc25276,
-        type: 3}
-      propertyPath: actions.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 3938415793843049536, guid: cbc7fa7c562cf8b4eb0fea8dccc25276,
-        type: 3}
-      propertyPath: actions.Array.data[1]
-      value: 
-      objectReference: {fileID: 1937456677}
-    - target: {fileID: 3938415793843049544, guid: cbc7fa7c562cf8b4eb0fea8dccc25276,
-        type: 3}
-      propertyPath: isExpanded
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3938415793843049544, guid: cbc7fa7c562cf8b4eb0fea8dccc25276,
-        type: 3}
-      propertyPath: transform
-      value: 
-      objectReference: {fileID: 1245596031}
     - target: {fileID: 3938415793843049660, guid: cbc7fa7c562cf8b4eb0fea8dccc25276,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2363,11 +2302,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: HerbalPlant
-      objectReference: {fileID: 0}
-    - target: {fileID: 8622977257391497397, guid: cbc7fa7c562cf8b4eb0fea8dccc25276,
-        type: 3}
-      propertyPath: isExpanded
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cbc7fa7c562cf8b4eb0fea8dccc25276, type: 3}
@@ -2696,64 +2630,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1752651249}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &1937456676 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3938415793843049661, guid: cbc7fa7c562cf8b4eb0fea8dccc25276,
-    type: 3}
-  m_PrefabInstance: {fileID: 1474484559}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1937456677
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1937456676}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f56c5d7161b19544d936a78dba06bbf2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isExpanded: 1
-  Character:
-    target: 0
-    character: {fileID: 0}
-    local:
-      allowTypesMask: 512
-      name: 
-      targetType: 2
-      targetObject: {fileID: 0}
-    global:
-      allowTypesMask: 512
-      name: 
-    list:
-      targetType: 3
-      targetObject: {fileID: 0}
-      select: 1
-      index: 0
-    eventChangeVariable:
-      m_PersistentCalls:
-        m_Calls: []
-  TargetPosition:
-    target: 3
-    offset: {x: 0, y: 0, z: 0}
-    targetTransform: {fileID: 1474484560}
-    targetPosition: {x: 0, y: 0, z: 0}
-    local:
-      allowTypesMask: 608
-      name: 
-      targetType: 2
-      targetObject: {fileID: 0}
-    global:
-      allowTypesMask: 608
-      name: 
-    list:
-      targetType: 3
-      targetObject: {fileID: 0}
-      select: 1
-      index: 0
-  clip: {fileID: -1614258186679632416, guid: 2b92ba6c90951e944b67252722440aeb, type: 2}
-  LootObject: {fileID: 11400000, guid: f00cd1de9f43caa47b235a1726794f6a, type: 2}
 --- !u!1 &1944642574
 GameObject:
   m_ObjectHideFlags: 0

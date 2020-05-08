@@ -17,7 +17,7 @@ namespace LowPolyHnS.Characters
         private Character cacheCharacter;
 
         public AnimationClip clip;
-
+        public float AnimationSpeed = 1f;
         private float fadeIn = 0.1f;
         private float fadeOut = 0.1f;
         private bool waitTillComplete = true;
@@ -69,7 +69,7 @@ namespace LowPolyHnS.Characters
                 {
                     characterAnimator = cacheCharacter.GetCharacterAnimator();
                     characterAnimator.CrossFadeGesture(
-                        clip, 1, null,
+                        clip, AnimationSpeed, null,
                         fadeIn, fadeOut
                     );
                 }
@@ -78,7 +78,7 @@ namespace LowPolyHnS.Characters
                 {
                     if (waitTillComplete)
                     {
-                        float wait = Time.time + clip.length / 1;
+                        float wait = Time.time + clip.length / AnimationSpeed;
 
                         WaitUntil waitUntil = new WaitUntil(() => forceStop || Time.time > wait);
                         yield return waitUntil;

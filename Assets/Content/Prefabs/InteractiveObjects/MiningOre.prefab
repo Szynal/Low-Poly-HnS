@@ -718,7 +718,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f56c5d7161b19544d936a78dba06bbf2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isExpanded: 0
+  isExpanded: 1
   Character:
     target: 0
     character: {fileID: 0}
@@ -757,7 +757,8 @@ MonoBehaviour:
       select: 1
       index: 0
   clip: {fileID: 1893309592507712509, guid: 2b92ba6c90951e944b67252722440aeb, type: 2}
-  lootTable: {fileID: 11400000, guid: dcb1f19b60fba4a819939ad6dfbbeb69, type: 2}
+  AnimationSpeed: 1
+  LootObject: {fileID: 11400000, guid: dcb1f19b60fba4a819939ad6dfbbeb69, type: 2}
 --- !u!114 &7547835330922581495
 MonoBehaviour:
   m_ObjectHideFlags: 3
