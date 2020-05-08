@@ -6,7 +6,7 @@ namespace LowPolyHnS.Inventory
 {
     public class GatheringUIManager : MonoBehaviour
     {
-        private const int TIME_LAYER = 200;
+        private const int TIME_LAYER = 202;
         private static GatheringUIManager Instance;
         private static DatabaseInventory DATABASE_INVENTORY;
         private const string DEFAULT_UI_PATH = "Assets/Content/Prefabs/UI/PlayerUI";
@@ -113,7 +113,7 @@ namespace LowPolyHnS.Inventory
                 return;
             }
 
-            GameObject prefab = DATABASE_INVENTORY.inventorySettings.inventoryUIPrefab;
+            GameObject prefab = DATABASE_INVENTORY.inventorySettings.gatheringUIPrefab;
             if (prefab == null) prefab = Resources.Load<GameObject>(DEFAULT_UI_PATH);
 
             Instantiate(prefab, Vector3.zero, Quaternion.identity);
