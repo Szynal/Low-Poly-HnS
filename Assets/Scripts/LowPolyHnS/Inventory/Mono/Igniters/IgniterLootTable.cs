@@ -21,16 +21,16 @@ namespace LowPolyHnS.Inventory
 
         private void Start()
         {
-            LootTable.AddListener(OnUseLootTable);
+            LootObject.AddListener(OnUseLootTable);
         }
 
         private void OnDestroy()
         {
             if (isExitingApplication) return;
-            LootTable.RemoveListener(OnUseLootTable);
+            LootObject.RemoveListener(OnUseLootTable);
         }
 
-        private void OnUseLootTable(LootTable.LootResult result)
+        private void OnUseLootTable(LootObject.LootResult result)
         {
             string itemName = result.item.itemName.GetText();
             float itemAmount = result.amount;

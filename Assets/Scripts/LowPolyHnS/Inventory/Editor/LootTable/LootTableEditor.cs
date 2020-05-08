@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace LowPolyHnS.Inventory
 {
-    [CustomEditor(typeof(LootTable))]
+    [CustomEditor(typeof(LootObject))]
     public class LootTableEditor : Editor
     {
         private const string SUMMARY = "Summary";
@@ -30,7 +30,7 @@ namespace LowPolyHnS.Inventory
 
         // PROPERTIES: ----------------------------------------------------------------------------
 
-        private LootTable lootTable;
+        private LootObject lootObject;
         private SerializedProperty spNoDropWeight;
 
         private SerializedProperty spLoot;
@@ -40,7 +40,7 @@ namespace LowPolyHnS.Inventory
 
         private void OnEnable()
         {
-            lootTable = target as LootTable;
+            lootObject = target as LootObject;
 
             spNoDropWeight = serializedObject.FindProperty("noDropWeight");
             spLoot = serializedObject.FindProperty("loot");
@@ -108,17 +108,17 @@ namespace LowPolyHnS.Inventory
             EditorGUI.DrawRect(summaryRectBg, COLOR_BG);
             EditorGUILayout.Space();
 
-            float totalWeight = lootTable.noDropWeight;
-            for (int i = 0; i < lootTable.loot.Length; ++i)
+            float totalWeight = lootObject.noDropWeight;
+            for (int i = 0; i < lootObject.loot.Length; ++i)
             {
-                totalWeight += lootTable.loot[i].weight;
+                totalWeight += lootObject.loot[i].weight;
             }
 
             Rect rect = new Rect(summaryRect.x, summaryRect.y, 0, summaryRect.height);
 
-            for (int i = 0; i < lootTable.loot.Length; ++i)
+            for (int i = 0; i < lootObject.loot.Length; ++i)
             {
-                float weight = lootTable.loot[i].weight;
+                float weight = lootObject.loot[i].weight;
                 float percent = weight / totalWeight;
 
                 rect = new Rect(
@@ -132,13 +132,13 @@ namespace LowPolyHnS.Inventory
                 Color color = COLOR_HEXS[colorIndex].GetColor();
 
                 EditorGUI.DrawRect(rect, color);
-                string itemName = lootTable.loot[i].item.ToString();
-                if (lootTable.loot[i].amount > 1)
+                string itemName = lootObject.loot[i].item.ToString();
+                if (lootObject.loot[i].amount > 1)
                 {
                     itemName = string.Format(
                         "{0} ({1})",
                         itemName,
-                        lootTable.loot[i].amount
+                        lootObject.loot[i].amount
                     );
                 }
 
@@ -149,11 +149,11 @@ namespace LowPolyHnS.Inventory
                 );
             }
 
-            if (lootTable.noDropWeight > 0)
+            if (lootObject.noDropWeight > 0)
             {
                 PaintLegend(
                     "No Drop",
-                    string.Format("{0:.00} %", 100f * (lootTable.noDropWeight / totalWeight)),
+                    string.Format("{0:.00} %", 100f * (lootObject.noDropWeight / totalWeight)),
                     COLOR_BG
                 );
             }

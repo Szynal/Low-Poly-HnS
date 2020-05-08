@@ -7,7 +7,7 @@ using Random = UnityEngine.Random;
 namespace LowPolyHnS.Inventory
 {
     [CreateAssetMenu(fileName = "New Loot Table", menuName = "LowPolyHnS/Inventory/Loot Table")]
-    public class LootTable : ScriptableObject
+    public class LootObject : ScriptableObject
     {
         public class EventLoot : UnityEvent<LootResult>
         {

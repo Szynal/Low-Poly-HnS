@@ -25,7 +25,7 @@ namespace LowPolyHnS.Characters
         private CharacterAnimator characterAnimator;
         private bool forceStop;
 
-        public LootTable lootTable;
+        public LootObject LootObject;
 
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
@@ -85,9 +85,9 @@ namespace LowPolyHnS.Characters
                     }
                 }
 
-                if (lootTable != null)
+                if (LootObject != null)
                 {
-                    LootTable.LootResult loot = lootTable.Get();
+                    LootObject.LootResult loot = LootObject.Get();
 
                     if (loot.item != null && loot.amount > 0)
                     {
@@ -112,7 +112,7 @@ namespace LowPolyHnS.Characters
 
         public override string GetNodeTitle()
         {
-            return string.Format(NODE_TITLE, "", lootTable.name);
+            return LootObject != null ? string.Format(NODE_TITLE, "", LootObject.name) : NODE_TITLE;
         }
 
 #endif

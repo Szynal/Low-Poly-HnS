@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace LowPolyHnS.Inventory
 {
-    [CustomPropertyDrawer(typeof(LootTable.Loot))]
+    [CustomPropertyDrawer(typeof(LootObject.Loot))]
     public class LootPD : PropertyDrawer
     {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)

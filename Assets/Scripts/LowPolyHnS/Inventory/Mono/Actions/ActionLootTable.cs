@@ -17,15 +17,15 @@ namespace LowPolyHnS.Inventory
             Container
         }
 
-        public LootTable lootTable;
+        public LootObject LootObject;
 
         public Target target = Target.PlayerInventory;
         public TargetGameObject container = new TargetGameObject(TargetGameObject.Target.Invoker);
 
         public override bool InstantExecute(GameObject target, IAction[] actions, int index)
         {
-            if (lootTable == null) return true;
-            LootTable.LootResult loot = lootTable.Get();
+            if (LootObject == null) return true;
+            LootObject.LootResult loot = LootObject.Get();
 
             if (loot.item != null && loot.amount > 0)
             {
@@ -70,7 +70,7 @@ namespace LowPolyHnS.Inventory
         {
             return string.Format(
                 NODE_TITLE,
-                lootTable == null ? "(none)" : lootTable.name
+                LootObject == null ? "(none)" : LootObject.name
             );
         }
 
