@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using LowPolyHnS.Core;
 using UnityEngine;
 
@@ -33,6 +34,11 @@ namespace LowPolyHnS.Variables
             }
 
             return null;
+        }
+
+        public string GetAllValue()
+        {
+            return variables.Aggregate(" ", (current, variable) => current + variable.Value.Get() + " ");
         }
 
         // INITIALIZERS: --------------------------------------------------------------------------

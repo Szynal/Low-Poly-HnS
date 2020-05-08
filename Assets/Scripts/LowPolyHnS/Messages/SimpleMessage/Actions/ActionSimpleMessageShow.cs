@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using LowPolyHnS.Core;
 using LowPolyHnS.Localization;
+using LowPolyHnS.Variables;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -19,7 +20,8 @@ namespace LowPolyHnS.Messages
         [LocStringNoPostProcess] public LocString message = new LocString();
         public Color color = Color.white;
         public float time = 2.0f;
-
+        public bool UseVariable = false;
+        public LocalVariables Variables;
         private bool forceStop;
 
         // EXECUTABLE: ----------------------------------------------------------------------------
@@ -32,14 +34,29 @@ namespace LowPolyHnS.Messages
                 AudioManager.Instance.PlayVoice(audioClip, 0f, 1f, voiceMixer);
             }
 
-            SimpleMessageManager.Instance.ShowText(message.GetText(), color);
+            if (UseVariable)
+            {
+                if (Variables != null)
+                {
+                    SimpleMessageManager.Instance.ShowText(
+                        text: message.GetText() + Variables.GetAllValue(), color);
+                }
+            }
+            else
+            {
+                SimpleMessageManager.Instance.ShowText(message.GetText(), color);
+            }
 
             float waitTime = Time.time + time;
             WaitUntil waitUntil = new WaitUntil(() => Time.time > waitTime || forceStop);
             yield return waitUntil;
 
             if (audioClip != null) AudioManager.Instance.StopVoice(audioClip);
+
+
             SimpleMessageManager.Instance.HideText();
+
+
             yield return 0;
         }
 
@@ -58,7 +75,8 @@ namespace LowPolyHnS.Messages
         private const string NODE_TITLE = "Show message: {0}";
 
         // PROPERTIES: ----------------------------------------------------------------------------
-
+        private SerializedProperty spUseVariable;
+        private SerializedProperty spVariables;
         private SerializedProperty spAudioClip;
         private SerializedProperty spMessage;
         private SerializedProperty spColor;
@@ -78,6 +96,8 @@ namespace LowPolyHnS.Messages
 
         protected override void OnEnableEditorChild()
         {
+            spUseVariable = serializedObject.FindProperty("UseVariable");
+            spVariables = serializedObject.FindProperty("Variables");
             spAudioClip = serializedObject.FindProperty("audioClip");
             spMessage = serializedObject.FindProperty("message");
             spColor = serializedObject.FindProperty("color");
@@ -93,6 +113,12 @@ namespace LowPolyHnS.Messages
             serializedObject.Update();
 
             EditorGUILayout.PropertyField(spMessage);
+            EditorGUILayout.PropertyField(spUseVariable);
+            if (UseVariable)
+            {
+                EditorGUILayout.PropertyField(spVariables);
+            }
+
             EditorGUILayout.PropertyField(spAudioClip);
             EditorGUILayout.PropertyField(spColor);
 
