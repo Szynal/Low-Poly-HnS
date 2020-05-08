@@ -10,9 +10,9 @@
  * -------------------------------------*/
 
 using UnityEngine;
-
 #if UNITY_5_5_OR_NEWER
 using UnityEngine.Profiling;
+
 #endif
 
 namespace Tayx.Graphy.Ram
@@ -26,18 +26,18 @@ namespace Tayx.Graphy.Ram
 
         #region Variables -> Private
 
-        private float m_allocatedRam    = 0;
-        private float m_reservedRam     = 0;
-        private float m_monoRam         = 0;
+        private float m_allocatedRam;
+        private float m_reservedRam;
+        private float m_monoRam;
 
         #endregion
 
         #region Properties -> Public
 
-        public float AllocatedRam   { get { return m_allocatedRam; } }
-        public float ReservedRam    { get { return m_reservedRam; } }
-        public float MonoRam        { get { return m_monoRam; } }
-        
+        public float AllocatedRam => m_allocatedRam;
+        public float ReservedRam => m_reservedRam;
+        public float MonoRam => m_monoRam;
+
         #endregion
 
         #region Methods -> Unity Callbacks
@@ -45,16 +45,16 @@ namespace Tayx.Graphy.Ram
         private void Update()
         {
 #if UNITY_5_6_OR_NEWER
-            m_allocatedRam  = Profiler.GetTotalAllocatedMemoryLong()/ 1048576f;
-            m_reservedRam   = Profiler.GetTotalReservedMemoryLong() / 1048576f;
-            m_monoRam       = Profiler.GetMonoUsedSizeLong()        / 1048576f;
+            m_allocatedRam = Profiler.GetTotalAllocatedMemoryLong() / 1048576f;
+            m_reservedRam = Profiler.GetTotalReservedMemoryLong() / 1048576f;
+            m_monoRam = Profiler.GetMonoUsedSizeLong() / 1048576f;
 #else
-            m_allocatedRam  = Profiler.GetTotalAllocatedMemory()    / 1048576f;
-            m_reservedRam   = Profiler.GetTotalReservedMemory()     / 1048576f;
-            m_monoRam       = Profiler.GetMonoUsedSize()            / 1048576f;
+            m_allocatedRam = Profiler.GetTotalAllocatedMemory()    / 1048576f;
+            m_reservedRam = Profiler.GetTotalReservedMemory()     / 1048576f;
+            m_monoRam = Profiler.GetMonoUsedSize()            / 1048576f;
 #endif
         }
 
-        #endregion 
+        #endregion
     }
 }

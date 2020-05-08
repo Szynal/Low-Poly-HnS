@@ -94,7 +94,7 @@ namespace LowPolyHnS.Characters
                 EditorGUILayout.PropertyField(spMouseButton);
                 EditorGUI.indentLevel--;
             }
-            
+
             serializedObject.ApplyModifiedProperties();
         }
 

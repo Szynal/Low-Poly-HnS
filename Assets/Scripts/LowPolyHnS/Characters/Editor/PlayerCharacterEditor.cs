@@ -138,6 +138,5 @@ namespace LowPolyHnS.Characters
             EditorGUILayout.Space();
             serializedObject.ApplyModifiedProperties();
         }
-
     }
 }

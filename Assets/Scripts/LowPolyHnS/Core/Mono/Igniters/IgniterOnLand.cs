@@ -18,18 +18,18 @@ namespace LowPolyHnS.Core
 
         private void Start()
         {
-            Character target = this.character.GetCharacter(gameObject);
+            Character target = character.GetCharacter(gameObject);
             if (target != null)
             {
-                target.onLand.AddListener(this.OnLand);
+                target.onLand.AddListener(OnLand);
             }
         }
 
         private void OnLand(float verticalSpeed)
         {
-            Character instance = this.character.GetCharacter(gameObject);
+            Character instance = character.GetCharacter(gameObject);
 
-            this.storeVerticalSpeed.Set(verticalSpeed, instance.gameObject);
+            storeVerticalSpeed.Set(verticalSpeed, instance.gameObject);
             base.ExecuteTrigger(instance.gameObject);
         }
     }

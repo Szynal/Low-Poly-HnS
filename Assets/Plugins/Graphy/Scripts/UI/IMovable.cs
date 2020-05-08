@@ -18,13 +18,11 @@ namespace Tayx.Graphy.UI
          * --------------------------------------*/
 
         /// <summary>
-        /// Sets the position of the module.
+        ///     Sets the position of the module.
         /// </summary>
         /// <param name="newModulePosition">
-        /// The new position of the module.
+        ///     The new position of the module.
         /// </param>
         void SetPosition(GraphyManager.ModulePosition newModulePosition);
     }
-
 }
-

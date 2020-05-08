@@ -15,11 +15,10 @@ using UnityEngine;
 namespace Tayx.Graphy.Utils
 {
     /// <summary>
-    /// Be aware this will not prevent a non singleton constructor
-    ///   such as `T myT = new T();`
-    /// To prevent that, add `protected T () {}` to your singleton class.
-    /// 
-    /// As a note, this is made as MonoBehaviour because we need Coroutines.
+    ///     Be aware this will not prevent a non singleton constructor
+    ///     such as `T myT = new T();`
+    ///     To prevent that, add `protected T () {}` to your singleton class.
+    ///     As a note, this is made as MonoBehaviour because we need Coroutines.
     /// </summary>
     public class G_Singleton<T> : MonoBehaviour where T : MonoBehaviour
     {
@@ -33,9 +32,9 @@ namespace Tayx.Graphy.Utils
 
         #region Variables -> Private
 
-        private static  T       _instance;
+        private static T _instance;
 
-        private static  object  _lock       = new object();
+        private static object _lock = new object();
 
         #endregion
 
@@ -45,7 +44,6 @@ namespace Tayx.Graphy.Utils
         {
             get
             {
-                
                 if (_applicationIsQuitting)
                 {
                     //Debug.LogWarning("[Singleton] Instance '" + typeof(T) +
@@ -53,12 +51,12 @@ namespace Tayx.Graphy.Utils
                     //    " Won't create again - returning null.");
                     return null;
                 }
-                
+
                 lock (_lock)
                 {
                     if (_instance == null)
                     {
-                        _instance = (T)FindObjectOfType(typeof(T));
+                        _instance = (T) FindObjectOfType(typeof(T));
 
                         if (FindObjectsOfType(typeof(T)).Length > 1)
                         {
@@ -88,11 +86,6 @@ namespace Tayx.Graphy.Utils
                                 " trying to access it."
                             );
                         }
-                        else
-                        {
-                            //Debug.Log("[Singleton] Using instance already created: " +
-                            //    _instance.gameObject.name);
-                        }
                     }
 
                     return _instance;
@@ -104,7 +97,7 @@ namespace Tayx.Graphy.Utils
 
         #region Methods -> Unity Callbacks
 
-        void Awake()
+        private void Awake()
         {
             if (_instance != null)
             {
@@ -116,16 +109,17 @@ namespace Tayx.Graphy.Utils
             }
         }
 
-        private static bool _applicationIsQuitting = false;
+        private static bool _applicationIsQuitting;
+
         /// <summary>
-        /// When Unity quits, it destroys objects in a random order.
-        /// In principle, a Singleton is only destroyed when application quits.
-        /// If any script calls Instance after it has been destroyed, 
-        ///   it will create a buggy ghost object that will stay on the Editor scene
-        ///   even after stopping playing the Application. Really bad!
-        /// So, this was made to be sure we're not creating that buggy ghost object.
+        ///     When Unity quits, it destroys objects in a random order.
+        ///     In principle, a Singleton is only destroyed when application quits.
+        ///     If any script calls Instance after it has been destroyed,
+        ///     it will create a buggy ghost object that will stay on the Editor scene
+        ///     even after stopping playing the Application. Really bad!
+        ///     So, this was made to be sure we're not creating that buggy ghost object.
         /// </summary>
-        void OnDestroy()
+        private void OnDestroy()
         {
             _applicationIsQuitting = true;
         }

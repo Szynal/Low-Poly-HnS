@@ -2097,6 +2097,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: MiningOre
       objectReference: {fileID: 0}
+    - target: {fileID: 7547835330922581495, guid: 1d04c34d80214b043b2c3090ab72f04d,
+        type: 3}
+      propertyPath: isExpanded
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7547835330922581502, guid: 1d04c34d80214b043b2c3090ab72f04d,
+        type: 3}
+      propertyPath: isExpanded
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1d04c34d80214b043b2c3090ab72f04d, type: 3}
 --- !u!4 &1229671228 stripped
@@ -2243,6 +2253,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 725164396}
     m_Modifications:
+    - target: {fileID: 1937456677, guid: cbc7fa7c562cf8b4eb0fea8dccc25276, type: 3}
+      propertyPath: isExpanded
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3938415793843049660, guid: cbc7fa7c562cf8b4eb0fea8dccc25276,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2302,6 +2316,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: HerbalPlant
+      objectReference: {fileID: 0}
+    - target: {fileID: 8622977257391497397, guid: cbc7fa7c562cf8b4eb0fea8dccc25276,
+        type: 3}
+      propertyPath: isExpanded
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cbc7fa7c562cf8b4eb0fea8dccc25276, type: 3}

@@ -49,7 +49,7 @@ namespace LowPolyHnS.Characters
         // CONSTANTS: --------------------------------------------------------------------------------------------------
 
         public const string CHARACTER_ICONS_PATH = "Assets/Content/Icons/";
-     
+
         private const float ANIM_BOOL_SPEED = 3f;
         private const string SECTION_CHAR_PARAMS1 = "Basic Parameters";
         private const string SECTION_CHAR_PARAMS2 = "Advanced Parameters";

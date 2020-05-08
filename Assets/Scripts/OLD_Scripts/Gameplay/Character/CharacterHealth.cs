@@ -36,7 +36,7 @@ public class CharacterHealth : Health
 
         HealthCurrent -= dmgAmount;
         sliderScript.UpdateHealthBar(HealthCurrent);
-        
+
         if (HealthCurrent <= 0)
         {
             Die();

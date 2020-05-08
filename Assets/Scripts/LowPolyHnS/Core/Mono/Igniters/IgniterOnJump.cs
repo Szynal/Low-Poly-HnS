@@ -15,18 +15,18 @@ namespace LowPolyHnS.Core
 
         private void Start()
         {
-            Character target = this.character.GetCharacter(gameObject);
+            Character target = character.GetCharacter(gameObject);
             if (target != null)
             {
-                target.onJump.AddListener(this.OnJump);
+                target.onJump.AddListener(OnJump);
             }
         }
 
         private void OnJump(int chain)
         {
-            if (this.jumpChain < 0 || this.jumpChain == chain)
+            if (jumpChain < 0 || jumpChain == chain)
             {
-                base.ExecuteTrigger(this.character.GetCharacter(gameObject).gameObject);
+                base.ExecuteTrigger(character.GetCharacter(gameObject).gameObject);
             }
         }
     }

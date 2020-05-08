@@ -66,7 +66,6 @@ namespace LowPolyHnS.Characters
                     moveDirection = targetPosition - characterTarget.transform.position;
                     moveDirection.Scale(PLANE);
                     break;
-
             }
 
             Vector3 charDirection = Vector3.Scale(
