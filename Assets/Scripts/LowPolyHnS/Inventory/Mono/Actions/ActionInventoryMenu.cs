@@ -50,6 +50,7 @@ namespace LowPolyHnS.Inventory
                     }
 
                     break;
+
                 default:
                     throw new ArgumentOutOfRangeException();
             }

@@ -19,6 +19,8 @@ namespace LowPolyHnS.Inventory
         private const string PROP_CONTAINER_UI_PREFAB = "containerUIPrefab";
         private const string PROP_MERCHANT_UI_PREFAB = "merchantUIPrefab";
         private const string PROP_INVENTORY_UI_PREFAB = "inventoryUIPrefab";
+        private const string PROP_GATHERING_UI_PREFAB = "gatheringUIPrefab";
+
         private const string PROP_INVENTORY_ONDRAG_GRABITEM = "onDragGrabItem";
         private const string PROP_ITEM_CURSOR_DRAG = "cursorDrag";
         private const string PROP_ITEM_CURSOR_DRAG_HS = "cursorDragHotspot";
@@ -37,9 +39,10 @@ namespace LowPolyHnS.Inventory
 
         private const string SEARCHBOX_NAME = "searchbox";
 
-        private static readonly GUIContent GC_MERCHANT = new GUIContent("Merchant UI Prefab (opt)");
-        private static readonly GUIContent GC_CONTAINER = new GUIContent("Container UI Prefab (opt)");
-        private static readonly GUIContent GC_INVENTORY = new GUIContent("Inventory UI Prefab (opt)");
+        private static readonly GUIContent GC_MERCHANT = new GUIContent("Merchant UI Prefab");
+        private static readonly GUIContent GC_CONTAINER = new GUIContent("Container UI Prefab");
+        private static readonly GUIContent GC_INVENTORY = new GUIContent("Inventory UI Prefab");
+        private static readonly GUIContent GC_GATHERING = new GUIContent("Gathering UI Prefab");
 
         private class ItemsData
         {
@@ -90,6 +93,7 @@ namespace LowPolyHnS.Inventory
         private SerializedProperty spContainerUIPrefab;
         private SerializedProperty spMerchantUIPrefab;
         private SerializedProperty spInventoryUIPrefab;
+        private SerializedProperty spGatheringUIPrefab;
         private SerializedProperty spItemOnDragGrabItem;
         private SerializedProperty spItemCursorDrag;
         private SerializedProperty spSaveInventory;
@@ -138,6 +142,7 @@ namespace LowPolyHnS.Inventory
             spMerchantUIPrefab = spInventorySettings.FindPropertyRelative(PROP_MERCHANT_UI_PREFAB);
             spContainerUIPrefab = spInventorySettings.FindPropertyRelative(PROP_CONTAINER_UI_PREFAB);
             spInventoryUIPrefab = spInventorySettings.FindPropertyRelative(PROP_INVENTORY_UI_PREFAB);
+            spGatheringUIPrefab = spInventorySettings.FindPropertyRelative(PROP_GATHERING_UI_PREFAB);
             spItemOnDragGrabItem = spInventorySettings.FindPropertyRelative(PROP_INVENTORY_ONDRAG_GRABITEM);
             spItemCursorDrag = spInventorySettings.FindPropertyRelative(PROP_ITEM_CURSOR_DRAG);
             spSaveInventory = spInventorySettings.FindPropertyRelative(PROP_SAVE_INVENTORY);
@@ -426,6 +431,7 @@ namespace LowPolyHnS.Inventory
             EditorGUILayout.PropertyField(spMerchantUIPrefab, GC_MERCHANT);
             EditorGUILayout.PropertyField(spContainerUIPrefab, GC_CONTAINER);
             EditorGUILayout.PropertyField(spInventoryUIPrefab, GC_INVENTORY);
+            EditorGUILayout.PropertyField(spGatheringUIPrefab, GC_GATHERING);
             EditorGUILayout.PropertyField(spItemOnDragGrabItem);
 
             EditorGUILayout.Space();

@@ -315,11 +315,13 @@ MonoBehaviour:
       type: 3}
     inventoryUIPrefab: {fileID: 1776935227048216, guid: 8d2fd14a2c95a4818a01edf51761b09d,
       type: 3}
+    gatheringUIPrefab: {fileID: 1776935227048216, guid: d8046cfce52a1af4f94f9b0aad0de9f8,
+      type: 3}
     onDragGrabItem: 1
     saveInventory: 1
     cursorDrag: {fileID: 2800000, guid: 21b611b5099004ff38798dfed2a007ad, type: 3}
     cursorDragHotspot: {x: 8, y: 8}
-    dragItemsToCombine: 1
+    dragItemsToCombine: 0
     pauseTimeOnUI: 1
     canDropItems: 1
     dropItemMaxDistance: 2

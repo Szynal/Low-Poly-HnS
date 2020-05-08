@@ -4,10 +4,10 @@ using UnityEngine.UI;
 
 namespace LowPolyHnS.Inventory
 {
-    public class InventoryUIManager : MonoBehaviour
+    public class GatheringUIManager : MonoBehaviour
     {
         private const int TIME_LAYER = 200;
-        private static InventoryUIManager Instance;
+        private static GatheringUIManager Instance;
         private static DatabaseInventory DATABASE_INVENTORY;
         private const string DEFAULT_UI_PATH = "Assets/Content/Prefabs/UI/PlayerUI";
 
