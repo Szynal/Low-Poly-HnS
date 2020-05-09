@@ -41,6 +41,7 @@ namespace LowPolyHnS.Inventory
             public GameObject containerUIPrefab;
             public GameObject inventoryUIPrefab;
             public GameObject gatheringUIPrefab;
+            public GameObject craftingUIPrefab;
 
             public bool onDragGrabItem = true;
             public bool saveInventory = true;

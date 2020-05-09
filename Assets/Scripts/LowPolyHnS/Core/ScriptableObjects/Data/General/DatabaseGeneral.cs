@@ -29,7 +29,6 @@ namespace LowPolyHnS.Core
 
         public GameObject prefabFloatingMessage;
 
-        [Tooltip("Should saving/loading a game store/restore which scene the player was in?")]
         public bool saveScenes = true;
 
         [SerializeField] private IDataProvider provider;

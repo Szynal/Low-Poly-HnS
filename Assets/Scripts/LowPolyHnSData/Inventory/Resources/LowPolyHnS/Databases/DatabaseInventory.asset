@@ -317,6 +317,8 @@ MonoBehaviour:
       type: 3}
     gatheringUIPrefab: {fileID: 1776935227048216, guid: d8046cfce52a1af4f94f9b0aad0de9f8,
       type: 3}
+    craftingUIPrefab: {fileID: 1776935227048216, guid: 1cd3e2460e7462b40ab8652704060a8b,
+      type: 3}
     onDragGrabItem: 1
     saveInventory: 1
     cursorDrag: {fileID: 2800000, guid: 21b611b5099004ff38798dfed2a007ad, type: 3}

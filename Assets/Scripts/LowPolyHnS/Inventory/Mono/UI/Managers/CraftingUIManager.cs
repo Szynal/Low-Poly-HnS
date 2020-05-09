@@ -10,34 +10,45 @@ namespace LowPolyHnS.Crafting
 {
     public class CraftingUIManager : MonoBehaviour
     {
-        private const int TIME_LAYER = 201;
+        private const int TIME_LAYER = 203;
 
         public static CraftingUIManager Instance;
         private static DatabaseInventory DATABASE_INVENTORY;
 
-        private const string DEFAULT_UI_PATH = "Assets/Content/Prefabs/UI/PlayerUI/CraftingUI";
+        private const string DEFAULT_UI_PATH = "LowPolyHnS/Inventory/CraftingUI";
 
         [Serializable]
         public class CraftingEvent : UnityEvent<int>
         {
         }
 
+        #region PROPERTIES
+
         public ScrollRect ScrollRecipes;
-        public ScrollRect ScrollPlayer;
+        public ScrollRect scrollPlayer;
 
-        [Space] public Text TextTitle;
-        public Text TextDescription;
+        [Space] public Text textTitle;
+        public Text textDescription;
 
-        [Space] public GameObject itemUIPrefabSeller;
-        public GameObject itemUIPrefabPlayer;
+        [InventoryMultiItemType, SerializeField]
+        private int playerTypes = ~0;
 
+        [Space] public GameObject ItemCraftingPlayerUI;
+        public GameObject ItemCraftingRecipesUI;
+
+        [HideInInspector] public Merchant currentMerchant;
+
+        private Animator merchantAnimator;
+        private GameObject merchantRoot;
         private bool isOpen;
 
         [Space] public CraftingEvent OnCraft = new CraftingEvent();
-        public CraftingEvent OnCantCraft = new CraftingEvent();
+        public CraftingEvent onCantCraft = new CraftingEvent();
 
-        private Dictionary<int, CraftingUIRecipes> craftingRecipes;
+        private Dictionary<int, CraftingUIRecipes> merchantItems;
         private Dictionary<int, CraftingUIItemPlayer> playerItems;
+
+        #endregion
 
 
         #region INITIALIZERS
@@ -54,13 +65,45 @@ namespace LowPolyHnS.Crafting
 
         public void Open()
         {
+            if (isOpen) return;
+
+            if (DATABASE_INVENTORY.inventorySettings.pauseTimeOnUI)
+            {
+                TimeManager.Instance.SetTimeScale(0f, TIME_LAYER);
+            }
         }
 
         public void Close()
         {
+            if (!isOpen) return;
+
+            if (DATABASE_INVENTORY.inventorySettings.pauseTimeOnUI)
+            {
+                TimeManager.Instance.SetTimeScale(1f, TIME_LAYER);
+            }
         }
 
         #endregion
+
+        private void ChangeState(bool toOpen)
+        {
+            if (merchantRoot == null)
+            {
+                Debug.LogError("Unable to find merchantRoot");
+                return;
+            }
+
+            isOpen = toOpen;
+
+            if (merchantAnimator == null)
+            {
+                merchantRoot.SetActive(toOpen);
+                return;
+            }
+
+            merchantAnimator.SetBool("State", toOpen);
+            InventoryManager.Instance.eventMerchantUI.Invoke(toOpen);
+        }
 
 
         #region STATIC METHODS
@@ -91,21 +134,29 @@ namespace LowPolyHnS.Crafting
 
         public static bool IsCraftingTableOpen()
         {
-            if (Instance == null) return false;
-            return Instance.isOpen;
+            return Instance != null && Instance.isOpen;
         }
 
         private static void RequireInstance()
         {
             if (DATABASE_INVENTORY == null) DATABASE_INVENTORY = DatabaseInventory.Load();
-            if (Instance == null)
+
+            if (Instance != null)
             {
-                EventSystemManager.Instance.Wakeup();
-                if (DATABASE_INVENTORY.inventorySettings == null)
-                {
-                    Debug.LogError("No inventory database found");
-                }
+                return;
             }
+
+            EventSystemManager.Instance.Wakeup();
+            if (DATABASE_INVENTORY.inventorySettings == null)
+            {
+                Debug.LogError("No inventory database found");
+                return;
+            }
+
+            GameObject prefab = DATABASE_INVENTORY.inventorySettings.craftingUIPrefab;
+            if (prefab == null) prefab = Resources.Load<GameObject>(DEFAULT_UI_PATH);
+
+            Instantiate(prefab, Vector3.zero, Quaternion.identity);
         }
 
         #endregion
