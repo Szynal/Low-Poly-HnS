@@ -38,8 +38,8 @@ namespace LowPolyHnS.Crafting
 
         [HideInInspector] public Merchant currentMerchant;
 
-        private Animator merchantAnimator;
-        private GameObject merchantRoot;
+        private Animator craftingAnimator;
+        private GameObject craftingRoot;
         private bool isOpen;
 
         [Space] public CraftingEvent OnCraft = new CraftingEvent();
@@ -56,6 +56,15 @@ namespace LowPolyHnS.Crafting
         private void Awake()
         {
             Instance = this;
+
+            Instance = this;
+            if (transform.childCount < 1)
+            {
+                return;
+            }
+
+            craftingRoot = transform.GetChild(0).gameObject;
+            craftingAnimator = craftingRoot.GetComponent<Animator>();
         }
 
         #endregion
@@ -66,6 +75,8 @@ namespace LowPolyHnS.Crafting
         public void Open()
         {
             if (isOpen) return;
+
+            ChangeState(true);
 
             if (DATABASE_INVENTORY.inventorySettings.pauseTimeOnUI)
             {
@@ -81,27 +92,29 @@ namespace LowPolyHnS.Crafting
             {
                 TimeManager.Instance.SetTimeScale(1f, TIME_LAYER);
             }
+
+            ChangeState(false);
         }
 
         #endregion
 
         private void ChangeState(bool toOpen)
         {
-            if (merchantRoot == null)
+            if (craftingRoot == null)
             {
-                Debug.LogError("Unable to find merchantRoot");
+                Debug.LogError("Unable to find craftingRoot");
                 return;
             }
 
             isOpen = toOpen;
 
-            if (merchantAnimator == null)
+            if (craftingAnimator == null)
             {
-                merchantRoot.SetActive(toOpen);
+                craftingRoot.SetActive(toOpen);
                 return;
             }
 
-            merchantAnimator.SetBool("State", toOpen);
+            craftingAnimator.SetBool("State", toOpen);
             InventoryManager.Instance.eventMerchantUI.Invoke(toOpen);
         }
 
