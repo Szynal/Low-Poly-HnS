@@ -52,7 +52,7 @@ namespace LowPolyHnS.Crafting
 
         #region PUBLIC METHODS
 
-        public void Open(Merchant merchant)
+        public void Open()
         {
         }
 
@@ -65,10 +65,10 @@ namespace LowPolyHnS.Crafting
 
         #region STATIC METHODS
 
-        public static void OpenCraftingTable(Merchant merchant)
+        public static void OpenCraftingTable()
         {
-            RequireInstance(merchant);
-            Instance.Open(merchant);
+            RequireInstance();
+            Instance.Open();
         }
 
         public static void CloseCraftingTable()
@@ -77,13 +77,25 @@ namespace LowPolyHnS.Crafting
             Instance.Close();
         }
 
+        public static void OpenCloseCraftingTable()
+        {
+            if (IsCraftingTableOpen())
+            {
+                CloseCraftingTable();
+            }
+            else
+            {
+                OpenCraftingTable();
+            }
+        }
+
         public static bool IsCraftingTableOpen()
         {
             if (Instance == null) return false;
             return Instance.isOpen;
         }
 
-        private static void RequireInstance(Merchant merchant)
+        private static void RequireInstance()
         {
             if (DATABASE_INVENTORY == null) DATABASE_INVENTORY = DatabaseInventory.Load();
             if (Instance == null)
@@ -92,14 +104,7 @@ namespace LowPolyHnS.Crafting
                 if (DATABASE_INVENTORY.inventorySettings == null)
                 {
                     Debug.LogError("No inventory database found");
-                    return;
                 }
-
-                GameObject prefab = merchant.merchantUI;
-                if (prefab == null) prefab = DATABASE_INVENTORY.inventorySettings.merchantUIPrefab;
-                if (prefab == null) prefab = Resources.Load<GameObject>(DEFAULT_UI_PATH);
-
-                Instantiate(prefab, Vector3.zero, Quaternion.identity);
             }
         }
 
