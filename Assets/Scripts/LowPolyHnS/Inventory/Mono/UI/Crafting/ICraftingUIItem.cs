@@ -4,18 +4,18 @@ using UnityEngine.UI;
 
 namespace LowPolyHnS.Crafting
 {
-    public abstract class ICraftingUIItem : MonoBehaviour
+    public abstract class CraftingUIItem : MonoBehaviour
     {
-        protected static DatabaseInventory DATABASE_INVENTORY;
+        protected static DatabaseInventory DatabaseInventory;
 
         #region PROPERTIES
 
         protected CraftingUIManager CraftingUIManager;
 
-        public Image Image;
-        public Text TextName;
-        public Text TextDescription;
-        public Text TextPrice;
+        public Image Image = null;
+        public Text TextName = null;
+        public Text TextDescription = null;
+        public Text TextPrice = null;
 
         #endregion
 
@@ -29,5 +29,12 @@ namespace LowPolyHnS.Crafting
 
         #endregion
 
+
+        #region PUBLIC METHODS
+
+        public abstract void UpdateUI();
+        public abstract void OnClickButton();
+
+        #endregion
     }
 }
