@@ -89,7 +89,7 @@ GameObject:
   - component: {fileID: 222969378726401064}
   - component: {fileID: 114928893715928168}
   m_Layer: 5
-  m_Name: MerchantName
+  m_Name: Title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1138,6 +1138,7 @@ GameObject:
   - component: {fileID: 114696885773994806}
   - component: {fileID: 114119744107941304}
   - component: {fileID: 114962041717141932}
+  - component: {fileID: 6118897119213793747}
   m_Layer: 5
   m_Name: CraftingUI
   m_TagString: Untagged
@@ -1294,6 +1295,53 @@ MonoBehaviour:
   onCantSell:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &6118897119213793747
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1776935227048216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb1befc6e6e44f14cbb04c6ede461011, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ScrollRecipes: {fileID: 114218560063847394}
+  ScrollPlayer: {fileID: 8455851825052156653}
+  TextTitle: {fileID: 114928893715928168}
+  TextDescription: {fileID: 0}
+  playerTypes: -1
+  itemUIPrefabSeller: {fileID: 0}
+  itemUIPrefabPlayer: {fileID: 0}
+  OnCraft:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 114938105071472188}
+        m_MethodName: Execute
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnCantCraft:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 114512605851771306}
+        m_MethodName: Execute
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1781354476930706
 GameObject:
   m_ObjectHideFlags: 0
