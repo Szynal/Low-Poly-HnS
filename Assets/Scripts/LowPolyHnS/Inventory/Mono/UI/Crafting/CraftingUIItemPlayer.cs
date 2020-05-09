@@ -1,4 +1,5 @@
 ﻿using System;
+using LowPolyHnS.Core.Hooks;
 using LowPolyHnS.Inventory;
 using UnityEngine;
 using UnityEngine.UI;
@@ -28,11 +29,20 @@ namespace LowPolyHnS.Crafting
 
         #endregion
 
+        #region PUBLIC METHODS
 
         public override void UpdateUI()
         {
-            throw new NotImplementedException();
+            if (item == null) return;
+
+            if (Image != null && item.sprite != null) Image.sprite = item.sprite;
+            if (TextName != null) TextName.text = item.itemName.GetText();
+            if (TextDescription != null) TextDescription.text = item.itemDescription.GetText();
+
+            GameObject player = HookPlayer.Instance != null ? HookPlayer.Instance.gameObject : null;
         }
+
+        #endregion
 
         public override void OnClickButton()
         {
