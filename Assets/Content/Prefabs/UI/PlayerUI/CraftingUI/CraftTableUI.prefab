@@ -210,9 +210,8 @@ GameObject:
   - component: {fileID: 114490481349263458}
   - component: {fileID: 114125760403580848}
   - component: {fileID: 225266644117998638}
-  - component: {fileID: 5956253852088752822}
   m_Layer: 5
-  m_Name: ItemCraftingCraftTableUI
+  m_Name: CraftTableUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -349,23 +348,6 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &5956253852088752822
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1705642912170962}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 033a1a18d4e0495418508cde9d270f22, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Image: {fileID: 114039955142447568}
-  TextName: {fileID: 114109174188818154}
-  TextDescription: {fileID: 114532636886076164}
-  WrapAmount: {fileID: 2317738778387265858}
-  TextAmount: {fileID: 8949307787568524622}
 --- !u!1 &1990379481436158
 GameObject:
   m_ObjectHideFlags: 0

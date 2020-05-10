@@ -2635,6 +2635,22 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 7757703272813056597, guid: 35f135b0e29ba914c9b94211ce9833b5,
+        type: 3}
+      propertyPath: Content
+      value: 
+      objectReference: {fileID: 3519518563615506095}
+    - target: {fileID: 7757703272813056597, guid: 35f135b0e29ba914c9b94211ce9833b5,
+        type: 3}
+      propertyPath: CraftTablePrefab
+      value: 
+      objectReference: {fileID: 1705642912170962, guid: eaccfc1eb0754e24a8dd890d97edd264,
+        type: 3}
+    - target: {fileID: 7757703272813056597, guid: 35f135b0e29ba914c9b94211ce9833b5,
+        type: 3}
+      propertyPath: CraftTable
+      value: 
+      objectReference: {fileID: 2237722810944391205}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 35f135b0e29ba914c9b94211ce9833b5, type: 3}
 --- !u!224 &5921008875213684693 stripped

@@ -83,7 +83,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5966fec17800a412691ce14562620ddf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isExpanded: 1
+  isExpanded: 0
   operation: 0
   itemHolder:
     item: {fileID: 114273004538180096, guid: 17839004acbb6924ebf5be3ce8a59dcc, type: 2}

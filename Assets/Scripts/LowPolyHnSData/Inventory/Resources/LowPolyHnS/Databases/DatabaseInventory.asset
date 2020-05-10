@@ -707,9 +707,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemToCombineA:
     item: {fileID: -5549674780278715467}
-  amountA: 1
+  amountA: 2
   itemToCombineB:
-    item: {fileID: -5549674780278715467}
+    item: {fileID: 114177772742640968}
   amountB: 1
   removeItemsOnCraft: 1
   actionsList: {fileID: 114940443500244628, guid: b4341ef21780b4c8a9dd9e8ec54d9686,

@@ -1,4 +1,4 @@
-﻿using System;
+﻿using LowPolyHnS.Core;
 using LowPolyHnS.Inventory;
 using UnityEngine;
 
@@ -6,18 +6,41 @@ namespace LowPolyHnS.Crafting
 {
     public class CraftingUIRecipe : CraftingUIItem
     {
-        public static DatabaseInventory Database;
-
-
+        private static DatabaseInventory DATABASE_INVENTORY;
 
         public ItemHolder ItemHolder;
-        [Space] public CanvasGroup CanvasGroup;
+        public GameObject CraftTablePrefab;
 
+        [Space] public CanvasGroup CanvasGroup;
+        public RectTransform CraftTable;
 
         public override void OnClickButton()
         {
-            throw new NotImplementedException();
+            if (DATABASE_INVENTORY == null) DATABASE_INVENTORY = DatabaseInventory.Load();
+
+            EventSystemManager.Instance.Wakeup();
+            if (DATABASE_INVENTORY.inventorySettings == null)
+            {
+                Debug.LogError("No inventory database found");
+                return;
+            }
+
+            Recipe[] catalogueRecipes = DATABASE_INVENTORY.inventoryCatalogue.recipes;
+
+            foreach (var recipe in catalogueRecipes)
+            {
+                Debug.Log(recipe);
+
+                var oldContent = CraftTable.GetComponentsInChildren<RectTransform>();
+                foreach (var content in oldContent)
+                {
+                    Destroy(content);
+                }
+
+                Instantiate(CraftTablePrefab, Vector3.zero, Quaternion.identity, CraftTable.transform);
+            }
         }
+
 
         public void InitRecipe()
         {

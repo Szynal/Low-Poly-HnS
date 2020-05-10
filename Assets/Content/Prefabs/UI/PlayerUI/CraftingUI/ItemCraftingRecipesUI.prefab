@@ -366,7 +366,10 @@ MonoBehaviour:
   TextDescription: {fileID: 114532636886076164}
   ItemHolder:
     item: {fileID: 114273004538180096, guid: 17839004acbb6924ebf5be3ce8a59dcc, type: 2}
+  CraftTableUI: {fileID: 1705642912170962, guid: eaccfc1eb0754e24a8dd890d97edd264,
+    type: 3}
   CanvasGroup: {fileID: 225266644117998638}
+  Content: {fileID: 0}
 --- !u!1 &1895533645457550
 GameObject:
   m_ObjectHideFlags: 0
@@ -562,7 +565,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 7757703272813056597}
         m_MethodName: OnClickButton
         m_Mode: 1
         m_Arguments:
