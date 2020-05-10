@@ -9,6 +9,7 @@ namespace LowPolyHnS.Crafting
         private static DatabaseInventory DATABASE_INVENTORY;
 
         public ItemHolder ItemHolder;
+        public int CatalogueKey;
         public GameObject CraftTablePrefab;
 
         [Space] public CanvasGroup CanvasGroup;
@@ -32,17 +33,13 @@ namespace LowPolyHnS.Crafting
                 Destroy(child.gameObject);
             }
 
-            foreach (var recipe in catalogueRecipes)
-            {
-                Debug.Log(recipe);
+            var itemA = Instantiate(CraftTablePrefab, Vector3.zero, Quaternion.identity, CraftTable.transform);
+            var itemToCombineA = itemA.GetComponent<CraftingUIItemToCombine>();
+            var itemB = Instantiate(CraftTablePrefab, Vector3.zero, Quaternion.identity, CraftTable.transform);
+            var itemToCombineB = itemB.GetComponent<CraftingUIItemToCombine>();
 
-                var itemA = Instantiate(CraftTablePrefab, Vector3.zero, Quaternion.identity, CraftTable.transform);
-                var itemToCombineA = itemA.GetComponent<CraftingUIItemToCombine>();
-                var itemB = Instantiate(CraftTablePrefab, Vector3.zero, Quaternion.identity, CraftTable.transform);
-                var itemToCombineB = itemB.GetComponent<CraftingUIItemToCombine>();
-
-                SetIngredientInformation(itemToCombineA, itemToCombineB, recipe);
-            }
+            SetIngredientInformation(itemToCombineA, itemToCombineB,
+                DATABASE_INVENTORY.inventoryCatalogue.recipes[CatalogueKey]);
         }
 
         private static void SetIngredientInformation(CraftingUIItemToCombine itemToCombineA,
@@ -65,7 +62,7 @@ namespace LowPolyHnS.Crafting
 
         public void InitRecipe()
         {
-            CanvasGroup.gameObject.transform.name = ItemHolder.item.itemName.content;
+            CanvasGroup.transform.name = ItemHolder.item.itemName.content;
             Image.sprite = ItemHolder.item.sprite;
             TextName.text = ItemHolder.item.itemName.content;
             TextDescription.text = ItemHolder.item.itemDescription.content;
