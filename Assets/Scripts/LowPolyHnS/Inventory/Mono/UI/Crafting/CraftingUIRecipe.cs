@@ -27,20 +27,41 @@ namespace LowPolyHnS.Crafting
 
             Recipe[] catalogueRecipes = DATABASE_INVENTORY.inventoryCatalogue.recipes;
 
+            foreach (Transform child in CraftTable)
+            {
+                Destroy(child.gameObject);
+            }
+
             foreach (var recipe in catalogueRecipes)
             {
                 Debug.Log(recipe);
 
-                var oldContent = CraftTable.GetComponentsInChildren<RectTransform>();
-                foreach (var content in oldContent)
-                {
-                    Destroy(content);
-                }
+                var itemA = Instantiate(CraftTablePrefab, Vector3.zero, Quaternion.identity, CraftTable.transform);
+                var itemToCombineA = itemA.GetComponent<CraftingUIItemToCombine>();
+                var itemB = Instantiate(CraftTablePrefab, Vector3.zero, Quaternion.identity, CraftTable.transform);
+                var itemToCombineB = itemB.GetComponent<CraftingUIItemToCombine>();
 
-                Instantiate(CraftTablePrefab, Vector3.zero, Quaternion.identity, CraftTable.transform);
+                SetIngredientInformation(itemToCombineA, itemToCombineB, recipe);
             }
         }
 
+        private static void SetIngredientInformation(CraftingUIItemToCombine itemToCombineA,
+            CraftingUIItemToCombine itemToCombineB, Recipe recipe)
+        {
+            if (itemToCombineA == null) return;
+            if (itemToCombineB == null) return;
+            if (recipe == null) return;
+
+            itemToCombineA.TextName.text = recipe.itemToCombineA.item.itemName.content;
+            itemToCombineA.TextDescription.text = recipe.itemToCombineA.item.itemDescription.content;
+            itemToCombineA.Image.sprite = recipe.itemToCombineA.item.sprite;
+            itemToCombineA.TextAmount.text = recipe.amountA.ToString();
+
+            itemToCombineB.TextName.text = recipe.itemToCombineB.item.itemName.content;
+            itemToCombineB.TextDescription.text = recipe.itemToCombineB.item.itemDescription.content;
+            itemToCombineB.Image.sprite = recipe.itemToCombineB.item.sprite;
+            itemToCombineB.TextAmount.text = recipe.amountB.ToString();
+        }
 
         public void InitRecipe()
         {

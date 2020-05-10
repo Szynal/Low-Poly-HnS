@@ -207,9 +207,9 @@ GameObject:
   - component: {fileID: 224527124187544162}
   - component: {fileID: 222192048223789582}
   - component: {fileID: 114070284695538426}
-  - component: {fileID: 114490481349263458}
   - component: {fileID: 114125760403580848}
   - component: {fileID: 225266644117998638}
+  - component: {fileID: 9040336451815858729}
   m_Layer: 5
   m_Name: CraftTableUI
   m_TagString: Untagged
@@ -275,47 +275,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &114490481349263458
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1705642912170962}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a98125502f715b4b83cfb77b434e436, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Navigation:
-    m_Mode: 3
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
-  m_Transition: 2
-  m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
-    m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
-  m_SpriteState:
-    m_HighlightedSprite: {fileID: 21300000, guid: c240ae08bef794af5802ff7b0dd2005f,
-      type: 3}
-    m_PressedSprite: {fileID: 21300000, guid: 75c597e6f855f4a8087bf864b9e8d755, type: 3}
-    m_SelectedSprite: {fileID: 21300000, guid: c240ae08bef794af5802ff7b0dd2005f, type: 3}
-    m_DisabledSprite: {fileID: 21300000, guid: 50d464c96fee14cb391d5e7247c9cfe5, type: 3}
-  m_AnimationTriggers:
-    m_NormalTrigger: Normal
-    m_HighlightedTrigger: Highlighted
-    m_PressedTrigger: Pressed
-    m_SelectedTrigger: Highlighted
-    m_DisabledTrigger: Disabled
-  m_Interactable: 1
-  m_TargetGraphic: {fileID: 114070284695538426}
 --- !u!114 &114125760403580848
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -348,6 +307,23 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &9040336451815858729
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1705642912170962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2cc523ed4103bb44a7d288224c521b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Image: {fileID: 114039955142447568}
+  TextName: {fileID: 114109174188818154}
+  TextDescription: {fileID: 114532636886076164}
+  WrapAmount: {fileID: 2317738778387265858}
+  TextAmount: {fileID: 8949307787568524622}
 --- !u!1 &1990379481436158
 GameObject:
   m_ObjectHideFlags: 0
