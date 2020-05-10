@@ -45,7 +45,7 @@ namespace LowPolyHnS.Crafting
         [Space] public CraftingEvent OnCraft = new CraftingEvent();
         public CraftingEvent onCantCraft = new CraftingEvent();
 
-        private Dictionary<int, CraftingUIRecipes> merchantItems;
+        private Dictionary<int, CraftingUIRecipe> merchantItems;
         private Dictionary<int, CraftingUIItemPlayer> playerItems;
 
         #endregion

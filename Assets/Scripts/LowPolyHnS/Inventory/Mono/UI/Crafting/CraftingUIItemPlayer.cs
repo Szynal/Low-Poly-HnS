@@ -24,23 +24,11 @@ namespace LowPolyHnS.Crafting
             base.Setup(craftingUIManager, parameters);
             item = parameters[0] as Item;
 
-            UpdateUI();
         }
 
         #endregion
 
         #region PUBLIC METHODS
-
-        public override void UpdateUI()
-        {
-            if (item == null) return;
-
-            if (Image != null && item.sprite != null) Image.sprite = item.sprite;
-            if (TextName != null) TextName.text = item.itemName.GetText();
-            if (TextDescription != null) TextDescription.text = item.itemDescription.GetText();
-
-            GameObject player = HookPlayer.Instance != null ? HookPlayer.Instance.gameObject : null;
-        }
 
         #endregion
 

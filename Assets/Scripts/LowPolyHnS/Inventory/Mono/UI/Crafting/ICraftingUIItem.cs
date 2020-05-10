@@ -6,8 +6,6 @@ namespace LowPolyHnS.Crafting
 {
     public abstract class CraftingUIItem : MonoBehaviour
     {
-        protected static DatabaseInventory DatabaseInventory;
-
         #region PROPERTIES
 
         protected CraftingUIManager CraftingUIManager;
@@ -15,7 +13,6 @@ namespace LowPolyHnS.Crafting
         public Image Image = null;
         public Text TextName = null;
         public Text TextDescription = null;
-        public Text TextPrice = null;
 
         #endregion
 
@@ -32,7 +29,6 @@ namespace LowPolyHnS.Crafting
 
         #region PUBLIC METHODS
 
-        public abstract void UpdateUI();
         public abstract void OnClickButton();
 
         #endregion
