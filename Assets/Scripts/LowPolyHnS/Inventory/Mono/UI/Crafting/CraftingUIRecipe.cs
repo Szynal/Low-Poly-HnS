@@ -15,7 +15,7 @@ namespace LowPolyHnS.Crafting
         [Space] public CanvasGroup CanvasGroup;
         public RectTransform CraftTable;
 
-        public override void OnClickButton()
+        public override void ShowCraftTable()
         {
             if (DATABASE_INVENTORY == null) DATABASE_INVENTORY = DatabaseInventory.Load();
 
@@ -26,20 +26,24 @@ namespace LowPolyHnS.Crafting
                 return;
             }
 
-            Recipe[] catalogueRecipes = DATABASE_INVENTORY.inventoryCatalogue.recipes;
-
             foreach (Transform child in CraftTable)
             {
                 Destroy(child.gameObject);
             }
 
-            var itemA = Instantiate(CraftTablePrefab, Vector3.zero, Quaternion.identity, CraftTable.transform);
-            var itemToCombineA = itemA.GetComponent<CraftingUIItemToCombine>();
-            var itemB = Instantiate(CraftTablePrefab, Vector3.zero, Quaternion.identity, CraftTable.transform);
-            var itemToCombineB = itemB.GetComponent<CraftingUIItemToCombine>();
+            GameObject itemA = Instantiate(CraftTablePrefab, Vector3.zero, Quaternion.identity, CraftTable.transform);
+            CraftingUIItemToCombine itemToCombineA = itemA.GetComponent<CraftingUIItemToCombine>();
+            GameObject itemB = Instantiate(CraftTablePrefab, Vector3.zero, Quaternion.identity, CraftTable.transform);
+            CraftingUIItemToCombine itemToCombineB = itemB.GetComponent<CraftingUIItemToCombine>();
 
-            SetIngredientInformation(itemToCombineA, itemToCombineB,
-                DATABASE_INVENTORY.inventoryCatalogue.recipes[CatalogueKey]);
+            Recipe recipeKey = DATABASE_INVENTORY.inventoryCatalogue.recipes[CatalogueKey];
+            if (recipeKey == null)
+            {
+                return;
+            }
+
+            SetIngredientInformation(itemToCombineA, itemToCombineB, recipeKey);
+            CraftingUIManager.Instance.Recipe = recipeKey;
         }
 
         private static void SetIngredientInformation(CraftingUIItemToCombine itemToCombineA,
@@ -59,6 +63,7 @@ namespace LowPolyHnS.Crafting
             itemToCombineB.Image.sprite = recipe.itemToCombineB.item.sprite;
             itemToCombineB.TextAmount.text = recipe.amountB.ToString();
         }
+
 
         public void InitRecipe()
         {

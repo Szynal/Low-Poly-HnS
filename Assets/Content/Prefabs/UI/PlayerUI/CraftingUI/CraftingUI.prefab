@@ -1251,16 +1251,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb1befc6e6e44f14cbb04c6ede461011, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ScrollRecipes: {fileID: 114218560063847394}
-  scrollPlayer: {fileID: 8455851825052156653}
-  textTitle: {fileID: 114928893715928168}
-  textDescription: {fileID: 0}
-  playerTypes: -1
-  ItemCraftingPlayerUI: {fileID: 1705642912170962, guid: eaccfc1eb0754e24a8dd890d97edd264,
-    type: 3}
-  ItemCraftingRecipesUI: {fileID: 1705642912170962, guid: 35f135b0e29ba914c9b94211ce9833b5,
-    type: 3}
-  currentMerchant: {fileID: 0}
+  Recipe: {fileID: 0}
   OnCraft:
     m_PersistentCalls:
       m_Calls:
@@ -2010,8 +2001,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: OnClickButton
+      - m_Target: {fileID: 6118897119213793747}
+        m_MethodName: Craft
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2603,7 +2594,7 @@ PrefabInstance:
     - target: {fileID: 224527124187544162, guid: 35f135b0e29ba914c9b94211ce9833b5,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 195
+      value: 150
       objectReference: {fileID: 0}
     - target: {fileID: 224527124187544162, guid: 35f135b0e29ba914c9b94211ce9833b5,
         type: 3}
@@ -2635,17 +2626,6 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
-    - target: {fileID: 7757703272813056597, guid: 35f135b0e29ba914c9b94211ce9833b5,
-        type: 3}
-      propertyPath: Content
-      value: 
-      objectReference: {fileID: 3519518563615506095}
-    - target: {fileID: 7757703272813056597, guid: 35f135b0e29ba914c9b94211ce9833b5,
-        type: 3}
-      propertyPath: CraftTablePrefab
-      value: 
-      objectReference: {fileID: 1705642912170962, guid: eaccfc1eb0754e24a8dd890d97edd264,
-        type: 3}
     - target: {fileID: 7757703272813056597, guid: 35f135b0e29ba914c9b94211ce9833b5,
         type: 3}
       propertyPath: CraftTable

@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using LowPolyHnS.Core;
 using LowPolyHnS.Inventory;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.UI;
 
 namespace LowPolyHnS.Crafting
 {
@@ -24,28 +22,13 @@ namespace LowPolyHnS.Crafting
 
         #region PROPERTIES
 
-        public ScrollRect ScrollRecipes;
-        public ScrollRect scrollPlayer;
-
-        [Space] public Text textTitle;
-        public Text textDescription;
-
-        [InventoryMultiItemType, SerializeField]
-        private int playerTypes = ~0;
-
-        [Space] public GameObject ItemCraftingPlayerUI;
-        public GameObject ItemCraftingRecipesUI;
-
-        [HideInInspector] public Merchant currentMerchant;
-
         private Animator craftingAnimator;
         private GameObject craftingRoot;
         private bool isOpen;
 
+        [HideInInspector] public Recipe Recipe;
         [Space] public CraftingEvent OnCraft = new CraftingEvent();
         public CraftingEvent onCantCraft = new CraftingEvent();
-
-        private Dictionary<int, CraftingUIRecipe> merchantItems;
 
         #endregion
 
@@ -117,6 +100,18 @@ namespace LowPolyHnS.Crafting
             InventoryManager.Instance.eventMerchantUI.Invoke(toOpen);
         }
 
+        public void Craft()
+        {
+            if (Recipe != null &&
+                InventoryManager.Instance.UseRecipe(Recipe.itemToCombineA.item.uuid, Recipe.itemToCombineB.item.uuid))
+            {
+                OnCraft.Invoke(0);
+            }
+            else
+            {
+                onCantCraft.Invoke(0);
+            }
+        }
 
         #region STATIC METHODS
 

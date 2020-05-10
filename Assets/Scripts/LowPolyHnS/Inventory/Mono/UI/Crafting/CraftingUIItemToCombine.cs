@@ -19,7 +19,7 @@ namespace LowPolyHnS.Crafting
 
         #endregion
 
-        public override void OnClickButton()
+        public override void ShowCraftTable()
         {
             throw new NotImplementedException();
         }

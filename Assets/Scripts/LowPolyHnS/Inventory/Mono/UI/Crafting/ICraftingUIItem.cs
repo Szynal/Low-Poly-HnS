@@ -29,7 +29,7 @@ namespace LowPolyHnS.Crafting
 
         #region PUBLIC METHODS
 
-        public abstract void OnClickButton();
+        public abstract void ShowCraftTable();
 
         #endregion
     }
