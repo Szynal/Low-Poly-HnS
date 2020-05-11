@@ -2489,7 +2489,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 853796753, guid: cbc7fa7c562cf8b4eb0fea8dccc25276, type: 3}
       propertyPath: isExpanded
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 853796753, guid: cbc7fa7c562cf8b4eb0fea8dccc25276, type: 3}
       propertyPath: UseVariable
