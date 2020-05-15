@@ -39,6 +39,14 @@ namespace LowPolyHnS.Inventory
         private const string PROP_UUID = "uuid";
         private const string PROP_NAME = "itemName";
         private const string PROP_DESCRIPTION = "itemDescription";
+
+        private const string PROP_STRENGTH_BONUS = "StrengthBonus";
+        private const string PROP_AGILITY_BONUS = "AgilityBonus";
+        private const string PROP_INTELLIGENCE_BONUS = "IntelligenceBonus";
+        private const string PROP_STRENGTH_PERCENT_BONUS = "StrengthPercentBonus";
+        private const string PROP_AGILITY_PERCENT_BONUS = "AgilityPercentBonus";
+        private const string PROP_INTELLIGENCE_PERCENT_BONUS = "IntelligencePercentBonus";
+
         private const string PROP_COLOR = "itemColor";
         private const string PROP_SPRITE = "sprite";
         private const string PROP_PREFAB = "prefab";
@@ -69,6 +77,14 @@ namespace LowPolyHnS.Inventory
         public SerializedProperty spUUID;
         private SerializedProperty spName;
         private SerializedProperty spDescription;
+
+        private SerializedProperty spStrengthBonus;
+        private SerializedProperty spAgilityBonus;
+        private SerializedProperty spIntelligenceBonus;
+        private SerializedProperty spStrengthPercentBonus;
+        private SerializedProperty spAgilityPercentBonus;
+        private SerializedProperty spIntelligencePercentBonus;
+
         private SerializedProperty spColor;
         private SerializedProperty spSprite;
         private SerializedProperty spPrefab;
@@ -98,8 +114,6 @@ namespace LowPolyHnS.Inventory
 
         private AnimBool animUnfold;
 
-        // METHODS: ----------------------------------------------------------------------------------------------------
-
         public void OnEnable()
         {
             if (target == null || serializedObject == null) return;
@@ -107,6 +121,14 @@ namespace LowPolyHnS.Inventory
             spUUID = serializedObject.FindProperty(PROP_UUID);
             spName = serializedObject.FindProperty(PROP_NAME);
             spDescription = serializedObject.FindProperty(PROP_DESCRIPTION);
+
+            spStrengthBonus = serializedObject.FindProperty(PROP_STRENGTH_BONUS);
+            spAgilityBonus = serializedObject.FindProperty(PROP_AGILITY_BONUS);
+            spIntelligenceBonus = serializedObject.FindProperty(PROP_INTELLIGENCE_BONUS);
+            spStrengthPercentBonus = serializedObject.FindProperty(PROP_STRENGTH_PERCENT_BONUS);
+            spAgilityPercentBonus = serializedObject.FindProperty(PROP_AGILITY_PERCENT_BONUS);
+            spIntelligencePercentBonus = serializedObject.FindProperty(PROP_INTELLIGENCE_PERCENT_BONUS);
+
             spColor = serializedObject.FindProperty(PROP_COLOR);
             spSprite = serializedObject.FindProperty(PROP_SPRITE);
             spPrefab = serializedObject.FindProperty(PROP_PREFAB);
@@ -373,6 +395,14 @@ namespace LowPolyHnS.Inventory
 
             EditorGUILayout.PropertyField(spName);
             EditorGUILayout.PropertyField(spDescription);
+
+            EditorGUILayout.PropertyField(spStrengthBonus);
+            EditorGUILayout.PropertyField(spAgilityBonus);
+            EditorGUILayout.PropertyField(spIntelligenceBonus);
+            EditorGUILayout.PropertyField(spStrengthPercentBonus);
+            EditorGUILayout.PropertyField(spAgilityPercentBonus);
+            EditorGUILayout.PropertyField(spIntelligencePercentBonus);
+
             EditorGUILayout.PropertyField(spColor);
 
             EditorGUILayout.Space();

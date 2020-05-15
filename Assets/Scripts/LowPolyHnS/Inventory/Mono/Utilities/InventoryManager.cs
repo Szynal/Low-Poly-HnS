@@ -453,8 +453,8 @@ namespace LowPolyHnS.Inventory
                 CharacterEquipment equipment = RequireEquipment(target);
                 if (equipment.CanEquip(uuid) && equipment.EquipItem(uuid, itemType))
                 {
-                    if (eventOnEquip != null) eventOnEquip.Invoke(target, uuid);
-                    if (eventChangePlayerInventory != null) eventChangePlayerInventory.Invoke();
+                    eventOnEquip?.Invoke(target, uuid);
+                    eventChangePlayerInventory?.Invoke();
                     return true;
                 }
 
@@ -469,8 +469,8 @@ namespace LowPolyHnS.Inventory
             CharacterEquipment equipment = RequireEquipment(target);
             if (equipment.UnequipItem(uuid))
             {
-                if (eventOnUnequip != null) eventOnUnequip.Invoke(target, uuid);
-                if (eventChangePlayerInventory != null) eventChangePlayerInventory.Invoke();
+                eventOnUnequip?.Invoke(target, uuid);
+                eventChangePlayerInventory?.Invoke();
                 return true;
             }
 

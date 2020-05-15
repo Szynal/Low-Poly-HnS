@@ -41,8 +41,7 @@ namespace LowPolyHnS.Characters
         private SerializedProperty spDeceleration;
 
         private SerializedProperty spRippleClickEffect;
-
-
+        
         private Section sectionAttribute;
         private SerializedProperty spStrength;
         private SerializedProperty spAgility;

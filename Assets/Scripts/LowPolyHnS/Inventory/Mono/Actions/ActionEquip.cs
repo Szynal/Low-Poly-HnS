@@ -27,11 +27,7 @@ namespace LowPolyHnS.Inventory
                 return true;
             }
 
-            InventoryManager.Instance.Equip(
-                targetObject,
-                item.item.uuid,
-                type
-            );
+            InventoryManager.Instance.Equip(targetObject, item.item.uuid, type);
 
             return true;
         }

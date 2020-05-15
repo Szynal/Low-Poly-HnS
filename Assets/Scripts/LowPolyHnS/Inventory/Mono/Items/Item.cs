@@ -14,11 +14,20 @@ namespace LowPolyHnS.Inventory
     [Serializable]
     public class Item : ScriptableObject
     {
-        // PROPERTIES: -------------------------------------------------------------------------------------------------
+        #region PROPERTIES
 
         public int uuid = -1;
         [LocStringNoPostProcess] public LocString itemName = new LocString();
         [LocStringNoPostProcess] public LocString itemDescription = new LocString();
+
+        public int StrengthBonus;
+        public int AgilityBonus;
+        public int IntelligenceBonus;
+
+        public float StrengthPercentBonus;
+        public float AgilityPercentBonus;
+        public float IntelligencePercentBonus;
+
         public Color itemColor = Color.grey;
 
         public Sprite sprite;
@@ -42,7 +51,7 @@ namespace LowPolyHnS.Inventory
         public IActionsList actionsOnEquip;
         public IActionsList actionsOnUnequip;
 
-        // CONSTRUCTOR: ------------------------------------------------------------------------------------------------
+        #endregion
 
 #if UNITY_EDITOR
 
@@ -56,6 +65,14 @@ namespace LowPolyHnS.Inventory
 
             item.itemName = new LocString();
             item.itemDescription = new LocString();
+
+            item.StrengthBonus = 0;
+            item.AgilityBonus = 0;
+            item.IntelligenceBonus = 0;
+            item.StrengthPercentBonus = 0;
+            item.AgilityPercentBonus = 0;
+            item.IntelligencePercentBonus = 0;
+
             item.price = 1;
             item.maxStack = 99;
             item.hideFlags = HideFlags.HideInHierarchy;
