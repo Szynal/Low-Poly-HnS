@@ -1,4 +1,5 @@
-﻿using LowPolyHnS.Core;
+﻿using LowPolyHnS.Attributes;
+using LowPolyHnS.Core;
 using LowPolyHnS.Core.Hooks;
 using UnityEngine;
 
@@ -54,6 +55,11 @@ namespace LowPolyHnS.Characters
 
         public GameObject RippleClickEffect = null;
 
+
+        public CharacterAttribute Strength;
+        public CharacterAttribute Agility;
+        public CharacterAttribute Intelligence;
+        
         // INITIALIZERS: --------------------------------------------------------------------------
 
         protected override void Awake()

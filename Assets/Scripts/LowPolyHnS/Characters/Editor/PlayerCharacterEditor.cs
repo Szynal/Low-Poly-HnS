@@ -9,6 +9,7 @@ namespace LowPolyHnS.Characters
     public class PlayerCharacterEditor : CharacterEditor
     {
         private const string SECTION_INPUT = "Player Input";
+        private const string SECTION_ATTRIBUTE = "Player Attribute";
 
         private const string PROP_INPUTT = "inputType";
         private const string PROP_MOUSEB = "mouseButtonMove";
@@ -21,6 +22,10 @@ namespace LowPolyHnS.Characters
         private const string PROP_DEC = "deceleration";
 
         private const string PROP_CLICK = "RippleClickEffect";
+
+        private const string PROP_STRENGTH = "Strength";
+        private const string PROP_AGILITY = "Agility";
+        private const string PROP_INTELLIGENCE = "Intelligence";
 
         // PROPERTIES: ----------------------------------------------------------------------------
 
@@ -37,6 +42,12 @@ namespace LowPolyHnS.Characters
 
         private SerializedProperty spRippleClickEffect;
 
+
+        private Section sectionAttribute;
+        private SerializedProperty spStrength;
+        private SerializedProperty spAgility;
+        private SerializedProperty spIntelligence;
+
         // INITIALIZERS: --------------------------------------------------------------------------
 
         protected new void OnEnable()
@@ -46,6 +57,7 @@ namespace LowPolyHnS.Characters
             string iconInputPath = Path.Combine(CHARACTER_ICONS_PATH, "PlayerInput.png");
             Texture2D iconInput = AssetDatabase.LoadAssetAtPath<Texture2D>(iconInputPath);
             sectionInput = new Section(SECTION_INPUT, iconInput, Repaint);
+            sectionAttribute = new Section(SECTION_ATTRIBUTE, null, Repaint);
 
             spInputType = serializedObject.FindProperty(PROP_INPUTT);
             spMouseButtonMove = serializedObject.FindProperty(PROP_MOUSEB);
@@ -56,6 +68,10 @@ namespace LowPolyHnS.Characters
             spUseAcceleration = serializedObject.FindProperty(PROP_USE_ACC);
             spAcceleration = serializedObject.FindProperty(PROP_ACC);
             spDeceleration = serializedObject.FindProperty(PROP_DEC);
+
+            spStrength = serializedObject.FindProperty(PROP_STRENGTH);
+            spAgility = serializedObject.FindProperty(PROP_AGILITY);
+            spIntelligence = serializedObject.FindProperty(PROP_INTELLIGENCE);
 
             spRippleClickEffect = serializedObject.FindProperty(PROP_CLICK);
 
@@ -135,67 +151,37 @@ namespace LowPolyHnS.Characters
                 }
             }
 
+            PaintCharacterAttributeProperties();
+
             EditorGUILayout.Space();
 
-            sectionInput.PaintSection();
-            using (var group = new EditorGUILayout.FadeGroupScope(sectionInput.state.faded))
+            serializedObject.ApplyModifiedProperties();
+        }
+
+
+        private void PaintCharacterAttributeProperties()
+        {
+            sectionAttribute.PaintSection();
+            using (EditorGUILayout.FadeGroupScope group = new EditorGUILayout.FadeGroupScope(sectionAttribute.state.faded))
             {
                 if (group.visible)
                 {
                     EditorGUILayout.BeginVertical(CoreGUIStyles.GetBoxExpanded());
+                    EditorGUILayout.LabelField("Attribute:", EditorStyles.boldLabel);
 
-                    EditorGUILayout.PropertyField(spInputType);
                     EditorGUI.indentLevel++;
-
-                    if (spInputType.intValue == (int)PlayerCharacter.INPUT_TYPE.PointAndClick ||
-                        spInputType.intValue == (int)PlayerCharacter.INPUT_TYPE.FollowPointer ||
-                        spInputType.intValue == (int)PlayerCharacter.INPUT_TYPE.FollowAndClickPointer)
-                    {
-                        EditorGUILayout.PropertyField(spMouseButtonMove);
-                    }
-
-                    if (spInputType.intValue == (int)PlayerCharacter.INPUT_TYPE.PointAndClick)
-                    {
-                        EditorGUILayout.PropertyField(spMouseLayerMask);
-                        if (spMouseLayerMask.intValue == 0)
-                        {
-                            spMouseLayerMask.intValue = ~0;
-                        }
-
-                        EditorGUILayout.PropertyField(spRippleClickEffect);
-                    }
-
-                    if (spInputType.intValue == (int)PlayerCharacter.INPUT_TYPE.FollowAndClickPointer)
-                    {
-                        EditorGUILayout.PropertyField(spMouseLayerMask);
-                        if (spMouseLayerMask.intValue == 0)
-                        {
-                            spMouseLayerMask.intValue = ~0;
-                        }
-
-                        EditorGUILayout.PropertyField(spRippleClickEffect);
-                    }
-
+                    EditorGUILayout.PropertyField(spStrength);
                     EditorGUI.indentLevel--;
-                    EditorGUILayout.PropertyField(spInputJump);
-
-                    EditorGUILayout.Space();
-                    EditorGUILayout.PropertyField(spUseAcceleration);
                     EditorGUI.indentLevel++;
-                    EditorGUI.BeginDisabledGroup(!spUseAcceleration.boolValue);
-
-                    EditorGUILayout.PropertyField(spAcceleration);
-                    EditorGUILayout.PropertyField(spDeceleration);
-
-                    EditorGUI.EndDisabledGroup();
+                    EditorGUILayout.PropertyField(spAgility);
+                    EditorGUI.indentLevel--;
+                    EditorGUI.indentLevel++;
+                    EditorGUILayout.PropertyField(spIntelligence);
                     EditorGUI.indentLevel--;
 
                     EditorGUILayout.EndVertical();
                 }
             }
-
-
-            serializedObject.ApplyModifiedProperties();
         }
     }
 }

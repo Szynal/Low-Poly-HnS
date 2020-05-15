@@ -2,9 +2,9 @@
 {
     public enum AttributeModifierType
     {
-        Flat = 100,
-        PercentAdd = 200,
-        PercentMultiply = 300,
+        Normal = 100,
+        Percent = 200,
+        PercentMultiply = 300
     }
 
     public class AttributeModifier
@@ -22,10 +22,16 @@
             Source = source;
         }
 
-        public AttributeModifier(float value, AttributeModifierType type) : this(value, type, (int)type, null) { }
+        public AttributeModifier(float value, AttributeModifierType type) : this(value, type, (int) type, null)
+        {
+        }
 
-        public AttributeModifier(float value, AttributeModifierType type, int order) : this(value, type, order, null) { }
+        public AttributeModifier(float value, AttributeModifierType type, int order) : this(value, type, order, null)
+        {
+        }
 
-        public AttributeModifier(float value, AttributeModifierType type, object source) : this(value, type, (int)type, source) { }
+        public AttributeModifier(float value, AttributeModifierType type, object source) : this(value, type, (int) type, source)
+        {
+        }
     }
 }

@@ -5,7 +5,7 @@ using System.Collections.ObjectModel;
 namespace LowPolyHnS.Attributes
 {
     [Serializable]
-    public class CharacterAttributes
+    public class CharacterAttribute
     {
         public float BaseValue;
 
@@ -31,13 +31,13 @@ namespace LowPolyHnS.Attributes
         protected readonly List<AttributeModifier> StatModifiersList;
         public readonly ReadOnlyCollection<AttributeModifier> StatModifiers;
 
-        public CharacterAttributes()
+        public CharacterAttribute()
         {
             StatModifiersList = new List<AttributeModifier>();
             StatModifiers = StatModifiersList.AsReadOnly();
         }
 
-        public CharacterAttributes(float baseValue) : this()
+        public CharacterAttribute(float baseValue) : this()
         {
             BaseValue = baseValue;
         }
@@ -92,17 +92,17 @@ namespace LowPolyHnS.Attributes
 
                 switch (mod.Type)
                 {
-                    case AttributeModifierType.Flat:
+                    case AttributeModifierType.Normal:
                     {
                         finalValue += mod.Value;
                         break;
                     }
 
-                    case AttributeModifierType.PercentAdd:
+                    case AttributeModifierType.Percent:
                     {
                         sumPercentAdd += mod.Value;
 
-                        if (i + 1 >= StatModifiersList.Count || StatModifiersList[i + 1].Type != AttributeModifierType.PercentAdd)
+                        if (i + 1 >= StatModifiersList.Count || StatModifiersList[i + 1].Type != AttributeModifierType.Percent)
                         {
                             finalValue *= 1 + sumPercentAdd;
                             sumPercentAdd = 0;
