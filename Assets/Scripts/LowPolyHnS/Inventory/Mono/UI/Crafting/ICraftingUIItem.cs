@@ -1,5 +1,4 @@
-﻿using LowPolyHnS.Inventory;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace LowPolyHnS.Crafting

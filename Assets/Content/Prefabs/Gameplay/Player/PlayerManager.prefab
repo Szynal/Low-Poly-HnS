@@ -8945,6 +8945,10 @@ PrefabInstance:
       propertyPath: useAcceleration
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 998570673, guid: fece4e6c51722ed49b325c7a83bdbe3a, type: 3}
+      propertyPath: footLayerMask.m_Bits
+      value: 515
+      objectReference: {fileID: 0}
     - target: {fileID: 676306226646476444, guid: fece4e6c51722ed49b325c7a83bdbe3a,
         type: 3}
       propertyPath: m_LocalPosition.x

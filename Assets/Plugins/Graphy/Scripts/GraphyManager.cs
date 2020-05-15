@@ -157,8 +157,7 @@ namespace Tayx.Graphy
 
         [SerializeField] private ModuleState m_audioModuleState = ModuleState.FULL;
 
-        [SerializeField]
-        private LookForAudioListener m_findAudioListenerInCameraIfNull = LookForAudioListener.ON_SCENE_LOAD;
+        [SerializeField] private LookForAudioListener m_findAudioListenerInCameraIfNull = LookForAudioListener.ON_SCENE_LOAD;
 
         [SerializeField] private AudioListener m_audioListener;
 

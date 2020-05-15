@@ -136,6 +136,65 @@ namespace LowPolyHnS.Characters
             }
 
             EditorGUILayout.Space();
+
+            sectionInput.PaintSection();
+            using (var group = new EditorGUILayout.FadeGroupScope(sectionInput.state.faded))
+            {
+                if (group.visible)
+                {
+                    EditorGUILayout.BeginVertical(CoreGUIStyles.GetBoxExpanded());
+
+                    EditorGUILayout.PropertyField(spInputType);
+                    EditorGUI.indentLevel++;
+
+                    if (spInputType.intValue == (int)PlayerCharacter.INPUT_TYPE.PointAndClick ||
+                        spInputType.intValue == (int)PlayerCharacter.INPUT_TYPE.FollowPointer ||
+                        spInputType.intValue == (int)PlayerCharacter.INPUT_TYPE.FollowAndClickPointer)
+                    {
+                        EditorGUILayout.PropertyField(spMouseButtonMove);
+                    }
+
+                    if (spInputType.intValue == (int)PlayerCharacter.INPUT_TYPE.PointAndClick)
+                    {
+                        EditorGUILayout.PropertyField(spMouseLayerMask);
+                        if (spMouseLayerMask.intValue == 0)
+                        {
+                            spMouseLayerMask.intValue = ~0;
+                        }
+
+                        EditorGUILayout.PropertyField(spRippleClickEffect);
+                    }
+
+                    if (spInputType.intValue == (int)PlayerCharacter.INPUT_TYPE.FollowAndClickPointer)
+                    {
+                        EditorGUILayout.PropertyField(spMouseLayerMask);
+                        if (spMouseLayerMask.intValue == 0)
+                        {
+                            spMouseLayerMask.intValue = ~0;
+                        }
+
+                        EditorGUILayout.PropertyField(spRippleClickEffect);
+                    }
+
+                    EditorGUI.indentLevel--;
+                    EditorGUILayout.PropertyField(spInputJump);
+
+                    EditorGUILayout.Space();
+                    EditorGUILayout.PropertyField(spUseAcceleration);
+                    EditorGUI.indentLevel++;
+                    EditorGUI.BeginDisabledGroup(!spUseAcceleration.boolValue);
+
+                    EditorGUILayout.PropertyField(spAcceleration);
+                    EditorGUILayout.PropertyField(spDeceleration);
+
+                    EditorGUI.EndDisabledGroup();
+                    EditorGUI.indentLevel--;
+
+                    EditorGUILayout.EndVertical();
+                }
+            }
+
+
             serializedObject.ApplyModifiedProperties();
         }
     }
