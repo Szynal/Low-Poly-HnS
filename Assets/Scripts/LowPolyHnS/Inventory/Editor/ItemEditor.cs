@@ -47,6 +47,10 @@ namespace LowPolyHnS.Inventory
         private const string PROP_AGILITY_PERCENT_BONUS = "AgilityPercentBonus";
         private const string PROP_INTELLIGENCE_PERCENT_BONUS = "IntelligencePercentBonus";
 
+        private const string PROP_FIRE_RESISTANCE_BONUS = "FireResistanceBonus";
+        private const string PROP_COLD_RESISTANCE_BONUS = "ColdResistanceBonus";
+        private const string PROP_POISON_RESISTANCE_BONUS = "PoisonResistanceBonus";
+
         private const string PROP_COLOR = "itemColor";
         private const string PROP_SPRITE = "sprite";
         private const string PROP_PREFAB = "prefab";
@@ -84,6 +88,10 @@ namespace LowPolyHnS.Inventory
         private SerializedProperty spStrengthPercentBonus;
         private SerializedProperty spAgilityPercentBonus;
         private SerializedProperty spIntelligencePercentBonus;
+
+        private SerializedProperty spFireResistanceBonus;
+        private SerializedProperty spColdResistanceBonus;
+        private SerializedProperty spPoisonResistanceBonus;
 
         private SerializedProperty spColor;
         private SerializedProperty spSprite;
@@ -128,6 +136,10 @@ namespace LowPolyHnS.Inventory
             spStrengthPercentBonus = serializedObject.FindProperty(PROP_STRENGTH_PERCENT_BONUS);
             spAgilityPercentBonus = serializedObject.FindProperty(PROP_AGILITY_PERCENT_BONUS);
             spIntelligencePercentBonus = serializedObject.FindProperty(PROP_INTELLIGENCE_PERCENT_BONUS);
+
+            spFireResistanceBonus = serializedObject.FindProperty(PROP_FIRE_RESISTANCE_BONUS);
+            spColdResistanceBonus = serializedObject.FindProperty(PROP_COLD_RESISTANCE_BONUS);
+            spPoisonResistanceBonus = serializedObject.FindProperty(PROP_POISON_RESISTANCE_BONUS);
 
             spColor = serializedObject.FindProperty(PROP_COLOR);
             spSprite = serializedObject.FindProperty(PROP_SPRITE);
@@ -402,6 +414,10 @@ namespace LowPolyHnS.Inventory
             EditorGUILayout.PropertyField(spStrengthPercentBonus);
             EditorGUILayout.PropertyField(spAgilityPercentBonus);
             EditorGUILayout.PropertyField(spIntelligencePercentBonus);
+
+            EditorGUILayout.PropertyField(spFireResistanceBonus);
+            EditorGUILayout.PropertyField(spColdResistanceBonus);
+            EditorGUILayout.PropertyField(spPoisonResistanceBonus);
 
             EditorGUILayout.PropertyField(spColor);
 

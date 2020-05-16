@@ -28,6 +28,10 @@ namespace LowPolyHnS.Inventory
         public float AgilityPercentBonus;
         public float IntelligencePercentBonus;
 
+        public float FireResistanceBonus;
+        public float ColdResistanceBonus;
+        public float PoisonResistanceBonus;
+        
         public Color itemColor = Color.grey;
 
         public Sprite sprite;
@@ -72,6 +76,10 @@ namespace LowPolyHnS.Inventory
             item.StrengthPercentBonus = 0;
             item.AgilityPercentBonus = 0;
             item.IntelligencePercentBonus = 0;
+
+            item.FireResistanceBonus = 0;
+            item.ColdResistanceBonus = 0;
+            item.PoisonResistanceBonus = 0;
 
             item.price = 1;
             item.maxStack = 99;

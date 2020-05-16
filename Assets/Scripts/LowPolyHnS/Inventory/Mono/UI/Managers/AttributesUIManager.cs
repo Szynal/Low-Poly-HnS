@@ -12,6 +12,10 @@ namespace LowPolyHnS.Attributes
         public TextMeshProUGUI Agility = null;
         public TextMeshProUGUI Intelligence = null;
 
+        public TextMeshProUGUI FireResistance = null;
+        public TextMeshProUGUI ColdResistance = null;
+        public TextMeshProUGUI PoisonResistance = null;
+
         public void UpdateAttributes()
         {
             if (HookPlayer.Instance == null)
@@ -28,6 +32,10 @@ namespace LowPolyHnS.Attributes
             Strength.text = playerCharacter.Strength.Value.ToString(CultureInfo.InvariantCulture);
             Agility.text = playerCharacter.Agility.Value.ToString(CultureInfo.InvariantCulture);
             Intelligence.text = playerCharacter.Intelligence.Value.ToString(CultureInfo.InvariantCulture);
+
+            FireResistance.text = playerCharacter.FireResistance.Value.ToString(CultureInfo.InvariantCulture);
+            ColdResistance.text = playerCharacter.ColdResistance.Value.ToString(CultureInfo.InvariantCulture);
+            PoisonResistance.text = playerCharacter.PoisonResistance.Value.ToString(CultureInfo.InvariantCulture);
         }
 
         public void UpdateAttributes(PlayerCharacter playerCharacter)
@@ -35,6 +43,10 @@ namespace LowPolyHnS.Attributes
             Strength.text = playerCharacter.Strength.Value.ToString(CultureInfo.InvariantCulture);
             Agility.text = playerCharacter.Agility.Value.ToString(CultureInfo.InvariantCulture);
             Intelligence.text = playerCharacter.Intelligence.Value.ToString(CultureInfo.InvariantCulture);
+
+            FireResistance.text = playerCharacter.FireResistance.Value.ToString(CultureInfo.InvariantCulture);
+            ColdResistance.text = playerCharacter.ColdResistance.Value.ToString(CultureInfo.InvariantCulture);
+            PoisonResistance.text = playerCharacter.PoisonResistance.Value.ToString(CultureInfo.InvariantCulture);
         }
     }
 }
