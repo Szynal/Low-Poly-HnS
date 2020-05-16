@@ -26,6 +26,9 @@ namespace LowPolyHnS.Characters
         private const string PROP_STRENGTH = "Strength";
         private const string PROP_AGILITY = "Agility";
         private const string PROP_INTELLIGENCE = "Intelligence";
+        private const string PROP_FIRE_RESISTANCE = "FireResistance";
+        private const string PROP_COLD_RESISTANCE = "ColdResistance";
+        private const string PROP_POISON_RESISTANCE = "PoisonResistance";
 
         // PROPERTIES: ----------------------------------------------------------------------------
 
@@ -41,13 +44,14 @@ namespace LowPolyHnS.Characters
         private SerializedProperty spDeceleration;
 
         private SerializedProperty spRippleClickEffect;
-        
+
         private Section sectionAttribute;
         private SerializedProperty spStrength;
         private SerializedProperty spAgility;
         private SerializedProperty spIntelligence;
-
-        // INITIALIZERS: --------------------------------------------------------------------------
+        private SerializedProperty spFireResistance;
+        private SerializedProperty spColdResistance;
+        private SerializedProperty spPoisonResistance;
 
         protected new void OnEnable()
         {
@@ -71,6 +75,9 @@ namespace LowPolyHnS.Characters
             spStrength = serializedObject.FindProperty(PROP_STRENGTH);
             spAgility = serializedObject.FindProperty(PROP_AGILITY);
             spIntelligence = serializedObject.FindProperty(PROP_INTELLIGENCE);
+            spFireResistance = serializedObject.FindProperty(PROP_FIRE_RESISTANCE);
+            spColdResistance = serializedObject.FindProperty(PROP_COLD_RESISTANCE);
+            spPoisonResistance = serializedObject.FindProperty(PROP_POISON_RESISTANCE);
 
             spRippleClickEffect = serializedObject.FindProperty(PROP_CLICK);
 
@@ -166,18 +173,26 @@ namespace LowPolyHnS.Characters
                 if (group.visible)
                 {
                     EditorGUILayout.BeginVertical(CoreGUIStyles.GetBoxExpanded());
-                    EditorGUILayout.LabelField("Attribute:", EditorStyles.boldLabel);
-
+                    EditorGUILayout.LabelField("Base Attribute:", EditorStyles.boldLabel);
                     EditorGUI.indentLevel++;
                     EditorGUILayout.PropertyField(spStrength);
-
-
                     EditorGUI.indentLevel--;
                     EditorGUI.indentLevel++;
                     EditorGUILayout.PropertyField(spAgility);
                     EditorGUI.indentLevel--;
                     EditorGUI.indentLevel++;
                     EditorGUILayout.PropertyField(spIntelligence);
+                    EditorGUI.indentLevel--;
+
+                    EditorGUILayout.LabelField("Resistances Attribute:", EditorStyles.boldLabel);
+                    EditorGUI.indentLevel++;
+                    EditorGUILayout.PropertyField(spFireResistance);
+                    EditorGUI.indentLevel--;
+                    EditorGUI.indentLevel++;
+                    EditorGUILayout.PropertyField(spColdResistance);
+                    EditorGUI.indentLevel--;
+                    EditorGUI.indentLevel++;
+                    EditorGUILayout.PropertyField(spPoisonResistance);
                     EditorGUI.indentLevel--;
 
                     EditorGUILayout.EndVertical();

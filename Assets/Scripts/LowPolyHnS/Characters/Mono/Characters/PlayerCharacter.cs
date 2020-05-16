@@ -59,6 +59,10 @@ namespace LowPolyHnS.Characters
         public CharacterAttribute Agility;
         public CharacterAttribute Intelligence;
 
+        public CharacterAttribute FireResistance;
+        public CharacterAttribute ColdResistance;
+        public CharacterAttribute PoisonResistance;
+
 
         // INITIALIZERS: --------------------------------------------------------------------------
 
