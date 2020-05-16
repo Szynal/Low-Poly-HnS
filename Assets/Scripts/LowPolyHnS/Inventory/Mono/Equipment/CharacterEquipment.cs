@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using LowPolyHnS.Attributes;
+using LowPolyHnS.Characters;
 using LowPolyHnS.Core;
+using LowPolyHnS.Core.Hooks;
 using UnityEngine;
 
 namespace LowPolyHnS.Inventory
@@ -81,28 +84,20 @@ namespace LowPolyHnS.Inventory
 
         public int HasEquip(int itemID)
         {
-            int counter = 0;
-            for (int i = 0; i < equipment.items.Length; ++i)
-            {
+            var counter = 0;
+            for (var i = 0; i < equipment.items.Length; ++i)
                 if (equipment.items[i].isEquipped &&
                     equipment.items[i].itemID == itemID)
-                {
                     counter += 1;
-                }
-            }
 
             return counter;
         }
 
         public bool HasEquipTypes(int itemTypes)
         {
-            for (int i = 0; i < ItemType.MAX; ++i)
-            {
+            for (var i = 0; i < ItemType.MAX; ++i)
                 if (((itemTypes >> i) & 1) > 0 && !equipment.items[i].isEquipped)
-                {
                     return false;
-                }
-            }
 
             return true;
         }
@@ -114,34 +109,27 @@ namespace LowPolyHnS.Inventory
                 : 0;
         }
 
-        public bool EquipItem(int itemID, int itemType, Action onEquip = null)
+        public virtual bool EquipItem(int itemID, int itemType, Action onEquip = null)
         {
-            Inventory.Item item = InventoryManager.Instance.itemsCatalogue[itemID];
-            if (!item.conditionsEquip.Check(gameObject))
-            {
-                return false;
-            }
+            var item = InventoryManager.Instance.itemsCatalogue[itemID];
+            if (!item.conditionsEquip.Check(gameObject)) return false;
 
-            List<int> itemTypes = new List<int>();
+            var itemTypes = new List<int>();
             if (InventoryManager.Instance.itemsCatalogue[itemID].fillAllTypes)
             {
-                for (int i = 0; i < ItemType.MAX; ++i)
-                {
+                for (var i = 0; i < ItemType.MAX; ++i)
                     if (((item.itemTypes >> i) & 1) > 0)
-                    {
                         itemTypes.Add(i);
-                    }
-                }
             }
             else
             {
                 itemTypes.Add(itemType);
             }
 
-            int numToUnequip = 0;
-            int numUnequipped = 0;
+            var numToUnequip = 0;
+            var numUnequipped = 0;
 
-            for (int i = 0; i < itemTypes.Count; ++i)
+            for (var i = 0; i < itemTypes.Count; ++i)
             {
                 if (equipment.items[itemTypes[i]].isEquipped)
                 {
@@ -149,12 +137,11 @@ namespace LowPolyHnS.Inventory
                     UnequipItem(equipment.items[itemTypes[i]].itemID, () =>
                     {
                         numUnequipped += 1;
-                        if (numUnequipped >= numToUnequip)
-                        {
-                            ExecuteActions(item.actionsOnEquip, onEquip);
-                        }
+                        if (numUnequipped >= numToUnequip) ExecuteActions(item.actionsOnEquip, onEquip);
                     });
                 }
+
+                AddCharacterModifierFromItem(item);
 
                 equipment.items[itemTypes[i]].isEquipped = true;
                 equipment.items[itemTypes[i]].itemID = itemID;
@@ -167,13 +154,12 @@ namespace LowPolyHnS.Inventory
 
         public bool UnequipItem(int itemID, Action onUnequip = null)
         {
-            bool unequipped = false;
+            var unequipped = false;
 
-            int itemsToUnequip = 0;
-            int itemsUnequipped = 0;
+            var itemsToUnequip = 0;
+            var itemsUnequipped = 0;
 
-            for (int i = 0; i < equipment.items.Length; ++i)
-            {
+            for (var i = 0; i < equipment.items.Length; ++i)
                 if (equipment.items[i].isEquipped && equipment.items[i].itemID == itemID)
                 {
                     Inventory.Item item = InventoryManager.Instance.itemsCatalogue[itemID];
@@ -188,38 +174,33 @@ namespace LowPolyHnS.Inventory
 
                     itemsToUnequip += 1;
 
-                    Actions actions = instance.GetComponent<Actions>();
+                    var actions = instance.GetComponent<Actions>();
                     actions.destroyAfterFinishing = true;
                     actions.onFinish.AddListener(() =>
                     {
                         itemsUnequipped += 1;
-                        if (itemsUnequipped >= itemsToUnequip && onUnequip != null)
-                        {
-                            onUnequip.Invoke();
-                        }
+                        if (itemsUnequipped >= itemsToUnequip) onUnequip?.Invoke();
                     });
 
+                    RemoveCharacterModifierFromSource(item);
                     actions.Execute(gameObject);
                     unequipped = true;
                 }
-            }
 
             return unequipped;
         }
 
         public int[] UnequipTypes(int itemTypes)
         {
-            List<int> unequipped = new List<int>();
-            for (int i = 0; i < ItemType.MAX; ++i)
-            {
+            var unequipped = new List<int>();
+            for (var i = 0; i < ItemType.MAX; ++i)
                 if (((itemTypes >> i) & 1) > 0)
-                {
                     if (equipment.items[i].isEquipped)
                     {
                         unequipped.Add(equipment.items[i].itemID);
                         equipment.items[i].isEquipped = false;
 
-                        GameObject instance = Instantiate(
+                        var instance = Instantiate(
                             InventoryManager
                                 .Instance
                                 .itemsCatalogue[equipment.items[i].itemID]
@@ -228,41 +209,124 @@ namespace LowPolyHnS.Inventory
                             transform.rotation
                         );
 
-                        Actions actions = instance.GetComponent<Actions>();
+                        var actions = instance.GetComponent<Actions>();
                         actions.destroyAfterFinishing = true;
                         actions.Execute(gameObject);
                     }
-                }
-            }
 
             return unequipped.ToArray();
         }
 
-        // PRIVATE METHODS: -----------------------------------------------------------------------
+        public void AddCharacterModifierFromItem(Inventory.Item item)
+        {
+            if (HookPlayer.Instance == null) return;
+
+            var playerCharacter = HookPlayer.Instance.GetComponent<PlayerCharacter>();
+
+            if (playerCharacter == null) return;
+
+            if (item.StrengthBonus != 0)
+            {
+                playerCharacter.Strength.AddModifier(
+                    new AttributeModifier(item.StrengthBonus, AttributeModifierType.Normal, item));
+            }
+
+            if (item.AgilityBonus != 0)
+            {
+                playerCharacter.Agility.AddModifier(new AttributeModifier(item.AgilityBonus, AttributeModifierType.Normal, item));
+            }
+
+            if (item.IntelligenceBonus != 0)
+            {
+                playerCharacter.Intelligence.AddModifier(new AttributeModifier(item.IntelligenceBonus,
+                    AttributeModifierType.Normal, item));
+            }
+
+            if (Math.Abs(item.StrengthPercentBonus) > 0)
+            {
+                playerCharacter.Strength.AddModifier(new AttributeModifier(item.StrengthPercentBonus,
+                    AttributeModifierType.PercentMultiply, item));
+            }
+
+            if (Math.Abs(item.AgilityPercentBonus) > 0)
+            {
+                playerCharacter.Agility.AddModifier(new AttributeModifier(item.AgilityPercentBonus,
+                    AttributeModifierType.PercentMultiply, item));
+            }
+
+            if (Math.Abs(item.IntelligencePercentBonus) > 0)
+            {
+                playerCharacter.Intelligence.AddModifier(new AttributeModifier(item.IntelligencePercentBonus,
+                    AttributeModifierType.PercentMultiply, item));
+            }
+
+            if (InventoryUIManager.Instance == null) return;
+
+            if (InventoryUIManager.Instance.AttributesUIManager != null)
+                InventoryUIManager.Instance.AttributesUIManager.UpdateAttributes(playerCharacter);
+        }
+
+
+        public void RemoveCharacterModifierFromSource(Inventory.Item item)
+        {
+            if (HookPlayer.Instance == null) return;
+
+            PlayerCharacter playerCharacter = HookPlayer.Instance.GetComponent<PlayerCharacter>();
+
+            if (playerCharacter == null) return;
+
+            if (item.StrengthBonus != 0)
+            {
+                playerCharacter.Strength.RemoveAllModifiersFromSource(item);
+            }
+
+            if (item.AgilityBonus != 0)
+            {
+                playerCharacter.Agility.RemoveAllModifiersFromSource(item);
+            }
+
+            if (item.IntelligenceBonus != 0)
+            {
+                playerCharacter.Intelligence.RemoveAllModifiersFromSource(item);
+            }
+
+
+            if (InventoryUIManager.Instance == null)
+            {
+                return;
+            }
+
+            if (InventoryUIManager.Instance.AttributesUIManager != null)
+            {
+                InventoryUIManager.Instance.AttributesUIManager.UpdateAttributes(playerCharacter);
+            }
+        }
+
+        #region PRIVATE METHODS
 
         private void ExecuteActions(IActionsList list, Action callback = null)
         {
-            GameObject instance = Instantiate(
+            var instance = Instantiate(
                 list.gameObject,
                 transform.position,
                 transform.rotation
             );
 
-            Actions actions = instance.GetComponent<Actions>();
+            var actions = instance.GetComponent<Actions>();
             actions.destroyAfterFinishing = true;
-            actions.onFinish.AddListener(() =>
-            {
-                if (callback != null) callback.Invoke();
-            });
+            actions.onFinish.AddListener(() => { callback?.Invoke(); });
 
             actions.Execute(gameObject);
         }
 
-        // IGAMESAVE: -----------------------------------------------------------------------------
+        #endregion
+
+
+        #region IGAMESAVE
 
         public string GetUniqueName()
         {
-            return string.Format("equip:{0}", GetUniqueID());
+            return $"equip:{GetUniqueID()}";
         }
 
         protected virtual string GetUniqueID()
@@ -277,17 +341,16 @@ namespace LowPolyHnS.Inventory
 
         public object GetSaveData()
         {
-            if (!saveEquipment) return null;
-            return equipment;
+            return !saveEquipment ? null : equipment;
         }
 
         public void ResetData()
         {
-            for (int i = 0; i < equipment.items.Length; ++i)
+            foreach (Item item in equipment.items)
             {
-                if (equipment.items[i].isEquipped)
+                if (item.isEquipped)
                 {
-                    UnequipItem(equipment.items[i].itemID);
+                    UnequipItem(item.itemID);
                 }
             }
 
@@ -296,7 +359,7 @@ namespace LowPolyHnS.Inventory
 
         public void OnLoad(object generic)
         {
-            Equipment savedEquipment = generic as Equipment;
+            var savedEquipment = generic as Equipment;
             if (!saveEquipment || savedEquipment == null) return;
 
             StartCoroutine(OnLoadNextFrame(savedEquipment));
@@ -307,13 +370,11 @@ namespace LowPolyHnS.Inventory
             Debug.Log("On Load");
 
             yield return null;
-            for (int i = 0; i < savedEquipment.items.Length; ++i)
-            {
+            for (var i = 0; i < savedEquipment.items.Length; ++i)
                 if (savedEquipment.items[i].isEquipped)
-                {
                     EquipItem(savedEquipment.items[i].itemID, i);
-                }
-            }
         }
+
+        #endregion
     }
 }

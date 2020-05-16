@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using LowPolyHnS.Inventory;
+using UnityEngine;
 
 namespace LowPolyHnS.Attributes
 {
@@ -13,6 +16,7 @@ namespace LowPolyHnS.Attributes
         protected float LastBaseValue;
         protected float RecentCalculation;
 
+        [SerializeField]
         public virtual float Value
         {
             get
@@ -48,9 +52,9 @@ namespace LowPolyHnS.Attributes
             StatModifiersList.Add(mod);
         }
 
-        public virtual bool RemoveModifier(AttributeModifier mod)
+        public virtual bool RemoveModifier(Item item)
         {
-            if (StatModifiersList.Remove(mod))
+            if (StatModifiersList.Remove(GetAttributeModifierFromItem(item)))
             {
                 NeedRecalculate = true;
                 return true;
@@ -59,9 +63,9 @@ namespace LowPolyHnS.Attributes
             return false;
         }
 
-        public virtual bool RemoveAllModifiersFromSource(object source)
+        public virtual bool RemoveAllModifiersFromSource(Item item)
         {
-            var numRemovals = StatModifiersList.RemoveAll(mod => mod.Source == source);
+            int numRemovals = StatModifiersList.RemoveAll(mod => mod.Item == item);
 
             if (numRemovals <= 0) return false;
 
@@ -88,7 +92,7 @@ namespace LowPolyHnS.Attributes
 
             for (var i = 0; i < StatModifiersList.Count; i++)
             {
-                var mod = StatModifiersList[i];
+                AttributeModifier mod = StatModifiersList[i];
 
                 switch (mod.Type)
                 {
@@ -123,6 +127,11 @@ namespace LowPolyHnS.Attributes
             }
 
             return (float) Math.Round(finalValue, 4);
+        }
+
+        public AttributeModifier GetAttributeModifierFromItem(Item item)
+        {
+            return StatModifiers.FirstOrDefault(modifier => modifier.Item.uuid == item.uuid);
         }
     }
 }

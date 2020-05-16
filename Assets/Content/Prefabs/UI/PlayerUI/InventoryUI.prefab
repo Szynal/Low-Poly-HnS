@@ -2416,6 +2416,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba80ac9effb54438bb3a60866c21ee67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AttributesUIManager: {fileID: 8287677214391009020}
   floatingItem: {fileID: 114016880103008786}
 --- !u!114 &114119744107941304
 MonoBehaviour:
@@ -5542,6 +5543,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8192334944186102019}
+  - component: {fileID: 8287677214391009020}
   m_Layer: 5
   m_Name: CharacterAttributes
   m_TagString: Untagged
@@ -5569,6 +5571,21 @@ RectTransform:
   m_AnchoredPosition: {x: -20, y: 0}
   m_SizeDelta: {x: -25, y: -40}
   m_Pivot: {x: 1, y: 0.5}
+--- !u!114 &8287677214391009020
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2473118348085436801}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0af26dfbfddf3547a741f0edf76f00d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Strength: {fileID: 5927416444695222385}
+  Agility: {fileID: 1882389038093404713}
+  Intelligence: {fileID: 5312053564358841675}
 --- !u!1 &2913015419264833014
 GameObject:
   m_ObjectHideFlags: 0

@@ -55,11 +55,11 @@ namespace LowPolyHnS.Characters
 
         public GameObject RippleClickEffect = null;
 
-
         public CharacterAttribute Strength;
         public CharacterAttribute Agility;
         public CharacterAttribute Intelligence;
-        
+
+
         // INITIALIZERS: --------------------------------------------------------------------------
 
         protected override void Awake()

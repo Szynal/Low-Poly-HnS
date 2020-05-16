@@ -1,4 +1,5 @@
-﻿using LowPolyHnS.Core;
+﻿using LowPolyHnS.Attributes;
+using LowPolyHnS.Core;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,11 +8,13 @@ namespace LowPolyHnS.Inventory
     public class InventoryUIManager : MonoBehaviour
     {
         private const int TIME_LAYER = 200;
-        private static InventoryUIManager Instance;
+        [HideInInspector] public static InventoryUIManager Instance;
         private static DatabaseInventory DATABASE_INVENTORY;
         private const string DEFAULT_UI_PATH = "Assets/Content/Prefabs/UI/PlayerUI";
 
         #region PROPERTIES
+
+        public AttributesUIManager AttributesUIManager = null;
 
         [Space] public Image floatingItem;
 
@@ -39,7 +42,7 @@ namespace LowPolyHnS.Inventory
         public void Open()
         {
             if (isOpen) return;
-
+            AttributesUIManager.UpdateAttributes();
             ChangeState(true);
             if (DATABASE_INVENTORY.inventorySettings.pauseTimeOnUI)
             {

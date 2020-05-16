@@ -21,8 +21,8 @@ MonoBehaviour:
     content: Red armor
     postProcess: 0
     translationID: 0
-  StrengthBonus: 0
-  AgilityBonus: 0
+  StrengthBonus: 1
+  AgilityBonus: 2
   IntelligenceBonus: 0
   StrengthPercentBonus: 0
   AgilityPercentBonus: 0
@@ -520,9 +520,9 @@ MonoBehaviour:
     content: A sword made of steel
     postProcess: 0
     translationID: 0
-  StrengthBonus: 0
+  StrengthBonus: 2
   AgilityBonus: 0
-  IntelligenceBonus: 0
+  IntelligenceBonus: 1
   StrengthPercentBonus: 0
   AgilityPercentBonus: 0
   IntelligencePercentBonus: 0

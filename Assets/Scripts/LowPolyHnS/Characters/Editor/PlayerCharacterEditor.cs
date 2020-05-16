@@ -170,6 +170,8 @@ namespace LowPolyHnS.Characters
 
                     EditorGUI.indentLevel++;
                     EditorGUILayout.PropertyField(spStrength);
+
+
                     EditorGUI.indentLevel--;
                     EditorGUI.indentLevel++;
                     EditorGUILayout.PropertyField(spAgility);
