@@ -51,6 +51,9 @@ namespace LowPolyHnS.Inventory
         private const string PROP_COLD_RESISTANCE_BONUS = "ColdResistanceBonus";
         private const string PROP_POISON_RESISTANCE_BONUS = "PoisonResistanceBonus";
 
+        private const string PROP_MIN_DAMAGE_VALUE = "MinDamageValue";
+        private const string PROP_MAX_DAMAGE_VALUE = "MaxDamageValue";
+
         private const string PROP_COLOR = "itemColor";
         private const string PROP_SPRITE = "sprite";
         private const string PROP_PREFAB = "prefab";
@@ -93,6 +96,9 @@ namespace LowPolyHnS.Inventory
         private SerializedProperty spColdResistanceBonus;
         private SerializedProperty spPoisonResistanceBonus;
 
+        private SerializedProperty spMinDamageValue;
+        private SerializedProperty spMaxDamageValue;
+
         private SerializedProperty spColor;
         private SerializedProperty spSprite;
         private SerializedProperty spPrefab;
@@ -122,6 +128,9 @@ namespace LowPolyHnS.Inventory
 
         private AnimBool animUnfold;
 
+        private bool showAttributes;
+        private bool showDamageProp;
+
         public void OnEnable()
         {
             if (target == null || serializedObject == null) return;
@@ -140,6 +149,9 @@ namespace LowPolyHnS.Inventory
             spFireResistanceBonus = serializedObject.FindProperty(PROP_FIRE_RESISTANCE_BONUS);
             spColdResistanceBonus = serializedObject.FindProperty(PROP_COLD_RESISTANCE_BONUS);
             spPoisonResistanceBonus = serializedObject.FindProperty(PROP_POISON_RESISTANCE_BONUS);
+
+            spMinDamageValue = serializedObject.FindProperty(PROP_MIN_DAMAGE_VALUE);
+            spMaxDamageValue = serializedObject.FindProperty(PROP_MAX_DAMAGE_VALUE);
 
             spColor = serializedObject.FindProperty(PROP_COLOR);
             spSprite = serializedObject.FindProperty(PROP_SPRITE);
@@ -408,16 +420,27 @@ namespace LowPolyHnS.Inventory
             EditorGUILayout.PropertyField(spName);
             EditorGUILayout.PropertyField(spDescription);
 
-            EditorGUILayout.PropertyField(spStrengthBonus);
-            EditorGUILayout.PropertyField(spAgilityBonus);
-            EditorGUILayout.PropertyField(spIntelligenceBonus);
-            EditorGUILayout.PropertyField(spStrengthPercentBonus);
-            EditorGUILayout.PropertyField(spAgilityPercentBonus);
-            EditorGUILayout.PropertyField(spIntelligencePercentBonus);
+            showAttributes = EditorGUILayout.Toggle("Use AttributeModifier", showAttributes);
+            if (showAttributes)
+            {
+                EditorGUILayout.PropertyField(spStrengthBonus);
+                EditorGUILayout.PropertyField(spAgilityBonus);
+                EditorGUILayout.PropertyField(spIntelligenceBonus);
+                EditorGUILayout.PropertyField(spStrengthPercentBonus);
+                EditorGUILayout.PropertyField(spAgilityPercentBonus);
+                EditorGUILayout.PropertyField(spIntelligencePercentBonus);
 
-            EditorGUILayout.PropertyField(spFireResistanceBonus);
-            EditorGUILayout.PropertyField(spColdResistanceBonus);
-            EditorGUILayout.PropertyField(spPoisonResistanceBonus);
+                EditorGUILayout.PropertyField(spFireResistanceBonus);
+                EditorGUILayout.PropertyField(spColdResistanceBonus);
+                EditorGUILayout.PropertyField(spPoisonResistanceBonus);
+            }
+
+            showDamageProp = EditorGUILayout.Toggle("UseDamageSystem", showDamageProp);
+            if (showDamageProp)
+            {
+                EditorGUILayout.PropertyField(spMinDamageValue);
+                EditorGUILayout.PropertyField(spMaxDamageValue);
+            }
 
             EditorGUILayout.PropertyField(spColor);
 
