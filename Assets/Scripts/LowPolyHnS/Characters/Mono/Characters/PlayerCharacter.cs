@@ -1,6 +1,7 @@
 ﻿using LowPolyHnS.Attributes;
 using LowPolyHnS.Core;
 using LowPolyHnS.Core.Hooks;
+using LowPolyHnS.Damage;
 using UnityEngine;
 
 namespace LowPolyHnS.Characters
@@ -30,7 +31,7 @@ namespace LowPolyHnS.Characters
 
         protected const string PLAYER_ID = "player";
         public static OnLoadSceneData ON_LOAD_SCENE_DATA;
-        
+
         public INPUT_TYPE inputType = INPUT_TYPE.Wsad;
         public MOUSE_BUTTON mouseButtonMove = MOUSE_BUTTON.LeftClick;
         public LayerMask mouseLayerMask = ~0;
@@ -66,9 +67,9 @@ namespace LowPolyHnS.Characters
         #endregion
 
 
-        #region Attack
-        
+        #region DamageSystem
 
+        public DamageSystem DamageSystem;
 
         #endregion
 
