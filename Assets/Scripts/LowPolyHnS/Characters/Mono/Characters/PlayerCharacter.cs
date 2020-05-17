@@ -30,9 +30,7 @@ namespace LowPolyHnS.Characters
 
         protected const string PLAYER_ID = "player";
         public static OnLoadSceneData ON_LOAD_SCENE_DATA;
-
-        // PROPERTIES: ----------------------------------------------------------------------------
-
+        
         public INPUT_TYPE inputType = INPUT_TYPE.Wsad;
         public MOUSE_BUTTON mouseButtonMove = MOUSE_BUTTON.LeftClick;
         public LayerMask mouseLayerMask = ~0;
@@ -55,6 +53,8 @@ namespace LowPolyHnS.Characters
 
         public GameObject RippleClickEffect = null;
 
+        #region CharacterAttributes
+
         public CharacterAttribute Strength;
         public CharacterAttribute Agility;
         public CharacterAttribute Intelligence;
@@ -63,8 +63,15 @@ namespace LowPolyHnS.Characters
         public CharacterAttribute ColdResistance;
         public CharacterAttribute PoisonResistance;
 
+        #endregion
 
-        // INITIALIZERS: --------------------------------------------------------------------------
+
+        #region Attack
+        
+
+
+        #endregion
+
 
         protected override void Awake()
         {

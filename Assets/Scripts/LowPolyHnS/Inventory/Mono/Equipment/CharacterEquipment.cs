@@ -260,6 +260,24 @@ namespace LowPolyHnS.Inventory
                     AttributeModifierType.PercentMultiply, item));
             }
 
+            if (Math.Abs(item.FireResistanceBonus) > 0)
+            {
+                playerCharacter.FireResistance.AddModifier(new AttributeModifier(item.FireResistanceBonus,
+                    AttributeModifierType.Normal, item));
+            }
+
+            if (Math.Abs(item.ColdResistanceBonus) > 0)
+            {
+                playerCharacter.ColdResistance.AddModifier(new AttributeModifier(item.ColdResistanceBonus,
+                    AttributeModifierType.Normal, item));
+            }
+
+            if (Math.Abs(item.PoisonResistanceBonus) > 0)
+            {
+                playerCharacter.PoisonResistance.AddModifier(new AttributeModifier(item.PoisonResistanceBonus,
+                    AttributeModifierType.Normal, item));
+            }
+
             if (InventoryUIManager.Instance == null) return;
 
             if (InventoryUIManager.Instance.AttributesUIManager != null)
@@ -288,6 +306,22 @@ namespace LowPolyHnS.Inventory
             if (item.IntelligenceBonus != 0)
             {
                 playerCharacter.Intelligence.RemoveAllModifiersFromSource(item);
+            }
+
+
+            if (item.FireResistanceBonus > 0)
+            {
+                playerCharacter.FireResistance.RemoveAllModifiersFromSource(item);
+            }
+
+            if (item.ColdResistanceBonus > 0)
+            {
+                playerCharacter.ColdResistance.RemoveAllModifiersFromSource(item);
+            }
+
+            if (item.PoisonResistanceBonus > 0)
+            {
+                playerCharacter.PoisonResistance.RemoveAllModifiersFromSource(item);
             }
 
 
