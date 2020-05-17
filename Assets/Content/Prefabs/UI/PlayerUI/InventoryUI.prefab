@@ -2295,7 +2295,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 190c3e36ab799488f85a4afab3550a12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemType: 2
+  itemType: 0
   equipmentImage: {fileID: 114427000287559122}
   equipmentText: {fileID: 0}
   frameImage: {fileID: 114011466448842506}
