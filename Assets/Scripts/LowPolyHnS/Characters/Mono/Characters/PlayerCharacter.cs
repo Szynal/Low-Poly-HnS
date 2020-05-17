@@ -78,6 +78,7 @@ namespace LowPolyHnS.Characters
         {
             if (!Application.isPlaying) return;
             CharacterAwake();
+            DamageSystem = new DamageSystem(Strength.Value, null);
 
             initSaveData = new SaveData
             {

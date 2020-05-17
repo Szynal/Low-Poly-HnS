@@ -30,6 +30,8 @@ MonoBehaviour:
   FireResistanceBonus: 10
   ColdResistanceBonus: 5
   PoisonResistanceBonus: 2
+  MinDamageValue: 0
+  MaxDamageValue: 0
   itemColor: {r: 0.745283, g: 0, b: 0, a: 1}
   sprite: {fileID: 21300000, guid: 00dfef9721b7b47bd8d11c253353104d, type: 3}
   prefab: {fileID: 1750978168217177670, guid: 14d093b90e4b6cb4893cac956f086faa, type: 3}
@@ -80,6 +82,8 @@ MonoBehaviour:
   FireResistanceBonus: 0
   ColdResistanceBonus: 0
   PoisonResistanceBonus: 0
+  MinDamageValue: 0
+  MaxDamageValue: 0
   itemColor: {r: 0.22259307, g: 0.7075472, b: 0, a: 1}
   sprite: {fileID: 21300000, guid: 62b77465a0a1c424ab5821210457a860, type: 3}
   prefab: {fileID: -927199367670048503, guid: ed21335f6563a5a4db6c01fee9b64106, type: 3}
@@ -130,6 +134,8 @@ MonoBehaviour:
   FireResistanceBonus: 0
   ColdResistanceBonus: 0
   PoisonResistanceBonus: 0
+  MinDamageValue: 0
+  MaxDamageValue: 0
   itemColor: {r: 0.30588236, g: 0.59607846, b: 0.011764707, a: 1}
   sprite: {fileID: 21300000, guid: ab5cfa807752bdb428b71ff80ad5a770, type: 3}
   prefab: {fileID: 1695198407935802, guid: ecb3f2997175e4a368214188a806379b, type: 3}
@@ -175,9 +181,9 @@ MonoBehaviour:
     recipes:
     - {fileID: 114798038658200360}
     itemTypes:
-    - id: General/
+    - id: General/Equipment/
       name:
-        content: Potions
+        content: Weapon
         postProcess: 0
         translationID: 0
     - id: General/Equipment/
@@ -200,6 +206,31 @@ MonoBehaviour:
         content: Armor
         postProcess: 0
         translationID: 0
+    - id: General/Equipment/
+      name:
+        content: Boots
+        postProcess: 0
+        translationID: 0
+    - id: General/Equipment/
+      name:
+        content: Necklace
+        postProcess: 0
+        translationID: -2065299025
+    - id: General/Equipment/
+      name:
+        content: Ring
+        postProcess: 0
+        translationID: 1121083406
+    - id: General/Equipment/
+      name:
+        content: Belt
+        postProcess: 0
+        translationID: 0
+    - id: General/
+      name:
+        content: Potions
+        postProcess: 0
+        translationID: 0
     - id: General/Gathering/
       name:
         content: Metal
@@ -208,31 +239,6 @@ MonoBehaviour:
     - id: General/Gathering/
       name:
         content: Herb
-        postProcess: 0
-        translationID: 0
-    - id: 
-      name:
-        content: 
-        postProcess: 0
-        translationID: 0
-    - id: 
-      name:
-        content: 
-        postProcess: 0
-        translationID: 0
-    - id: 
-      name:
-        content: 
-        postProcess: 0
-        translationID: 0
-    - id: 
-      name:
-        content: 
-        postProcess: 0
-        translationID: 0
-    - id: 
-      name:
-        content: 
         postProcess: 0
         translationID: 0
     - id: 
@@ -401,6 +407,8 @@ MonoBehaviour:
   FireResistanceBonus: 0
   ColdResistanceBonus: 0
   PoisonResistanceBonus: 0
+  MinDamageValue: 0
+  MaxDamageValue: 0
   itemColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   sprite: {fileID: 0}
   prefab: {fileID: 0}
@@ -447,6 +455,8 @@ MonoBehaviour:
   FireResistanceBonus: 0
   ColdResistanceBonus: 0
   PoisonResistanceBonus: 0
+  MinDamageValue: 0
+  MaxDamageValue: 0
   itemColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   sprite: {fileID: 21300000, guid: 23de4d75b7c2645f18974205d5ee7158, type: 3}
   prefab: {fileID: 0}
@@ -497,6 +507,8 @@ MonoBehaviour:
   FireResistanceBonus: 0
   ColdResistanceBonus: 0
   PoisonResistanceBonus: 0
+  MinDamageValue: 0
+  MaxDamageValue: 0
   itemColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   sprite: {fileID: 21300000, guid: e2de5a0d5cc174e148402f1dcacb7b16, type: 3}
   prefab: {fileID: 1695198407935802, guid: ecb3f2997175e4a368214188a806379b, type: 3}
@@ -547,6 +559,8 @@ MonoBehaviour:
   FireResistanceBonus: 0
   ColdResistanceBonus: 0
   PoisonResistanceBonus: 0
+  MinDamageValue: 0
+  MaxDamageValue: 0
   itemColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   sprite: {fileID: 21300000, guid: a6719796afd6442638107c46bb167533, type: 3}
   prefab: {fileID: 3232748699348546228, guid: 56b7c3d5b0a4846429efb4fa202930f8, type: 3}
@@ -554,7 +568,7 @@ MonoBehaviour:
   price: 100
   maxStack: 1
   weight: 5
-  itemTypes: 6
+  itemTypes: 130
   onClick: 1
   consumeItem: 0
   actionsOnClick: {fileID: 114376854373756430, guid: 60d93fc04c4b14a01b24c35f51a924e7,
@@ -597,6 +611,8 @@ MonoBehaviour:
   FireResistanceBonus: 0
   ColdResistanceBonus: 0
   PoisonResistanceBonus: 0
+  MinDamageValue: 0
+  MaxDamageValue: 0
   itemColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   sprite: {fileID: 21300000, guid: 5041bfbe300f5457496f9696f43df0b4, type: 3}
   prefab: {fileID: 1695198407935802, guid: 924bd157896e94f72a329d5f92706ee9, type: 3}
@@ -647,6 +663,8 @@ MonoBehaviour:
   FireResistanceBonus: 0
   ColdResistanceBonus: 0
   PoisonResistanceBonus: 0
+  MinDamageValue: 0
+  MaxDamageValue: 0
   itemColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   sprite: {fileID: 0}
   prefab: {fileID: 0}
@@ -693,6 +711,8 @@ MonoBehaviour:
   FireResistanceBonus: 0
   ColdResistanceBonus: 0
   PoisonResistanceBonus: 0
+  MinDamageValue: 0
+  MaxDamageValue: 0
   itemColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   sprite: {fileID: 0}
   prefab: {fileID: 0}
@@ -739,6 +759,8 @@ MonoBehaviour:
   FireResistanceBonus: 0
   ColdResistanceBonus: 0
   PoisonResistanceBonus: 0
+  MinDamageValue: 0
+  MaxDamageValue: 0
   itemColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   sprite: {fileID: 0}
   prefab: {fileID: 0}
@@ -785,6 +807,8 @@ MonoBehaviour:
   FireResistanceBonus: 0
   ColdResistanceBonus: 0
   PoisonResistanceBonus: 0
+  MinDamageValue: 0
+  MaxDamageValue: 0
   itemColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   sprite: {fileID: 0}
   prefab: {fileID: 0}
@@ -852,6 +876,8 @@ MonoBehaviour:
   FireResistanceBonus: 0
   ColdResistanceBonus: 0
   PoisonResistanceBonus: 0
+  MinDamageValue: 0
+  MaxDamageValue: 0
   itemColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   sprite: {fileID: 21300000, guid: b5e622ceeadae4b9a9d83633cf7797d0, type: 3}
   prefab: {fileID: 0}
@@ -902,6 +928,8 @@ MonoBehaviour:
   FireResistanceBonus: 0
   ColdResistanceBonus: 0
   PoisonResistanceBonus: 0
+  MinDamageValue: 0
+  MaxDamageValue: 0
   itemColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   sprite: {fileID: 0}
   prefab: {fileID: 0}
@@ -948,6 +976,8 @@ MonoBehaviour:
   FireResistanceBonus: 0
   ColdResistanceBonus: 0
   PoisonResistanceBonus: 0
+  MinDamageValue: 0
+  MaxDamageValue: 0
   itemColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   sprite: {fileID: 21300000, guid: 455f3470e3cc4844e9da5dcce29eaad5, type: 3}
   prefab: {fileID: 1695198407935802, guid: ecb3f2997175e4a368214188a806379b, type: 3}

@@ -1,5 +1,4 @@
 ﻿using System.Globalization;
-using LowPolyHnS.Attributes;
 using LowPolyHnS.Inventory;
 using UnityEngine;
 
@@ -22,7 +21,7 @@ namespace LowPolyHnS.Damage
 
         public DamageType TypeOfDamage = DamageType.Physical;
 
-        public DamageSystem(AttributeModifier strength, Item item)
+        public DamageSystem(float strength, Item item)
         {
             if (weapon == null)
             {
@@ -35,13 +34,13 @@ namespace LowPolyHnS.Damage
                 MaxDamageValue = weapon.MaxDamageValue;
             }
 
-            Value = PhysicalDamageFormula(strength, item);
+            Value = PhysicalDamageFormula(strength);
             weapon = item;
         }
 
-        public float PhysicalDamageFormula(AttributeModifier strength, Item item)
+        public float PhysicalDamageFormula(float strength)
         {
-            return Random.Range(MinDamageValue, MaxDamageValue) * (strength.Value / 10);
+            return Random.Range(MinDamageValue, MaxDamageValue) * (strength / 10);
         }
 
         public string GetMinDamageValueInfo()

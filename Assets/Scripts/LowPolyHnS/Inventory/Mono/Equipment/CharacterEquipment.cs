@@ -281,7 +281,9 @@ namespace LowPolyHnS.Inventory
             if (InventoryUIManager.Instance == null) return;
 
             if (InventoryUIManager.Instance.AttributesUIManager != null)
+            {
                 InventoryUIManager.Instance.AttributesUIManager.UpdateAttributes(playerCharacter);
+            }
         }
 
 

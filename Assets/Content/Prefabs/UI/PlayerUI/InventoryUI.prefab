@@ -5120,6 +5120,7 @@ MonoBehaviour:
   FireResistance: {fileID: 9135614160233240070}
   ColdResistance: {fileID: 2318566932821384732}
   PoisonResistance: {fileID: 9190355512295378522}
+  DamageValue: {fileID: 790939353475986421}
 --- !u!1 &2588208444508516211
 GameObject:
   m_ObjectHideFlags: 0
