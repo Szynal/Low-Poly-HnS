@@ -143,7 +143,7 @@ MonoBehaviour:
   price: 1
   maxStack: 99
   weight: 0
-  itemTypes: 32
+  itemTypes: 2048
   onClick: 1
   consumeItem: 0
   actionsOnClick: {fileID: 2377523397524369863, guid: 71fee213d8a987b499f0de0285746ecd,
@@ -170,14 +170,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inventoryCatalogue:
     items:
+    - {fileID: -5549674780278715467}
+    - {fileID: -9000702557057661082}
+    - {fileID: 8039637003375704792}
     - {fileID: 114273004538180096}
     - {fileID: 114876379292609582}
     - {fileID: 114177772742640968}
-    - {fileID: 114202326578594358}
-    - {fileID: -9000702557057661082}
     - {fileID: -6708522800911847274}
-    - {fileID: 8039637003375704792}
-    - {fileID: -5549674780278715467}
+    - {fileID: 114202326578594358}
     recipes:
     - {fileID: 114798038658200360}
     itemTypes:
@@ -516,7 +516,7 @@ MonoBehaviour:
   price: 100
   maxStack: 99
   weight: 1
-  itemTypes: 1
+  itemTypes: 2048
   onClick: 0
   consumeItem: 1
   actionsOnClick: {fileID: 114455550709671036, guid: e0f24da964b664ceca0096f3ef2ed016,
@@ -620,7 +620,7 @@ MonoBehaviour:
   price: 10
   maxStack: 99
   weight: 1
-  itemTypes: 1
+  itemTypes: 512
   onClick: 1
   consumeItem: 1
   actionsOnClick: {fileID: 114524400458103072, guid: f08bcf1f9777a4aacbe8c7212ba829f3,
@@ -885,7 +885,7 @@ MonoBehaviour:
   price: 85
   maxStack: 99
   weight: 1
-  itemTypes: 1
+  itemTypes: 0
   onClick: 0
   consumeItem: 1
   actionsOnClick: {fileID: 114299862846821014, guid: 76a99c4c78d1547739fe9f73fdd73477,
@@ -985,7 +985,7 @@ MonoBehaviour:
   price: 2
   maxStack: 99
   weight: 1
-  itemTypes: 32
+  itemTypes: 1024
   onClick: 1
   consumeItem: 0
   actionsOnClick: {fileID: 2377523397524369863, guid: 5eac8bafe69c0bb4996bf19b301b3b89,
