@@ -559,8 +559,8 @@ MonoBehaviour:
   FireResistanceBonus: 0
   ColdResistanceBonus: 0
   PoisonResistanceBonus: 0
-  MinDamageValue: 0
-  MaxDamageValue: 0
+  MinDamageValue: 2
+  MaxDamageValue: 5
   itemColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   sprite: {fileID: 21300000, guid: a6719796afd6442638107c46bb167533, type: 3}
   prefab: {fileID: 3232748699348546228, guid: 56b7c3d5b0a4846429efb4fa202930f8, type: 3}
@@ -568,7 +568,7 @@ MonoBehaviour:
   price: 100
   maxStack: 1
   weight: 5
-  itemTypes: 130
+  itemTypes: 3
   onClick: 1
   consumeItem: 0
   actionsOnClick: {fileID: 114376854373756430, guid: 60d93fc04c4b14a01b24c35f51a924e7,
