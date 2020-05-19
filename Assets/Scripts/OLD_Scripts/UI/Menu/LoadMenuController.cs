@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
 using LowPolyHnS;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class LoadMenuController : SubMenuController
 {
-    // Code copied from FE_LoadScreen
-
     [Header("LoadMenu Properties")] [SerializeField]
     private Button[] saveSlots = new Button[10];
 
@@ -20,35 +19,33 @@ public class LoadMenuController : SubMenuController
     public override void Show()
     {
         base.Show();
-        prepareSlots();
+        PrepareSlots();
     }
 
-    public void OnSlotSelected(Button _clickedButton)
+    public void OnSlotSelected(Button clickedButton)
     {
-        //We need to find out which slot we selected
-        int _selectedIndex = 0;
-        while (_selectedIndex < 10)
+        int selectedIndex = 0;
+        while (selectedIndex < 10)
         {
-            if (_clickedButton == saveSlots[_selectedIndex])
+            if (clickedButton == saveSlots[selectedIndex])
             {
                 break;
             }
 
-            _selectedIndex++;
+            selectedIndex++;
         }
 
-        //Now to load the game from there
         if (SceneLoader.Instance)
         {
-            SceneLoader.Instance.LoadFromSave(GameManager.Instance.CurrentSave.Saves[_selectedIndex]);
+            SceneLoader.Instance.LoadFromSave(GameManager.Instance.CurrentSave.Saves[selectedIndex]);
         }
 
         ExitCompletely();
     }
 
-    private void prepareSlots()
+    private void PrepareSlots()
     {
-        List<Save> _savedGames = GameManager.Instance.CurrentSave.Saves;
+        List<Save> savedGames = GameManager.Instance.CurrentSave.Saves;
 
         for (int i = 0; i < 10; i++)
         {
@@ -57,15 +54,16 @@ public class LoadMenuController : SubMenuController
                 continue;
             }
 
-            Text _slotTitle = saveSlots[i].GetComponentInChildren<Text>(true);
-            if (_savedGames[i].MainSceneID != -1)
+            TextMeshProUGUI slotTitle = saveSlots[i].GetComponentInChildren<TextMeshProUGUI>(true);
+
+            if (savedGames[i].MainSceneID != -1)
             {
-                _slotTitle.text = $"SAVED SLOT {i + 1} : {_savedGames[i].Date}";
+                slotTitle.SetText($"Save {i + 1} : {savedGames[i].Date}");
                 saveSlots[i].interactable = true;
             }
             else
             {
-                _slotTitle.text = "EMPTY SLOT";
+                slotTitle.SetText("Empty slot");
                 saveSlots[i].interactable = false;
             }
         }

@@ -28,8 +28,10 @@ public class Save
         MainSceneName = activeScene.name;
 
         StatesOfScenes = SceneLoader.Instance.GetSceneStates();
+        DateTime time = DateTime.Now;
 
-        Date = DateTime.Now.Hour.ToString("D2") + ":" + DateTime.Now.Minute.ToString("D2");
+        Date = time.Day.ToString("D2") + "." + time.Month.ToString("D2") + "." + time.Year.ToString("D2") + " " +
+               time.Hour.ToString("D2") + ":" + time.Minute.ToString("D2");
     }
 
     public SceneSave GetStateBySceneID(int sceneID)
