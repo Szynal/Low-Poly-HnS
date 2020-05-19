@@ -948,7 +948,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 114234051086678564}
   m_HandleRect: {fileID: 224124585570927658}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -2055,7 +2055,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 190c3e36ab799488f85a4afab3550a12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemType: 4
+  itemType: 2
   equipmentImage: {fileID: 114319185756184004}
   equipmentText: {fileID: 0}
   frameImage: {fileID: 114636952185781034}
@@ -4717,7 +4717,7 @@ MonoBehaviour:
   itemType: 4
   equipmentImage: {fileID: 5296179516421535521}
   equipmentText: {fileID: 0}
-  frameImage: {fileID: 114527480806074020}
+  frameImage: {fileID: 4471315119897683241}
   onUnequipped: {fileID: 21300000, guid: 8b32ee1738a11417c9b50631595b6bb0, type: 3}
   onEquipped: {fileID: 21300000, guid: c240ae08bef794af5802ff7b0dd2005f, type: 3}
   onHighlight: {fileID: 21300000, guid: 75c597e6f855f4a8087bf864b9e8d755, type: 3}

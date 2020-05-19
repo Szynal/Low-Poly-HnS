@@ -6624,7 +6624,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec260cf9efadc44caa8896ca14ea1756, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isExpanded: 1
+  isExpanded: 0
   menuType: 0
   actionType: 2
 --- !u!1 &1489089162

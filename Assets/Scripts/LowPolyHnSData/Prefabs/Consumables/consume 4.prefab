@@ -103,4 +103,4 @@ MonoBehaviour:
         m_Calls: []
   item:
     item: {fileID: 114202326578594358, guid: 17839004acbb6924ebf5be3ce8a59dcc, type: 2}
-  type: 2
+  type: 0

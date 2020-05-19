@@ -3190,18 +3190,6 @@ PrefabInstance:
       propertyPath: m_sharedMaterial
       value: 
       objectReference: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-    - target: {fileID: 1378470847, guid: 5bb97218fa3ea6b44a437df564502ec6, type: 3}
-      propertyPath: isExpanded
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1378470848, guid: 5bb97218fa3ea6b44a437df564502ec6, type: 3}
-      propertyPath: actions.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1378470848, guid: 5bb97218fa3ea6b44a437df564502ec6, type: 3}
-      propertyPath: actions.Array.data[1]
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 1943886445, guid: 5bb97218fa3ea6b44a437df564502ec6, type: 3}
       propertyPath: m_sharedMaterial
       value: 

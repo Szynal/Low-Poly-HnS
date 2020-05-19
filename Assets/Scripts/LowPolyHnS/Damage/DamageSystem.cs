@@ -15,32 +15,36 @@ namespace LowPolyHnS.Damage
         }
 
         private Item weapon;
-        private float MinDamageValue { get; }
-        private float MaxDamageValue { get; }
+        public float MinDamageValue;
+        public float MaxDamageValue;
         private float AverageDamageValue => (MinDamageValue + MaxDamageValue) / 2;
 
         public DamageType TypeOfDamage = DamageType.Physical;
 
         public DamageSystem(float strength, Item item)
         {
+            weapon = item;
             if (weapon == null)
             {
-                MinDamageValue = 1f;
-                MaxDamageValue = 2f;
+                Debug.Log("NULL");
+
+                MinDamageValue = 1f + (strength - 1) / 10;
+                MaxDamageValue = 2f + (strength - 1) / 10;
             }
             else
             {
-                MinDamageValue = weapon.MinDamageValue;
-                MaxDamageValue = weapon.MaxDamageValue;
+                Debug.Log("OHO");
+
+                MinDamageValue = weapon.MinDamageValue + (strength - 1) / 10;
+                MaxDamageValue = weapon.MaxDamageValue + (strength - 1) / 10;
             }
 
             Value = PhysicalDamageFormula(strength);
-            weapon = item;
         }
 
         public float PhysicalDamageFormula(float strength)
         {
-            return Random.Range(MinDamageValue, MaxDamageValue) * (strength / 10);
+            return Random.Range(MinDamageValue, MaxDamageValue);
         }
 
         public string GetMinDamageValueInfo()
@@ -50,7 +54,7 @@ namespace LowPolyHnS.Damage
 
         public string GetMaxDamageValueInfo()
         {
-            return MinDamageValue.ToString(CultureInfo.InvariantCulture);
+            return MaxDamageValue.ToString(CultureInfo.InvariantCulture);
         }
 
         public string GetAverageDamageValue()

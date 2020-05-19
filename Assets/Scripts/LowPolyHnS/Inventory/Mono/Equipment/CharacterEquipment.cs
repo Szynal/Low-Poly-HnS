@@ -5,6 +5,7 @@ using LowPolyHnS.Attributes;
 using LowPolyHnS.Characters;
 using LowPolyHnS.Core;
 using LowPolyHnS.Core.Hooks;
+using LowPolyHnS.Damage;
 using UnityEngine;
 
 namespace LowPolyHnS.Inventory
@@ -278,6 +279,11 @@ namespace LowPolyHnS.Inventory
                     AttributeModifierType.Normal, item));
             }
 
+           if (item.itemTypes == 1)
+            {
+               //  playerCharacter.DamageSystem = new DamageSystem(playerCharacter.Strength.Value, item);
+            }
+
             if (InventoryUIManager.Instance == null) return;
 
             if (InventoryUIManager.Instance.AttributesUIManager != null)
@@ -326,6 +332,10 @@ namespace LowPolyHnS.Inventory
                 playerCharacter.PoisonResistance.RemoveAllModifiersFromSource(item);
             }
 
+            if (item.itemTypes == 1)
+            {
+                playerCharacter.DamageSystem = new DamageSystem(playerCharacter.Strength.Value, null);
+            }
 
             if (InventoryUIManager.Instance == null)
             {
