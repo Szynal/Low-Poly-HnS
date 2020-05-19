@@ -1,43 +1,67 @@
-﻿using UnityEngine;
+﻿using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace LowPolyHnS.UI
 {
-    [RequireComponent(typeof(Animation))]
     public class LoadingCircle : MonoBehaviour
     {
-        [SerializeField] private Transform transformToRotate = null;
-        [SerializeField] private float rotationSpeed = 30f;
-        [SerializeField] private Image[] imagesToFade = null;
-        [SerializeField] private float fadeTime = 1f;
+        public Transform TransformToRotate = null;
+        public float RotationSpeed = 90f;
+        public Image[] ImagesToFade = null;
+        public TextMeshProUGUI Text = null;
+        public float FadeTime = 1f;
 
         private bool isDisabling;
         private float fadeProgress;
 
         private void OnEnable()
         {
-            foreach (Image image in imagesToFade)
+            foreach (Image image in ImagesToFade)
             {
-                image.color = GetFullColor(image.color);
+                if (image != null)
+                {
+                    image.color = GetFullColor(image.color);
+                }
             }
 
-            transformToRotate.localRotation = Quaternion.Euler(Vector3.zero);
+            if (Text != null)
+            {
+                Text.color = GetFullColor(Text.color);
+            }
+
+            if (TransformToRotate != null)
+            {
+                TransformToRotate.localRotation = Quaternion.Euler(Vector3.zero);
+            }
         }
 
         private void Update()
         {
-            transformToRotate.Rotate(0f, 0f, rotationSpeed * Time.unscaledDeltaTime);
+            if (TransformToRotate != null)
+            {
+                TransformToRotate.Rotate(0f, 0f, -RotationSpeed * Time.unscaledDeltaTime);
+            }
 
             if (!isDisabling)
             {
                 return;
             }
 
-            fadeProgress += Time.unscaledDeltaTime / fadeTime;
+            fadeProgress += Time.unscaledDeltaTime / FadeTime;
 
-            foreach (Image image in imagesToFade)
+            foreach (Image image in ImagesToFade)
             {
-                image.color = Color.Lerp(GetFullColor(image.color), GetFadedColor(image.color),
+                if (image != null)
+                {
+                    image.color = Color.Lerp(GetFullColor(image.color), GetFadedColor(image.color),
+                        fadeProgress);
+                }
+            }
+
+            if (Text != null)
+            {
+                Text.color = Color.Lerp(GetFullColor(Text.color), GetFadedColor(Text.color),
                     fadeProgress);
             }
 
