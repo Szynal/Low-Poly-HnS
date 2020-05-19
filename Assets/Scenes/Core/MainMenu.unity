@@ -193,7 +193,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 0
+    m_Mode: 3
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -438,6 +438,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8811232645565501209, guid: 375448632787b904b816e6bf8ab43d8a,
         type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8811232645565501209, guid: 375448632787b904b816e6bf8ab43d8a,
+        type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 0}
@@ -445,6 +450,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: Show
+      objectReference: {fileID: 0}
+    - target: {fileID: 8811232645565501209, guid: 375448632787b904b816e6bf8ab43d8a,
+        type: 3}
+      propertyPath: m_Navigation.m_Mode
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8811232645565501210, guid: 375448632787b904b816e6bf8ab43d8a,
         type: 3}
@@ -477,10 +487,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 549416938629183301, guid: c6c4906f2c09a2a40bb6a7ebb17b7da0,
+    - target: {fileID: 442715040900642883, guid: c6c4906f2c09a2a40bb6a7ebb17b7da0,
         type: 3}
-      propertyPath: Settings.UseCharacterBasedMovement
-      value: 0
+      propertyPath: m_AdditionalShaderChannelsFlag
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 549416938629183306, guid: c6c4906f2c09a2a40bb6a7ebb17b7da0,
         type: 3}
@@ -542,36 +552,31 @@ PrefabInstance:
       propertyPath: m_Name
       value: Generic_GameManager
       objectReference: {fileID: 0}
-    - target: {fileID: 4514522296803194282, guid: c6c4906f2c09a2a40bb6a7ebb17b7da0,
+    - target: {fileID: 2990209681028046802, guid: c6c4906f2c09a2a40bb6a7ebb17b7da0,
         type: 3}
-      propertyPath: m_HorizontalAxis
-      value: Horizontal
+      propertyPath: m_AdditionalShaderChannelsFlag
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 4514522296803194282, guid: c6c4906f2c09a2a40bb6a7ebb17b7da0,
         type: 3}
-      propertyPath: m_VerticalAxis
-      value: Vertical
+      propertyPath: m_ForceModuleActive
+      value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 4514522296803194282, guid: c6c4906f2c09a2a40bb6a7ebb17b7da0,
+    - target: {fileID: 4710320375054841121, guid: c6c4906f2c09a2a40bb6a7ebb17b7da0,
         type: 3}
-      propertyPath: m_SubmitButton
-      value: Submit
-      objectReference: {fileID: 0}
-    - target: {fileID: 4514522296803194282, guid: c6c4906f2c09a2a40bb6a7ebb17b7da0,
-        type: 3}
-      propertyPath: m_CancelButton
-      value: Cancel
-      objectReference: {fileID: 0}
-    - target: {fileID: 5833863324086589339, guid: c6c4906f2c09a2a40bb6a7ebb17b7da0,
-        type: 3}
-      propertyPath: ActiveScenes.Array.size
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6517250156093362580, guid: c6c4906f2c09a2a40bb6a7ebb17b7da0,
         type: 3}
       propertyPath: m_FirstSelected
       value: 
-      objectReference: {fileID: 1120033003}
+      objectReference: {fileID: 0}
+    - target: {fileID: 7341165959235613387, guid: c6c4906f2c09a2a40bb6a7ebb17b7da0,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c6c4906f2c09a2a40bb6a7ebb17b7da0, type: 3}
 --- !u!1 &180286153
@@ -769,7 +774,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 0
+    m_Mode: 3
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -1288,7 +1293,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 0
+    m_Mode: 3
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -1381,6 +1386,11 @@ PrefabInstance:
     - target: {fileID: 5053899037631616321, guid: edca26a5466d1184c9b79edf4229e803,
         type: 3}
       propertyPath: m_Type
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5053899037631616321, guid: edca26a5466d1184c9b79edf4229e803,
+        type: 3}
+      propertyPath: m_RaycastTarget
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5053899037631616334, guid: edca26a5466d1184c9b79edf4229e803,
@@ -2230,8 +2240,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a625b5faa3feac840b9d5f0e05fa4dc2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  firstToSelect: {fileID: 1120033005}
-  rememberSelection: 1
+  firstToSelect: {fileID: 0}
+  rememberSelection: 0
   canGoBack: 0
   loadPanelPanel: {fileID: 0}
 --- !u!114 &496024758
@@ -2265,10 +2275,10 @@ Canvas:
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
-  m_OverrideSorting: 0
+  m_OverrideSorting: 1
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 1
+  m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -2461,7 +2471,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 0
+    m_Mode: 3
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -3456,6 +3466,11 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: Show
       objectReference: {fileID: 0}
+    - target: {fileID: 8811232645565501209, guid: 375448632787b904b816e6bf8ab43d8a,
+        type: 3}
+      propertyPath: m_Navigation.m_Mode
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 8811232645565501210, guid: 375448632787b904b816e6bf8ab43d8a,
         type: 3}
       propertyPath: m_Sprite
@@ -3792,7 +3807,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 0
+    m_Mode: 3
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -4136,7 +4151,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 0
+    m_Mode: 3
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -4498,30 +4513,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1083224177}
   m_CullTransparentMesh: 0
---- !u!1 &1120033003 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8811232645565501215, guid: 375448632787b904b816e6bf8ab43d8a,
-    type: 3}
-  m_PrefabInstance: {fileID: 8811232644529625076}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &1120033004 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8811232645565501208, guid: 375448632787b904b816e6bf8ab43d8a,
     type: 3}
   m_PrefabInstance: {fileID: 8811232644529625076}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1120033005 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8811232645565501209, guid: 375448632787b904b816e6bf8ab43d8a,
-    type: 3}
-  m_PrefabInstance: {fileID: 8811232644529625076}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1120033003}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1150193330
 GameObject:
   m_ObjectHideFlags: 0
@@ -5019,7 +5016,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 0
+    m_Mode: 3
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -5300,7 +5297,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -5418,7 +5415,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -6099,7 +6096,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 0
+    m_Mode: 3
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -6566,6 +6563,11 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: Show
       objectReference: {fileID: 0}
+    - target: {fileID: 8811232645565501209, guid: 375448632787b904b816e6bf8ab43d8a,
+        type: 3}
+      propertyPath: m_Navigation.m_Mode
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 8811232645565501210, guid: 375448632787b904b816e6bf8ab43d8a,
         type: 3}
       propertyPath: m_Sprite
@@ -6725,7 +6727,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 0
+    m_Mode: 3
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -7180,7 +7182,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 0
+    m_Mode: 3
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -7329,7 +7331,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 0
+    m_Mode: 3
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -7507,7 +7509,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 1
+  m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -7690,6 +7692,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: ExitGame
+      objectReference: {fileID: 0}
+    - target: {fileID: 8811232645565501209, guid: 375448632787b904b816e6bf8ab43d8a,
+        type: 3}
+      propertyPath: m_Navigation.m_Mode
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8811232645565501210, guid: 375448632787b904b816e6bf8ab43d8a,
         type: 3}
@@ -8071,7 +8078,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -8085,7 +8092,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2083512326}
   - component: {fileID: 2083512325}
-  - component: {fileID: 2083512324}
   - component: {fileID: 2083512327}
   m_Layer: 0
   m_Name: Main Camera
@@ -8094,14 +8100,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &2083512324
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2083512323}
-  m_Enabled: 1
 --- !u!20 &2083512325
 Camera:
   m_ObjectHideFlags: 0
@@ -8414,6 +8412,11 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 496024757}
+    - target: {fileID: 8811232645565501209, guid: 375448632787b904b816e6bf8ab43d8a,
+        type: 3}
+      propertyPath: m_Navigation.m_Mode
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 8811232645565501210, guid: 375448632787b904b816e6bf8ab43d8a,
         type: 3}
       propertyPath: m_Type

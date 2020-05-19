@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 0
+  m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -242,67 +242,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Generic_GameManager
       objectReference: {fileID: 0}
-    - target: {fileID: 1376466739670179999, guid: c6c4906f2c09a2a40bb6a7ebb17b7da0,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: -239.01236
-      objectReference: {fileID: 0}
-    - target: {fileID: 3329719488003123909, guid: c6c4906f2c09a2a40bb6a7ebb17b7da0,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7530325707594905666, guid: c6c4906f2c09a2a40bb6a7ebb17b7da0,
-        type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 123923ebff9792c4a8185cdd00073b8e,
-        type: 3}
-    - target: {fileID: 8057767657334557659, guid: c6c4906f2c09a2a40bb6a7ebb17b7da0,
-        type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 123923ebff9792c4a8185cdd00073b8e,
-        type: 3}
-    - target: {fileID: 8057767657334557659, guid: c6c4906f2c09a2a40bb6a7ebb17b7da0,
-        type: 3}
-      propertyPath: m_Color.r
-      value: 0.3018868
-      objectReference: {fileID: 0}
-    - target: {fileID: 8057767657334557659, guid: c6c4906f2c09a2a40bb6a7ebb17b7da0,
-        type: 3}
-      propertyPath: m_Color.g
-      value: 0.3018868
-      objectReference: {fileID: 0}
-    - target: {fileID: 8057767657334557659, guid: c6c4906f2c09a2a40bb6a7ebb17b7da0,
-        type: 3}
-      propertyPath: m_Color.b
-      value: 0.3018868
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c6c4906f2c09a2a40bb6a7ebb17b7da0, type: 3}
---- !u!1 &2020634417 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1964364873718004140, guid: c6c4906f2c09a2a40bb6a7ebb17b7da0,
-    type: 3}
-  m_PrefabInstance: {fileID: 2020634416}
-  m_PrefabAsset: {fileID: 0}
---- !u!111 &2020634418
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2020634417}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Animation: {fileID: 7400000, guid: 14da348e47cd57641a2f5e43d7bef18a, type: 2}
-  m_Animations:
-  - {fileID: 7400000, guid: 14da348e47cd57641a2f5e43d7bef18a, type: 2}
-  m_WrapMode: 2
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_CullingType: 0
 --- !u!1 &2037264554
 GameObject:
   m_ObjectHideFlags: 0

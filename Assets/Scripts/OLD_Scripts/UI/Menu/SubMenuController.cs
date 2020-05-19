@@ -74,7 +74,7 @@ public class SubMenuController : MonoBehaviour
 
         if (rememberSelection)
         {
-            setCurrentlySelectedAsFirstToSelect();
+        //    setCurrentlySelectedAsFirstToSelect();
         }
 
         gameObject.SetActive(false);

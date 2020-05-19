@@ -6,44 +6,39 @@ namespace LowPolyHnS.UI
     [RequireComponent(typeof(Animation))]
     public class LoadingCircle : MonoBehaviour
     {
-        public Animation CircleRotate = null;
-        public Image[] ImagesToFade = null;
-        public float FadeTime = 1f;
+        [SerializeField] private Transform transformToRotate = null;
+        [SerializeField] private float rotationSpeed = 30f;
+        [SerializeField] private Image[] imagesToFade = null;
+        [SerializeField] private float fadeTime = 1f;
 
         private bool isDisabling;
         private float fadeProgress;
 
         private void OnEnable()
         {
-            foreach (Image image in ImagesToFade)
+            foreach (Image image in imagesToFade)
             {
-                image.color = getFullColor(image.color);
+                image.color = GetFullColor(image.color);
             }
 
-            if (CircleRotate != null)
-            {
-                CircleRotate.Play();
-            }
-        }
-
-        private void OnDisable()
-        {
-            isDisabling = false;
+            transformToRotate.localRotation = Quaternion.Euler(Vector3.zero);
         }
 
         private void Update()
         {
-            if (isDisabling == false)
+            transformToRotate.Rotate(0f, 0f, rotationSpeed * Time.unscaledDeltaTime);
+
+            if (!isDisabling)
             {
                 return;
             }
 
-            fadeProgress += Time.unscaledDeltaTime / FadeTime;
+            fadeProgress += Time.unscaledDeltaTime / fadeTime;
 
-            foreach (Image image in ImagesToFade)
+            foreach (Image image in imagesToFade)
             {
-                image.color = Color.Lerp(getFullColor(image.color),
-                    getFadedColor(image.color), fadeProgress);
+                image.color = Color.Lerp(GetFullColor(image.color), GetFadedColor(image.color),
+                    fadeProgress);
             }
 
             if (fadeProgress >= 1f)
@@ -52,18 +47,23 @@ namespace LowPolyHnS.UI
             }
         }
 
+        private void OnDisable()
+        {
+            isDisabling = false;
+        }
+
         public void Hide()
         {
             fadeProgress = 0f;
             isDisabling = true;
         }
 
-        private Color getFullColor(Color color)
+        private static Color GetFullColor(Color input)
         {
-            return new Color(color.r, color.g, color.b, 1f);
+            return new Color(input.r, input.g, input.b, 1f);
         }
 
-        private Color getFadedColor(Color input)
+        private static Color GetFadedColor(Color input)
         {
             return new Color(input.r, input.g, input.b, 0f);
         }
