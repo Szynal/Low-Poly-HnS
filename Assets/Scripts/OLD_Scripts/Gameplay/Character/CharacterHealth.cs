@@ -35,7 +35,10 @@ public class CharacterHealth : Health
         }
 
         HealthCurrent -= dmgAmount;
-        sliderScript.UpdateHealthBar(HealthCurrent);
+        if (sliderScript != null)
+        {
+            sliderScript.UpdateHealthBar(HealthCurrent);
+        }
 
         if (HealthCurrent <= 0)
         {
